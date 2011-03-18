@@ -1,0 +1,27 @@
+    ps_2_x
+    def c0, 2, -1, 0, 0
+    dcl_pp t0.xy
+    dcl_pp t1.xy
+    dcl_pp_centroid t2.xyz
+    dcl_pp_centroid t3.xyz
+    dcl v0
+    dcl v1
+    dcl_2d s0
+    dcl_2d s1
+    texld_pp r0, t1, s1
+    texld_pp r1, t0, s0
+    mad_pp r0.xyz, r0, c0.x, c0.y
+    nrm_pp r2.xyz, r0
+    mad_pp r0.xyz, t3, c0.x, c0.y
+    dp3_sat_pp r0.x, r0, r2
+    mul_pp r0.xyz, r0.x, c2
+    mul_pp r0.xyz, r1, r0
+    mul_pp r0.xyz, r0, t2
+    dp4_pp r1.x, c3, v0
+    dp4_pp r1.y, c4, v1
+    add_pp r1.x, r1.x, r1.y
+    mad_pp r1.x, r1.x, c0.x, r1.w
+    add_sat_pp r0.w, r1.x, c0.y
+    mov_pp oC0, r0
+
+// approximately 17 instruction slots used (2 texture, 15 arithmetic)
