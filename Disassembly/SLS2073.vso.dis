@@ -16,8 +16,14 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   ModelViewProj  c0       4
-//   ObjToCubeSpace c8       4
+//   ModelViewProj[0]  c0       1
+//   ModelViewProj[1]  c1       1
+//   ModelViewProj[2]  c2       1
+//   ModelViewProj[3]  c3       1
+//   ObjToCubeSpace[0] c8       1
+//   ObjToCubeSpace[1] c9       1
+//   ObjToCubeSpace[2] c10      1
+//   ObjToCubeSpace[3] c11      1
 //   LightPosition  c16      1
 //   FogParam       c23      1
 //

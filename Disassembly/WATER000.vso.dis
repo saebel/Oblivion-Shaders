@@ -17,8 +17,14 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj c0       4
-//   WorldMat      c4       4
+//   ModelViewProj[0] c0       1
+//   ModelViewProj[1] c1       1
+//   ModelViewProj[2] c2       1
+//   ModelViewProj[3] c3       1
+//   WorldMat[0]      c4       1
+//   WorldMat[1]      c5       1
+//   WorldMat[2]      c6       1
+//   WorldMat[3]      c7       1
 //   Tile          c8       1
 //   QPosAdjust    c9       1
 //   DepthOffset   c10      1

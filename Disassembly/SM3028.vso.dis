@@ -18,7 +18,10 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj c0       4
+//   ModelViewProj[0] c0       1
+//   ModelViewProj[1] c1       1
+//   ModelViewProj[2] c2       1
+//   ModelViewProj[3] c3       1
 //   EyePosition   c8       1
 //   UOffset       c9       1
 //   VOffset       c10      1

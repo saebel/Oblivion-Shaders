@@ -20,14 +20,32 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj c0       4
+//   ModelViewProj[0] c0       1
+//   ModelViewProj[1] c1       1
+//   ModelViewProj[2] c2       1
+//   ModelViewProj[3] c3       1
 //   AmbientColor  c5       1
 //   DiffColor     c6       1
 //   DiffColorPt   c7       1
 //   LightPos      c9       1
 //   LightRadius   c10      1
 //   SunDimmer     c16      1
-//   WindMatrices  c18     16
+//   WindMatrices[00]  c18      1
+//   WindMatrices[01]  c19      1
+//   WindMatrices[02]  c20      1
+//   WindMatrices[03]  c21      1
+//   WindMatrices[04]  c22      1
+//   WindMatrices[05]  c23      1
+//   WindMatrices[06]  c24      1
+//   WindMatrices[07]  c25      1
+//   WindMatrices[08]  c26      1
+//   WindMatrices[09]  c27      1
+//   WindMatrices[10]  c28      1
+//   WindMatrices[11]  c29      1
+//   WindMatrices[12]  c30      1
+//   WindMatrices[13]  c31      1
+//   WindMatrices[14]  c32      1
+//   WindMatrices[15]  c33      1
 //
 
     vs_1_1

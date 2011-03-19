@@ -18,12 +18,17 @@
 //
 //   Name              Reg   Size
 //   ----------------- ----- ----
-//   SkinModelViewProj c1       4
+//   SkinModelViewProj[0] c1       1
+//   SkinModelViewProj[1] c2       1
+//   SkinModelViewProj[2] c3       1
+//   SkinModelViewProj[3] c4       1
 //   LightDirection    c13      1
 //   FogParam          c23      1
 //   FogColor          c24      1
 //   EyePosition       c25      1
-//   Bones             c42     54
+//   Bones[0]             c42     17
+//   Bones[1]             c43     17
+//   Bones[2]             c44     17
 //
 
     vs_2_0

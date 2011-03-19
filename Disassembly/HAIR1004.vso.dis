@@ -17,10 +17,17 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   ModelViewProj  c0       4
-//   LightDirection c13      2
-//   LightPosition  c16      3
-//   LightColor     c19      2
+//   ModelViewProj[0]  c0       1
+//   ModelViewProj[1]  c1       1
+//   ModelViewProj[2]  c2       1
+//   ModelViewProj[3]  c3       1
+//   LightDirection[0] c13      1
+//   LightDirection[1] c14      1
+//   LightPosition[0]  c16      1
+//   LightPosition[1]  c17      1
+//   LightPosition[2]  c18      1
+//   LightColor[0]     c19      1
+//   LightColor[1]     c20      1
 //   EyePosition    c25      1
 //
 

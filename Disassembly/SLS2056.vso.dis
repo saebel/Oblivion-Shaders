@@ -15,8 +15,13 @@
 //
 //   Name               Reg   Size
 //   ------------------ ----- ----
-//   ModelViewProj      c0       4
-//   WorldViewTranspose c4       3
+//   ModelViewProj[0]   c0       1
+//   ModelViewProj[1]   c1       1
+//   ModelViewProj[2]   c2       1
+//   ModelViewProj[3]   c3       1
+//   WorldViewTranspose[0] c4       1
+//   WorldViewTranspose[1] c5       1
+//   WorldViewTranspose[2] c6       1
 //   LightPosition      c16      1
 //
 

@@ -16,8 +16,13 @@
 //
 //   Name                Reg   Size
 //   ------------------- ----- ----
-//   ModelViewProj       c0       4
-//   LightDirection      c13      1
+//   ModelViewProj[0]    c0       1
+//   ModelViewProj[1]    c1       1
+//   ModelViewProj[2]    c2       1
+//   ModelViewProj[3]    c3       1
+//   LightDirection[0]   c13      1
+//   LightDirection[1]   c14      1
+//   LightDirection[2]   c15      1
 //   ShadowProjTransform c23      1
 //   ShadowProjData      c24      1
 //

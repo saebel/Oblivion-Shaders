@@ -19,11 +19,21 @@
 //
 //   Name                Reg   Size
 //   ------------------- ----- ----
-//   ModelViewProj       c0       4
-//   LightDirection      c13      1
-//   LightPosition       c16      3
+//   ModelViewProj[0]    c0       1
+//   ModelViewProj[1]    c1       1
+//   ModelViewProj[2]    c2       1
+//   ModelViewProj[3]    c3       1
+//   LightDirection[0]   c13      1
+//   LightDirection[1]   c14      1
+//   LightDirection[2]   c15      1
+//   LightPosition[0]    c16      1
+//   LightPosition[1]    c17      1
+//   LightPosition[2]    c18      1
 //   EyePosition         c25      1
-//   ShadowProj          c28      4
+//   ShadowProj[0]       c28      1
+//   ShadowProj[1]       c29      1
+//   ShadowProj[2]       c30      1
+//   ShadowProj[3]       c31      1
 //   ShadowProjData      c32      1
 //   ShadowProjTransform c33      1
 //
