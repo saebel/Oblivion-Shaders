@@ -14,20 +14,20 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   PSDecalOffsets PSDecalOffsets      1
-//   DecalMap       DecalMap       1
+//   PSDecalOffsets const_15      1
+//   DecalMap       texture_1       1
 //
 
-    texcoord input_0.xyz;			// partial precision
-    sampler DecalMap;
-    r0.xy = sat(texcoord_0);			// partial precision
-    r0.x = (PSDecalOffsets.y * r0.x) - PSDecalOffsets.x;			// partial precision
-    r0.y = (PSDecalOffsets.w * r0.y) - PSDecalOffsets.z;			// partial precision
-    r1 = DecalMap[r0];			// partial precision
+    float3 texcoord_0 : TEXCOORD0;			// partial precision
+    sampler2D DecalMap;
+    r0.xy = saturate(IN.texcoord_0);			// partial precision
+    r0.x = (PSDecalOffsets.y * r0.x) + PSDecalOffsets.x;			// partial precision
+    r0.y = (PSDecalOffsets.w * r0.y) + PSDecalOffsets.z;			// partial precision
+    r1 = tex2D(DecalMap, r0);			// partial precision
     r0.xyz = r1;			// partial precision
-    r0.w = texcoord_0.z;			// partial precision
-    r0 = r0 * texcoord_0.z;			// partial precision
+    r0.w = IN.texcoord_0.z;			// partial precision
+    r0 = r0 * IN.texcoord_0.z;			// partial precision
     r0.w = r1.w * r0.w;			// partial precision
-    rendertarget_0 = r0;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 9 instruction slots used (1 texture, 8 arithmetic)

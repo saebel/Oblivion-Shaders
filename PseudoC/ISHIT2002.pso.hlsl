@@ -16,47 +16,47 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   blurParams      blurParams       1
-//   doubleVisParams doubleVisParams       1
-//   Src0            Src0       1
-//   Src1            Src1       1
+//   blurParams      const_1       1
+//   doubleVisParams const_2       1
+//   Src0            texture_0       1
+//   Src1            texture_1       1
 //
 
-    const_0 = {1, 0, -0.5, 0.5};
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    sampler Src0;
-    sampler Src1;
+    const float4 const_0 = {1, 0, -0.5, 0.5};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    sampler2D Src0;
+    sampler2D Src1;
     r0.w = const_0.x;
     r0.w = r0.w - doubleVisParams.w;
-    r0.xy = texcoord_0 - doubleVisParams;
-    r1.y = (r0.y >= r0.w ? r0.y : r0.w);
-    r1.x = (r0.x >= const_0.y ? r0.x : const_0.y);
-    r2.xy = texcoord_0 - doubleVisParams;
-    r0.x = (doubleVisParams.z < r2.x ? doubleVisParams.z : r2.x);
-    r0.y = (r2.y < const_0.x ? r2.y : const_0.x);
-    r2 = Src0[r1];
-    r1 = Src0[r0];
-    r0 = Src1[texcoord_1];
+    r0.xy = IN.texcoord_0 - doubleVisParams;
+    r1.y = max(r0.y, r0.w);
+    r1.x = max(r0.x, const_0.y);
+    r2.xy = IN.texcoord_0 + doubleVisParams;
+    r0.x = min(doubleVisParams.z, r2.x);
+    r0.y = min(r2.y, const_0.x);
+    r2 = tex2D(Src0, r1);
+    r1 = tex2D(Src0, r0);
+    r0 = tex2D(Src1, IN.texcoord_1);
     r0.w = 1.0 / doubleVisParams.w;
     r0.w = r0.w * doubleVisParams.z;
-    r1.w = texcoord_1.x - const_0.z;
+    r1.w = IN.texcoord_1.x + const_0.z;
     r0.w = r0.w * r1.w;
-    r0.w = r0.w - r0.w;
-    r1.w = texcoord_1.y - const_0.z;
-    r1.w = r1.w - r1.w;
+    r0.w = r0.w + r0.w;
+    r1.w = IN.texcoord_1.y + const_0.z;
+    r1.w = r1.w + r1.w;
     r1.w = r1.w * r1.w;
-    r0.w = (r0.w * r0.w) - r1.w;
+    r0.w = (r0.w * r0.w) + r1.w;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r1.w = r0.w * blurParams.z;
-    r0.w = (r1.w < const_0.x ? r1.w : const_0.x);
-    r1.xyz = r2 - r1;
+    r0.w = min(r1.w, const_0.x);
+    r1.xyz = r2 + r1;
     r1.w = const_0.x - r0.w;
     r1.xyz = r1 * r1.w;
     r0.xyz = r0 * r0.w;
     r0.xyz = (const_0.w * r1) + r0;
     r0.w = const_0.x;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 31 instruction slots used (3 texture, 28 arithmetic)

@@ -14,17 +14,17 @@
 //
 //   Name              Reg   Size
 //   ----------------- ----- ----
-//   TranslationMatrix[0] TranslationMatrix[0]       1
-//   TranslationMatrix[1] TranslationMatrix[1]       1
+//   TranslationMatrix[0] const_8        1
+//   TranslationMatrix[1] const_9        1
 //
 
-    const_0 = {1, 0, 0, 0};
-    position input_0;
-    texcoord input_1;
-    r0.xyz = (input_0.xyxw * const_0.xxyw) - const_0.yyxw;
-    position.x = (r0.x * TranslationMatrix[0].x) + (r0.y * TranslationMatrix[0].y) + (r0.z * TranslationMatrix[0].z);
-    position.y = (r0.x * TranslationMatrix[1].x) + (r0.y * TranslationMatrix[1].y) + (r0.z * TranslationMatrix[1].z);
-    position.zw = input_0;
-    texcoord_0.xy = input_1;
+    const int4 const_0 = {1, 0, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    r0.xyz = (IN.position.xyxw * const_0.xxyw) + const_0.yyxw;
+    OUT.position.x = dot(r0, TranslationMatrix[0]);
+    OUT.position.y = dot(r0, TranslationMatrix[1]);
+    OUT.position.zw = IN.position;
+    OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 5 instruction slots used

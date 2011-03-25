@@ -16,60 +16,60 @@
 //
 //   Name              Reg   Size
 //   ----------------- ----- ----
-//   SkinModelViewProj[0] SkinModelViewProj[0]       1
-//   SkinModelViewProj[1] SkinModelViewProj[1]       1
-//   SkinModelViewProj[2] SkinModelViewProj[2]       1
-//   SkinModelViewProj[3] SkinModelViewProj[3]       1
-//   FogParam          FogParam      1
-//   FogColor          FogColor      1
-//   Bones[0]             Bones[0]     17
-//   Bones[1]             Bones[1]     17
-//   Bones[2]             Bones[2]     17
+//   SkinModelViewProj[0] const_1        1
+//   SkinModelViewProj[1] const_2        1
+//   SkinModelViewProj[2] const_3        1
+//   SkinModelViewProj[3] const_4        1
+//   FogParam          const_23      1
+//   FogColor          const_24      1
+//   Bones[0]             const_42      18
+//   Bones[1]             const_43      18
+//   Bones[2]             const_44      18
 //
 
-    const_0 = {1, 765.01001, 0, 0};
-    position input_0;
-    dcl_blendweight input_1
-    dcl_blendindices input_2
-    r2.x = (input_1.x * const_0.x.x) + (input_1.y * const_0.x.y) + (input_1.z * const_0.x.z);
-    r0 = input_2.zyxw * const_0.y;
-    r1 = (input_0.xyzx * const_0.xxxz) - const_0.zzzx;
+    const float4 const_0 = {1, 765.01001, 0, 0};
+    float4 IN.position : POSITION;
+    float3 IN.blendweight : BLENDWEIGHT;
+    float4 IN.blendindices : BLENDINDICES;
+    r2.x = dot(IN.blendweight, const_0.x);
+    r0 = IN.blendindices.zyxw * const_0.y;
+    r1 = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r2.w = const_0.x - r2.x;
-    a0.x = r0.y;
-    r2.x = (Bones[0][a0.x].x * r1.x) + (Bones[0][a0.x].y * r1.y) + (Bones[0][a0.x].z * r1.z) + (Bones[0][a0.x].w * r1.w);
-    r2.y = (Bones[1][a0.x].x * r1.x) + (Bones[1][a0.x].y * r1.y) + (Bones[1][a0.x].z * r1.z) + (Bones[1][a0.x].w * r1.w);
-    r2.z = (Bones[2][a0.x].x * r1.x) + (Bones[2][a0.x].y * r1.y) + (Bones[2][a0.x].z * r1.z) + (Bones[2][a0.x].w * r1.w);
-    r3.xyz = r2 * input_1.y;
-    a0.x = r0.x;
-    r2.x = (Bones[0][a0.x].x * r1.x) + (Bones[0][a0.x].y * r1.y) + (Bones[0][a0.x].z * r1.z) + (Bones[0][a0.x].w * r1.w);
-    r2.y = (Bones[1][a0.x].x * r1.x) + (Bones[1][a0.x].y * r1.y) + (Bones[1][a0.x].z * r1.z) + (Bones[1][a0.x].w * r1.w);
-    r2.z = (Bones[2][a0.x].x * r1.x) + (Bones[2][a0.x].y * r1.y) + (Bones[2][a0.x].z * r1.z) + (Bones[2][a0.x].w * r1.w);
-    r2.xyz = (input_1.x * r2) + r3;
-    a0.x = r0.z;
-    r0.x = (Bones[0][a0.x].x * r1.x) + (Bones[0][a0.x].y * r1.y) + (Bones[0][a0.x].z * r1.z) + (Bones[0][a0.x].w * r1.w);
-    r0.y = (Bones[1][a0.x].x * r1.x) + (Bones[1][a0.x].y * r1.y) + (Bones[1][a0.x].z * r1.z) + (Bones[1][a0.x].w * r1.w);
-    r0.z = (Bones[2][a0.x].x * r1.x) + (Bones[2][a0.x].y * r1.y) + (Bones[2][a0.x].z * r1.z) + (Bones[2][a0.x].w * r1.w);
-    r2.xyz = (input_1.z * r0) + r2;
-    a0.x = r0.w;
-    r0.x = (Bones[0][a0.x].x * r1.x) + (Bones[0][a0.x].y * r1.y) + (Bones[0][a0.x].z * r1.z) + (Bones[0][a0.x].w * r1.w);
-    r0.y = (Bones[1][a0.x].x * r1.x) + (Bones[1][a0.x].y * r1.y) + (Bones[1][a0.x].z * r1.z) + (Bones[1][a0.x].w * r1.w);
-    r0.z = (Bones[2][a0.x].x * r1.x) + (Bones[2][a0.x].y * r1.y) + (Bones[2][a0.x].z * r1.z) + (Bones[2][a0.x].w * r1.w);
+    offset.x = r0.y;
+    r2.x = dot(Bones[0 + offset.x], r1);
+    r2.y = dot(Bones[1 + offset.x], r1);
+    r2.z = dot(Bones[2 + offset.x], r1);
+    r3.xyz = r2 * IN.blendweight.y;
+    offset.x = r0.x;
+    r2.x = dot(Bones[0 + offset.x], r1);
+    r2.y = dot(Bones[1 + offset.x], r1);
+    r2.z = dot(Bones[2 + offset.x], r1);
+    r2.xyz = (IN.blendweight.x * r2) + r3;
+    offset.x = r0.z;
+    r0.x = dot(Bones[0 + offset.x], r1);
+    r0.y = dot(Bones[1 + offset.x], r1);
+    r0.z = dot(Bones[2 + offset.x], r1);
+    r2.xyz = (IN.blendweight.z * r0) + r2;
+    offset.x = r0.w;
+    r0.x = dot(Bones[0 + offset.x], r1);
+    r0.y = dot(Bones[1 + offset.x], r1);
+    r0.z = dot(Bones[2 + offset.x], r1);
     r0.xyz = (r2.w * r0) + r2;
     r0.w = const_0.x;
-    r1.x = (SkinModelViewProj[0].x * r0.x) + (SkinModelViewProj[0].y * r0.y) + (SkinModelViewProj[0].z * r0.z) + (SkinModelViewProj[0].w * r0.w);
-    r1.y = (SkinModelViewProj[1].x * r0.x) + (SkinModelViewProj[1].y * r0.y) + (SkinModelViewProj[1].z * r0.z) + (SkinModelViewProj[1].w * r0.w);
-    r1.z = (SkinModelViewProj[2].x * r0.x) + (SkinModelViewProj[2].y * r0.y) + (SkinModelViewProj[2].z * r0.z) + (SkinModelViewProj[2].w * r0.w);
-    r2.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
+    r1.x = dot(SkinModelViewProj[0], r0);
+    r1.y = dot(SkinModelViewProj[1], r0);
+    r1.z = dot(SkinModelViewProj[2], r0);
+    r2.x = dot(r1, r1);	// normalize + length
     r1.w = 1.0 / sqrt(r2.x);
     r1.w = 1.0 / r1.w;
     r1.w = FogParam.x - r1.w;
     r2.w = 1.0 / FogParam.y;
     r1.w = r1.w * r2.w;
-    position.w = (SkinModelViewProj[3].x * r0.x) + (SkinModelViewProj[3].y * r0.y) + (SkinModelViewProj[3].z * r0.z) + (SkinModelViewProj[3].w * r0.w);
-    r0.w = (r1.w >= const_0.z ? r1.w : const_0.z);
-    position.xyz = r1;
-    r0.w = (r0.w < const_0.x ? r0.w : const_0.x);
-    color_0.w = const_0.x - r0.w;
-    color_0.xyz = FogColor;
+    OUT.position.w = dot(SkinModelViewProj[3], r0);
+    r0.w = max(r1.w, const_0.z);
+    OUT.position.xyz = r1;
+    r0.w = min(r0.w, const_0.x);
+    OUT.color_0.a = const_0.x - r0.w;
+    OUT.color_0.rgb = FogColor;
 
 // approximately 40 instruction slots used

@@ -14,25 +14,25 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Toggles      Toggles       1
-//   BaseMap      BaseMap       1
+//   Toggles      const_7       1
+//   BaseMap      texture_0       1
 //
 
-    const_0 = {0.0399999991, -0.0199999996, 1, 0};
-    texcoord input_0.xy;
-    texcoord input_6.xyz;			// centroid
-    color input_0.xyz;
-    sampler BaseMap;
-    r0 = BaseMap[texcoord_0];			// partial precision
-    r0.x = (texcoord_6.x * texcoord_6.x) + (texcoord_6.y * texcoord_6.y) + (texcoord_6.z * texcoord_6.z);
+    const float4 const_0 = {0.04, -0.02, 1, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_6 : TEXCOORD6_centroid;
+    float3 IN.color_0 : COLOR0;
+    sampler2D BaseMap;
+    r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
+    r0.x = dot(IN.texcoord_6, IN.texcoord_6);
     r1.w = 1.0 / sqrt(r0.x);
-    r0.xy = r1.w * texcoord_6;			// partial precision
-    r0.w = (r0.w * const_0.x) - const_0.y;			// partial precision
-    r0.xy = (r0.w * r0) + texcoord_0;
-    r0 = BaseMap[r0];			// partial precision
-    r1.xyz = r0 * input_0;			// partial precision
+    r0.xy = r1.w * IN.texcoord_6;			// partial precision
+    r0.w = (r0.w * const_0.x) + const_0.y;			// partial precision
+    r0.xy = (r0.w * r0) + IN.texcoord_0;
+    r0 = tex2D(BaseMap, r0);			// partial precision
+    r1.xyz = r0 * IN.color_0;			// partial precision
     r0.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
     r0.w = const_0.z;
-    rendertarget_0 = r0;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 11 instruction slots used (2 texture, 9 arithmetic)

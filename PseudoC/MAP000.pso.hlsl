@@ -16,64 +16,64 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   CameraPos    CameraPos       1
-//   Src0         Src0       1
-//   Src1         Src1       1
-//   Src2         Src2       1
+//   CameraPos    const_1       1
+//   Src0         texture_0       1
+//   Src1         texture_1       1
+//   Src2         texture_2       1
 //
 
-    const_0 = {0.200000003, 0.200000003, 0.150000006, 0.100000001};
-    const_2 = {0.5, 0.25, 0.75, 0};
-    const_3 = {0.458999991, 0.231000006, 0.128999993, 0};
-    const_4 = {1, -1, 2, 10};
-    texcoord input_0.xy;
-    sampler Src0;
-    sampler Src1;
-    sampler Src2;
-    r3.x = texcoord_0.x;
+    const float4 const_0 = {0.2, 0.2, 0.15, 0.1};
+    const float4 const_2 = {0.5, 0.25, 0.75, 0};
+    const float4 const_3 = {0.458999991, 0.231000006, 0.128999993, 0};
+    const int4 const_4 = {1, -1, 2, 10};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
+    sampler2D Src1;
+    sampler2D Src2;
+    r3.x = IN.texcoord_0.x;
     r0.xy = const_4;
-    r7.xy = (-r0 * CameraPos) + texcoord_0;
+    r7.xy = (-r0 * CameraPos) + IN.texcoord_0;
     r3.y = r7.y;
-    r6.x = texcoord_0.x;
-    r5.xy = texcoord_0 - CameraPos;
+    r6.x = IN.texcoord_0.x;
+    r5.xy = IN.texcoord_0 - CameraPos;
     r6.y = r5.y;
     r1.x = r5.x;
-    r4.xy = (r0 * CameraPos) + texcoord_0;
+    r4.xy = (r0 * CameraPos) + IN.texcoord_0;
     r0.x = r4.x;
-    r2.xy = texcoord_0 - CameraPos;
-    r1.y = texcoord_0.y;
-    r0.y = texcoord_0.y;
-    r7 = Src0[r7];
-    r3 = Src0[r3];
-    r9 = Src0[r6];
-    r8 = Src0[r5];
-    r6 = Src0[r4];
-    r4 = Src0[r2];
-    r5 = Src0[r1];
-    r2 = Src0[r0];
-    r1 = Src1[texcoord_0];
-    r0 = Src2[texcoord_0];
-    r9 = (const_4.z * r9) - r8;
-    r9 = r6 - r9;
+    r2.xy = IN.texcoord_0 + CameraPos;
+    r1.y = IN.texcoord_0.y;
+    r0.y = IN.texcoord_0.y;
+    r7 = tex2D(Src0, r7);
+    r3 = tex2D(Src0, r3);
+    r9 = tex2D(Src0, r6);
+    r8 = tex2D(Src0, r5);
+    r6 = tex2D(Src0, r4);
+    r4 = tex2D(Src0, r2);
+    r5 = tex2D(Src0, r1);
+    r2 = tex2D(Src0, r0);
+    r1 = tex2D(Src1, IN.texcoord_0);
+    r0 = tex2D(Src2, IN.texcoord_0);
+    r9 = (const_4.z * r9) + r8;
+    r9 = r6 + r9;
     r9 = r9 - r7;
-    r3 = (const_4.z * -r3) - r9;
+    r3 = (const_4.z * -r3) + r9;
     r3 = r3 - r4;
     r3 = r3 * r3;
-    r5 = (const_4.z * r5) - r8;
-    r5 = r7 - r5;
+    r5 = (const_4.z * r5) + r8;
+    r5 = r7 + r5;
     r5 = r5 - r6;
-    r2 = (const_4.z * -r2) - r5;
+    r2 = (const_4.z * -r2) + r5;
     r2 = r2 - r4;
     r2 = (r2 * r2) + r3;
     r1.w = r2.w * const_4.w;
-    r2.x = (const_0.x * r2.x) + (const_0.y * r2.y) + (const_0.z * r2.z);
-    r0.w = (r1.w < const_0.w ? r1.w : const_0.w);
-    r0.w = r2.x - r0.w;
+    r2.x = dot(const_0, r2);
+    r0.w = min(r1.w, const_0.w);
+    r0.w = r2.x + r0.w;
     r1.xyz = r1 * const_2.y;
-    r1.w = (r0.w < const_2.x ? r0.w : const_2.x);
+    r1.w = min(r0.w, const_2.x);
     r1.xyz = (const_2.z * r0) + r1;
-    r0.xyz = r1.w * (const_3 - r1) + r1;
+    r0.xyz = lerp(const_3, r1, r1.w);
     r0.w = const_4.x;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 46 instruction slots used (10 texture, 36 arithmetic)

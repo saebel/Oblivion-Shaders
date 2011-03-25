@@ -15,30 +15,30 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
-//   FogParam      FogParam      1
-//   FogColor      FogColor      1
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
+//   FogParam      const_23      1
+//   FogColor      const_24      1
 //
 
-    const_4 = {0, 1, 0, 0};
-    position input_0;
-    r0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    r0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    r0.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    r1.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
+    const int4 const_4 = {0, 1, 0, 0};
+    float4 IN.position : POSITION;
+    r0.x = dot(ModelViewProj[0], IN.position);
+    r0.y = dot(ModelViewProj[1], IN.position);
+    r0.z = dot(ModelViewProj[2], IN.position);
+    r1.x = dot(r0, r0);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r1.w = 1.0 / FogParam.y;
     r0.w = r0.w * r1.w;
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r0.w = (r0.w >= const_4.x ? r0.w : const_4.x);
-    position.xyz = r0;
-    r0.w = (r0.w < const_4.y ? r0.w : const_4.y);
-    color_0.w = const_4.y - r0.w;
-    color_0.xyz = FogColor;
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r0.w = max(r0.w, const_4.x);
+    OUT.position.xyz = r0;
+    r0.w = min(r0.w, const_4.y);
+    OUT.color_0.a = const_4.y - r0.w;
+    OUT.color_0.rgb = FogColor;
 
 // approximately 15 instruction slots used

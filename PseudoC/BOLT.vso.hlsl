@@ -17,50 +17,50 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
-//   fVars0        fVars0       1
-//   fVars1        fVars1       1
-//   fVars2        fVars2       1
-//   SegmentData[0]   SegmentData[0]      1
-//   SegmentData[1]   SegmentData[1]      1
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
+//   fVars0        const_4       1
+//   fVars1        const_5       1
+//   fVars2        const_6       1
+//   SegmentData[0]   const_14       1
+//   SegmentData[1]   const_15       1
 //
 
-    const_7 = {-1, 1, 0, -2};
-    position input_0;
-    color_1 input_1;
-    r0.w = (input_1.x >= fVars0.y ? 1.0 : 0.0);
-    r2.w = (r0.w * -fVars0.y) - input_1.x;
-    r1.w = r2.w - const_7.x;
+    const int4 const_7 = {-1, 1, 0, -2};
+    float4 IN.position : POSITION;
+    float4 IN.color_1 : COLOR1;
+    r0.w = (IN.color_1.r >= fVars0.y ? 1.0 : 0.0);
+    r2.w = (r0.w * -fVars0.y) + IN.color_1.r;
+    r1.w = r2.w + const_7.x;
     r3.xyz = const_7;
-    a0.x = r2.w;
-    r0 = (SegmentData[0][a0.x].xyzx * r3.yyyz) - r3.zzzy;
-    a0.x = r1.w;
-    r1 = (SegmentData[0][a0.x].xyzx * r3.yyyz) - r3.zzzy;
-    a0.x = r2.w;
-    r2 = (SegmentData[1][a0.x].xyzx * r3.yyyz) - r3.zzzy;
-    r5.x = (ModelViewProj[0].x * r1.x) + (ModelViewProj[0].y * r1.y) + (ModelViewProj[0].z * r1.z) + (ModelViewProj[0].w * r1.w);
-    r4.x = (ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w);
-    r4.y = (ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w);
-    r6.x = (ModelViewProj[0].x * r2.x) + (ModelViewProj[0].y * r2.y) + (ModelViewProj[0].z * r2.z) + (ModelViewProj[0].w * r2.w);
-    r6.y = (ModelViewProj[1].x * r2.x) + (ModelViewProj[1].y * r2.y) + (ModelViewProj[1].z * r2.z) + (ModelViewProj[1].w * r2.w);
-    r5.y = (ModelViewProj[1].x * r1.x) + (ModelViewProj[1].y * r1.y) + (ModelViewProj[1].z * r1.z) + (ModelViewProj[1].w * r1.w);
+    offset.x = r2.w;
+    r0 = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
+    offset.x = r1.w;
+    r1 = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
+    offset.x = r2.w;
+    r2 = (SegmentData[1 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
+    r5.x = dot(ModelViewProj[0], r1);
+    r4.x = dot(ModelViewProj[0], r0);
+    r4.y = dot(ModelViewProj[1], r0);
+    r6.x = dot(ModelViewProj[0], r2);
+    r6.y = dot(ModelViewProj[1], r2);
+    r5.y = dot(ModelViewProj[1], r1);
     r2.xy = r6 - r4;
     r1.xy = r5 - r4;
     r6.xy = r2 * r2;
     r5.xy = r1 * r1;
-    r2.w = r6.y - r6.x;
-    r1.w = r5.y - r5.x;
+    r2.w = r6.y + r6.x;
+    r1.w = r5.y + r5.x;
     r2.w = 1.0 / sqrt(r2.w);
     r1.w = 1.0 / sqrt(r1.w);
     r2.xy = r2 * r2.w;
     r1.xy = (r1.w * r1) + r2;
     r1.z = r2.x * r1.y;
-    position.z = (ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w);
+    OUT.position.z = dot(ModelViewProj[2], r0);
     r1.w = (r1.x * r2.y) - r1.z;
-    position.w = (ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w);
+    OUT.position.w = dot(ModelViewProj[3], r0);
     r0.w = (r1.w < const_7.z ? 1.0 : 0.0);
     r0.xy = r1 * r0.w;
     r7.y = pow(2.0, fVars0.z);	// partial precision
@@ -69,40 +69,40 @@
     r4.w = fVars0.z - r0.w;
     r1.xy = r0 * r0;
     r1.w = 1.0 / r4.w;
-    r0.w = r1.y - r1.x;
-    r6.w = r1.w * input_1.x;
+    r0.w = r1.y + r1.x;
+    r6.w = r1.w * IN.color_1.r;
     r2.w = 1.0 / sqrt(r0.w);
-    r0.w = (-r6.w >= r6.w ? -r6.w : r6.w);
+    r0.w = max(-r6.w, r6.w);
     r0.xy = r0 * r2.w;
     r7.y = pow(2.0, r0.w);	// partial precision
     r5.w = r7.y;
     r0.w = (r6.w >= -r6.w ? 1.0 : 0.0);
-    r3.w = r5.w - r5.w;
+    r3.w = r5.w + r5.w;
     r7.y = pow(2.0, r6.w);	// partial precision
     r2.w = r7.y;
     r0.w = (r0.w * r3.w) - r5.w;
-    r1.w = (input_1.x * r1.w) - r2.w;
+    r1.w = (IN.color_1.r * r1.w) - r2.w;
     r3.w = r4.w * r0.w;
-    r1.w = (r1.w * fVars1.w) - fVars1.z;
+    r1.w = (r1.w * fVars1.w) + fVars1.z;
     r7.y = pow(2.0, r3.w);	// partial precision
     r2.w = r7.y;
     r0.w = (r0.w * r4.w) - r2.w;
-    r3.w = r3.x - fVars1.y;
+    r3.w = r3.x + fVars1.y;
     r6.w = (r0.w >= r3.w ? 1.0 : 0.0);
     r5.w = (r0.w < fVars1.x ? 1.0 : 0.0);
     r2.w = r0.w * fVars2.x;
-    r6.w = (r6.w * -r5.w) - const_7.y;
+    r6.w = (r6.w * -r5.w) + const_7.y;
     r3.w = (r2.w >= r3.w ? 1.0 : 0.0);
     r2.w = (r3.z < fVars2.x ? 1.0 : 0.0);
-    r3.w = (r3.w * -r6.w) - r6.w;
+    r3.w = (r3.w * -r6.w) + r6.w;
     r2.w = r5.w * r2.w;
     r0.w = (r0.w >= r4.w ? 1.0 : 0.0);
-    r2.w = (r2.w * -r3.w) - r3.w;
-    r1.w = r1.w * input_0.x;
-    r0.w = (r0.w * -r2.w) - r2.w;
-    position.xy = (r1.w * r0) - r4;
-    color_0.w = r0.w * fVars2.y;
-    color_0.xyz = const_7.y;
-    texcoord_0.xy = input_0;
+    r2.w = (r2.w * -r3.w) + r3.w;
+    r1.w = r1.w * IN.position.x;
+    r0.w = (r0.w * -r2.w) + r2.w;
+    OUT.position.xy = (r1.w * r0) + r4;
+    OUT.color_0.a = r0.w * fVars2.y;
+    OUT.color_0.rgb = const_7.y;
+    OUT.texcoord_0.xy = IN.position;
 
 // approximately 73 instruction slots used

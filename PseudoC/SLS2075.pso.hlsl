@@ -17,34 +17,34 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   FillColor     FillColor       1
-//   RimColor      RimColor       1
-//   fVars         fVars       1
-//   NormalMap     NormalMap       1
-//   SourceTexture SourceTexture       1
+//   FillColor     const_0       1
+//   RimColor      const_1       1
+//   fVars         const_2       1
+//   NormalMap     texture_0       1
+//   SourceTexture texture_1       1
 //
 
-    const_3 = {-0.5, 0, 1, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    texcoord input_3.xyz;			// centroid
-    color input_1;
-    sampler NormalMap;
-    sampler SourceTexture;
-    r1 = NormalMap[texcoord_0];
-    r0 = SourceTexture[texcoord_1];
-    r1.xyz = r1 - const_3.x;
-    r1.xyz = r1 - r1;
-    r2.x = (r1.x * texcoord_3.x) + (r1.y * texcoord_3.y) + (r1.z * texcoord_3.z);
-    r1.w = (r2.x >= const_3.y ? r2.x : const_3.y);
+    const float4 const_3 = {-0.5, 0, 1, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float3 texcoord_3 : TEXCOORD3_centroid;
+    float4 IN.color_1 : COLOR1;
+    sampler2D NormalMap;
+    sampler2D SourceTexture;
+    r1 = tex2D(NormalMap, IN.texcoord_0);
+    r0 = tex2D(SourceTexture, IN.texcoord_1);
+    r1.xyz = r1 + const_3.x;
+    r1.xyz = r1 + r1;
+    r2.x = dot(r1, IN.texcoord_3);
+    r1.w = max(r2.x, const_3.y);
     r2.w = const_3.z - r1.w;
-    r0.xyz = r0 - FillColor;
-    r0.w = r0.w * FillColor.w;
-    pow r1.w, r2.w, fVars.x
+    r0.xyz = r0 + FillColor;
+    r0.w = r0.w * FillColor.a;
+    r1.w = pow(abs(r2.w), fVars.x);
     r0.xyz = r0 * r0.w;
-    r1 = (r1.w * RimColor) - r0;
-    r0.xyz = input_1.w * (input_1 - r1) + r1;
+    r1 = (r1.w * RimColor) + r0;
+    r0.xyz = lerp(IN.color_1, r1, IN.color_1.a);
     r0.w = r1.w;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 18 instruction slots used (2 texture, 16 arithmetic)

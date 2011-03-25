@@ -15,142 +15,135 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   ModelViewProj[0]   ModelViewProj[0]       1
-//   ModelViewProj[1]   ModelViewProj[1]       1
-//   ModelViewProj[2]   ModelViewProj[2]       1
-//   ModelViewProj[3]   ModelViewProj[3]       1
-//   DecalFade[0]       DecalFade[0]      1
-//   DecalFade[1]       DecalFade[1]      1
-//   DecalFade[2]       DecalFade[2]      1
-//   DecalFade[3]       DecalFade[3]      1
-//   DecalFade[4]       DecalFade[4]      1
-//   DecalFade[5]       DecalFade[5]      1
-//   DecalFade[6]       DecalFade[6]      1
-//   DecalFade[7]       DecalFade[7]      1
+//   ModelViewProj[0]   const_0        1
+//   ModelViewProj[1]   const_1        1
+//   ModelViewProj[2]   const_2        1
+//   ModelViewProj[3]   const_3        1
+//   DecalFade       const_31      8
 //   DecalProjection const_40     31
 //
 
-    const_4 = {0.0125000002, 0.5, 0, 1};
-    const_5 = {10, 0.00390625, 1, 0};
-    position input_0;
-    texcoord input_1;
-    normal input_2;
-    position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
+    const float4 const_4 = {0.0125000002, 0.5, 0, 1};
+    const float4 const_5 = {10, (1.0 / 256), 1, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float3 IN.normal : NORMAL;
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
     r0.x = const_44.w;
     r0.y = const_45.w;
     r0.z = const_46.w;
-    position.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    r0.xyz = r0 - input_0;
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r1.x = (const_44.x * r0.x) + (const_44.y * r0.y) + (const_44.z * r0.z);
-    r1.y = (const_45.x * r0.x) + (const_45.y * r0.y) + (const_45.z * r0.z);
-    r2.x = (const_46.x * r0.x) + (const_46.y * r0.y) + (const_46.z * r0.z);
-    texcoord_1.xy = (const_4.x * r1) + const_4.y;
-    r0.x = (input_2.x * const_46.x) + (input_2.y * const_46.y) + (input_2.z * const_46.z);
-    abs r1.w, r2.x
-    r0.w = (r0.x >= const_4.z ? r0.x : const_4.z);
-    r1.w = (r1.w * -const_5.y) - const_5.z;
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    r0.xyz = r0 + IN.position;
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r1.x = dot(const_44, r0);
+    r1.y = dot(const_45, r0);
+    r2.x = dot(const_46, r0);
+    OUT.texcoord_1.xy = (const_4.x * r1) + const_4.y;
+    r0.x = dot(IN.normal, const_46);
+    r1.w = abs(r2.x);
+    r0.w = max(r0.x, const_4.z);
+    r1.w = (r1.w * -const_5.y) + const_5.z;
     r2.w = const_4.w - r0.w;
-    pow r0.w, r2.w, const_5.x
+    r0.w = pow(abs(r2.w), const_5.x);
     r0.x = const_48.w;
     r0.y = const_49.w;
     r0.z = const_50.w;
-    r0.w = r0.w * DecalFade[1].x;
-    r0.xyz = r0 - input_0;
-    texcoord_1.z = r1.w * r0.w;
-    r1.x = (const_48.x * r0.x) + (const_48.y * r0.y) + (const_48.z * r0.z);
-    r1.y = (const_49.x * r0.x) + (const_49.y * r0.y) + (const_49.z * r0.z);
-    r2.x = (const_50.x * r0.x) + (const_50.y * r0.y) + (const_50.z * r0.z);
-    texcoord_2.xy = (const_4.x * r1) + const_4.y;
-    r0.x = (input_2.x * const_50.x) + (input_2.y * const_50.y) + (input_2.z * const_50.z);
-    abs r1.w, r2.x
-    r0.w = (r0.x >= const_4.z ? r0.x : const_4.z);
-    r1.w = (r1.w * -const_5.y) - const_5.z;
+    r0.w = r0.w * const_32.x;
+    r0.xyz = r0 + IN.position;
+    OUT.texcoord_1.z = r1.w * r0.w;
+    r1.x = dot(const_48, r0);
+    r1.y = dot(const_49, r0);
+    r2.x = dot(const_50, r0);
+    OUT.texcoord_2.xy = (const_4.x * r1) + const_4.y;
+    r0.x = dot(IN.normal, const_50);
+    r1.w = abs(r2.x);
+    r0.w = max(r0.x, const_4.z);
+    r1.w = (r1.w * -const_5.y) + const_5.z;
     r2.w = const_4.w - r0.w;
-    pow r0.w, r2.w, const_5.x
+    r0.w = pow(abs(r2.w), const_5.x);
     r0.x = const_52.w;
     r0.y = const_53.w;
     r0.z = const_54.w;
-    r0.w = r0.w * DecalFade[2].x;
-    r0.xyz = r0 - input_0;
-    texcoord_2.z = r1.w * r0.w;
-    r1.x = (const_52.x * r0.x) + (const_52.y * r0.y) + (const_52.z * r0.z);
-    r1.y = (const_53.x * r0.x) + (const_53.y * r0.y) + (const_53.z * r0.z);
-    r2.x = (const_54.x * r0.x) + (const_54.y * r0.y) + (const_54.z * r0.z);
-    texcoord_3.xy = (const_4.x * r1) + const_4.y;
-    r0.x = (input_2.x * const_54.x) + (input_2.y * const_54.y) + (input_2.z * const_54.z);
-    abs r1.w, r2.x
-    r0.w = (r0.x >= const_4.z ? r0.x : const_4.z);
-    r1.w = (r1.w * -const_5.y) - const_5.z;
+    r0.w = r0.w * const_33.x;
+    r0.xyz = r0 + IN.position;
+    OUT.texcoord_2.z = r1.w * r0.w;
+    r1.x = dot(const_52, r0);
+    r1.y = dot(const_53, r0);
+    r2.x = dot(const_54, r0);
+    OUT.texcoord_3.xy = (const_4.x * r1) + const_4.y;
+    r0.x = dot(IN.normal, const_54);
+    r1.w = abs(r2.x);
+    r0.w = max(r0.x, const_4.z);
+    r1.w = (r1.w * -const_5.y) + const_5.z;
     r2.w = const_4.w - r0.w;
-    pow r0.w, r2.w, const_5.x
+    r0.w = pow(abs(r2.w), const_5.x);
     r0.x = const_56.w;
     r0.y = const_57.w;
     r0.z = const_58.w;
-    r0.w = r0.w * DecalFade[3].x;
-    r0.xyz = r0 - input_0;
-    texcoord_3.z = r1.w * r0.w;
-    r1.x = (const_56.x * r0.x) + (const_56.y * r0.y) + (const_56.z * r0.z);
-    r1.y = (const_57.x * r0.x) + (const_57.y * r0.y) + (const_57.z * r0.z);
-    r2.x = (const_58.x * r0.x) + (const_58.y * r0.y) + (const_58.z * r0.z);
-    texcoord_4.xy = (const_4.x * r1) + const_4.y;
-    r0.x = (input_2.x * const_58.x) + (input_2.y * const_58.y) + (input_2.z * const_58.z);
-    abs r1.w, r2.x
-    r0.w = (r0.x >= const_4.z ? r0.x : const_4.z);
-    r1.w = (r1.w * -const_5.y) - const_5.z;
+    r0.w = r0.w * const_34.x;
+    r0.xyz = r0 + IN.position;
+    OUT.texcoord_3.z = r1.w * r0.w;
+    r1.x = dot(const_56, r0);
+    r1.y = dot(const_57, r0);
+    r2.x = dot(const_58, r0);
+    OUT.texcoord_4.xy = (const_4.x * r1) + const_4.y;
+    r0.x = dot(IN.normal, const_58);
+    r1.w = abs(r2.x);
+    r0.w = max(r0.x, const_4.z);
+    r1.w = (r1.w * -const_5.y) + const_5.z;
     r2.w = const_4.w - r0.w;
-    pow r0.w, r2.w, const_5.x
+    r0.w = pow(abs(r2.w), const_5.x);
     r0.x = const_60.w;
     r0.y = const_61.w;
     r0.z = const_62.w;
-    r0.w = r0.w * DecalFade[4].x;
-    r0.xyz = r0 - input_0;
-    texcoord_4.z = r1.w * r0.w;
-    r1.x = (const_60.x * r0.x) + (const_60.y * r0.y) + (const_60.z * r0.z);
-    r1.y = (const_61.x * r0.x) + (const_61.y * r0.y) + (const_61.z * r0.z);
-    r2.x = (const_62.x * r0.x) + (const_62.y * r0.y) + (const_62.z * r0.z);
-    texcoord_5.xy = (const_4.x * r1) + const_4.y;
-    r0.x = (input_2.x * const_62.x) + (input_2.y * const_62.y) + (input_2.z * const_62.z);
-    abs r1.w, r2.x
-    r0.w = (r0.x >= const_4.z ? r0.x : const_4.z);
-    r1.w = (r1.w * -const_5.y) - const_5.z;
+    r0.w = r0.w * const_35.x;
+    r0.xyz = r0 + IN.position;
+    OUT.texcoord_4.z = r1.w * r0.w;
+    r1.x = dot(const_60, r0);
+    r1.y = dot(const_61, r0);
+    r2.x = dot(const_62, r0);
+    OUT.texcoord_5.xy = (const_4.x * r1) + const_4.y;
+    r0.x = dot(IN.normal, const_62);
+    r1.w = abs(r2.x);
+    r0.w = max(r0.x, const_4.z);
+    r1.w = (r1.w * -const_5.y) + const_5.z;
     r2.w = const_4.w - r0.w;
-    pow r0.w, r2.w, const_5.x
+    r0.w = pow(abs(r2.w), const_5.x);
     r0.x = const_64.w;
     r0.y = const_65.w;
     r0.z = const_66.w;
-    r0.w = r0.w * DecalFade[5].x;
-    r0.xyz = r0 - input_0;
-    texcoord_5.z = r1.w * r0.w;
-    r1.x = (const_64.x * r0.x) + (const_64.y * r0.y) + (const_64.z * r0.z);
-    r1.y = (const_65.x * r0.x) + (const_65.y * r0.y) + (const_65.z * r0.z);
-    r2.x = (const_66.x * r0.x) + (const_66.y * r0.y) + (const_66.z * r0.z);
-    texcoord_6.xy = (const_4.x * r1) + const_4.y;
-    r0.x = (input_2.x * const_66.x) + (input_2.y * const_66.y) + (input_2.z * const_66.z);
-    abs r1.w, r2.x
-    r0.w = (r0.x >= const_4.z ? r0.x : const_4.z);
-    r1.w = (r1.w * -const_5.y) - const_5.z;
+    r0.w = r0.w * const_36.x;
+    r0.xyz = r0 + IN.position;
+    OUT.texcoord_5.z = r1.w * r0.w;
+    r1.x = dot(const_64, r0);
+    r1.y = dot(const_65, r0);
+    r2.x = dot(const_66, r0);
+    OUT.texcoord_6.xy = (const_4.x * r1) + const_4.y;
+    r0.x = dot(IN.normal, const_66);
+    r1.w = abs(r2.x);
+    r0.w = max(r0.x, const_4.z);
+    r1.w = (r1.w * -const_5.y) + const_5.z;
     r2.w = const_4.w - r0.w;
-    pow r0.w, r2.w, const_5.x
+    r0.w = pow(abs(r2.w), const_5.x);
     r0.x = const_68.w;
     r0.y = const_69.w;
     r0.z = const_70.w;
-    r0.w = r0.w * DecalFade[6].x;
-    r0.xyz = r0 - input_0;
-    texcoord_6.z = r1.w * r0.w;
-    r1.x = (const_68.x * r0.x) + (const_68.y * r0.y) + (const_68.z * r0.z);
-    r1.y = (const_69.x * r0.x) + (const_69.y * r0.y) + (const_69.z * r0.z);
-    r2.x = (input_2.x * const_70.x) + (input_2.y * const_70.y) + (input_2.z * const_70.z);
-    r0.x = (const_70.x * r0.x) + (const_70.y * r0.y) + (const_70.z * r0.z);
-    r0.w = (r2.x >= const_4.z ? r2.x : const_4.z);
-    texcoord_7.xy = (const_4.x * r1) + const_4.y;
+    r0.w = r0.w * const_37.x;
+    r0.xyz = r0 + IN.position;
+    OUT.texcoord_6.z = r1.w * r0.w;
+    r1.x = dot(const_68, r0);
+    r1.y = dot(const_69, r0);
+    r2.x = dot(IN.normal, const_70);
+    r0.x = dot(const_70, r0);
+    r0.w = max(r2.x, const_4.z);
+    OUT.texcoord_7.xy = (const_4.x * r1) + const_4.y;
     r2.w = const_4.w - r0.w;
-    abs r1.w, r0.x
-    pow r0.w, r2.w, const_5.x
-    r1.w = (r1.w * -const_5.y) - const_5.z;
-    r0.w = r0.w * DecalFade[7].x;
-    texcoord_7.z = r1.w * r0.w;
-    texcoord_0.xyz = (input_1.xyxw * const_4.wwzw) - const_4.zzww;
+    r1.w = abs(r0.x);
+    r0.w = pow(abs(r2.w), const_5.x);
+    r1.w = (r1.w * -const_5.y) + const_5.z;
+    r0.w = r0.w * const_38.x;
+    OUT.texcoord_7.z = r1.w * r0.w;
+    OUT.texcoord_0.xyz = (IN.texcoord_0.xyxw * const_4.wwzw) + const_4.zzww;
 
 // approximately 131 instruction slots used

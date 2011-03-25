@@ -14,27 +14,27 @@
 //
 //   Name               Reg   Size
 //   ------------------ ----- ----
-//   ModelViewProj[0]   ModelViewProj[0]       1
-//   ModelViewProj[1]   ModelViewProj[1]       1
-//   ModelViewProj[2]   ModelViewProj[2]       1
-//   ModelViewProj[3]   ModelViewProj[3]       1
-//   WorldViewTranspose[0] WorldViewTranspose[0]       1
-//   WorldViewTranspose[1] WorldViewTranspose[1]       1
-//   WorldViewTranspose[2] WorldViewTranspose[2]       1
+//   ModelViewProj[0]      const_0        1
+//   ModelViewProj[1]      const_1        1
+//   ModelViewProj[2]      const_2        1
+//   ModelViewProj[3]      const_3        1
+//   WorldViewTranspose[0] const_4        1
+//   WorldViewTranspose[1] const_5        1
+//   WorldViewTranspose[2] const_6        1
 //
 
-    const_7 = {0.5, 5, -4.4000001, 0};
-    position input_0;
-    normal input_1;
-    position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r0.x = (WorldViewTranspose[0].x * input_1.x) + (WorldViewTranspose[0].y * input_1.y) + (WorldViewTranspose[0].z * input_1.z);
-    r0.y = (WorldViewTranspose[1].x * input_1.x) + (WorldViewTranspose[1].y * input_1.y) + (WorldViewTranspose[1].z * input_1.z);
-    r0.z = (WorldViewTranspose[2].x * input_1.x) + (WorldViewTranspose[2].y * input_1.y) + (WorldViewTranspose[2].z * input_1.z);
-    texcoord_0.xyz = (const_7.x * r0) + const_7.x;
-    r0.y = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    texcoord_1.x = (r0.y * const_7.y) - const_7.z;
-    position.z = r0.y;
+    const float4 const_7 = {0.5, 5, -4.4, 0};
+    float4 IN.position : POSITION;
+    float3 IN.normal : NORMAL;
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r0.x = dot(WorldViewTranspose[0], IN.normal);
+    r0.y = dot(WorldViewTranspose[1], IN.normal);
+    r0.z = dot(WorldViewTranspose[2], IN.normal);
+    OUT.texcoord_0.xyz = (const_7.x * r0) + const_7.x;
+    r0.y = dot(ModelViewProj[2], IN.position);
+    OUT.texcoord_1.x = (r0.y * const_7.y) + const_7.z;
+    OUT.position.z = r0.y;
 
 // approximately 10 instruction slots used

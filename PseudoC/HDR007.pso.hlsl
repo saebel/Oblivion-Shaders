@@ -14,23 +14,23 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   HDRParam     HDRParam       1
-//   Src0         Src0       1
+//   HDRParam     const_1       1
+//   Src0         texture_0       1
 //
 
-    const_0 = {0.00999999978, 1, 0, 0};
-    texcoord input_0.xy;
-    sampler Src0;
-    r0 = Src0[texcoord_0];
-    r1.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
+    const float4 const_0 = {0.01, 1, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
+    r0 = tex2D(Src0, IN.texcoord_0);
+    r1.x = dot(r0, r0);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
     r0.w = 1.0 / r0.w;
-    r1.w = (const_0.x >= r0.w ? const_0.x : r0.w);
-    r0.w = (r1.w < HDRParam.x ? r1.w : HDRParam.x);
+    r1.w = max(const_0.x, r0.w);
+    r0.w = min(r1.w, HDRParam.x);
     r1.w = 1.0 / r1.w;
     r0.w = r0.w * r1.w;
     r0.xyz = r0 * r0.w;
     r0.w = const_0.y;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

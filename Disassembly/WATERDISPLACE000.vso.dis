@@ -14,8 +14,7 @@
 //
 //   Name              Reg   Size
 //   ----------------- ----- ----
-//   TranslationMatrix[0] c8       1
-//   TranslationMatrix[1] c9       1
+//   TranslationMatrix c8       2
 //
 
     vs_2_0

@@ -23,67 +23,67 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   EyePos          EyePos       1
-//   SunDir          SunDir       1
-//   SunColor        SunColor       1
-//   ShallowColor    ShallowColor       1
-//   DeepColor       DeepColor       1
-//   ReflectionColor ReflectionColor       1
-//   VarAmounts      VarAmounts       1
-//   FogParam        FogParam       1
-//   FogColor        FogColor      1
-//   FresnelRI       FresnelRI      1
-//   ReflectionMap   ReflectionMap       1
+//   EyePos          const_1       1
+//   SunDir          const_2       1
+//   SunColor        const_3       1
+//   ShallowColor    const_5       1
+//   DeepColor       const_6       1
+//   ReflectionColor const_7       1
+//   VarAmounts      const_8       1
+//   FogParam        const_9       1
+//   FogColor        const_10      1
+//   FresnelRI       const_11      1
+//   ReflectionMap   texture_0       1
 //
 
-    const_0 = {1, 1, -1, 0};
-    texcoord input_0.xyz;			// centroid
-    texcoord input_1.xyz;			// centroid
-    texcoord input_2;			// centroid
-    texcoord input_3;			// centroid
-    texcoord input_4;			// centroid
-    texcoord input_5;			// centroid
-    sampler ReflectionMap;
-    r1.xyz = texcoord_0;
+    const int4 const_0 = {1, 1, -1, 0};
+    float3 texcoord_0 : TEXCOORD0_centroid;
+    float3 texcoord_1 : TEXCOORD1_centroid;
+    float4 texcoord_2 : TEXCOORD2_centroid;
+    float4 texcoord_3 : TEXCOORD3_centroid;
+    float4 texcoord_4 : TEXCOORD4_centroid;
+    float4 texcoord_5 : TEXCOORD5_centroid;
+    sampler2D ReflectionMap;
+    r1.xyz = IN.texcoord_0;
     r1.w = const_0.x;
-    r0.x = (texcoord_2.x * r1.x) + (texcoord_2.y * r1.y) + (texcoord_2.z * r1.z) + (texcoord_2.w * r1.w);
-    r0.y = (texcoord_3.x * r1.x) + (texcoord_3.y * r1.y) + (texcoord_3.z * r1.z) + (texcoord_3.w * r1.w);
-    r0.z = (texcoord_4.x * r1.x) + (texcoord_4.y * r1.y) + (texcoord_4.z * r1.z) + (texcoord_4.w * r1.w);
-    r0.w = (texcoord_5.x * r1.x) + (texcoord_5.y * r1.y) + (texcoord_5.z * r1.z) + (texcoord_5.w * r1.w);
-    texldp r0, r0, ReflectionMap			// partial precision
-    r1.xyz = EyePos - texcoord_1;
-    r2.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
+    r0.x = dot(IN.texcoord_2, r1);
+    r0.y = dot(IN.texcoord_3, r1);
+    r0.z = dot(IN.texcoord_4, r1);
+    r0.w = dot(IN.texcoord_5, r1);
+    r0 = tex2Dproj(ReflectionMap, r0);			// partial precision
+    r1.xyz = EyePos - IN.texcoord_1;
+    r2.x = dot(r1, r1);	// normalize + length
     r0.w = 1.0 / sqrt(r2.x);
     r1.xyz = r1 * r0.w;
     r4.w = 1.0 / r0.w;
-    r0.w = sat(r1.z);
+    r0.w = saturate(r1.z);
     r1.w = const_0.x - r0.w;
     r2.w = r1.w * r1.w;
     r0.xyz = r0 - ReflectionColor;
     r2.w = r2.w * r2.w;
     r2.xyz = ReflectionColor;
-    r0.xyz = (VarAmounts.y * r0) - r2;			// partial precision
+    r0.xyz = (VarAmounts.y * r0) + r2;			// partial precision
     r2.w = r1.w * r2.w;
     r1.xyz = r1 * -const_0;
     r1.w = const_0.x;
     r1.w = r1.w - FresnelRI.x;
-    r2.w = (r1.w * r2.w) - FresnelRI.x;
-    r2.x = sat((r1.x * SunDir.x) + (r1.y * SunDir.y) + (r1.z * SunDir.z));
+    r2.w = (r1.w * r2.w) + FresnelRI.x;
+    r2.x = saturate(dot(r1, SunDir));
     r1.xyz = DeepColor;
     r1.xyz = ShallowColor - r1;
-    pow r1.w, r2.x, VarAmounts.x
-    r2.xyz = (r0.w * r1) - DeepColor;			// partial precision
-    r3.w = sat(SunDir.w);
-    r1.xyz = r2.w * (r0 - r2) + r2;
+    r1.w = pow(abs(r2.x), VarAmounts.x);
+    r2.xyz = (r0.w * r1) + DeepColor;			// partial precision
+    r3.w = saturate(SunDir.w);
+    r1.xyz = lerp(r0, r2, r2.w);
     r0.w = FogParam.x - r4.w;
     r0.xyz = r1.w * SunColor;
     r1.w = 1.0 / FogParam.y;
     r1.xyz = (r3.w * r0) + r1;
-    r0.w = sat(r0.w * r1.w);
+    r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor - r1;
     r1.w = const_0.x - r0.w;
-    r0.w = (VarAmounts.z >= r2.w ? VarAmounts.z : r2.w);
-    r0.xyz = (r1.w * r0) - r1;
-    rendertarget_0 = r0;
+    r0.w = max(VarAmounts.z, r2.w);
+    r0.xyz = (r1.w * r0) + r1;
+    OUT.color_0 = r0;
 
 // approximately 44 instruction slots used (1 texture, 43 arithmetic)

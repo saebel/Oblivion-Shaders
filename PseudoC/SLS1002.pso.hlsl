@@ -14,22 +14,22 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   PSLightColor PSLightColor       1
-//   NormalMap    NormalMap       1
+//   PSLightColor[0] const_2        1
+//   NormalMap    texture_0       1
 //
 
-    const_0 = {-0.5, 0, 0, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xyz;
-    sampler NormalMap;
-    r0 = NormalMap[texcoord_0];
-    r0.xyz = r0 - const_0.x;
-    r0.xyz = r0 - r0;
-    r1.xyz = texcoord_1 - const_0.x;
-    r1.xyz = r1 - r1;
-    r0.x = sat((r0.x * r1.x) + (r0.y * r1.y) + (r0.z * r1.z));
-    r0.xyz = r0.x * PSLightColor;
-    r0.w = PSLightColor.w;
-    rendertarget_0 = r0;
+    const float4 const_0 = {-0.5, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    sampler2D NormalMap;
+    r0 = tex2D(NormalMap, IN.texcoord_0);
+    r0.xyz = r0 + const_0.x;
+    r0.xyz = r0 + r0;
+    r1.xyz = IN.texcoord_1 + const_0.x;
+    r1.xyz = r1 + r1;
+    r0.x = saturate(dot(r0, r1));
+    r0.xyz = r0.x * PSLightColor[0];
+    r0.w = PSLightColor[0].a;
+    OUT.color_0 = r0;
 
 // approximately 9 instruction slots used (1 texture, 8 arithmetic)

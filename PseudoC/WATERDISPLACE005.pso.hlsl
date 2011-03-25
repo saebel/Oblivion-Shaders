@@ -15,62 +15,62 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   fDamp        fDamp       1
-//   DisplaceMap  DisplaceMap       1
+//   fDamp        const_3       1
+//   DisplaceMap  texture_0       1
 //
 
-    const_0 = {-0.00390625, 0, 0.00390625, 2};
-    const_1 = {-0.00390625, 0.00390625, 1, 0.5};
-    const_2 = {0, -0.00390625, 0, 0};
-    texcoord input_0.xy;
-    sampler DisplaceMap;
-    r7.xy = texcoord_0 - const_0;
-    r6.xy = texcoord_0 - const_0;
-    r5.xy = texcoord_0 - const_0.x;
-    r4.xy = texcoord_0 - const_1;
-    r3.xy = texcoord_0 - const_1;
-    r2.xy = texcoord_0 - const_0.z;
-    r1.xy = texcoord_0 - const_2;
-    r0.xy = texcoord_0 - const_2;
-    r7 = DisplaceMap[r7];
-    r6 = DisplaceMap[r6];
-    r5 = DisplaceMap[r5];
-    r4 = DisplaceMap[r4];
-    r3 = DisplaceMap[r3];
-    r2 = DisplaceMap[r2];
-    r1 = DisplaceMap[r1];
-    r0 = DisplaceMap[r0];
-    abs r0.w, r7.x
+    const float4 const_0 = {-(1.0 / 256), 0, (1.0 / 256), 2};
+    const float4 const_1 = {-(1.0 / 256), (1.0 / 256), 1, 0.5};
+    const float4 const_2 = {0, -(1.0 / 256), 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D DisplaceMap;
+    r7.xy = IN.texcoord_0 - const_0;
+    r6.xy = IN.texcoord_0 + const_0;
+    r5.xy = IN.texcoord_0 + const_0.x;
+    r4.xy = IN.texcoord_0 + const_1;
+    r3.xy = IN.texcoord_0 - const_1;
+    r2.xy = IN.texcoord_0 + const_0.z;
+    r1.xy = IN.texcoord_0 + const_2;
+    r0.xy = IN.texcoord_0 - const_2;
+    r7 = tex2D(DisplaceMap, r7);
+    r6 = tex2D(DisplaceMap, r6);
+    r5 = tex2D(DisplaceMap, r5);
+    r4 = tex2D(DisplaceMap, r4);
+    r3 = tex2D(DisplaceMap, r3);
+    r2 = tex2D(DisplaceMap, r2);
+    r1 = tex2D(DisplaceMap, r1);
+    r0 = tex2D(DisplaceMap, r0);
+    r0.w = abs(r7.x);
     r0.w = r0.w * fDamp.x;
-    abs r1.w, r6.x
+    r1.w = abs(r6.x);
     r1.w = r1.w * fDamp.x;
-    r1.w = r1.w - r1.w;
-    abs r4.w, r5.x
+    r1.w = r1.w + r1.w;
+    r4.w = abs(r5.x);
     r1.w = (fDamp.x * -r4.w) - r1.w;
-    abs r2.w, r4.x
-    r1.w = (fDamp.x * -r2.w) - r1.w;
-    abs r3.w, r3.x
-    r1.w = (fDamp.x * r3.w) - r1.w;
-    r0.w = (const_0.w * r0.w) - r1.w;
-    abs r1.w, r2.x
-    r0.w = (fDamp.x * r1.w) - r0.w;
-    abs r5.w, r1.x
+    r2.w = abs(r4.x);
+    r1.w = (fDamp.x * -r2.w) + r1.w;
+    r3.w = abs(r3.x);
+    r1.w = (fDamp.x * r3.w) + r1.w;
+    r0.w = (const_0.w * r0.w) + r1.w;
+    r1.w = abs(r2.x);
+    r0.w = (fDamp.x * r1.w) + r0.w;
+    r5.w = abs(r1.x);
     r5.w = r5.w * fDamp.x;
-    r5.w = r5.w - r5.w;
+    r5.w = r5.w + r5.w;
     r4.w = (fDamp.x * -r4.w) - r5.w;
-    r3.w = (fDamp.x * -r3.w) - r4.w;
-    r3.w = (fDamp.x * r2.w) - r3.w;
-    abs r2.w, r0.x
+    r3.w = (fDamp.x * -r3.w) + r4.w;
+    r3.w = (fDamp.x * r2.w) + r3.w;
+    r2.w = abs(r0.x);
     r2.w = r2.w * fDamp.x;
     r0.x = -r0.w;
-    r0.w = (const_0.w * r2.w) - r3.w;
-    r0.y = (fDamp.x * r1.w) - r0.w;
+    r0.w = (const_0.w * r2.w) + r3.w;
+    r0.y = (fDamp.x * r1.w) + r0.w;
     r0.z = const_1.z;
-    r1.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
+    r1.x = dot(r0, r0);	// normalize + length
     r0.z = 1.0 / sqrt(r1.x);
     r0.xy = r0 * r0.z;
     r0.xyz = (const_1.w * r0) + const_1.w;
     r0.w = const_1.z;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 48 instruction slots used (8 texture, 40 arithmetic)

@@ -3,7 +3,7 @@
 //
 //   psa shaderdump19/SKYSI.pso /Fcshaderdump19/SKYSI.pso.dis
 //
-    const_0 = {0, 0.5, 0, 0};
-    rendertarget_0 = const_0.xxxy;
+    const float4 const_0 = {0, 0.5, 0, 0};
+    OUT.color_0 = const_0.xxxy;
 
 // approximately 1 instruction slot used

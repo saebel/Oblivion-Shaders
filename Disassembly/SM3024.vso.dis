@@ -14,13 +14,8 @@
 //
 //   Name              Reg   Size
 //   ----------------- ----- ----
-//   SkinModelViewProj[0] c1       1
-//   SkinModelViewProj[1] c2       1
-//   SkinModelViewProj[2] c3       1
-//   SkinModelViewProj[3] c4       1
-//   Bones[0]          c31     17
-//   Bones[1]          c32     17
-//   Bones[2]          c33     17
+//   SkinModelViewProj c1       4
+//   Bones             c31     54
 //
 
     vs_3_0

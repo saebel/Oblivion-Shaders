@@ -17,35 +17,35 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   PSLightColor  PSLightColor       1
-//   NormalMap     NormalMap       1
-//   AttMapXY      AttMapXY       1
-//   AttMapZ       AttMapZ       1
-//   NormalCubeMap NormalCubeMap       1
+//   PSLightColor[0]  const_2        1
+//   NormalMap     texture_0       1
+//   AttMapXY      texture_1       1
+//   AttMapZ       texture_2       1
+//   NormalCubeMap texture_3       1
 //
 
-    const_0 = {-0.5, 0, 0, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    texcoord input_2.xy;
-    texcoord input_3.xyz;
-    sampler NormalMap;
-    sampler AttMapXY;
-    sampler AttMapZ;
-    dcl_cube NormalCubeMap
-    r3 = NormalMap[texcoord_0];
-    r2 = NormalCubeMap[texcoord_3];
-    r0 = AttMapXY[texcoord_1];
-    r1 = AttMapZ[texcoord_2];
-    r3.xyz = r3 - const_0.x;
-    r3.xyz = r3 - r3;
-    r2.xyz = r2 - const_0.x;
-    r2.xyz = r2 - r2;
-    r2.x = sat((r3.x * r2.x) + (r3.y * r2.y) + (r3.z * r2.z));
-    r2.xyz = r2.x * PSLightColor;
+    const float4 const_0 = {-0.5, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float2 texcoord_2 : TEXCOORD2;
+    float3 texcoord_3 : TEXCOORD3;
+    sampler2D NormalMap;
+    sampler2D AttMapXY;
+    sampler2D AttMapZ;
+    samplerCUBE NormalCubeMap;
+    r3 = tex2D(NormalMap, IN.texcoord_0);
+    r2 = texCUBE(NormalCubeMap, IN.texcoord_3);
+    r0 = tex2D(AttMapXY, IN.texcoord_1);
+    r1 = tex2D(AttMapZ, IN.texcoord_2);
+    r3.xyz = r3 + const_0.x;
+    r3.xyz = r3 + r3;
+    r2.xyz = r2 + const_0.x;
+    r2.xyz = r2 + r2;
+    r2.x = saturate(dot(r3, r2));
+    r2.xyz = r2.x * PSLightColor[0];
     r0.xyz = r0 * r1;
     r0.xyz = r2 * r0;
-    r0.w = PSLightColor.w;
-    rendertarget_0 = r0;
+    r0.w = PSLightColor[0].a;
+    OUT.color_0 = r0;
 
 // approximately 14 instruction slots used (4 texture, 10 arithmetic)

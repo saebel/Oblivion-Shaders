@@ -14,26 +14,26 @@
 //
 //   Name              Reg   Size
 //   ----------------- ----- ----
-//   PSRefractionPower PSRefractionPower      1
-//   NormalMap         NormalMap       1
+//   PSRefractionPower const_25      1
+//   NormalMap         texture_0       1
 //
 
-    const_0 = {-0.5, 0.100000001, -0.100000001, 0.899999976};
-    const_1 = {1, 0, 0, 0};
-    texcoord input_0.xyz;			// partial precision
-    texcoord input_1.xy;			// partial precision
-    sampler NormalMap;
-    r0 = NormalMap[texcoord_0];
-    r0.xy = r0 - const_0.x;
-    r0.xy = r0 - r0;			// partial precision
-    r1.xy = (r0 < const_0.y ? r0 : const_0.y);			// partial precision
-    r0.xy = (const_0.z >= r1 ? const_0.z : r1);			// partial precision
-    r0.xy = (const_0.w * r0) + texcoord_1;			// partial precision
-    r0.w = 1.0 / texcoord_0.z;			// partial precision
+    const float4 const_0 = {-0.5, 0.1, -0.1, 1.0 - 0.1};
+    const int4 const_1 = {1, 0, 0, 0};
+    float3 texcoord_0 : TEXCOORD0;			// partial precision
+    float2 texcoord_1 : TEXCOORD1;			// partial precision
+    sampler2D NormalMap;
+    r0 = tex2D(NormalMap, IN.texcoord_0);
+    r0.xy = r0 + const_0.x;
+    r0.xy = r0 + r0;			// partial precision
+    r1.xy = min(r0, const_0.y);			// partial precision
+    r0.xy = max(const_0.z, r1);			// partial precision
+    r0.xy = (const_0.w * r0) + IN.texcoord_1;			// partial precision
+    r0.w = 1.0 / IN.texcoord_0.z;			// partial precision
     r0.xy = r0 * r0.w;			// partial precision
-    r0.xy = (-const_0.x * r0) + -const_0.x;			// partial precision
+    r0.xy = (-const_0.x * r0) - const_0.x;			// partial precision
     r0.z = PSRefractionPower.x;			// partial precision
     r0.w = const_1.x;
-    rendertarget_0 = r0;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 12 instruction slots used (1 texture, 11 arithmetic)

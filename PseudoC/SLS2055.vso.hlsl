@@ -16,56 +16,56 @@
 //
 //   Name                   Reg   Size
 //   ---------------------- ----- ----
-//   SkinModelViewProj[0]   SkinModelViewProj[0]       1
-//   SkinModelViewProj[1]   SkinModelViewProj[1]       1
-//   SkinModelViewProj[2]   SkinModelViewProj[2]       1
-//   SkinModelViewProj[3]   SkinModelViewProj[3]       1
-//   SkinWorldViewTranspose[0] SkinWorldViewTranspose[0]       1
-//   SkinWorldViewTranspose[1] SkinWorldViewTranspose[1]       1
-//   SkinWorldViewTranspose[2] SkinWorldViewTranspose[2]       1
-//   LightPosition          LightPosition      1
-//   Bones[0]                  Bones[0]     17
-//   Bones[1]                  Bones[1]     17
-//   Bones[2]                  Bones[2]     17
+//   SkinModelViewProj[0]      const_1        1
+//   SkinModelViewProj[1]      const_2        1
+//   SkinModelViewProj[2]      const_3        1
+//   SkinModelViewProj[3]      const_4        1
+//   SkinWorldViewTranspose[0] const_5        1
+//   SkinWorldViewTranspose[1] const_6        1
+//   SkinWorldViewTranspose[2] const_7        1
+//   LightPosition[0]          const_16       1
+//   Bones[0]                  const_42      18
+//   Bones[1]                  const_43      18
+//   Bones[2]                  const_44      18
 //
 
-    const_0 = {1, 765.01001, 0, 0};
-    position input_0;
-    texcoord input_1;
-    dcl_blendweight input_2
-    dcl_blendindices input_3
-    r0 = input_3.zyxw * const_0.y;
+    const float4 const_0 = {1, 765.01001, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float3 IN.blendweight : BLENDWEIGHT;
+    float4 IN.blendindices : BLENDINDICES;
+    r0 = IN.blendindices.zyxw * const_0.y;
     r0 = r0 - floor(r0);
-    r1.x = (input_2.x * const_0.x.x) + (input_2.y * const_0.x.y) + (input_2.z * const_0.x.z);
-    r0 = (input_3.zyxw * const_0.y) - r0;
-    mova a0, r0
-    r0 = (input_0.xyzx * const_0.xxxz) - const_0.zzzx;
+    r1.x = dot(IN.blendweight, const_0.x);
+    r0 = (IN.blendindices.zyxw * const_0.y) - r0;
+    offset = r0;
+    r0 = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.w = const_0.x - r1.x;
-    r1.x = (Bones[0][a0.y].x * r0.x) + (Bones[0][a0.y].y * r0.y) + (Bones[0][a0.y].z * r0.z) + (Bones[0][a0.y].w * r0.w);
-    r1.y = (Bones[1][a0.y].x * r0.x) + (Bones[1][a0.y].y * r0.y) + (Bones[1][a0.y].z * r0.z) + (Bones[1][a0.y].w * r0.w);
-    r1.z = (Bones[2][a0.y].x * r0.x) + (Bones[2][a0.y].y * r0.y) + (Bones[2][a0.y].z * r0.z) + (Bones[2][a0.y].w * r0.w);
-    r2.xyz = r1 * input_2.y;
-    r1.x = (Bones[0][a0.x].x * r0.x) + (Bones[0][a0.x].y * r0.y) + (Bones[0][a0.x].z * r0.z) + (Bones[0][a0.x].w * r0.w);
-    r1.y = (Bones[1][a0.x].x * r0.x) + (Bones[1][a0.x].y * r0.y) + (Bones[1][a0.x].z * r0.z) + (Bones[1][a0.x].w * r0.w);
-    r1.z = (Bones[2][a0.x].x * r0.x) + (Bones[2][a0.x].y * r0.y) + (Bones[2][a0.x].z * r0.z) + (Bones[2][a0.x].w * r0.w);
-    r2.xyz = (input_2.x * r1) + r2;
-    r1.x = (Bones[0][a0.z].x * r0.x) + (Bones[0][a0.z].y * r0.y) + (Bones[0][a0.z].z * r0.z) + (Bones[0][a0.z].w * r0.w);
-    r1.y = (Bones[1][a0.z].x * r0.x) + (Bones[1][a0.z].y * r0.y) + (Bones[1][a0.z].z * r0.z) + (Bones[1][a0.z].w * r0.w);
-    r1.z = (Bones[2][a0.z].x * r0.x) + (Bones[2][a0.z].y * r0.y) + (Bones[2][a0.z].z * r0.z) + (Bones[2][a0.z].w * r0.w);
-    r2.xyz = (input_2.z * r1) + r2;
-    r1.x = (Bones[0][a0.w].x * r0.x) + (Bones[0][a0.w].y * r0.y) + (Bones[0][a0.w].z * r0.z) + (Bones[0][a0.w].w * r0.w);
-    r1.y = (Bones[1][a0.w].x * r0.x) + (Bones[1][a0.w].y * r0.y) + (Bones[1][a0.w].z * r0.z) + (Bones[1][a0.w].w * r0.w);
-    r1.z = (Bones[2][a0.w].x * r0.x) + (Bones[2][a0.w].y * r0.y) + (Bones[2][a0.w].z * r0.z) + (Bones[2][a0.w].w * r0.w);
+    r1.x = dot(Bones[0 + offset.y], r0);
+    r1.y = dot(Bones[1 + offset.y], r0);
+    r1.z = dot(Bones[2 + offset.y], r0);
+    r2.xyz = r1 * IN.blendweight.y;
+    r1.x = dot(Bones[0 + offset.x], r0);
+    r1.y = dot(Bones[1 + offset.x], r0);
+    r1.z = dot(Bones[2 + offset.x], r0);
+    r2.xyz = (IN.blendweight.x * r1) + r2;
+    r1.x = dot(Bones[0 + offset.z], r0);
+    r1.y = dot(Bones[1 + offset.z], r0);
+    r1.z = dot(Bones[2 + offset.z], r0);
+    r2.xyz = (IN.blendweight.z * r1) + r2;
+    r1.x = dot(Bones[0 + offset.w], r0);
+    r1.y = dot(Bones[1 + offset.w], r0);
+    r1.z = dot(Bones[2 + offset.w], r0);
     r0.xyz = (r1.w * r1) + r2;
     r0.w = const_0.x;
-    position.x = (SkinModelViewProj[0].x * r0.x) + (SkinModelViewProj[0].y * r0.y) + (SkinModelViewProj[0].z * r0.z) + (SkinModelViewProj[0].w * r0.w);
-    position.y = (SkinModelViewProj[1].x * r0.x) + (SkinModelViewProj[1].y * r0.y) + (SkinModelViewProj[1].z * r0.z) + (SkinModelViewProj[1].w * r0.w);
-    position.z = (SkinModelViewProj[2].x * r0.x) + (SkinModelViewProj[2].y * r0.y) + (SkinModelViewProj[2].z * r0.z) + (SkinModelViewProj[2].w * r0.w);
-    position.w = (SkinModelViewProj[3].x * r0.x) + (SkinModelViewProj[3].y * r0.y) + (SkinModelViewProj[3].z * r0.z) + (SkinModelViewProj[3].w * r0.w);
-    texcoord_1.x = (SkinWorldViewTranspose[0].x * r0.x) + (SkinWorldViewTranspose[0].y * r0.y) + (SkinWorldViewTranspose[0].z * r0.z) + (SkinWorldViewTranspose[0].w * r0.w);
-    texcoord_1.y = (SkinWorldViewTranspose[1].x * r0.x) + (SkinWorldViewTranspose[1].y * r0.y) + (SkinWorldViewTranspose[1].z * r0.z) + (SkinWorldViewTranspose[1].w * r0.w);
-    texcoord_1.z = (SkinWorldViewTranspose[2].x * r0.x) + (SkinWorldViewTranspose[2].y * r0.y) + (SkinWorldViewTranspose[2].z * r0.z) + (SkinWorldViewTranspose[2].w * r0.w);
-    texcoord_0.xy = input_1;
-    texcoord_1.w = LightPosition.w;
+    OUT.position.x = dot(SkinModelViewProj[0], r0);
+    OUT.position.y = dot(SkinModelViewProj[1], r0);
+    OUT.position.z = dot(SkinModelViewProj[2], r0);
+    OUT.position.w = dot(SkinModelViewProj[3], r0);
+    OUT.texcoord_1.x = dot(SkinWorldViewTranspose[0], r0);
+    OUT.texcoord_1.y = dot(SkinWorldViewTranspose[1], r0);
+    OUT.texcoord_1.z = dot(SkinWorldViewTranspose[2], r0);
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.w = LightPosition[0].w;
 
 // approximately 33 instruction slots used

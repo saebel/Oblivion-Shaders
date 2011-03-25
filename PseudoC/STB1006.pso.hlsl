@@ -13,12 +13,11 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   DiffuseMap   DiffuseMap       1
+//   DiffuseMap   texture_0       1
 //
 
-    ps_1_3
-    tex texcoord_0
-    r0.xyz = texcoord_0 * input_0;
-  + r0.w = texcoord_0.w;
+    IN.texcoord_0 = tex2D(DiffuseMap, texcoord_0);
+    r0.xyz = IN.texcoord_0 * IN.input_0;
+  + r0.w = IN.texcoord_0.w;
 
 // approximately 2 instruction slots used (1 texture, 1 arithmetic)

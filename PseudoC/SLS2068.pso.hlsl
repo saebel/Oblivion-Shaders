@@ -17,36 +17,36 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   AmbientColor AmbientColor       1
-//   PSLightColor PSLightColor       1
-//   BaseMap      BaseMap       1
-//   NormalMap    NormalMap       1
-//   ShadowMap    ShadowMap       1
+//   AmbientColor const_1       1
+//   PSLightColor[0] const_2        1
+//   BaseMap      texture_0       1
+//   NormalMap    texture_1       1
+//   ShadowMap    texture_2       1
 //
 
-    const_0 = {-0.5, 20, 0.5, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xy;			// partial precision
-    texcoord input_2;			// partial precision			// centroid
-    texcoord input_3.xyz;			// partial precision			// centroid
-    sampler BaseMap;
-    sampler NormalMap;
-    sampler ShadowMap;
-    r1 = NormalMap[texcoord_1];
-    r0 = BaseMap[texcoord_0];			// partial precision
-    r1.xyz = r1 - const_0.x;
-    r2.xyz = r1 - r1;			// partial precision
-    r1.xyz = norm(r2);			// partial precision
-    r2.x = sat((r1.x * texcoord_3.x) + (r1.y * texcoord_3.y) + (r1.z * texcoord_3.z));			// partial precision
-    r1.xyz = PSLightColor;
-    r1.xyz = (r2.x * r1) - AmbientColor;			// partial precision
-    r0.xyz = r0 * texcoord_2;			// partial precision
+    const float4 const_0 = {-0.5, 20, 0.5, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;			// partial precision
+    float4 texcoord_2 : TEXCOORD2_centroid;			// partial precision
+    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
+    sampler2D BaseMap;
+    sampler2D NormalMap;
+    sampler2D ShadowMap;
+    r1 = tex2D(NormalMap, IN.texcoord_1);
+    r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
+    r1.xyz = r1 + const_0.x;
+    r2.xyz = r1 + r1;			// partial precision
+    r1.xyz = normalize(r2);			// partial precision
+    r2.x = saturate(dot(r1, IN.texcoord_3));			// partial precision
+    r1.xyz = PSLightColor[0];
+    r1.xyz = (r2.x * r1) + AmbientColor;			// partial precision
+    r0.xyz = r0 * IN.texcoord_2;			// partial precision
     r1.xyz = r1 * r0;			// partial precision
-    r0.xy = texcoord_0 * const_0.y;
-    r0 = ShadowMap[r0];
-    r0.w = (r0.x * const_0.z) - const_0.z;
+    r0.xy = IN.texcoord_0 * const_0.y;
+    r0 = tex2D(ShadowMap, r0);
+    r0.w = (r0.x * const_0.z) + const_0.z;
     r0.xyz = r1 * r0.w;			// partial precision
-    r0.w = texcoord_2.w;			// partial precision
-    rendertarget_0 = r0;			// partial precision
+    r0.w = IN.texcoord_2.w;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 18 instruction slots used (3 texture, 15 arithmetic)

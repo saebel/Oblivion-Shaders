@@ -19,43 +19,44 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   ModelViewProj[0]   ModelViewProj[0]       1
-//   ModelViewProj[1]   ModelViewProj[1]       1
-//   ModelViewProj[2]   ModelViewProj[2]       1
-//   ModelViewProj[3]   ModelViewProj[3]       1
-//   ObjToCubeSpace  const_8       2
-//   HighDetailRange HighDetailRange      1
-//   LightDirection  LightDirection      1
-//   FogParam        FogParam      1
-//   FogColor        FogColor      1
-//   LODLandFlags    LODLandFlags      1
+//   ModelViewProj[0]   const_0        1
+//   ModelViewProj[1]   const_1        1
+//   ModelViewProj[2]   const_2        1
+//   ModelViewProj[3]   const_3        1
+//   ObjToCubeSpace[0]  const_8        1
+//   ObjToCubeSpace[1]  const_9        1
+//   HighDetailRange const_12      1
+//   LightDirection[0]  const_13       1
+//   FogParam        const_23      1
+//   FogColor        const_24      1
+//   LODLandFlags    const_47      1
 //
 
-    const_4 = {-1, -2048, 0.600000024, 0};
-    position input_0;
-    texcoord input_1;
-    r0.w = (const_8.x * input_0.x) + (const_8.y * input_0.y) + (const_8.z * input_0.z) + (const_8.w * input_0.w);
+    const float4 const_4 = {-1, -2048, 0.6, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    r0.w = dot(ObjToCubeSpace[0], IN.position);
     r0.w = r0.w - HighDetailRange.x;
-    abs r2.w, r0.w
-    r0.w = (const_9.x * input_0.x) + (const_9.y * input_0.y) + (const_9.z * input_0.z) + (const_9.w * input_0.w);
+    r2.w = abs(r0.w);
+    r0.w = dot(ObjToCubeSpace[1], IN.position);
     r4.w = (r2.w < HighDetailRange.z ? 1.0 : 0.0);
     r0.w = r0.w - HighDetailRange.y;
-    abs r3.w, r0.w
+    r3.w = abs(r0.w);
     r1.xzw = const_4;
-    r0.w = r1.x - LODLandFlags.y;
+    r0.w = r1.x + LODLandFlags.y;
     r5.w = (r3.w < HighDetailRange.w ? 1.0 : 0.0);
     r0.w = r0.w * r0.w;
     r4.w = r4.w * r5.w;
     r0.w = (-r0.w >= r0.w ? 1.0 : 0.0);
     r0.w = r4.w * r0.w;
-    r0.z = (r0.w * const_4.y) - input_0.z;
-    r0.xyw = input_0;
+    r0.z = (r0.w * const_4.y) + IN.position.z;
+    r0.xyw = IN.position;
     r2.xy = r1.z * HighDetailRange.zwzw;
-    r1.x = (ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w);
-    r1.y = (ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w);
-    r1.z = (ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w);
+    r1.x = dot(ModelViewProj[0], r0);
+    r1.y = dot(ModelViewProj[1], r0);
+    r1.z = dot(ModelViewProj[2], r0);
     r2.w = (r2.w < r2.x ? 1.0 : 0.0);
-    r2.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
+    r2.x = dot(r1, r1);	// normalize + length
     r4.w = (r3.w < r2.y ? 1.0 : 0.0);
     r3.w = 1.0 / sqrt(r2.x);
     r2.w = r2.w * r4.w;
@@ -64,15 +65,15 @@
     r5.w = 1.0 / FogParam.y;
     r3.w = (r1.w < LODLandFlags.x ? 1.0 : 0.0);
     r1.w = r4.w * r5.w;
-    texcoord_7.x = r2.w * r3.w;
-    r1.w = (r1.w >= const_4.w ? r1.w : const_4.w);
-    position.w = (ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w);
-    r0.w = (r1.w < -const_4.x ? r1.w : -const_4.x);
-    position.xyz = r1;
-    add color_1.w, -r0.w, -const_4.x
-    texcoord_0.xy = input_1;
-    texcoord_1.xyz = LightDirection;
-    texcoord_7.y = const_4.w;
-    color_1.xyz = FogColor;
+    OUT.texcoord_7.x = r2.w * r3.w;
+    r1.w = max(r1.w, const_4.w);
+    OUT.position.w = dot(ModelViewProj[3], r0);
+    r0.w = min(r1.w, -const_4.x);
+    OUT.position.xyz = r1;
+    OUT.color_1.a = -(r0.w + const_4.x);
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.xyz = LightDirection[0];
+    OUT.texcoord_7.y = const_4.w;
+    OUT.color_1.rgb = FogColor;
 
 // approximately 40 instruction slots used

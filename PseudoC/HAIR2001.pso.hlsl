@@ -20,82 +20,82 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   AmbientColor AmbientColor       1
-//   PSLightColor PSLightColor       1
-//   PSHairTint   PSHairTint      1
-//   DiffuseMap   DiffuseMap       1
-//   NormalMap    NormalMap       1
-//   HeightMap    HeightMap       1
-//   AnisoMap     AnisoMap       1
-//   LayerMap     LayerMap       1
+//   AmbientColor const_1       1
+//   PSLightColor[0] const_2        1
+//   PSHairTint   const_24      1
+//   DiffuseMap   texture_0       1
+//   NormalMap    texture_1       1
+//   HeightMap    texture_2       1
+//   AnisoMap     texture_3       1
+//   LayerMap     texture_5       1
 //
 
-    const_0 = {0.0399999991, -0.0199999996, -0.5, 0};
-    const_3 = {1, 0.5, 0.150000006, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xyz;
-    texcoord input_2.xyz;
-    texcoord input_3.xyz;
-    color input_0;
-    color input_1.xy;
-    sampler DiffuseMap;
-    sampler NormalMap;
-    sampler HeightMap;
-    sampler AnisoMap;
-    sampler LayerMap;
-    r0 = HeightMap[texcoord_0];
-    r0.w = (r0.x * const_0.x) - const_0.y;
-    r0.xy = texcoord_0;
-    r1.xy = (r0.w * texcoord_1) + r0;
-    r0 = NormalMap[r1];
-    r0.xyz = r0 - const_0.z;
-    r0.xyz = r0 - r0;
-    r4.xyz = norm(r0);
-    r5.x = (r4.x * texcoord_2.x) + (r4.y * texcoord_2.y) + (r4.z * texcoord_2.z);
-    r5.y = (r4.x * texcoord_3.x) + (r4.y * texcoord_3.y) + (r4.z * texcoord_3.z);
-    r1 = LayerMap[r1];
-    r0 = DiffuseMap[texcoord_0];
-    r2 = AnisoMap[r5];
-    r3 = NormalMap[texcoord_0];
-    r6.w = (r5.x >= const_0.w ? r5.x : const_0.w);
-    r2.x = (r4.x * texcoord_1.x) + (r4.y * texcoord_1.y) + (r4.z * texcoord_1.z);
-    r4.w = (r2.x >= const_0.w ? r2.x : const_0.w);
+    const float4 const_0 = {0.04, -0.02, -0.5, 0};
+    const float4 const_3 = {1, 0.5, 0.15, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    float3 texcoord_2 : TEXCOORD2;
+    float3 texcoord_3 : TEXCOORD3;
+    float4 IN.color_0 : COLOR0;
+    float2 IN.color_1 : COLOR1;
+    sampler2D DiffuseMap;
+    sampler2D NormalMap;
+    sampler2D HeightMap;
+    sampler2D AnisoMap;
+    sampler2D LayerMap;
+    r0 = tex2D(HeightMap, IN.texcoord_0);
+    r0.w = (r0.x * const_0.x) + const_0.y;
+    r0.xy = IN.texcoord_0;
+    r1.xy = (IN.texcoord_1 * r0.w) + r0;
+    r0 = tex2D(NormalMap, r1);
+    r0.xyz = r0 + const_0.z;
+    r0.xyz = r0 + r0;
+    r4.xyz = normalize(r0);
+    r5.x = dot(r4, IN.texcoord_2);
+    r5.y = dot(r4, IN.texcoord_3);
+    r1 = tex2D(LayerMap, r1);
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);
+    r2 = tex2D(AnisoMap, r5);
+    r3 = tex2D(NormalMap, IN.texcoord_0);
+    r6.w = max(r5.x, const_0.w);
+    r2.x = dot(r4, IN.texcoord_1);
+    r4.w = max(r2.x, const_0.w);
     r4.w = const_3.x - r4.w;
     r5.w = r4.w * r4.w;
-    r6.w = sat((r4.w * r5.w) - r6.w);
-    r2.xyz = sat((r6.w * PSLightColor) - input_0);
-    r2.xyz = sat((r4.w * r5.w) - r2);
-    r2.xyz = r2 * PSLightColor;
-    r2.xyz = (input_0.w * r2) + AmbientColor;
-    r2.xyz = r2 - input_0;
+    r6.w = saturate((r4.w * r5.w) + r6.w);
+    r2.xyz = saturate((r6.w * PSLightColor[0]) + IN.color_0);
+    r2.xyz = saturate((r4.w * r5.w) + r2);
+    r2.xyz = r2 * PSLightColor[0];
+    r2.xyz = (IN.color_0.a * r2) + AmbientColor;
+    r2.xyz = r2 + IN.color_0;
     r3.y = const_0.z;
-    r3.xyz = r3.y - PSHairTint;
-    r3.xyz = (input_1.y * r3) - const_0.z;
-    r4.xyz = r3 - r3;
+    r3.xyz = r3.y + PSHairTint;
+    r3.xyz = (IN.color_1.g * r3) - const_0.z;
+    r4.xyz = r3 + r3;
     r5.xyz = (const_3.y * r3) + const_3.z;
     r1.xyz = r1 * r4;
     r4.w = r4.w * r5.w;
     r2.xyz = r2 * r1;
-    r1.xyz = r4.w * PSLightColor;
-    r4.w = (texcoord_2.z >= const_0.w ? texcoord_2.z : const_0.w);
-    r3.xyz = r4.w * PSLightColor;
-    r3.xyz = (input_0.w * r3) + input_0;
-    r3.xyz = (input_0.w * r1) + r3;
-    r1.xyz = r3.w * PSLightColor;
-    r3.w = r2.w * input_0.w;
+    r1.xyz = r4.w * PSLightColor[0];
+    r4.w = max(IN.texcoord_2.z, const_0.w);
+    r3.xyz = r4.w * PSLightColor[0];
+    r3.xyz = (IN.color_0.a * r3) + IN.color_0;
+    r3.xyz = (IN.color_0.a * r1) + r3;
+    r1.xyz = r3.w * PSLightColor[0];
+    r3.w = r2.w * IN.color_0.a;
     r1.xyz = r5 * r1;
-    r3.xyz = r3 - AmbientColor;
+    r3.xyz = r3 + AmbientColor;
     r4.w = (r1.x <= 0.0 ? const_3.x : const_3.w);
     r0.xyz = r0 * r4;
     r5.w = (r1.y <= 0.0 ? const_3.x : const_3.w);
     r3.xyz = r3 * r0;
     r2.w = (r1.z <= 0.0 ? const_3.x : const_3.w);
-    r0.xyz = r1.w * (r2 - r3) + r3;
+    r0.xyz = lerp(r2, r3, r1.w);
     r1.w = r4.w * r5.w;
     r1.xyz = (r3.w * r1) + r0;
     r1.w = r2.w * r1.w;
-    r0.w = r0.w * AmbientColor.w;
+    r0.w = r0.w * AmbientColor.a;
     r0.xyz = (r1.w <= 0.0 ? r1 : r0);
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 57 instruction slots used (6 texture, 51 arithmetic)

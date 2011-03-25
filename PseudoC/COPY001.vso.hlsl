@@ -14,21 +14,21 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   texRatio0      texRatio0       1
-//   RotationMatrix[0] RotationMatrix[0]       1
-//   RotationMatrix[1] RotationMatrix[1]       1
+//   texRatio0      const_6       1
+//   RotationMatrix[0] const_8        1
+//   RotationMatrix[1] const_9        1
 //
 
-    const_0 = {-0.5, 0.5, 0, 0};
-    position input_0;
-    texcoord input_1;
-    position output_0;
-    texcoord output_1.xy;
-    r0.xy = (texRatio0 * input_1) + texRatio0.zwzw;
-    r0.xy = r0 - const_0.x;
+    const float4 const_0 = {-0.5, 0.5, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 OUT.position : POSITION;
+    float2 OUT.texcoord_0 : TEXCOORD0;
+    r0.xy = (IN.texcoord_0 * texRatio0) + texRatio0.zwzw;
+    r0.xy = r0 + const_0.x;
     r1.xy = r0.y * RotationMatrix[1];
-    r0.xy = (r0.x * RotationMatrix[0]) - r1;
-    output_1.xy = r0 - const_0.y;
-    output_0 = input_0;
+    r0.xy = (r0.x * RotationMatrix[0]) + r1;
+    OUT.texcoord_0.xy = r0 + const_0.y;
+    OUT.position = IN.position;
 
 // approximately 6 instruction slots used

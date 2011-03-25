@@ -15,41 +15,41 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   Time          Time       1
-//   amplitudeSamp amplitudeSamp       1
-//   freqSamp      freqSamp       1
+//   Time          const_0       1
+//   amplitudeSamp texture_0       1
+//   freqSamp      texture_1       1
 //
 
-    const_1 = {0.159154937, 0.5, 6.28318548, -3.14159274};
-    const_2 = {0, 1, 0, 0};
-    def const_3, -1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-    const_4 = {-0.020833334, -0.125, 1, 0.5};
-    texcoord input_0.xy;
-    sampler amplitudeSamp;
-    sampler freqSamp;
-    r1 = freqSamp[texcoord_0];
-    r0 = amplitudeSamp[texcoord_0];
+    const float4 const_1 = {(1.0 / (PI * 2)), 0.5, PI * 2, -PI};
+    const int4 const_2 = {0, 1, 0, 0};
+    const float4 const_3 = {D3DSINCOSCONST1};
+    const float4 const_4 = {D3DSINCOSCONST2};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D amplitudeSamp;
+    sampler2D freqSamp;
+    r1 = tex2D(freqSamp, IN.texcoord_0);
+    r0 = tex2D(amplitudeSamp, IN.texcoord_0);
     r2.w = r1.x * Time.x;
     r1.w = -r1.x * Time.x;
-    r2.w = (r2.w * const_1.x) - const_1.y;
+    r2.w = (r2.w * const_1.x) + const_1.y;
     r2.w = r2.w - floor(r2.w);
-    r3.w = (r2.w * const_1.z) - const_1.w;
-    sincos r2.xy, r3.w, const_3, const_4
+    r3.w = (r2.w * const_1.z) + const_1.w;
+    r2.x = cos(r3.w); r2.y = sin(r3.w);
     r3.w = r0.y * r2.y;
     r2.w = r0.y * r2.x;
-    r1.w = (r1.w * const_1.x) - const_1.y;
+    r1.w = (r1.w * const_1.x) + const_1.y;
     r1.w = r1.w - floor(r1.w);
     r2.x = (r0.x * r2.x) - r3.w;
-    r3.w = (r1.w * const_1.z) - const_1.w;
-    sincos r1.xy, r3.w, const_3, const_4
-    r2.y = (r0.x * r2.y) - r2.w;
+    r3.w = (r1.w * const_1.z) + const_1.w;
+    r1.x = cos(r3.w); r1.y = sin(r3.w);
+    r2.y = (r0.x * r2.y) + r2.w;
     r1.w = r0.w * r1.y;
-    r0.x = (r0.z * r1.x) - r1.w;
+    r0.x = (r0.z * r1.x) + r1.w;
     r0.w = r0.w * r1.x;
     r0.y = (r0.z * r1.y) - r0.w;
-    r0.xy = r2 - r0;
+    r0.xy = r2 + r0;
     r0.z = const_2.x;
     r0.w = const_2.y;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 38 instruction slots used (2 texture, 36 arithmetic)

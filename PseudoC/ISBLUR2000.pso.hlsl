@@ -14,21 +14,21 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   alphaAdd     alphaAdd       1
-//   Src0         Src0       1
+//   alphaAdd     const_2       1
+//   Src0         texture_0       1
 //
 
-    const_0 = {0.600000024, 0.730000019, 0.800000012, 1};
-    texcoord input_0.xy;
-    sampler Src0;
-    r0 = Src0[texcoord_0];
-    r1.x = sat((const_0.x * r0.x) + (const_0.y * r0.y) + (const_0.z * r0.z));
+    const float4 const_0 = {0.6, 0.73, 0.8, 1};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
+    r0 = tex2D(Src0, IN.texcoord_0);
+    r1.x = saturate(dot(const_0, r0));
     r1.w = r1.x * alphaAdd.y;
     r0.w = r0.w * alphaAdd.z;
-    r0.w = (r1.w * r1.w) - r0.w;
-    r0.w = r0.w - alphaAdd.x;
+    r0.w = (r1.w * r1.w) + r0.w;
+    r0.w = r0.w + alphaAdd.x;
     r0.xyz = r0 * r0.w;
     r0.w = const_0.w;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 9 instruction slots used (1 texture, 8 arithmetic)

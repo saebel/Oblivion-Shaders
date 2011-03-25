@@ -14,28 +14,28 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Src0         Src0       1
-//   Src1         Src1       1
+//   Src0         texture_0       1
+//   Src1         texture_1       1
 //
 
-    const_0 = {-0.5, 2, 0, 1};
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    sampler Src0;
-    sampler Src1;
-    r0 = Src1[texcoord_1];
-    r0.w = r0.x - const_0.x;
+    const float4 const_0 = {-0.5, 2, 0, 1};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    sampler2D Src0;
+    sampler2D Src1;
+    r0 = tex2D(Src1, IN.texcoord_1);
+    r0.w = r0.x + const_0.x;
     r1.w = r0.z * r0.w;
-    r0.w = r0.y - const_0.x;
-    r1.x = (const_0.y * -r1.w) - texcoord_0.x;
+    r0.w = r0.y + const_0.x;
+    r1.x = (const_0.y * -r1.w) + IN.texcoord_0.x;
     r0.w = r0.z * r0.w;
-    r1.y = (const_0.y * r0.w) - texcoord_0.y;
-    r0 = Src1[r1];
-    r1 = Src0[r1];
-    r2 = Src0[texcoord_0];
+    r1.y = (const_0.y * r0.w) + IN.texcoord_0.y;
+    r0 = tex2D(Src1, r1);
+    r1 = tex2D(Src0, r1);
+    r2 = tex2D(Src0, IN.texcoord_0);
     r0.w = r0.w * r0.w;
     r3.w = (r0.w <= 0.0 ? const_0.w : const_0.z);
-    r0 = r3.w * (r1 - r2) + r2;
-    rendertarget_0 = r0;
+    r0 = lerp(r1, r2, r3.w);
+    OUT.color_0 = r0;
 
 // approximately 15 instruction slots used (4 texture, 11 arithmetic)

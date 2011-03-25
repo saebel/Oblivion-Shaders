@@ -14,18 +14,18 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   sampScramble    sampScramble       1
-//   sampSourceImage sampSourceImage       1
+//   sampScramble    texture_1       1
+//   sampSourceImage texture_2       1
 //
 
-    texcoord input_0.xy;
-    sampler sampScramble;
-    sampler sampSourceImage;
-    r0.xy = texcoord_0.y;
-    r0 = sampScramble[r0];
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D sampScramble;
+    sampler2D sampSourceImage;
+    r0.xy = IN.texcoord_0.y;
+    r0 = tex2D(sampScramble, r0);
     r0.y = r0.x;
-    r0.x = texcoord_0.x;
-    r0 = sampSourceImage[r0];
-    rendertarget_0 = r0;
+    r0.x = IN.texcoord_0.x;
+    r0 = tex2D(sampSourceImage, r0);
+    OUT.color_0 = r0;
 
 // approximately 6 instruction slots used (2 texture, 4 arithmetic)

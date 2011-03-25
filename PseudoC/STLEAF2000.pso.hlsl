@@ -13,14 +13,14 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   DiffuseMap   DiffuseMap       1
+//   DiffuseMap   texture_0       1
 //
 
-    texcoord input_0.xy;			// partial precision
-    texcoord input_1.xyz;			// partial precision
-    sampler DiffuseMap;
-    r0 = DiffuseMap[texcoord_0];			// partial precision
-    r0.xyz = r0 * texcoord_1;			// partial precision
-    rendertarget_0 = r0;			// partial precision
+    float2 texcoord_0 : TEXCOORD0;			// partial precision
+    float3 texcoord_1 : TEXCOORD1;			// partial precision
+    sampler2D DiffuseMap;
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
+    r0.xyz = r0 * IN.texcoord_1;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

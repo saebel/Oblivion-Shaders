@@ -15,33 +15,35 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   PSLightColor const_2       3
-//   BaseMap      BaseMap       1
-//   NormalMap    NormalMap       1
+//   PSLightColor[0] const_2        1
+//   PSLightColor[1] const_3        1
+//   PSLightColor[2] const_4        1
+//   BaseMap      texture_0       1
+//   NormalMap    texture_1       1
 //
 
-    const_0 = {-0.5, 0, 0, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    texcoord input_2.xyz;
-    texcoord input_3.xyz;
-    color input_0;
-    color input_1;
-    sampler BaseMap;
-    sampler NormalMap;
-    r1 = NormalMap[texcoord_1];
-    r0 = BaseMap[texcoord_0];
-    r1.xyz = r1 - const_0.x;
-    r1.xyz = r1 - r1;
-    r2.xyz = texcoord_3 - const_0.x;
-    r2.xyz = r2 - r2;
-    r1.x = sat((r1.x * r2.x) + (r1.y * r2.y) + (r1.z * r2.z));
-    r1.xyz = sat(r1.x * const_2);
-    r0.xyz = r0 * texcoord_2;
-    r0.w = (const_3.x * input_0.x) + (const_3.y * input_0.y) + (const_3.z * input_0.z) + (const_3.w * input_0.w);
-    r1.w = (const_4.x * input_1.x) + (const_4.y * input_1.y) + (const_4.z * input_1.z) + (const_4.w * input_1.w);
+    const float4 const_0 = {-0.5, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float3 texcoord_2 : TEXCOORD2;
+    float3 texcoord_3 : TEXCOORD3;
+    float4 IN.color_0 : COLOR0;
+    float4 IN.color_1 : COLOR1;
+    sampler2D BaseMap;
+    sampler2D NormalMap;
+    r1 = tex2D(NormalMap, IN.texcoord_1);
+    r0 = tex2D(BaseMap, IN.texcoord_0);
+    r1.xyz = r1 + const_0.x;
+    r1.xyz = r1 + r1;
+    r2.xyz = IN.texcoord_3 + const_0.x;
+    r2.xyz = r2 + r2;
+    r1.x = saturate(dot(r1, r2));
+    r1.xyz = saturate(r1.x * PSLightColor[0]);
+    r0.xyz = r0 * IN.texcoord_2;
+    r0.w = dot(PSLightColor[1], IN.color_0);
+    r1.w = dot(PSLightColor[2], IN.color_1);
     r0.xyz = r1 * r0;
-    r0.w = r0.w - r1.w;
-    rendertarget_0 = r0;
+    r0.w = r0.w + r1.w;
+    OUT.color_0 = r0;
 
 // approximately 14 instruction slots used (2 texture, 12 arithmetic)

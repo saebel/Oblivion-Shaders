@@ -19,68 +19,66 @@
 //
 //   Name                Reg   Size
 //   ------------------- ----- ----
-//   ModelViewProj[0]    ModelViewProj[0]       1
-//   ModelViewProj[1]    ModelViewProj[1]       1
-//   ModelViewProj[2]    ModelViewProj[2]       1
-//   ModelViewProj[3]    ModelViewProj[3]       1
-//   LightDirection[0]   LightDirection[0]      1
-//   LightDirection[1]   LightDirection[1]      1
-//   LightDirection[2]   LightDirection[2]      1
-//   LightPosition[0]       LightPosition[0]      1
-//   LightPosition[1]       LightPosition[1]      1
-//   EyePosition         EyePosition      1
-//   ShadowProj[0]       ShadowProj[0]      1
-//   ShadowProj[1]       ShadowProj[1]      1
-//   ShadowProj[2]       ShadowProj[2]      1
-//   ShadowProj[3]       ShadowProj[3]      1
-//   ShadowProjData      ShadowProjData      1
-//   ShadowProjTransform ShadowProjTransform      1
+//   ModelViewProj[0]       const_0        1
+//   ModelViewProj[1]       const_1        1
+//   ModelViewProj[2]       const_2        1
+//   ModelViewProj[3]       const_3        1
+//   LightDirection[0]      const_13       1
+//   LightPosition[0]       const_16       1
+//   LightPosition[1]       const_17       1
+//   EyePosition         const_25      1
+//   ShadowProj[0]          const_28       1
+//   ShadowProj[1]          const_29       1
+//   ShadowProj[2]          const_30       1
+//   ShadowProj[3]          const_31       1
+//   ShadowProjData      const_32      1
+//   ShadowProjTransform const_33      1
 //
 
-    const_4 = {0.5, 1, 0, 0};
-    position input_0;
-    tangent input_1;
-    binormal input_2;
-    normal input_3;
-    texcoord input_4;
-    position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    position.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r1.x = (input_1.x * LightDirection[0].x) + (input_1.y * LightDirection[0].y) + (input_1.z * LightDirection[0].z);
-    r1.y = (input_2.x * LightDirection[0].x) + (input_2.y * LightDirection[0].y) + (input_2.z * LightDirection[0].z);
-    r1.z = (input_3.x * LightDirection[0].x) + (input_3.y * LightDirection[0].y) + (input_3.z * LightDirection[0].z);
-    r0.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
-    r2.xyz = EyePosition - input_0;
+    const float4 const_4 = {0.5, 1, 0, 0};
+    float4 IN.position : POSITION;
+    float3 IN.tangent : TANGENT;
+    float3 IN.binormal : BINORMAL;
+    float3 IN.normal : NORMAL;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r1.x = dot(IN.tangent, LightDirection[0]);
+    r1.y = dot(IN.binormal, LightDirection[0]);
+    r1.z = dot(IN.normal, LightDirection[0]);
+    r0.x = dot(r1, r1);	// normalize + length
+    r2.xyz = EyePosition - IN.position;
     r0.w = 1.0 / sqrt(r0.x);
-    r0.xyz = norm(r2);
-    texcoord_1.xyz = r1 * r0.w;
-    r2.x = (input_1.x * r0.x) + (input_1.y * r0.y) + (input_1.z * r0.z);
-    r2.y = (input_2.x * r0.x) + (input_2.y * r0.y) + (input_2.z * r0.z);
-    r2.z = (input_3.x * r0.x) + (input_3.y * r0.y) + (input_3.z * r0.z);
-    r1.x = (r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z);
-    r0.xyz = LightPosition[1] - input_0;
+    r0.xyz = normalize(r2);
+    OUT.texcoord_1.xyz = r1 * r0.w;
+    r2.x = dot(IN.tangent, r0);
+    r2.y = dot(IN.binormal, r0);
+    r2.z = dot(IN.normal, r0);
+    r1.x = dot(r2, r2);	// normalize + length
+    r0.xyz = LightPosition[1] - IN.position;
     r0.w = 1.0 / sqrt(r1.x);
-    r1.xyz = norm(r0);
-    texcoord_7.xyz = r2 * r0.w;
-    texcoord_2.x = (input_1.x * r1.x) + (input_1.y * r1.y) + (input_1.z * r1.z);
-    texcoord_2.y = (input_2.x * r1.x) + (input_2.y * r1.y) + (input_2.z * r1.z);
-    texcoord_2.z = (input_3.x * r1.x) + (input_3.y * r1.y) + (input_3.z * r1.z);
+    r1.xyz = normalize(r0);
+    OUT.texcoord_7.xyz = r2 * r0.w;
+    OUT.texcoord_2.x = dot(IN.tangent, r1);
+    OUT.texcoord_2.y = dot(IN.binormal, r1);
+    OUT.texcoord_2.z = dot(IN.normal, r1);
     r0.w = 1.0 / LightPosition[1].w;
-    r1.w = (ShadowProj[3].x * input_0.x) + (ShadowProj[3].y * input_0.y) + (ShadowProj[3].z * input_0.z) + (ShadowProj[3].w * input_0.w);
+    r1.w = dot(ShadowProj[3], IN.position);
     r0.xyz = r0 * r0.w;
     r1.y = r1.w * ShadowProjTransform.w;
-    texcoord_4.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_4.xyz = (const_4.x * r0) + const_4.x;
     r0.w = 1.0 / r1.y;
-    r0.x = (ShadowProj[0].x * input_0.x) + (ShadowProj[0].y * input_0.y) + (ShadowProj[0].z * input_0.z) + (ShadowProj[0].w * input_0.w);
-    r0.y = (ShadowProj[1].x * input_0.x) + (ShadowProj[1].y * input_0.y) + (ShadowProj[1].z * input_0.z) + (ShadowProj[1].w * input_0.w);
-    r1.xy = (r1.w * ShadowProjTransform) - r0;
+    r0.x = dot(ShadowProj[0], IN.position);
+    r0.y = dot(ShadowProj[1], IN.position);
+    r1.xy = (r1.w * ShadowProjTransform) + r0;
     r0.xy = r0 - ShadowProjData;
-    texcoord_6.xy = r0.w * r1;
+    OUT.texcoord_6.xy = r0.w * r1;
     r0.w = 1.0 / ShadowProjData.w;
-    texcoord_6.z = r0.x * r0.w;
-    texcoord_6.w = (r0.y * -r0.w) - const_4.y;
-    texcoord_0.xy = input_4;
-    texcoord_4.w = const_4.x;
+    OUT.texcoord_6.z = r0.x * r0.w;
+    OUT.texcoord_6.w = (r0.y * -r0.w) + const_4.y;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_4.w = const_4.x;
 
 // approximately 43 instruction slots used

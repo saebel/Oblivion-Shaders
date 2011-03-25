@@ -13,14 +13,14 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   texRatio0    texRatio0       1
+//   texRatio0    const_6       1
 //
 
-    const_0 = {0.300000012, 0.589999974, 0.109999999, 0};
-    position input_0;
-    texcoord input_1;
-    texcoord_0.xy = (texRatio0 * input_1) + texRatio0.zwzw;
-    position = input_0;
-    texcoord_1.xyz = const_0;
+    const float4 const_0 = {0.3, 0.59, 0.11, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    OUT.texcoord_0.xy = (IN.texcoord_0 * texRatio0) + texRatio0.zwzw;
+    OUT.position = IN.position;
+    OUT.texcoord_1.xyz = const_0;
 
 // approximately 3 instruction slots used

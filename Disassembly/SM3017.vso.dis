@@ -15,18 +15,8 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   ModelViewProj[0]   c0       1
-//   ModelViewProj[1]   c1       1
-//   ModelViewProj[2]   c2       1
-//   ModelViewProj[3]   c3       1
-//   DecalFade[0]       c32      1
-//   DecalFade[1]       c33      1
-//   DecalFade[2]       c34      1
-//   DecalFade[3]       c35      1
-//   DecalFade[4]       c36      1
-//   DecalFade[5]       c37      1
-//   DecalFade[6]       c38      1
-//   DecalFade[7]       c39      1
+//   ModelViewProj   c0       4
+//   DecalFade       c32      8
 //   DecalProjection c40     31
 //
 

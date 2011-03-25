@@ -13,21 +13,21 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
 //
 
-    const_4 = {1, 0, 0, 0};
-    position input_0;
-    texcoord input_1;
-    color input_2;
-    position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    position.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    texcoord_0.xy = input_1;
-    color_0 = (input_2.xyzx * const_4.xxxy) - const_4.yyyx;
+    const int4 const_4 = {1, 0, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.color_0 : COLOR0;
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.color_0 = (IN.color_0.xyzx * const_4.xxxy) + const_4.yyyx;
 
 // approximately 6 instruction slots used

@@ -21,10 +21,7 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] c0       1
-//   ModelViewProj[1] c1       1
-//   ModelViewProj[2] c2       1
-//   ModelViewProj[3] c3       1
+//   ModelViewProj c0       4
 //   DiffuseDir    c4       1
 //   DiffuseColor  c5       1
 //   EyePos        c9       1
@@ -32,8 +29,7 @@
 //   FogParam      c11      1
 //   AlphaParam    c12      1
 //   AmbientColor  c13      1
-//   InstanceData[0]  c20      1
-//   InstanceData[1]  c21      1
+//   InstanceData  c20      2
 //
 
     vs_2_0

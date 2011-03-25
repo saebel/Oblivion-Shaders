@@ -18,24 +18,27 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   WorldViewProj const_0       4
-//   EyePosition   EyePosition       1
-//   Velocity      Velocity       1
-//   MinPos        MinPos      1
-//   MaxPos        MaxPos      1
-//   Params        Params      1
+//   WorldViewProj[0] const_0        1
+//   WorldViewProj[1] const_1        1
+//   WorldViewProj[2] const_2        1
+//   WorldViewProj[3] const_3        1
+//   EyePosition   const_8       1
+//   Velocity      const_9       1
+//   MinPos        const_10      1
+//   MaxPos        const_11      1
+//   Params        const_12      1
 //
 
-    const_4 = {0, -1, 1, 0.5};
-    const_5 = {0.159154937, 0.5, 6.28318548, -3.14159274};
-    position input_0;
-    texcoord input_1;
-    texcoord_1 input_2;
-    position output_0;
-    dcl_color output_1
-    texcoord output_2.xy;
+    const float4 const_4 = {0, -1, 1, 0.5};
+    const float4 const_5 = {(1.0 / (PI * 2)), 0.5, PI * 2, -PI};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.texcoord_1 : TEXCOORD1;
+    float4 OUT.position : POSITION;
+    float4 OUT.color_0 : COLOR0;
+    float2 OUT.texcoord_0 : TEXCOORD0;
     r0.xyz = Velocity;
-    r1.xyz = (Params.x * r0) + input_2;
+    r1.xyz = (Params.x * r0) + IN.texcoord_1;
     r6.xyz = MaxPos;
     r5.xyz = r6 - MinPos;
     r1.xyz = r1 - MinPos;
@@ -45,53 +48,53 @@
     r1.xyz = r1 * r2;
     r3.xyz = abs(r1) - floor(abs(r1));
     r2.xyz = (r1 >= -r1 ? 1.0 : 0.0);
-    r1.xyz = r2 * (r3 - -r3) + -r3;
+    r1.xyz = lerp(r3, -r3, r2);
     r2.xyz = r5 * r1;
-    r1.xyz = abs(r2) - MinPos;
+    r1.xyz = abs(r2) + MinPos;
     r2.xyz = MaxPos - abs(r2);
     r0.xyz = (const_4.x < r0 ? 1.0 : 0.0);
-    r4.xyz = r0 * (r1 - r2) + r2;
+    r4.xyz = lerp(r1, r2, r0);
     r0.xy = r4 - EyePosition;
     r1.xy = r0 * r0;
-    r0.w = r1.y - r1.x;
+    r0.w = r1.y + r1.x;
     r0.w = 1.0 / sqrt(r0.w);
     r1.xz = -r0.xyyw * r0.w;
     r1.yw = r1.z * const_4.xyzx;
     r0.xyz = r1.zxww * const_4.yzzw;
-    r0.w = (Params.z * Params.x) - input_2.x;
-    r1.y = (r1.yxww.x * r0.x) + (r1.yxww.y * r0.y) + (r1.yxww.z * r0.z);
-    r0.w = (r0.w * const_5.x) - const_5.y;
+    r0.w = (Params.z * Params.x) + IN.texcoord_1.x;
+    r1.y = dot(r1.yxww, r0);
+    r0.w = (r0.w * const_5.x) + const_5.y;
     r0.w = r0.w - floor(r0.w);
     r1.y = 1.0 / sqrt(r1.y);
-    r0.w = (r0.w * const_5.z) - const_5.w;
+    r0.w = (r0.w * const_5.z) + const_5.w;
     r1.xy = r0 * r1.y;
-    sincos r2.xy, r0.w
+    r2.x = cos(r0.w); r2.y = sin(r0.w);
     r3.xyz = r2.xxyw * const_4.zxzw;
     r2.xyz = r2.yxxw * const_4.yxzw;
-    r3.x = (r3.x * input_0.x) + (r3.y * input_0.y) + (r3.z * input_0.z);
-    r3.z = (r2.x * input_0.x) + (r2.y * input_0.y) + (r2.z * input_0.z);
-    r3.w = input_0.y;
+    r3.x = dot(r3, IN.position);
+    r3.z = dot(r2, IN.position);
+    r3.w = IN.position.y;
     r0.w = r1.x;
-    r3.y = (r1.ywzw.x * r3.xzww.x) + (r1.ywzw.y * r3.xzww.y) + (r1.ywzw.z * r3.xzww.z);
-    r3.x = (r0.wzyw.x * r3.xzww.x) + (r0.wzyw.y * r3.xzww.y) + (r0.wzyw.z * r3.xzww.z);
+    r3.y = dot(r1.ywzw, r3.xzww);
+    r3.x = dot(r0.wzyw, r3.xzww);
     r0.xyz = (-const_4.w * abs(r5)) + r6;
     r2.x = 1.0 / abs(r5.x);
     r2.y = 1.0 / abs(r5.y);
     r2.z = 1.0 / abs(r5.z);
     r1.xyz = r0 - r4;
-    r0.xyz = r4 - r3;
+    r0.xyz = r4 + r3;
     r1.xyz = r2 * r1;
     r0.w = const_4.z;
-    r1.w = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
-    output_0.x = (const_0.x * r0.x) + (const_0.y * r0.y) + (const_0.z * r0.z) + (const_0.w * r0.w);
+    r1.w = dot(r1, r1);	// normalize + length
+    OUT.position.x = dot(WorldViewProj[0], r0);
     r1.w = 1.0 / sqrt(r1.w);
-    output_0.y = (const_1.x * r0.x) + (const_1.y * r0.y) + (const_1.z * r0.z) + (const_1.w * r0.w);
+    OUT.position.y = dot(WorldViewProj[1], r0);
     r1.w = 1.0 / r1.w;
-    output_0.z = (const_2.x * r0.x) + (const_2.y * r0.y) + (const_2.z * r0.z) + (const_2.w * r0.w);
+    OUT.position.z = dot(WorldViewProj[2], r0);
     r1.w = const_4.z - r1.w;
-    output_0.w = (const_3.x * r0.x) + (const_3.y * r0.y) + (const_3.z * r0.z) + (const_3.w * r0.w);
-    output_1.w = r1.w * r1.w;
-    output_1.xyz = const_4.z;
-    output_2.xy = input_1;
+    OUT.position.w = dot(WorldViewProj[3], r0);
+    OUT.color_0.a = r1.w * r1.w;
+    OUT.color_0.rgb = const_4.z;
+    OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 62 instruction slots used

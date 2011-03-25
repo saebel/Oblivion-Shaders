@@ -13,14 +13,14 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   SourceTexture SourceTexture       1
+//   SourceTexture texture_0       1
 //
 
-    color input_0;
-    texcoord input_0.xy;			// partial precision
-    sampler SourceTexture;
-    r0 = SourceTexture[texcoord_0];			// partial precision
-    r0 = r0 * input_0;			// partial precision
-    rendertarget_0 = r0;			// partial precision
+    float4 IN.color_0 : COLOR0;
+    float2 texcoord_0 : TEXCOORD0;			// partial precision
+    sampler2D SourceTexture;
+    r0 = tex2D(SourceTexture, IN.texcoord_0);			// partial precision
+    r0 = r0 * IN.color_0;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

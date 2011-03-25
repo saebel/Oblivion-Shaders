@@ -21,52 +21,52 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
-//   DiffuseDir    DiffuseDir       1
-//   DiffuseColor  DiffuseColor       1
-//   EyePos        EyePos       1
-//   FogColor      FogColor      1
-//   FogParam      FogParam      1
-//   AlphaParam    AlphaParam      1
-//   AmbientColor  AmbientColor      1
-//   InstanceData[0]  InstanceData[0]      1
-//   InstanceData[1]  InstanceData[1]      1
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
+//   DiffuseDir    const_4       1
+//   DiffuseColor  const_5       1
+//   EyePos        const_9       1
+//   FogColor      const_10      1
+//   FogParam      const_11      1
+//   AlphaParam    const_12      1
+//   AmbientColor  const_13      1
+//   InstanceData[0]  const_20       1
+//   InstanceData[1]  const_21       1
 //
 
-    const_6 = {0.00999999978, -0.5, 0, 1};
-    position input_0;
-    color input_1;
-    texcoord input_2;
-    texcoord_1 input_3;
-    r0.w = input_3.x - floor(input_3.x);
-    r0.w = input_3.x - r0.w;
-    mova a0.w, r0.w
+    const float4 const_6 = {0.01, -0.5, 0, 1};
+    float4 IN.position : POSITION;
+    float4 IN.color_0 : COLOR0;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.texcoord_1 : TEXCOORD1;
+    r0.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
+    r0.w = IN.texcoord_1.x - r0.w;
+    offset.w = r0.w;
     r0.w = const_6.x;
-    r0.w = r0.w * InstanceData[0][a0.w].w;
-    r1 = InstanceData[0][a0.w] - floor(InstanceData[0][a0.w]);
-    r0.xyz = (r0.w * input_0) + InstanceData[0][a0.w];
-    r1.xyz = r1 - const_6.y;
-    r0.w = input_0.w;
-    r1.xyz = r1 - r1;
-    position.w = (ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w);			//		(ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w)
-    r2.x = (DiffuseDir.x * r1.x) + (DiffuseDir.y * r1.y) + (DiffuseDir.z * r1.z);
-    r1.xyz = InstanceData[0][a0.w];
+    r0.w = r0.w * InstanceData[0 + offset.w].w;
+    r1 = InstanceData[0 + offset.w] - floor(InstanceData[0 + offset.w]);
+    r0.xyz = (IN.position * r0.w) + InstanceData[0 + offset.w];
+    r1.xyz = r1 + const_6.y;
+    r0.w = IN.position.w;
+    r1.xyz = r1 + r1;
+    OUT.position.w = dot(ModelViewProj[3], r0);			//		(ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w)
+    r2.x = dot(DiffuseDir, r1);
+    r1.xyz = InstanceData[0 + offset.w];
     r1.xyz = EyePos - r1;
-    r2.xyz = r2.x * input_1;
+    r2.xyz = r2.x * IN.color_0;
     r3.xyz = r1.w * r2;
-    r2.x = (ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w);			//		(ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w)
-    r2.y = (ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w);			//		(ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w)
-    r2.z = (ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w);			//		(ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w)
+    r2.x = dot(ModelViewProj[0], r0);			//		(ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w)
+    r2.y = dot(ModelViewProj[1], r0);			//		(ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w)
+    r2.z = dot(ModelViewProj[2], r0);			//		(ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w)
     r0.xyz = DiffuseColor;
-    texcoord_4.xyz = (r0 * r3) + AmbientColor;
-    r0.x = (r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z);			//		(r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z)
-    position.xyz = r2;
+    OUT.texcoord_4.xyz = (r0 * r3) + AmbientColor;
+    r0.x = dot(r2, r2);	// normalize + length			//		(r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z)
+    OUT.position.xyz = r2;
     r0.w = 1.0 / sqrt(r0.x);			//		1.0 / sqrt(r0)
     r0.w = 1.0 / r0.w;			//		1.0 / (1.0 / sqrt(r0)) ^= sqrt(r0)
-    r0.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
+    r0.x = dot(r1, r1);	// normalize + length
     r2.w = FogParam.x - r0.w;		// exp fog	(off - r0)
     r0.w = 1.0 / sqrt(r0.x);
     r4.w = 1.0 / FogParam.y;			// exp fog	(1 / div)
@@ -74,18 +74,18 @@
     r1.w = r0.w - AlphaParam.x;
     r3.w = 1.0 / AlphaParam.y;
     r2.w = r2.w * r4.w;		// exp fog	(off - r0) * (1 / div)
-    r1.w = (r1.w * -r3.w) - const_6.w;
-    r2.w = (r2.w >= const_6.z ? r2.w : const_6.z);		// exp fog	max((off - r0) * (1 / div), 0.0)
-    r1.w = (r1.w >= const_6.z ? r1.w : const_6.z);
-    r2.w = (r2.w < const_6.w ? r2.w : const_6.w);		// exp fog	min(max((off - r0) * (1 / div), 0.0), 1.0)
-    r1.w = (r1.w < const_6.w ? r1.w : const_6.w);
+    r1.w = (r1.w * -r3.w) + const_6.w;
+    r2.w = max(r2.w, const_6.z);		// exp fog	max((off - r0) * (1 / div), 0.0)
+    r1.w = max(r1.w, const_6.z);
+    r2.w = min(r2.w, const_6.w);		// exp fog	min(max((off - r0) * (1 / div), 0.0), 1.0)
+    r1.w = min(r1.w, const_6.w);
     r0.w = (AlphaParam.x < r0.w ? 1.0 : 0.0);
     r1.w = r1.w - const_6.w;
-    color_0.w = const_6.w - r2.w;		// exp fog	1.0 - min(max((off - r0) * (1 / div), 0.0), 1.0)
-    texcoord_5.w = (r0.w * r1.w) - const_6.w;
-    texcoord_0.xy = input_2;
-    texcoord_4.w = const_6.w;
-    texcoord_5.xyz = const_6.z;
-    color_0.xyz = FogColor;			// exp fog
+    OUT.color_0.a = const_6.w - r2.w;		// exp fog	1.0 - min(max((off - r0) * (1 / div), 0.0), 1.0)
+    OUT.texcoord_5.w = (r0.w * r1.w) + const_6.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_4.w = const_6.w;
+    OUT.texcoord_5.xyz = const_6.z;
+    OUT.color_0.rgb = FogColor;			// exp fog
 
 // approximately 46 instruction slots used

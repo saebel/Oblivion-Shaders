@@ -14,26 +14,26 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   BlendValue   BlendValue       1
-//   Src0         Src0       1
+//   BlendValue   const_1       1
+//   Src0         texture_0       1
 //
 
-    const_0 = {0.298999995, 0.587000012, 0.114, 0.140000001};
-    const_2 = {0.109999999, -0.0399999991, 1, 0};
-    const_3 = {1, 0.955688059, 0.619858086, 0};
-    const_4 = {1, -0.271581799, -0.646873832, 0};
-    const_5 = {1, -1.1081773, 1.70506454, 0};
-    texcoord input_0.xy;
-    sampler Src0;
-    r1 = Src0[texcoord_0];
-    r0.x = (const_0.x * r1.x) + (const_0.y * r1.y) + (const_0.z * r1.z);
-    r0.x = r0.x - const_0.w;
+    const float4 const_0 = {0.299, 0.587000012, 0.114, 0.14};
+    const float4 const_2 = {0.11, -0.04, 1, 0};
+    const float4 const_3 = {1, 0.955688059, 0.619858086, 0};
+    const float4 const_4 = {1, -0.271581799, -0.646873832, 0};
+    const float4 const_5 = {1, -1.1081773, 1.70506454, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
+    r1 = tex2D(Src0, IN.texcoord_0);
+    r0.x = dot(const_0, r1);
+    r0.x = r0.x + const_0.w;
     r0.yz = const_2.zxyw;
-    r2.x = (const_3.x * r0.x) + (const_3.y * r0.y) + (const_3.z * r0.z);
-    r2.y = (const_4.x * r0.x) + (const_4.y * r0.y) + (const_4.z * r0.z);
-    r2.z = (const_5.x * r0.x) + (const_5.y * r0.y) + (const_5.z * r0.z);
-    r0.xyz = BlendValue.x * (r2 - r1) + r1;
+    r2.x = dot(const_3, r0);
+    r2.y = dot(const_4, r0);
+    r2.z = dot(const_5, r0);
+    r0.xyz = lerp(r2, r1, BlendValue.x);
     r0.w = const_2.z;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

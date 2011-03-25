@@ -22,65 +22,65 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Scroll       Scroll       1
-//   EyePos       EyePos       1
-//   ShallowColor ShallowColor       1
-//   DeepColor    DeepColor       1
-//   VarAmounts   VarAmounts       1
-//   FogParam     FogParam       1
-//   FogColor     FogColor      1
-//   FresnelRI    FresnelRI      1
-//   NormalMap    NormalMap       1
-//   DetailMap    DetailMap       1
+//   Scroll       const_0       1
+//   EyePos       const_1       1
+//   ShallowColor const_5       1
+//   DeepColor    const_6       1
+//   VarAmounts   const_8       1
+//   FogParam     const_9       1
+//   FogColor     const_10      1
+//   FresnelRI    const_11      1
+//   NormalMap    texture_1       1
+//   DetailMap    texture_2       1
 //
 
-    const_2 = {0.100000001, 0.200000003, 0, 0};
-    const_3 = {2, -1, 0, -0.000122070313};
-    texcoord input_1.xyz;			// centroid
-    texcoord input_6.xy;
-    sampler NormalMap;
-    sampler DetailMap;
-    r0.xy = EyePos - texcoord_1;
-    dp2r0.w = r0 - r0;, const_3.z
+    const float4 const_2 = {0.1, 0.2, 0, 0};
+    const float4 const_3 = {2, -1, 0, -(1.0 / 8192)};
+    float3 texcoord_1 : TEXCOORD1_centroid;
+    float2 texcoord_6 : TEXCOORD6;
+    sampler2D NormalMap;
+    sampler2D DetailMap;
+    r0.xy = EyePos - IN.texcoord_1;
+    r0.w = dot(r0.xy, r0.xy) + const_3.z;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
-    r1.w = sat((r0.w * const_3.w) - const_3.y);
+    r1.w = saturate((r0.w * const_3.w) - const_3.y);
     r2.w = r1.w * r1.w;
-    r1.xy = texcoord_6 - Scroll;
-    r0 = NormalMap[r1];
-    r0.xyz = (const_3.x * r0) - const_3.y;
+    r1.xy = IN.texcoord_6 + Scroll;
+    r0 = tex2D(NormalMap, r1);
+    r0.xyz = (const_3.x * r0) + const_3.y;
     r0.xy = r2.w * r0;
-    r2.xyz = norm(r0);
+    r2.xyz = normalize(r0);
     r0.xy = (const_2.x * r2) + r1;
-    r0 = DetailMap[r0];
-    r3.w = sat(r2.y - r2.y);
-    r1.xyz = EyePos - texcoord_1;
+    r0 = tex2D(DetailMap, r0);
+    r3.w = saturate(r2.y + r2.y);
+    r1.xyz = EyePos - IN.texcoord_1;
     r4.w = r1.w * VarAmounts.w;
-    r3.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
+    r3.x = dot(r1, r1);	// normalize + length
     r2.w = 1.0 / sqrt(r3.x);
     r3.xyz = DeepColor;
     r3.xyz = ShallowColor - r3;
     r0.w = 1.0 / r2.w;
-    r4.xyz = (r3.w * r3) - DeepColor;			// partial precision
+    r4.xyz = (r3.w * r3) + DeepColor;			// partial precision
     r0.w = FogParam.x - r0.w;
-    r3.xyz = r4.w * (r0 - r4) + r4;
+    r3.xyz = lerp(r0, r4, r4.w);
     r3.w = 1.0 / FogParam.y;
     r0.xyz = FogColor - r3;
-    r0.w = sat(r0.w * r3.w);
+    r0.w = saturate(r0.w * r3.w);
     r1.xyz = r1 * r2.w;
-    add r0.w, -r0.w, -const_3.y
-    r0.xyz = (r0.w * r0) - r3;
+    r0.w = -(r0.w + const_3.y);
+    r0.xyz = (r0.w * r0) + r3;
     r2.w = r1.w * r0.x;
-    r1.x = sat((r1.x * r2.x) + (r1.y * r2.y) + (r1.z * r2.z));
-    add r0.w, -r1.x, -const_3.y
+    r1.x = saturate(dot(r1, r2));
+    r0.w = -(r1.x + const_3.y);
     r1.w = r0.w * r0.w;
     r1.w = r1.w * r1.w;
     r1.w = r0.w * r1.w;
     r1.z = const_3.y;
-    add r0.w, -r1.z, -FresnelRI.x
-    r0.x = (r2.w * const_2.y) - r0.x;
-    r1.w = (r0.w * r1.w) - FresnelRI.x;
-    r0.w = (VarAmounts.z >= r1.w ? VarAmounts.z : r1.w);
-    rendertarget_0 = r0;
+    r0.w = -(r1.z + FresnelRI.x);
+    r0.x = (r2.w * const_2.y) + r0.x;
+    r1.w = (r0.w * r1.w) + FresnelRI.x;
+    r0.w = max(VarAmounts.z, r1.w);
+    OUT.color_0 = r0;
 
 // approximately 45 instruction slots used (2 texture, 43 arithmetic)

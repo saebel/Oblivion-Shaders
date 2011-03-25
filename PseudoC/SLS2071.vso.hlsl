@@ -18,79 +18,79 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
-//   EyePosition   EyePosition       1
-//   UOffset       UOffset       1
-//   VOffset       VOffset      1
-//   FogParam      FogParam      1
-//   FogColor      FogColor      1
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
+//   EyePosition   const_8       1
+//   UOffset       const_9       1
+//   VOffset       const_10      1
+//   FogParam      const_12      1
+//   FogColor      const_13      1
 //
 
-    const_4 = {0.0250000004, 0.0208350997, -0.0851330012, 0.180141002};
-    const_5 = {-0.330299497, 0.999866009, -2, 1.57079637};
-    const_6 = {-3.14159274, 0.318471342, 1, 0};
-    position input_0;
-    tangent input_1;
-    binormal input_2;
-    normal input_3;
-    texcoord input_4;
-    abs r0.xy, input_0
-    r0.w = (r0.y >= r0.x ? r0.y : r0.x);
+    const float4 const_4 = {0.025, 0.0208350997, -0.0851330012, 0.180141002};
+    const float4 const_5 = {-0.330299497, 0.999866009, -2, PI / 2};
+    const float4 const_6 = {-PI, 0.318471342, 1, 0};
+    float4 IN.position : POSITION;
+    float3 IN.tangent : TANGENT;
+    float3 IN.binormal : BINORMAL;
+    float3 IN.normal : NORMAL;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    r0.xy = abs(IN.position);
+    r0.w = max(r0.y, r0.x);
     r1.w = 1.0 / r0.w;
-    r0.w = (r0.y < r0.x ? r0.y : r0.x);
+    r0.w = min(r0.y, r0.x);
     r0.w = r1.w * r0.w;
     r1.w = r0.w * r0.w;
-    r2.w = (r1.w * const_4.y) - const_4.z;
-    r2.w = (r1.w * r2.w) - const_4.w;
-    r2.w = (r1.w * r2.w) - const_5.x;
-    r1.w = (r1.w * r2.w) - const_5.y;
+    r2.w = (r1.w * const_4.y) + const_4.z;
+    r2.w = (r1.w * r2.w) + const_4.w;
+    r2.w = (r1.w * r2.w) + const_5.x;
+    r1.w = (r1.w * r2.w) + const_5.y;
     r2.w = r0.w * r1.w;
     r1.w = (r0.y < r0.x ? 1.0 : 0.0);
-    r0.w = (r2.w * const_5.z) - const_5.w;
-    r1.w = (r0.w * r1.w) - r2.w;
-    r0.w = (input_0.y < -input_0.y ? 1.0 : 0.0);
-    r2.w = (r0.w * const_6.x) - r1.w;
+    r0.w = (r2.w * const_5.z) + const_5.w;
+    r1.w = (r0.w * r1.w) + r2.w;
+    r0.w = (IN.position.y < -IN.position.y ? 1.0 : 0.0);
+    r2.w = (r0.w * const_6.x) + r1.w;
     r0.w = const_4.x;
-    texcoord_1.y = (input_0.z * r0.w) - UOffset.x;
-    r1.w = r2.w - r2.w;
-    r0.w = (input_0.y < input_0.x ? input_0.y : input_0.x);
-    r3.w = (input_0.y >= input_0.x ? input_0.y : input_0.x);
+    OUT.texcoord_1.y = (IN.position.z * r0.w) + UOffset.x;
+    r1.w = r2.w + r2.w;
+    r0.w = min(IN.position.y, IN.position.x);
+    r3.w = max(IN.position.y, IN.position.x);
     r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
     r3.w = (r3.w >= -r3.w ? 1.0 : 0.0);
     r0.w = r0.w * r3.w;
-    r1.xyz = EyePosition - input_0;
-    r1.w = (r0.w * -r1.w) - r2.w;
-    r0.x = (input_3.x * r1.x) + (input_3.y * r1.y) + (input_3.z * r1.z);
+    r1.xyz = EyePosition - IN.position;
+    r1.w = (r0.w * -r1.w) + r2.w;
+    r0.x = dot(IN.normal, r1);
     r0.yw = const_6;
-    texcoord_1.x = (r1.w * r0.y) - VOffset.x;
+    OUT.texcoord_1.x = (r1.w * r0.y) + VOffset.x;
     r1.w = (r0.x < const_6.z ? 1.0 : 0.0);
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
     r0.xyz = r1 * r1.w;
     r2.xyz = (const_5.z * r0) + r1;
-    r0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    r0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    r0.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    r1.x = (input_1.x * r2.x) + (input_1.y * r2.y) + (input_1.z * r2.z);
-    r3.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
-    r1.y = (input_2.x * r2.x) + (input_2.y * r2.y) + (input_2.z * r2.z);
+    r0.x = dot(ModelViewProj[0], IN.position);
+    r0.y = dot(ModelViewProj[1], IN.position);
+    r0.z = dot(ModelViewProj[2], IN.position);
+    r1.x = dot(IN.tangent, r2);
+    r3.x = dot(r0, r0);	// normalize + length
+    r1.y = dot(IN.binormal, r2);
     r1.w = 1.0 / sqrt(r3.x);
-    r1.z = (input_3.x * r2.x) + (input_3.y * r2.y) + (input_3.z * r2.z);
+    r1.z = dot(IN.normal, r2);
     r1.w = 1.0 / r1.w;
     r1.w = FogParam.x - r1.w;
     r2.w = 1.0 / FogParam.y;
     r1.w = r1.w * r2.w;
-    r1.w = (r1.w >= const_6.w ? r1.w : const_6.w);
-    r2.xyz = norm(r1);
-    texcoord_3.xyz = r2;
-    r1.w = (r1.w < const_6.z ? r1.w : const_6.z);
+    r1.w = max(r1.w, const_6.w);
+    r2.xyz = normalize(r1);
+    OUT.texcoord_3.xyz = r2;
+    r1.w = min(r1.w, const_6.z);
     r1.w = const_6.z - r1.w;
     r0.w = (r0.w < FogParam.z ? 1.0 : 0.0);
-    position.xyz = r0;
-    color_1.w = r1.w * r0.w;
-    texcoord_0.xy = input_4;
-    color_1.xyz = FogColor;
+    OUT.position.xyz = r0;
+    OUT.color_1.a = r1.w * r0.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.color_1.rgb = FogColor;
 
 // approximately 57 instruction slots used

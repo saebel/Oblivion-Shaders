@@ -23,100 +23,100 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   DiffuseDir    DiffuseDir       1
-//   DiffuseColor  DiffuseColor       1
-//   ScaleMask     ScaleMask       1
-//   WindData      WindData       1
-//   AlphaParam    AlphaParam       1
-//   AmbientColor  AmbientColor       1
-//   AddlParams    AddlParams       1
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]      1
-//   ModelViewProj[2] ModelViewProj[2]      1
-//   ModelViewProj[3] ModelViewProj[3]      1
-//   FogColor      FogColor      1
-//   FogParam      FogParam      1
-//   InstanceData[0]  InstanceData[0]      1
-//   InstanceData[1]  InstanceData[1]      1
+//   DiffuseDir    const_0       1
+//   DiffuseColor  const_1       1
+//   ScaleMask     const_2       1
+//   WindData      const_4       1
+//   AlphaParam    const_5       1
+//   AmbientColor  const_6       1
+//   AddlParams    const_7       1
+//   ModelViewProj[0] const_9        1
+//   ModelViewProj[1] const_10        1
+//   ModelViewProj[2] const_11        1
+//   ModelViewProj[3] const_12        1
+//   FogColor      const_14      1
+//   FogParam      const_15      1
+//   InstanceData[0]  const_20       1
+//   InstanceData[1]  const_21       1
 //
 
-    const_3 = {-0.5, 0.00999999978, 1, 0.0588235296};
-    const_8 = {0, 2, -1, 1};
-    DiffuseColor3 = {0.0078125, 0.159154937, 0.5, 0};
-    DiffuseColor6 = {6.28318548, -3.14159274, 0, 0};
-    def DiffuseColor7, -1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-    DiffuseColor8 = {-0.020833334, -0.125, 1, 0.5};
-    position input_0;
-    color input_1;
-    texcoord input_2;
-    texcoord_1 input_3;
-    r0.w = input_3.x - floor(input_3.x);
-    r0.w = input_3.x - r0.w;
-    mova a0.w, r0.w
-    r0 = InstanceData[0][a0.w] - floor(InstanceData[0][a0.w]);
-    r1.xyz = r0 - const_3.x;
-    r2.xyz = r0.w * input_1;
-    r0.xyz = r1 - r1;
+    const float4 const_3 = {-0.5, 0.01, 1, (1.0 / 17)};
+    const int4 const_8 = {0, 2, -1, 1};
+    const float4 const_13 = {(1.0 / 128), (1.0 / (PI * 2)), 0.5, 0};
+    const float4 const_16 = {PI * 2, -PI, 0, 0};
+    const float4 const_17 = {D3DSINCOSCONST1};
+    const float4 const_18 = {D3DSINCOSCONST2};
+    float4 IN.position : POSITION;
+    float4 IN.color_0 : COLOR0;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.texcoord_1 : TEXCOORD1;
+    r0.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
+    r0.w = IN.texcoord_1.x - r0.w;
+    offset.w = r0.w;
+    r0 = InstanceData[0 + offset.w] - floor(InstanceData[0 + offset.w]);
+    r1.xyz = r0 + const_3.x;
+    r2.xyz = r0.w * IN.color_0;
+    r0.xyz = r1 + r1;
     r3.x = (const_8.y * r1.y) - r0.z;
-    r1.x = (DiffuseDir.x * r0.x) + (DiffuseDir.y * r0.y) + (DiffuseDir.z * r0.z);
-    r0.w = (r1.x >= const_8.x ? r1.x : const_8.x);
-    abs r1.xyz, r0
-    r2.w = (r0.w < const_3.z ? r0.w : const_3.z);
+    r1.x = dot(DiffuseDir, r0);
+    r0.w = max(r1.x, const_8.x);
+    r1.xyz = abs(r0);
+    r2.w = min(r0.w, const_3.z);
     r1 = (r1.yzxz >= r1.xxyy ? 1.0 : 0.0);
     r4.xy = r1.ywzw * r1.xzzw;
     r3.yz = r0.x * const_8.xzww;
     r0.w = -r0.y;
     r3.z = r4.y * r3.z;
-    r3.xy = (r4.y * r3) - r0.wxzw;
+    r3.xy = (r4.y * r3) + r0.wxzw;
     r1.yz = (r0.xzyw * const_8.xzww) - r3;
-    r0.w = InstanceData[0][a0.w].y - InstanceData[0][a0.w].x;
+    r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r1.x = -r3.x;
     r1.w = r0.w * const_3.w;
-    r1.xyz = (r4.x * r1) - r3;
+    r1.xyz = (r4.x * r1) + r3;
     r1.w = r1.w - floor(r1.w);
-    r5.xyz = norm(r1);
-    r1.w = r1.w - const_3.x;
+    r5.xyz = normalize(r1);
+    r1.w = r1.w + const_3.x;
     r3.xyz = r0.yzxw * r5.zxyw;
-    r1.x = r1.w - r1.w;
+    r1.x = r1.w + r1.w;
     r4.xyz = (r5.yzxw * r0.zxyw) - r3;
-    r1.w = (r1.x * -r1.x) - const_3.z;
+    r1.w = (r1.x * -r1.x) + const_3.z;
     r1.w = 1.0 / sqrt(r1.w);
     r1.yz = const_3;
-    r3.w = r1.y * InstanceData[0][a0.w].w;
+    r3.w = r1.y * InstanceData[0 + offset.w].w;
     r1.w = 1.0 / r1.w;
-    r3.xyz = (r3.w * ScaleMask) - r1.z;
-    r3.xyz = r3 * input_0;
+    r3.xyz = (r3.w * ScaleMask) + r1.z;
+    r3.xyz = r3 * IN.position;
     r1.z = const_8.x;
     r6.x = WindData.w;
-    r0.w = (r0.w * DiffuseColor3.x) - r6.x;
-    r6.x = (r1.wxzw.x * r3.x) + (r1.wxzw.y * r3.y) + (r1.wxzw.z * r3.z);
+    r0.w = (r0.w * const_13.x) + r6.x;
+    r6.x = dot(r1.wxzw, r3);
     r1.y = -r1.w;
-    r0.w = (r0.w * DiffuseColor3.y) - DiffuseColor3.z;
-    r3.x = (r1.x * r3.x) + (r1.y * r3.y) + (r1.z * r3.z);
+    r0.w = (r0.w * const_13.y) + const_13.z;
+    r3.x = dot(r1, r3);
     r0.w = r0.w - floor(r0.w);
     r1.xyz = r5 * r6.x;
-    r0.w = (r0.w * DiffuseColor6.x) - DiffuseColor6.y;
+    r0.w = (r0.w * const_16.x) + const_16.y;
     r4.xyz = (r3.x * r4) + r1;
-    sincos r1.y, r0.w, DiffuseColor7, DiffuseColor8
+    r1.y = sin(r0.w);
     r1.w = r1.y * WindData.z;
-    r0.w = input_1.w * input_1.w;
+    r0.w = IN.color_0.a * IN.color_0.w;
     r0.xyz = (r3.z * r0) + r4;
     r0.w = r1.w * r0.w;
     r0.xy = (r0.w * WindData) + r0;
-    r1.xyz = r0 - InstanceData[0][a0.w];
-    r1.w = input_0.w;
+    r1.xyz = r0 + InstanceData[0 + offset.w];
+    r1.w = IN.position.w;
     r2.xyz = r2 * r2.w;
-    r0.x = (ModelViewProj[0].x * r1.x) + (ModelViewProj[0].y * r1.y) + (ModelViewProj[0].z * r1.z) + (ModelViewProj[0].w * r1.w);
-    r0.y = (ModelViewProj[1].x * r1.x) + (ModelViewProj[1].y * r1.y) + (ModelViewProj[1].z * r1.z) + (ModelViewProj[1].w * r1.w);
-    r0.z = (ModelViewProj[2].x * r1.x) + (ModelViewProj[2].y * r1.y) + (ModelViewProj[2].z * r1.z) + (ModelViewProj[2].w * r1.w);
+    r0.x = dot(ModelViewProj[0], r1);
+    r0.y = dot(ModelViewProj[1], r1);
+    r0.z = dot(ModelViewProj[2], r1);
     r2.xyz = r2 * DiffuseColor;
-    r3.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
-    texcoord_5.xyz = r2 * AddlParams.x;
+    r3.x = dot(r0, r0);	// normalize + length
+    OUT.texcoord_5.xyz = r2 * AddlParams.x;
     r2.w = 1.0 / sqrt(r3.x);
-    r0.w = (ModelViewProj[3].x * r1.x) + (ModelViewProj[3].y * r1.y) + (ModelViewProj[3].z * r1.z) + (ModelViewProj[3].w * r1.w);
+    r0.w = dot(ModelViewProj[3], r1);
     r1.w = 1.0 / r2.w;
     r1.w = FogParam.x - r1.w;
-    r2.w = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z) + (r0.w * r0.w);
+    r2.w = dot(r0, r0);	// normalize + length
     r3.w = 1.0 / FogParam.y;
     r2.w = 1.0 / sqrt(r2.w);
     r1.w = r1.w * r3.w;
@@ -124,17 +124,17 @@
     r1.xy = r2.w - AlphaParam.xzzw;
     r2.x = 1.0 / AlphaParam.y;
     r2.y = 1.0 / AlphaParam.w;
-    r1.w = (r1.w >= const_8.x ? r1.w : const_8.x);
+    r1.w = max(r1.w, const_8.x);
     r1.xy = r1 * r2;
-    r1.w = (r1.w < const_3.z ? r1.w : const_3.z);
-    r1.xy = (r1 >= const_8.x ? r1 : const_8.x);
-    color_0.w = const_3.z - r1.w;
-    r1.xy = (r1 < const_3.z ? r1 : const_3.z);
-    position = r0;
+    r1.w = min(r1.w, const_3.z);
+    r1.xy = max(r1, const_8.x);
+    OUT.color_0.a = const_3.z - r1.w;
+    r1.xy = min(r1, const_3.z);
+    OUT.position = r0;
     r0.w = const_3.z - r1.y;
-    texcoord_5.w = r1.x * r0.w;
-    texcoord_0.xy = input_2;
-    texcoord_4 = AmbientColor;
-    color_0.xyz = FogColor;
+    OUT.texcoord_5.w = r1.x * r0.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_4 = AmbientColor;
+    OUT.color_0.rgb = FogColor;
 
 // approximately 95 instruction slots used

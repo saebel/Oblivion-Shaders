@@ -15,49 +15,49 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   ModelViewProj[0]  ModelViewProj[0]       1
-//   ModelViewProj[1]  ModelViewProj[1]       1
-//   ModelViewProj[2]  ModelViewProj[2]       1
-//   ModelViewProj[3]  ModelViewProj[3]       1
-//   ObjToCubeSpace[0] ObjToCubeSpace[0]      1
-//   ObjToCubeSpace[1] ObjToCubeSpace[1]      1
-//   ObjToCubeSpace[2] ObjToCubeSpace[2]      1
-//   EyePosition    EyePosition      1
+//   ModelViewProj[0]  const_0        1
+//   ModelViewProj[1]  const_1        1
+//   ModelViewProj[2]  const_2        1
+//   ModelViewProj[3]  const_3        1
+//   ObjToCubeSpace[0] const_10       1
+//   ObjToCubeSpace[1] const_11       1
+//   ObjToCubeSpace[2] const_12       1
+//   EyePosition    const_14      1
 //
 
-    position input_0;
-    texcoord input_1;
-    normal input_2;
-    tangent input_3;
-    binormal input_4;
-    color input_5;
-    position output_0;
-    texcoord output_1.xy;
-    texcoord_1 output_2;
-    texcoord_2 output_3;
-    texcoord_3 output_4;
-    dcl_color output_5.xyz
-    output_0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    output_0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    output_0.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    output_0.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    output_2.x = (input_3.x * ObjToCubeSpace[0].x) + (input_3.y * ObjToCubeSpace[0].y) + (input_3.z * ObjToCubeSpace[0].z);
-    output_2.y = (input_4.x * ObjToCubeSpace[0].x) + (input_4.y * ObjToCubeSpace[0].y) + (input_4.z * ObjToCubeSpace[0].z);
-    output_2.z = (input_2.x * ObjToCubeSpace[0].x) + (input_2.y * ObjToCubeSpace[0].y) + (input_2.z * ObjToCubeSpace[0].z);
-    output_3.x = (input_3.x * ObjToCubeSpace[1].x) + (input_3.y * ObjToCubeSpace[1].y) + (input_3.z * ObjToCubeSpace[1].z);
-    output_3.y = (input_4.x * ObjToCubeSpace[1].x) + (input_4.y * ObjToCubeSpace[1].y) + (input_4.z * ObjToCubeSpace[1].z);
-    output_3.z = (input_2.x * ObjToCubeSpace[1].x) + (input_2.y * ObjToCubeSpace[1].y) + (input_2.z * ObjToCubeSpace[1].z);
-    output_4.x = (input_3.x * ObjToCubeSpace[2].x) + (input_3.y * ObjToCubeSpace[2].y) + (input_3.z * ObjToCubeSpace[2].z);
-    output_4.y = (input_4.x * ObjToCubeSpace[2].x) + (input_4.y * ObjToCubeSpace[2].y) + (input_4.z * ObjToCubeSpace[2].z);
-    output_4.z = (input_2.x * ObjToCubeSpace[2].x) + (input_2.y * ObjToCubeSpace[2].y) + (input_2.z * ObjToCubeSpace[2].z);
-    r0.x = (ObjToCubeSpace[0].x * input_0.x) + (ObjToCubeSpace[0].y * input_0.y) + (ObjToCubeSpace[0].z * input_0.z) + (ObjToCubeSpace[0].w * input_0.w);
-    r0.y = (ObjToCubeSpace[1].x * input_0.x) + (ObjToCubeSpace[1].y * input_0.y) + (ObjToCubeSpace[1].z * input_0.z) + (ObjToCubeSpace[1].w * input_0.w);
-    r0.z = (ObjToCubeSpace[2].x * input_0.x) + (ObjToCubeSpace[2].y * input_0.y) + (ObjToCubeSpace[2].z * input_0.z) + (ObjToCubeSpace[2].w * input_0.w);
-    output_1.xy = input_1;
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float3 IN.normal : NORMAL;
+    float3 IN.tangent : TANGENT;
+    float3 IN.binormal : BINORMAL;
+    float4 IN.color_0 : COLOR0;
+    float4 OUT.position : POSITION;
+    float2 OUT.texcoord_0 : TEXCOORD0;
+    float4 OUT.texcoord_1 : TEXCOORD1;
+    float4 OUT.texcoord_2 : TEXCOORD2;
+    float4 OUT.texcoord_3 : TEXCOORD3;
+    float3 OUT.color_0 : COLOR0;
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    OUT.texcoord_1.x = dot(IN.tangent, ObjToCubeSpace[0]);
+    OUT.texcoord_1.y = dot(IN.binormal, ObjToCubeSpace[0]);
+    OUT.texcoord_1.z = dot(IN.normal, ObjToCubeSpace[0]);
+    OUT.texcoord_2.x = dot(IN.tangent, ObjToCubeSpace[1]);
+    OUT.texcoord_2.y = dot(IN.binormal, ObjToCubeSpace[1]);
+    OUT.texcoord_2.z = dot(IN.normal, ObjToCubeSpace[1]);
+    OUT.texcoord_3.x = dot(IN.tangent, ObjToCubeSpace[2]);
+    OUT.texcoord_3.y = dot(IN.binormal, ObjToCubeSpace[2]);
+    OUT.texcoord_3.z = dot(IN.normal, ObjToCubeSpace[2]);
+    r0.x = dot(ObjToCubeSpace[0], IN.position);
+    r0.y = dot(ObjToCubeSpace[1], IN.position);
+    r0.z = dot(ObjToCubeSpace[2], IN.position);
+    OUT.texcoord_0.xy = IN.texcoord_0;
     r0.xyz = EyePosition - r0;
-    output_2.w = r0.x;
-    output_3.w = r0.y;
-    output_4.w = r0.z;
-    output_5.xyz = input_5;
+    OUT.texcoord_1.w = r0.x;
+    OUT.texcoord_2.w = r0.y;
+    OUT.texcoord_3.w = r0.z;
+    OUT.color_0.rgb = IN.color_0;
 
 // approximately 22 instruction slots used

@@ -1,0 +1,89 @@
+
+# vectur/matrix constructs
+position.x = dot(ModelViewProj[0], input_0);
+position.y = dot(ModelViewProj[1], input_0);
+position.z = dot(ModelViewProj[2], input_0);
+position.w = dot(ModelViewProj[3], input_0);
+
+r0.x = dot(texcoord_2, r1);
+r0.y = dot(texcoord_3, r1);
+r0.z = dot(texcoord_4, r1);
+r0.w = dot(texcoord_5, r1);
+
+r0.x = dot(input_1, r1);
+r0.y = dot(input_2, r1);
+r0.z = dot(input_3, r1);
+
+r1.x = dot(SkinModelViewProj[0], r0);
+r1.y = dot(SkinModelViewProj[1], r0);
+r1.z = dot(SkinModelViewProj[2], r0);
+
+# matrix constructs
+r0.x = (input_1.x * r1.x) + (input_1.y * r1.y) + (input_1.z * r1.z);
+r0.y = (input_2.x * r1.x) + (input_2.y * r1.y) + (input_2.z * r1.z);
+r0.z = (input_3.x * r1.x) + (input_3.y * r1.y) + (input_3.z * r1.z);
+
+position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
+position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
+position.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
+position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
+
+r1.x = (Bones[0][offset.y].x * r0.x) + (Bones[0][offset.y].y * r0.y) + (Bones[0][offset.y].z * r0.z) + (Bones[0][offset.y].w * r0.w);
+r1.y = (Bones[1][offset.y].x * r0.x) + (Bones[1][offset.y].y * r0.y) + (Bones[1][offset.y].z * r0.z) + (Bones[1][offset.y].w * r0.w);
+r1.z = (Bones[2][offset.y].x * r0.x) + (Bones[2][offset.y].y * r0.y) + (Bones[2][offset.y].z * r0.z) + (Bones[2][offset.y].w * r0.w);
+
+r2.x = dot(r12, r15);
+r2.y = dot(r11, r15);
+r2.z = dot(r10, r15);
+
+# clamp[0,1]
+r1.w = max(r0.x, const_4.x);
+r1.w = min(r1.w, const_4.y);
+
+# normalize + length
+r0.xyz = LightPosition[0] - input_0;
+r1.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
+r1.x = dot(r0, r0);
+r0.w = 1.0 / sqrt(r1.x);
+r2.xyz = r0 * r0.w;
+r0.w = 1.0 / r0.w;
+
+# length
+r2.z = dot(r15, r15);
+r2.z = 1.0 / sqrt(r2.z);
+r2.z = 1.0 / r2.z;
+
+# normalize
+r5.x = dot(r4, r4);
+r0.w = 1.0 / sqrt(r5.x);
+r4.xyz = r4 * r0.w;
+
+# if
+r1 = (r3.w <= 0.0 ? r1 : r0);
+if (r3.w > 0.0)
+  r1 = r0;
+
+# ftoi
+r0 = (input_7.zyxw * const_0.y);
+r0 = r0 - floor(r0);
+r1 = (input_7.zyxw * const_0.y) - r0;
+
+# mov const :-P
+r13.x = r0.w - r0.w;
+r13.yz = r13.x - const_7.xxyw;
+r2.xyz = r13.x - const_7.zxyw;
+
+# distance
+length(a - b)
+
+# 0.0
+r1.w = r6.x - r6.x;
+
+# float to adress-offset
+r1.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
+r0.w = IN.texcoord_1.x - r1.w;
+offset = r0.w;
+
+r0.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
+r0.w = IN.texcoord_1.x - r0.w;
+offset.w = r0.w;

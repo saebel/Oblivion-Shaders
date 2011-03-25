@@ -3,14 +3,14 @@
 //
 //   vsa shaderdump19/SLS2073.pso /Fcshaderdump19/SLS2073.pso.dis
 //
-    const_0 = {-0.5, 0.5, 0, 0};
-    texcoord input_0.xyz;			// partial precision
-    texcoord input_1.x;			// partial precision
-    r0.xyz = texcoord_0 - const_0.x;			// partial precision
-    r1.xyz = r0 - r0;			// partial precision
-    r0.xyz = norm(r1);			// partial precision
+    const float4 const_0 = {-0.5, 0.5, 0, 0};
+    float3 texcoord_0 : TEXCOORD0;			// partial precision
+    float texcoord_1 : TEXCOORD1;			// partial precision
+    r0.xyz = IN.texcoord_0 + const_0.x;			// partial precision
+    r1.xyz = r0 + r0;			// partial precision
+    r0.xyz = normalize(r1);			// partial precision
     r0.xyz = (const_0.y * r0) + const_0.y;			// partial precision
-    r0.w = texcoord_1.x;			// partial precision
-    rendertarget_0 = r0;			// partial precision
+    r0.w = IN.texcoord_1.x;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 8 instruction slots used

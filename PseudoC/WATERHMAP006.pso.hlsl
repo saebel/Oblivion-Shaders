@@ -13,15 +13,15 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   HeightMap    HeightMap       1
+//   HeightMap    texture_0       1
 //
 
-    const_0 = {1, 0, 0, 0};
-    texcoord input_0.xy;
-    sampler HeightMap;
-    r0 = HeightMap[texcoord_0];
-    abs r0.xyz, r0.x
+    const int4 const_0 = {1, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D HeightMap;
+    r0 = tex2D(HeightMap, IN.texcoord_0);
+    r0.xyz = abs(r0.x);
     r0.w = const_0.x;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

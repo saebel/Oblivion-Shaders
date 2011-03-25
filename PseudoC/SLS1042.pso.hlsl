@@ -14,21 +14,21 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   BaseMap      BaseMap       1
-//   GlowMap      GlowMap       1
+//   BaseMap      texture_0       1
+//   GlowMap      texture_1       1
 //
 
-    const_0 = {1, 0, 0, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    texcoord input_2.xyz;
-    sampler BaseMap;
-    sampler GlowMap;
-    r1 = BaseMap[texcoord_0];
-    r0 = GlowMap[texcoord_1];
-    r1.xyz = r1 * texcoord_2;
+    const int4 const_0 = {1, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float3 texcoord_2 : TEXCOORD2;
+    sampler2D BaseMap;
+    sampler2D GlowMap;
+    r1 = tex2D(BaseMap, IN.texcoord_0);
+    r0 = tex2D(GlowMap, IN.texcoord_1);
+    r1.xyz = r1 * IN.texcoord_2;
     r0.xyz = r0 * r1;
     r0.w = const_0.x;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 6 instruction slots used (2 texture, 4 arithmetic)

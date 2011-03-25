@@ -16,44 +16,42 @@
 //
 //   Name                Reg   Size
 //   ------------------- ----- ----
-//   ModelViewProj[0]    ModelViewProj[0]       1
-//   ModelViewProj[1]    ModelViewProj[1]       1
-//   ModelViewProj[2]    ModelViewProj[2]       1
-//   ModelViewProj[3]    ModelViewProj[3]       1
-//   LightDirection[0]   LightDirection[0]      1
-//   LightDirection[1]   LightDirection[1]      1
-//   LightDirection[2]   LightDirection[2]      1
-//   ShadowProjTransform ShadowProjTransform      1
-//   ShadowProjData      ShadowProjData      1
+//   ModelViewProj[0]       const_0        1
+//   ModelViewProj[1]       const_1        1
+//   ModelViewProj[2]       const_2        1
+//   ModelViewProj[3]       const_3        1
+//   LightDirection[0]      const_13       1
+//   ShadowProjTransform const_23      1
+//   ShadowProjData      const_24      1
 //
 
-    const_4 = {0.001953125, 0, 1, 0};
-    position input_0;
-    texcoord input_1;
-    texcoord_1 input_2;
-    texcoord_2 input_3;
-    r0.xy = ShadowProjTransform.zwzw - input_0;
+    const float4 const_4 = {0.001953125, 0, 1, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.texcoord_1 : TEXCOORD1;
+    float4 IN.texcoord_2 : TEXCOORD2;
+    r0.xy = ShadowProjTransform.zwzw - IN.position;
     r0.xy = r0 * r0;
-    r0.w = r0.y - r0.x;
+    r0.w = r0.y + r0.x;
     r0.w = 1.0 / sqrt(r0.w);
-    position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
     r0.w = 1.0 / r0.w;
     r0.w = ShadowProjData.x - r0.w;
     r1.w = 1.0 / ShadowProjData.y;
-    position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
     r0.w = r0.w * r1.w;
-    position.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    r0.w = (r0.w >= const_4.y ? r0.w : const_4.y);
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r0.w = (r0.w < const_4.z ? r0.w : const_4.z);
-    texcoord_2.w = const_4.z - r0.w;
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    r0.w = max(r0.w, const_4.y);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r0.w = min(r0.w, const_4.z);
+    OUT.texcoord_2.w = const_4.z - r0.w;
     r0.w = const_4.x;
-    r0.xy = (r0.w * input_1) + ShadowProjTransform;
-    texcoord_0.xy = r0;
-    texcoord_1.xy = r0;
-    texcoord_2.xyz = const_4.z;
-    texcoord_3.xyz = LightDirection[0];
-    color_0 = input_2;
-    color_1 = input_3;
+    r0.xy = (IN.texcoord_0 * r0.w) + ShadowProjTransform;
+    OUT.texcoord_0.xy = r0;
+    OUT.texcoord_1.xy = r0;
+    OUT.texcoord_2.xyz = const_4.z;
+    OUT.texcoord_3.xyz = LightDirection[0];
+    OUT.color_0 = IN.texcoord_1;
+    OUT.color_1 = IN.texcoord_2;
 
 // approximately 23 instruction slots used

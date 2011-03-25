@@ -14,14 +14,14 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   AmbientColor AmbientColor       1
-//   DiffuseMap   DiffuseMap       1
+//   AmbientColor const_1       1
+//   DiffuseMap   texture_0       1
 //
 
-    texcoord input_0.xy;
-    sampler DiffuseMap;
-    r0 = DiffuseMap[texcoord_0];
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D DiffuseMap;
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);
     r0.xyz = AmbientColor;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

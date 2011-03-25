@@ -15,73 +15,73 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   BlurScale    BlurScale       1
+//   BlurScale    const_2       1
 //   BlurOffsets  const_3       9
-//   Src0         Src0       1
+//   Src0         texture_0       1
 //
 
-    const_0 = {128, 2.5, 1, 0};
-    texcoord input_0.xy;
-    sampler Src0;
+    const float4 const_0 = {128, 2.5, 1, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
     r0.z = const_0.y;
     r3.w = r0.z - const_4.x;
-    r0.w = texcoord_0.x * const_0.x;
+    r0.w = IN.texcoord_0.x * const_0.x;
     r1.w = r0.w - floor(r0.w);
     r2.w = r0.z - const_4.y;
-    r0.w = texcoord_0.y * const_0.x;
+    r0.w = IN.texcoord_0.y * const_0.x;
     r0.x = (r1.w <= 0.0 ? const_4.x : r3.w);
     r0.w = r0.w - floor(r0.w);
     r0.y = (r0.w <= 0.0 ? const_4.y : r2.w);
-    r8.xy = (BlurScale * r0) + texcoord_0;
+    r8.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_3.x;
     r0.x = (r1.w <= 0.0 ? const_3.x : r2.w);
     r2.w = r0.z - const_3.y;
     r0.y = (r0.w <= 0.0 ? const_3.y : r2.w);
-    r7.xy = (BlurScale * r0) + texcoord_0;
+    r7.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_5.x;
     r0.x = (r1.w <= 0.0 ? const_5.x : r2.w);
     r2.w = r0.z - const_5.y;
     r0.y = (r0.w <= 0.0 ? const_5.y : r2.w);
-    r6.xy = (BlurScale * r0) + texcoord_0;
+    r6.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_6.x;
     r0.x = (r1.w <= 0.0 ? const_6.x : r2.w);
     r2.w = r0.z - const_6.y;
     r0.y = (r0.w <= 0.0 ? const_6.y : r2.w);
-    r5.xy = (BlurScale * r0) + texcoord_0;
+    r5.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_7.x;
     r0.x = (r1.w <= 0.0 ? const_7.x : r2.w);
     r2.w = r0.z - const_7.y;
     r0.y = (r0.w <= 0.0 ? const_7.y : r2.w);
-    r4.xy = (BlurScale * r0) + texcoord_0;
+    r4.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_8.x;
     r0.x = (r1.w <= 0.0 ? const_8.x : r2.w);
     r2.w = r0.z - const_8.y;
     r0.y = (r0.w <= 0.0 ? const_8.y : r2.w);
-    r3.xy = (BlurScale * r0) + texcoord_0;
+    r3.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_9.x;
     r0.x = (r1.w <= 0.0 ? const_9.x : r2.w);
     r2.w = r0.z - const_9.y;
     r0.y = (r0.w <= 0.0 ? const_9.y : r2.w);
-    r2.xy = (BlurScale * r0) + texcoord_0;
+    r2.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_10.x;
     r0.x = (r1.w <= 0.0 ? const_10.x : r2.w);
     r2.w = r0.z - const_10.y;
     r0.y = (r0.w <= 0.0 ? const_10.y : r2.w);
-    r1.xy = (BlurScale * r0) + texcoord_0;
+    r1.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_11.x;
     r0.x = (r1.w <= 0.0 ? const_11.x : r2.w);
     r1.w = r0.z - const_11.y;
     r0.y = (r0.w <= 0.0 ? const_11.y : r1.w);
-    r0.xy = (BlurScale * r0) + texcoord_0;
-    r8 = Src0[r8];
-    r7 = Src0[r7];
-    r6 = Src0[r6];
-    r5 = Src0[r5];
-    r4 = Src0[r4];
-    r3 = Src0[r3];
-    r2 = Src0[r2];
-    r1 = Src0[r1];
-    r0 = Src0[r0];
+    r0.xy = (BlurScale * r0) + IN.texcoord_0;
+    r8 = tex2D(Src0, r8);
+    r7 = tex2D(Src0, r7);
+    r6 = tex2D(Src0, r6);
+    r5 = tex2D(Src0, r5);
+    r4 = tex2D(Src0, r4);
+    r3 = tex2D(Src0, r3);
+    r2 = tex2D(Src0, r2);
+    r1 = tex2D(Src0, r1);
+    r0 = tex2D(Src0, r0);
     r8.xyz = r8 * const_4.z;
     r7.xyz = (const_3.z * r7) + r8;
     r6.xyz = (const_5.z * r6) + r7;
@@ -92,6 +92,6 @@
     r1.xyz = (const_10.z * r1) + r2;
     r0.xyz = (const_11.z * r0) + r1;
     r0.w = const_0.z;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 70 instruction slots used (9 texture, 61 arithmetic)

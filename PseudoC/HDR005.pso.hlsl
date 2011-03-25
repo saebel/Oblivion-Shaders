@@ -37,18 +37,18 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   HDRParam     HDRParam       1
-//   Src0         Src0       1
+//   HDRParam     const_1       1
+//   Src0         texture_0       1
 //
 
-    const_0 = {0, 1, 0, 0};
-    texcoord input_0.xy;
-    sampler Src0;
-    r0 = Src0[texcoord_0];
+    const int4 const_0 = {0, 1, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
+    r0 = tex2D(Src0, IN.texcoord_0);
     r1.xyz = r0 - HDRParam.x;		// in - 1.225
-    r0.xyz = (r1 >= const_0.x ? r1 : const_0.x);		// max(in - 1.225, 0)
+    r0.xyz = max(r1, const_0.x);		// max(in - 1.225, 0)
     r0.xyz = r0 * HDRParam.y;		// max(in - 1.225, 0) * fBrightClamp == 1.350000
     r0.w = const_0.y;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 6 instruction slots used (1 texture, 5 arithmetic)

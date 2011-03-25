@@ -14,24 +14,23 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   SpellInput   SpellInput       1
-//   Src0         Src0       1
+//   SpellInput   const_1       1
+//   Src0         texture_0       1
 //
 
-    ps_1_3
-    const_0 = {1, 0, 0, -1};
-    const_2 = {1, 1, 1, 0.5};
-    const_3 = {0.209999993, 0.5, 0.779999971, 0};
-    const_4 = {0, 0, 0, 1};
-    tex texcoord_0
-    r1 = (const_0.x * SpellInput.x) + (const_0.y * SpellInput.y) + (const_0.z * SpellInput.z);
-    texcoord_0.w = const_0.w - r1.w;
-    texcoord_0.w = texcoord_0.w * texcoord_0.w;
-  + r1.xyz = (const_2.x * texcoord_0.x) + (const_2.y * texcoord_0.y) + (const_2.z * texcoord_0.z);
-    r0.w = (-texcoord_0.w * const_2.w) - const_2.w;
-    cnd texcoord_0.w, r0.w, const_3.w, const_4.w
+    const int4 const_0 = {1, 0, 0, -1};
+    const float4 const_2 = {1, 1, 1, 0.5};
+    const float4 const_3 = {0.21, 0.5, 0.78, 0};
+    const int4 const_4 = {0, 0, 0, 1};
+    IN.texcoord_0 = tex2D(s0, texcoord_0);
+    r1 = dot(const_0, SpellInput);
+    IN.texcoord_0.w = const_0.w + r1.w;
+    IN.texcoord_0.w = IN.texcoord_0.w * IN.texcoord_0.w;
+  + r1.xyz = dot(const_2, IN.texcoord_0);
+    r0.w = (-IN.texcoord_0.w * const_2.w) + const_2.w;
+    IN.texcoord_0.w = (r0.w > 0.5 ? const_4.w : const_3.w);
   + r1.xyz = r1 * const_3;
-    r0.xyz = texcoord_0.w * (r1 - texcoord_0) + texcoord_0;
+    r0.xyz = lerp(r1, IN.texcoord_0, IN.texcoord_0.w);
   + r0.w = const_4.w;
 
 // approximately 7 instruction slots used (1 texture, 6 arithmetic)

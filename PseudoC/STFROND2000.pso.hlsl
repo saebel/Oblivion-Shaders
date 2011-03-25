@@ -14,18 +14,18 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   SunlightDimmer SunlightDimmer       1
-//   DiffuseMap     DiffuseMap       1
+//   SunlightDimmer const_0       1
+//   DiffuseMap     texture_0       1
 //
 
-    texcoord input_0.xy;
-    color input_0.xyz;
-    color input_1.xyz;
-    sampler DiffuseMap;
-    r0 = DiffuseMap[texcoord_0];
-    r1.xyz = input_1;
-    r1.xyz = (SunlightDimmer.x * r1) + input_0;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 IN.color_0 : COLOR0;
+    float3 IN.color_1 : COLOR1;
+    sampler2D DiffuseMap;
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);
+    r1.xyz = IN.color_1;
+    r1.xyz = (SunlightDimmer.x * r1) + IN.color_0;
     r0.xyz = r0 * r1;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 5 instruction slots used (1 texture, 4 arithmetic)

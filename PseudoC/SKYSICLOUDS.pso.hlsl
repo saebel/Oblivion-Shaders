@@ -15,20 +15,20 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Params       Params       1
-//   TexMap       TexMap       1
-//   TexMapBlend  TexMapBlend       1
+//   Params       const_4       1
+//   TexMap       texture_0       1
+//   TexMapBlend  texture_1       1
 //
 
-    const_0 = {0, 0, 0, 0};
-    texcoord input_0.xy;
-    texcoord_1 input_1.xy;
-    sampler TexMap;
-    sampler TexMapBlend;
-    r1 = TexMapBlend[input_1];
-    r0 = TexMap[input_0];
+    const int4 const_0 = {0, 0, 0, 0};
+    float2 IN.texcoord_0 : TEXCOORD0;
+    float2 IN.texcoord_1 : TEXCOORD1;
+    sampler2D TexMap;
+    sampler2D TexMapBlend;
+    r1 = tex2D(TexMapBlend, IN.texcoord_1);
+    r0 = tex2D(TexMap, IN.texcoord_0);
     r0.z = r1.w - r0.w;
-    rendertarget_0.w = (Params.x * r0.z) - r0.w;
-    rendertarget_0.xyz = const_0.x;
+    OUT.color_0.a = (Params.x * r0.z) + r0.w;
+    OUT.color_0.rgb = const_0.x;
 
 // approximately 5 instruction slots used (2 texture, 3 arithmetic)

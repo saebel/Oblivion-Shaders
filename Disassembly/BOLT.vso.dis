@@ -17,15 +17,11 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] c0       1
-//   ModelViewProj[1] c1       1
-//   ModelViewProj[2] c2       1
-//   ModelViewProj[3] c3       1
+//   ModelViewProj c0       4
 //   fVars0        c4       1
 //   fVars1        c5       1
 //   fVars2        c6       1
-//   SegmentData[0]   c14      1
-//   SegmentData[1]   c15      1
+//   SegmentData   c14      2
 //
 
     vs_1_1

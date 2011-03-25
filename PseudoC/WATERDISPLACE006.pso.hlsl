@@ -17,26 +17,26 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   BlendAmount  BlendAmount       1
-//   fDamp        fDamp       1
-//   HeightMap01  HeightMap01       1
-//   HeightMap02  HeightMap02       1
+//   BlendAmount  const_1       1
+//   fDamp        const_3       1
+//   HeightMap01  texture_0       1
+//   HeightMap02  texture_1       1
 //
 
-    const_0 = {0.800000012, 1, 0, 0};
-    texcoord input_0.xy;
-    sampler HeightMap01;
-    sampler HeightMap02;
-    r1 = HeightMap02[texcoord_0];
-    r0 = HeightMap01[texcoord_0];
-    abs r2.w, r1.x
+    const float4 const_0 = {0.8, 1, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D HeightMap01;
+    sampler2D HeightMap02;
+    r1 = tex2D(HeightMap02, IN.texcoord_0);
+    r0 = tex2D(HeightMap01, IN.texcoord_0);
+    r2.w = abs(r1.x);
     r0.w = 1.0 / fDamp.x;
     r0.w = r0.w * const_0.x;
-    abs r1.w, r0.x
-    r2.w = (r0.w * -r1.w) - r2.w;
+    r1.w = abs(r0.x);
+    r2.w = (r0.w * -r1.w) + r2.w;
     r2.w = r2.w * BlendAmount.x;
-    r0.xyz = (r0.w * r1.w) - r2.w;
+    r0.xyz = (r0.w * r1.w) + r2.w;
     r0.w = const_0.y;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 11 instruction slots used (2 texture, 9 arithmetic)

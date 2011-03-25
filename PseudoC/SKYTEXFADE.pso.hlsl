@@ -13,16 +13,16 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   TexMap       TexMap       1
+//   TexMap       texture_0       1
 //
 
-    texcoord input_0.xy;
-    texcoord_2 input_1.x;
-    color input_2;
-    sampler TexMap;
-    r0 = TexMap[input_0];
-    r0.w = r0.w * input_2.w;
-    rendertarget_0.xyz = r0 * input_2;
-    rendertarget_0.w = r0.w * input_1.x;
+    float2 IN.texcoord_0 : TEXCOORD0;
+    float IN.texcoord_2 : TEXCOORD2;
+    float4 IN.color_0 : COLOR0;
+    sampler2D TexMap;
+    r0 = tex2D(TexMap, IN.texcoord_0);
+    r0.w = r0.w * IN.color_0.a;
+    OUT.color_0.rgb = r0 * IN.color_0;
+    OUT.color_0.a = r0.w * IN.texcoord_2.x;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

@@ -16,28 +16,10 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] c0       1
-//   ModelViewProj[1] c1       1
-//   ModelViewProj[2] c2       1
-//   ModelViewProj[3] c3       1
+//   ModelViewProj c0       4
 //   FogParam      c23      1
 //   FogColor      c24      1
-//   WindMatrices[00]    c38      1
-//   WindMatrices[01]    c39      1
-//   WindMatrices[02]    c40      1
-//   WindMatrices[03]    c41      1
-//   WindMatrices[04]    c42      1
-//   WindMatrices[05]    c43      1
-//   WindMatrices[06]    c44      1
-//   WindMatrices[07]    c45      1
-//   WindMatrices[08]    c46      1
-//   WindMatrices[09]    c47      1
-//   WindMatrices[10]    c48      1
-//   WindMatrices[11]    c49      1
-//   WindMatrices[12]    c50      1
-//   WindMatrices[13]    c51      1
-//   WindMatrices[14]    c52      1
-//   WindMatrices[15]    c53      1
+//   WindMatrices  c38     16
 //
 
     vs_1_1

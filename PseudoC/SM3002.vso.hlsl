@@ -15,48 +15,48 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
-//   FogParam      FogParam      1
-//   FogColor      FogColor      1
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
+//   FogParam      const_15      1
+//   FogColor      const_16      1
 //
 
-    const_4 = {1, 0, 0, 0};
-    position input_0;
-    tangent input_1;
-    binormal input_2;
-    normal input_3;
-    texcoord input_4;
-    color input_5;
-    position output_0;
-    texcoord output_1.xy;
-    dcl_color output_2
-    texcoord_3 output_3.xyz;
-    texcoord_4 output_4.xyz;
-    texcoord_5 output_5.xyz;
-    texcoord_6 output_6.xyz;
-    texcoord_7 output_7;
-    r0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    r0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    r0.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    r0.w = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
+    const int4 const_4 = {1, 0, 0, 0};
+    float4 IN.position : POSITION;
+    float3 IN.tangent : TANGENT;
+    float3 IN.binormal : BINORMAL;
+    float3 IN.normal : NORMAL;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.color_0 : COLOR0;
+    float4 OUT.position : POSITION;
+    float2 OUT.texcoord_0 : TEXCOORD0;
+    float4 OUT.color_0 : COLOR0;
+    float3 OUT.texcoord_3 : TEXCOORD3;
+    float3 OUT.texcoord_4 : TEXCOORD4;
+    float3 OUT.texcoord_5 : TEXCOORD5;
+    float3 OUT.texcoord_6 : TEXCOORD6;
+    float4 OUT.texcoord_7 : TEXCOORD7;
+    r0.x = dot(ModelViewProj[0], IN.position);
+    r0.y = dot(ModelViewProj[1], IN.position);
+    r0.z = dot(ModelViewProj[2], IN.position);
+    r0.w = dot(r0, r0);	// normalize + length
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r1.w = 1.0 / FogParam.y;
-    output_0.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r0.w = sat(r0.w * r1.w);
-    output_0.xyz = r0;
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r0.w = saturate(r0.w * r1.w);
+    OUT.position.xyz = r0;
     r0.w = const_4.x - r0.w;
-    output_7.w = r0.w * FogParam.z;
-    output_1.xy = input_4;
-    output_2 = input_5;
-    output_3.xyz = input_1;
-    output_4.xyz = input_2;
-    output_5.xyz = input_3;
-    output_6.xyz = input_0;
-    output_7.xyz = FogColor;
+    OUT.texcoord_7.w = r0.w * FogParam.z;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.color_0 = IN.color_0;
+    OUT.texcoord_3.xyz = IN.tangent;
+    OUT.texcoord_4.xyz = IN.binormal;
+    OUT.texcoord_5.xyz = IN.normal;
+    OUT.texcoord_6.xyz = IN.position;
+    OUT.texcoord_7.xyz = FogColor;
 
 // approximately 20 instruction slots used

@@ -22,116 +22,103 @@
 //
 //   Name                Reg   Size
 //   ------------------- ----- ----
-//   ModelViewProj[0]    ModelViewProj[0]       1
-//   ModelViewProj[1]    ModelViewProj[1]       1
-//   ModelViewProj[2]    ModelViewProj[2]       1
-//   ModelViewProj[3]    ModelViewProj[3]       1
-//   LightDirection[0]   LightDirection[0]      1
-//   LightDirection[1]   LightDirection[1]      1
-//   LightDirection[2]   LightDirection[2]      1
-//   LightPosition       ModelViewProj[1]6      2
-//   FogParam            FogParam      1
-//   FogColor            FogColor      1
-//   EyePosition         EyePosition      1
-//   ShadowProj[0]       ShadowProj[0]      1
-//   ShadowProj[1]       ShadowProj[1]      1
-//   ShadowProj[2]       ShadowProj[2]      1
-//   ShadowProj[3]       ShadowProj[3]      1
-//   ShadowProjData      ShadowProjData      1
-//   ShadowProjTransform ShadowProjTransform      1
-//   WindMatrices[00]    WindMatrices[00]      1
-//   WindMatrices[01]    WindMatrices[01]      1
-//   WindMatrices[02]    WindMatrices[02]      1
-//   WindMatrices[03]    WindMatrices[03]      1
-//   WindMatrices[04]    WindMatrices[04]      1
-//   WindMatrices[05]    WindMatrices[05]      1
-//   WindMatrices[06]    WindMatrices[06]      1
-//   WindMatrices[07]    WindMatrices[07]      1
-//   WindMatrices[08]    WindMatrices[08]      1
-//   WindMatrices[09]    WindMatrices[09]      1
-//   WindMatrices[10]    WindMatrices[10]      1
-//   WindMatrices[11]    WindMatrices[11]      1
-//   WindMatrices[12]    WindMatrices[12]      1
-//   WindMatrices[13]    WindMatrices[13]      1
-//   WindMatrices[14]    WindMatrices[14]      1
-//   WindMatrices[15]    WindMatrices[15]      1
+//   ModelViewProj[0]       const_0        1
+//   ModelViewProj[1]       const_1        1
+//   ModelViewProj[2]       const_2        1
+//   ModelViewProj[3]       const_3        1
+//   LightDirection[0]      const_13       1
+//   LightPosition[0]       const_16       1
+//   LightPosition[1]       const_17       1
+//   FogParam            const_23      1
+//   FogColor            const_24      1
+//   EyePosition         const_25      1
+//   ShadowProj[0]          const_28       1
+//   ShadowProj[1]          const_29       1
+//   ShadowProj[2]          const_30       1
+//   ShadowProj[3]          const_31       1
+//   ShadowProjData      const_32      1
+//   ShadowProjTransform const_33      1
+//   WindMatrices[0]        const_38      4
+//   WindMatrices[1]        const_39      4
+//   WindMatrices[2]        const_40      4
+//   WindMatrices[3]        const_41      4
 //
 
-    const_4 = {0.5, 1, 0, 0};
-    position input_0;
-    tangent input_1;
-    binormal input_2;
-    normal input_3;
-    texcoord input_4;
-    dcl_blendindices input_5
-    r0.w = input_5.y - floor(input_5.y);
-    r0.w = input_5.y - r0.w;
-    mova a0.w, r0.w
-    r0.x = (WindMatrices[00][a0.w].x * input_0.x) + (WindMatrices[00][a0.w].y * input_0.y) + (WindMatrices[00][a0.w].z * input_0.z) + (WindMatrices[00][a0.w].w * input_0.w);
-    r0.y = (WindMatrices[01][a0.w].x * input_0.x) + (WindMatrices[01][a0.w].y * input_0.y) + (WindMatrices[01][a0.w].z * input_0.z) + (WindMatrices[01][a0.w].w * input_0.w);
-    r0.z = (WindMatrices[02][a0.w].x * input_0.x) + (WindMatrices[02][a0.w].y * input_0.y) + (WindMatrices[02][a0.w].z * input_0.z) + (WindMatrices[02][a0.w].w * input_0.w);
-    r0.w = (WindMatrices[03][a0.w].x * input_0.x) + (WindMatrices[03][a0.w].y * input_0.y) + (WindMatrices[03][a0.w].z * input_0.z) + (WindMatrices[03][a0.w].w * input_0.w);
-    r0 = r0 - input_0;
-    r1 = input_0;
-    r0 = (input_5.x * r0) + r1;
-    position.w = (ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w);
-    r3.x = (input_1.x * LightDirection[0].x) + (input_1.y * LightDirection[0].y) + (input_1.z * LightDirection[0].z);
+    const float4 const_4 = {0.5, 1, 0, 0};
+    float4 IN.position : POSITION;
+    float3 IN.tangent : TANGENT;
+    float3 IN.binormal : BINORMAL;
+    float3 IN.normal : NORMAL;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.blendindices : BLENDINDICES;
+    r0.w = frac(IN.blendindices.y);
+    r0.w = IN.blendindices.y - r0.w;
+    offset.w = r0.w;
+    r0.x = dot(WindMatrices[0 + offset.w], IN.position);
+    r0.y = dot(WindMatrices[1 + offset.w], IN.position);
+    r0.z = dot(WindMatrices[2 + offset.w], IN.position);
+    r0.w = dot(WindMatrices[3 + offset.w], IN.position);
+    r0 = r0 - IN.position;
+    r1 = IN.position;
+    r0 = (IN.blendindices.x * r0) + r1;
+    OUT.position.w = dot(ModelViewProj[3], r0);
+    r3.x = dot(IN.tangent, LightDirection[0]);
     r2.xyz = EyePosition - r0;
-    r3.y = (input_2.x * LightDirection[0].x) + (input_2.y * LightDirection[0].y) + (input_2.z * LightDirection[0].z);
-    r1.x = (r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z);
-    r3.z = (input_3.x * LightDirection[0].x) + (input_3.y * LightDirection[0].y) + (input_3.z * LightDirection[0].z);
+    r3.y = dot(IN.binormal, LightDirection[0]);
+    r1.x = dot(r2, r2);	// normalize + length
+    r3.z = dot(IN.normal, LightDirection[0]);
     r1.w = 1.0 / sqrt(r1.x);
-    r1.x = (r3.x * r3.x) + (r3.y * r3.y) + (r3.z * r3.z);
+    r1.x = dot(r3, r3);	// normalize + length
     r4.xyz = (r1.w * r2) + LightDirection[0];
     r2.w = 1.0 / sqrt(r1.x);
-    r1.xyz = norm(r4);
-    texcoord_1.xyz = r3 * r2.w;
-    r4.x = (input_1.x * r1.x) + (input_1.y * r1.y) + (input_1.z * r1.z);
-    r4.y = (input_2.x * r1.x) + (input_2.y * r1.y) + (input_2.z * r1.z);
-    r4.z = (input_3.x * r1.x) + (input_3.y * r1.y) + (input_3.z * r1.z);
-    r3.x = (r4.x * r4.x) + (r4.y * r4.y) + (r4.z * r4.z);
-    r1.xyz = ModelViewProj[1]7 - r0;
+    r1.xyz = normalize(r4);
+    OUT.texcoord_1.xyz = r3 * r2.w;
+    r4.x = dot(IN.tangent, r1);
+    r4.y = dot(IN.binormal, r1);
+    r4.z = dot(IN.normal, r1);
+    r3.x = dot(r4, r4);	// normalize + length
+    r1.xyz = LightPosition[1] - r0;
     r2.w = 1.0 / sqrt(r3.x);
-    r3.xyz = norm(r1);
-    texcoord_3.xyz = r4 * r2.w;
-    texcoord_2.x = (input_1.x * r3.x) + (input_1.y * r3.y) + (input_1.z * r3.z);
-    texcoord_2.y = (input_2.x * r3.x) + (input_2.y * r3.y) + (input_2.z * r3.z);
-    texcoord_2.z = (input_3.x * r3.x) + (input_3.y * r3.y) + (input_3.z * r3.z);
+    r3.xyz = normalize(r1);
+    OUT.texcoord_3.xyz = r4 * r2.w;
+    OUT.texcoord_2.x = dot(IN.tangent, r3);
+    OUT.texcoord_2.y = dot(IN.binormal, r3);
+    OUT.texcoord_2.z = dot(IN.normal, r3);
     r3.xyz = (r1.w * r2) + r3;
-    r1.w = 1.0 / ModelViewProj[1]7.w;
+    r1.w = 1.0 / LightPosition[1].w;
     r2.xyz = r1 * r1.w;
-    r1.xyz = norm(r3);
-    texcoord_5.xyz = (const_4.x * r2) + const_4.x;
-    texcoord_4.x = (input_1.x * r1.x) + (input_1.y * r1.y) + (input_1.z * r1.z);
-    texcoord_4.y = (input_2.x * r1.x) + (input_2.y * r1.y) + (input_2.z * r1.z);
-    r2.x = (ShadowProj[0].x * r0.x) + (ShadowProj[0].y * r0.y) + (ShadowProj[0].z * r0.z) + (ShadowProj[0].w * r0.w);
-    r2.y = (ShadowProj[1].x * r0.x) + (ShadowProj[1].y * r0.y) + (ShadowProj[1].z * r0.z) + (ShadowProj[1].w * r0.w);
-    r1.w = (ShadowProj[3].x * r0.x) + (ShadowProj[3].y * r0.y) + (ShadowProj[3].z * r0.z) + (ShadowProj[3].w * r0.w);
-    texcoord_4.z = (input_3.x * r1.x) + (input_3.y * r1.y) + (input_3.z * r1.z);
-    r3.xy = (r1.w * ShadowProjTransform) - r2;
+    r1.xyz = normalize(r3);
+    OUT.texcoord_5.xyz = (const_4.x * r2) + const_4.x;
+    OUT.texcoord_4.x = dot(IN.tangent, r1);
+    OUT.texcoord_4.y = dot(IN.binormal, r1);
+    r2.x = dot(ShadowProj[0], r0);
+    r2.y = dot(ShadowProj[1], r0);
+    r1.w = dot(ShadowProj[3], r0);
+    OUT.texcoord_4.z = dot(IN.normal, r1);
+    r3.xy = (r1.w * ShadowProjTransform) + r2;
     r2.xy = r2 - ShadowProjData;
-    r1.x = (ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w);
-    r1.y = (ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w);
-    r1.z = (ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w);
+    r1.x = dot(ModelViewProj[0], r0);
+    r1.y = dot(ModelViewProj[1], r0);
+    r1.z = dot(ModelViewProj[2], r0);
     r0.y = r1.w * ShadowProjTransform.w;
-    r0.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
+    r0.x = dot(r1, r1);	// normalize + length
     r1.w = 1.0 / r0.y;
     r0.w = 1.0 / sqrt(r0.x);
-    texcoord_7.xy = r3 * r1.w;
+    OUT.texcoord_7.xy = r3 * r1.w;
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r2.w = 1.0 / FogParam.y;
     r1.w = 1.0 / ShadowProjData.w;
     r0.w = r0.w * r2.w;
-    texcoord_7.z = r2.x * r1.w;
-    r0.w = (r0.w >= const_4.z ? r0.w : const_4.z);
-    texcoord_7.w = (r2.y * -r1.w) - const_4.y;
-    r0.w = (r0.w < const_4.y ? r0.w : const_4.y);
-    position.xyz = r1;
-    color_1.w = const_4.y - r0.w;
-    texcoord_0.xy = input_4;
-    texcoord_5.w = const_4.x;
-    color_0 = (input_5.z * const_4.yyyz) - const_4.zzzy;
-    color_1.xyz = FogColor;
+    OUT.texcoord_7.z = r2.x * r1.w;
+    r0.w = max(r0.w, const_4.z);
+    OUT.texcoord_7.w = (r2.y * -r1.w) + const_4.y;
+    r0.w = min(r0.w, const_4.y);
+    OUT.position.xyz = r1;
+    OUT.color_1.a = const_4.y - r0.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_5.w = const_4.x;
+    OUT.color_0 = (IN.blendindices.z * const_4.yyyz) + const_4.zzzy;
+    OUT.color_1.rgb = FogColor;
 
 // approximately 75 instruction slots used

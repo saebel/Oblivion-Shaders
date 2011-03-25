@@ -14,25 +14,25 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   AlphaTestRef AlphaTestRef       1
-//   DiffuseMap   DiffuseMap       1
+//   AlphaTestRef const_3       1
+//   DiffuseMap   texture_0       1
 //
 
-    const_0 = {0, 1, 0, 0};
-    texcoord input_0.xy;			// partial precision
-    texcoord input_4.xyz;			// partial precision			// centroid
-    texcoord input_5;			// partial precision			// centroid
-    color input_0;
-    sampler DiffuseMap;
-    r0 = DiffuseMap[texcoord_0];			// partial precision
-    r1.xyz = texcoord_5;			// partial precision
-    r1.xyz = r1 - texcoord_4;			// partial precision
-    r2.xyz = (-r0 * r1) + input_0;			// partial precision
+    const int4 const_0 = {0, 1, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;			// partial precision
+    float3 texcoord_4 : TEXCOORD4_centroid;			// partial precision
+    float4 texcoord_5 : TEXCOORD5_centroid;			// partial precision
+    float4 IN.color_0 : COLOR0;
+    sampler2D DiffuseMap;
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
+    r1.xyz = IN.texcoord_5;			// partial precision
+    r1.xyz = r1 + IN.texcoord_4;			// partial precision
+    r2.xyz = (-r0 * r1) + IN.color_0;			// partial precision
     r0.w = AlphaTestRef.x - r0.w;			// partial precision
-    r2.xyz = r2 * input_0.w;			// partial precision
+    r2.xyz = r2 * IN.color_0.a;			// partial precision
     r0.w = (r0.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
     r0.xyz = (r0 * r1) + r2;			// partial precision
-    r0.w = r0.w * texcoord_5.w;			// partial precision
-    rendertarget_0 = r0;			// partial precision
+    r0.w = r0.w * IN.texcoord_5.w;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 10 instruction slots used (1 texture, 9 arithmetic)

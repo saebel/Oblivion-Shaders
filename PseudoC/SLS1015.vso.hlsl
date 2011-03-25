@@ -16,43 +16,43 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   ModelViewProj[0]  ModelViewProj[0]       1
-//   ModelViewProj[1]  ModelViewProj[1]       1
-//   ModelViewProj[2]  ModelViewProj[2]       1
-//   ModelViewProj[3]  ModelViewProj[3]       1
-//   LightDirection LightDirection      1
-//   FogParam       FogParam      1
-//   FogColor       FogColor      1
+//   ModelViewProj[0]  const_0        1
+//   ModelViewProj[1]  const_1        1
+//   ModelViewProj[2]  const_2        1
+//   ModelViewProj[3]  const_3        1
+//   LightDirection[0] const_13       1
+//   FogParam       const_23      1
+//   FogColor       const_24      1
 //
 
-    const_4 = {0.5, 0, 1, 0};
-    position input_0;
-    tangent input_1;
-    binormal input_2;
-    normal input_3;
-    texcoord input_4;
-    r0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    r0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    r0.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r2.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
-    r1.x = (input_1.x * LightDirection.x) + (input_1.y * LightDirection.y) + (input_1.z * LightDirection.z);
+    const float4 const_4 = {0.5, 0, 1, 0};
+    float4 IN.position : POSITION;
+    float3 IN.tangent : TANGENT;
+    float3 IN.binormal : BINORMAL;
+    float3 IN.normal : NORMAL;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    r0.x = dot(ModelViewProj[0], IN.position);
+    r0.y = dot(ModelViewProj[1], IN.position);
+    r0.z = dot(ModelViewProj[2], IN.position);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r2.x = dot(r0, r0);	// normalize + length
+    r1.x = dot(IN.tangent, LightDirection[0]);
     r0.w = 1.0 / sqrt(r2.x);
-    r1.y = (input_2.x * LightDirection.x) + (input_2.y * LightDirection.y) + (input_2.z * LightDirection.z);
+    r1.y = dot(IN.binormal, LightDirection[0]);
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r1.w = 1.0 / FogParam.y;
-    r1.z = (input_3.x * LightDirection.x) + (input_3.y * LightDirection.y) + (input_3.z * LightDirection.z);
+    r1.z = dot(IN.normal, LightDirection[0]);
     r0.w = r0.w * r1.w;
-    color_1.xyz = (const_4.x * r1) + const_4.x;
-    r0.w = (r0.w >= const_4.y ? r0.w : const_4.y);
-    position.xyz = r0;
-    r0.w = (r0.w < const_4.z ? r0.w : const_4.z);
-    color_0.w = const_4.z - r0.w;
-    texcoord_0.xy = input_4;
-    texcoord_1.xy = input_4;
-    texcoord_2.xy = input_4;
-    texcoord_3.xy = input_4;
-    color_0.xyz = FogColor;
+    OUT.color_1.rgb = (const_4.x * r1) + const_4.x;
+    r0.w = max(r0.w, const_4.y);
+    OUT.position.xyz = r0;
+    r0.w = min(r0.w, const_4.z);
+    OUT.color_0.a = const_4.z - r0.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.xy = IN.texcoord_0;
+    OUT.texcoord_2.xy = IN.texcoord_0;
+    OUT.texcoord_3.xy = IN.texcoord_0;
+    OUT.color_0.rgb = FogColor;
 
 // approximately 23 instruction slots used

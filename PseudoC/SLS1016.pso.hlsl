@@ -16,34 +16,34 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   AmbientColor AmbientColor       1
-//   PSLightColor PSLightColor       1
-//   BaseMap      BaseMap       1
-//   NormalMap    NormalMap       1
+//   AmbientColor const_1       1
+//   PSLightColor[0] const_2        1
+//   BaseMap      texture_0       1
+//   NormalMap    texture_1       1
 //
 
-    const_0 = {-0.5, 0, 0, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    texcoord input_3.xyz;
-    color input_0.xyz;
-    color input_1;
-    sampler BaseMap;
-    sampler NormalMap;
-    r1 = NormalMap[texcoord_1];
-    r0 = BaseMap[texcoord_0];
-    r1.xyz = r1 - const_0.x;
-    r1.xyz = r1 - r1;
-    r2.xyz = texcoord_3 - const_0.x;
-    r2.xyz = r2 - r2;
-    r2.x = sat((r1.x * r2.x) + (r1.y * r2.y) + (r1.z * r2.z));
+    const float4 const_0 = {-0.5, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float3 texcoord_3 : TEXCOORD3;
+    float3 IN.color_0 : COLOR0;
+    float4 IN.color_1 : COLOR1;
+    sampler2D BaseMap;
+    sampler2D NormalMap;
+    r1 = tex2D(NormalMap, IN.texcoord_1);
+    r0 = tex2D(BaseMap, IN.texcoord_0);
+    r1.xyz = r1 + const_0.x;
+    r1.xyz = r1 + r1;
+    r2.xyz = IN.texcoord_3 + const_0.x;
+    r2.xyz = r2 + r2;
+    r2.x = saturate(dot(r1, r2));
     r1.xyz = AmbientColor;
-    r1.xyz = sat((r2.x * PSLightColor) - r1);
-    r0.xyz = r0 * input_0;
-    r2.xyz = (-r0 * r1) + input_1;
-    r2.xyz = r2 * input_1.w;
-    r0.w = r0.w * AmbientColor.w;
+    r1.xyz = saturate((r2.x * PSLightColor[0]) + r1);
+    r0.xyz = r0 * IN.color_0;
+    r2.xyz = (-r0 * r1) + IN.color_1;
+    r2.xyz = r2 * IN.color_1.a;
+    r0.w = r0.w * AmbientColor.a;
     r0.xyz = (r0 * r1) + r2;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 15 instruction slots used (2 texture, 13 arithmetic)

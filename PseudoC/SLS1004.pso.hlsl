@@ -13,14 +13,14 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   DiffuseMap   DiffuseMap       1
+//   DiffuseMap   texture_0       1
 //
 
-    texcoord input_0.xy;
-    color input_0.xyz;
-    sampler DiffuseMap;
-    r0 = DiffuseMap[texcoord_0];
-    r0.xyz = r0 * input_0;
-    rendertarget_0 = r0;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 IN.color_0 : COLOR0;
+    sampler2D DiffuseMap;
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);
+    r0.xyz = r0 * IN.color_0;
+    OUT.color_0 = r0;
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

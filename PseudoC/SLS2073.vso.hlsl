@@ -16,42 +16,39 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   ModelViewProj[0]  ModelViewProj[0]       1
-//   ModelViewProj[1]  ModelViewProj[1]       1
-//   ModelViewProj[2]  ModelViewProj[2]       1
-//   ModelViewProj[3]  ModelViewProj[3]       1
-//   ObjToCubeSpace[0] ObjToCubeSpace[0]       1
-//   ObjToCubeSpace[1] ObjToCubeSpace[1]       1
-//   ObjToCubeSpace[2] ObjToCubeSpace[2]      1
-//   ObjToCubeSpace[3] ObjToCubeSpace[3]      1
-//   LightPosition  LightPosition      1
-//   FogParam       FogParam      1
+//   ModelViewProj[0]  const_0        1
+//   ModelViewProj[1]  const_1        1
+//   ModelViewProj[2]  const_2        1
+//   ModelViewProj[3]  const_3        1
+//   ObjToCubeSpace const_8       4
+//   LightPosition[0]  const_16       1
+//   FogParam       const_23      1
 //
 
-    const_4 = {0, 1, 0, 0};
-    position input_0;
-    texcoord input_1;
-    r0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    r0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    r0.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    r1.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
+    const int4 const_4 = {0, 1, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    r0.x = dot(ModelViewProj[0], IN.position);
+    r0.y = dot(ModelViewProj[1], IN.position);
+    r0.z = dot(ModelViewProj[2], IN.position);
+    r1.x = dot(r0, r0);	// normalize + length
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
     r0.w = 1.0 / sqrt(r1.x);
-    texcoord_1.x = (ObjToCubeSpace[0].x * input_0.x) + (ObjToCubeSpace[0].y * input_0.y) + (ObjToCubeSpace[0].z * input_0.z) + (ObjToCubeSpace[0].w * input_0.w);
+    OUT.texcoord_1.x = dot(ObjToCubeSpace, IN.position);
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r1.w = 1.0 / FogParam.y;
-    texcoord_1.y = (ObjToCubeSpace[1].x * input_0.x) + (ObjToCubeSpace[1].y * input_0.y) + (ObjToCubeSpace[1].z * input_0.z) + (ObjToCubeSpace[1].w * input_0.w);
+    OUT.texcoord_1.y = dot(const_9, IN.position);
     r0.w = r0.w * r1.w;
-    texcoord_1.z = (ObjToCubeSpace[2].x * input_0.x) + (ObjToCubeSpace[2].y * input_0.y) + (ObjToCubeSpace[2].z * input_0.z) + (ObjToCubeSpace[2].w * input_0.w);
-    r0.w = (r0.w >= const_4.x ? r0.w : const_4.x);
-    texcoord_1.w = (ObjToCubeSpace[3].x * input_0.x) + (ObjToCubeSpace[3].y * input_0.y) + (ObjToCubeSpace[3].z * input_0.z) + (ObjToCubeSpace[3].w * input_0.w);
-    r0.w = (r0.w < const_4.y ? r0.w : const_4.y);
-    position.xyz = r0;
-    texcoord_3.w = const_4.y - r0.w;
-    texcoord_0.xy = input_1;
-    texcoord_6.xyz = input_0;
-    texcoord_2 = LightPosition;
-    texcoord_3.xyz = const_4.x;
+    OUT.texcoord_1.z = dot(const_10, IN.position);
+    r0.w = max(r0.w, const_4.x);
+    OUT.texcoord_1.w = dot(const_11, IN.position);
+    r0.w = min(r0.w, const_4.y);
+    OUT.position.xyz = r0;
+    OUT.texcoord_3.w = const_4.y - r0.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_6.xyz = IN.position;
+    OUT.texcoord_2 = LightPosition[0];
+    OUT.texcoord_3.xyz = const_4.x;
 
 // approximately 22 instruction slots used

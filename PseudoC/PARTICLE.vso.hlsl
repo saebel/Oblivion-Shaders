@@ -23,35 +23,39 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   WorldViewProj const_0       4
-//   fVars0        fVars0       1
-//   fVars1        fVars1       1
-//   fVars2        fVars2       1
-//   fVars3        fVars3       1
-//   Color1        Color1       1
-//   Color2        Color2       1
-//   Color3        Color3      1
-//   Velocity      Velocity      1
-//   Acceleration  Acceleration      1
-//   InstanceData  const_15      2
+//   WorldViewProj[0] const_0        1
+//   WorldViewProj[1] const_1        1
+//   WorldViewProj[2] const_2        1
+//   WorldViewProj[3] const_3        1
+//   fVars0        const_4       1
+//   fVars1        const_5       1
+//   fVars2        const_6       1
+//   fVars3        const_7       1
+//   Color1        const_8       1
+//   Color2        const_9       1
+//   Color3        const_10      1
+//   Velocity      const_11      1
+//   Acceleration  const_12      1
+//   InstanceData[0]  const_15       1
+//   InstanceData[1]  const_16       1
 //
 
-    const_13 = {2, 0.5, 1, 0};
-    position input_0;
-    texcoord input_1;
-    color_1 input_2;
-    r0.w = input_2.x - input_2.x;
+    const float4 const_13 = {2, 0.5, 1, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.color_1 : COLOR1;
+    r0.w = IN.color_1.r + IN.color_1.x;
     r0.w = r0.w - floor(r0.w);
-    r0.w = (const_13.x * input_2.x) - r0.w;
-    mova a0.w, r0.w
+    r0.w = (const_13.x * IN.color_1.r) - r0.w;
+    offset.w = r0.w;
     r1.xzw = fVars0;
-    r0.w = r1.x - const_15[a0.w].w;
-    r0.xyz = const_16[a0.w];
+    r0.w = r1.x - InstanceData[0 + offset.w].w;
+    r0.xyz = InstanceData[1 + offset.w];
     r1.xyz = (r1.z * r0) + Velocity;
-    r3.w = r0.w * const_16[a0.w].w;
+    r3.w = r0.w * InstanceData[1 + offset.w].w;
     r0.xyz = (r1.w * r0) + Acceleration;
     r0.w = r3.w * r3.w;
-    r1.xyz = (r3.w * r1) + const_15[a0.w];
+    r1.xyz = (r3.w * r1) + InstanceData[0 + offset.w];
     r0.xyz = r0 * r0.w;
     r0.xyz = (const_13.y * r0) + r1;
     r0.xyz = r0 - fVars3;
@@ -61,47 +65,47 @@
     r2.xz = fVars2;
     r3.xy = (fVars2.zwzw < r6.w ? 1.0 : 0.0);
     r4.zw = const_13;
-    r1.xzw = (fVars2.yywy * r4.zyzw) - r4.wywz;
+    r1.xzw = (fVars2.yywy * r4.zyzw) + r4.wywz;
     r2.xz = r2 * r3.x;
-    r2.yw = r3.x * (fVars2 - fVars2.xxzz) + fVars2.xxzz;
+    r2.yw = lerp(fVars2, fVars2.xxzz, r3.x);
     r1.xzw = r1 - r2;
     r1.y = -r2.y;
-    position.z = (const_2.x * r0.x) + (const_2.y * r0.y) + (const_2.z * r0.z) + (const_2.w * r0.w);
-    r1 = (r3.y * r1) - r2;
-    position.w = (const_3.x * r0.x) + (const_3.y * r0.y) + (const_3.z * r0.z) + (const_3.w * r0.w);
+    OUT.position.z = dot(WorldViewProj[2], r0);
+    r1 = (r3.y * r1) + r2;
+    OUT.position.w = dot(WorldViewProj[3], r0);
     r2.w = r1.w - r1.z;
     r1.w = (r3.w * r5.w) - r1.z;
     r2.w = 1.0 / r2.w;
     r3.xyz = (fVars1 < r6.w ? 1.0 : 0.0);
     r1.w = r1.w * r2.w;
-    r2.w = r1.w * (r1.y - r1.x) + r1.x;
+    r2.w = lerp(r1.y, r1.x, r1.w);
     r1.w = fVars1.x;
     r1.x = r3.x * r1.w;
-    r1.z = r3.x * (fVars1.y - fVars1.x) + fVars1.x;
-    r5.xy = r3.y * (fVars1.yzzw - r1.xzzw) + r1.xzzw;
-    r2.xy = (fVars1.z * r4.zwzw) - r4.wzzw;
-    r4.xy = r2.w * input_0;
-    r1.xy = r3.z * (r2 - r5) + r5;
-    r5.x = (const_0.x * r0.x) + (const_0.y * r0.y) + (const_0.z * r0.z) + (const_0.w * r0.w);
+    r1.z = lerp(fVars1.y, fVars1.x, r3.x);
+    r5.xy = lerp(fVars1.yzzw, r1.xzzw, r3.y);
+    r2.xy = (fVars1.z * r4.zwzw) + r4.wzzw;
+    r4.xy = r2.w * IN.position;
+    r1.xy = lerp(r2, r5, r3.z);
+    r5.x = dot(WorldViewProj[0], r0);
     r2.w = r1.y - r1.x;
     r1.w = (r3.w * r5.w) - r1.x;
     r2.w = 1.0 / r2.w;
-    r5.y = (const_1.x * r0.x) + (const_1.y * r0.y) + (const_1.z * r0.z) + (const_1.w * r0.w);
+    r5.y = dot(WorldViewProj[1], r0);
     r5.w = r1.w * r2.w;
     r0 = Color1 - r4.zzzw;
     r1 = Color1;
     r1 = Color2 - r1;
-    r0 = (r3.x * r0) - const_13.zzzw;
-    r2 = (r3.x * r1) - Color1;
-    r1 = r3.y * (Color2 - r0) + r0;
-    r0 = r3.y * (Color3 - r2) + r2;
-    r2 = r3.z * (Color3 - r1) + r1;
-    r1 = r3.z * (const_13.zzzw - r0) + r0;
+    r0 = (r3.x * r0) + const_13.zzzw;
+    r2 = (r3.x * r1) + Color1;
+    r1 = lerp(Color2, r0, r3.y);
+    r0 = lerp(Color3, r2, r3.y);
+    r2 = lerp(Color3, r1, r3.z);
+    r1 = lerp(const_13.zzzw, r0, r3.z);
     r3.w = 1.0 / fVars1.w;
-    r0 = r5.w * (r1 - r2) + r2;
-    position.xy = (r3.w * r4) + r5;
-    color_0.w = r0.w * fVars3.w;
-    color_0.xyz = r0;
-    texcoord_0.xy = input_1;
+    r0 = lerp(r1, r2, r5.w);
+    OUT.position.xy = (r3.w * r4) + r5;
+    OUT.color_0.a = r0.w * fVars3.w;
+    OUT.color_0.rgb = r0;
+    OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 73 instruction slots used

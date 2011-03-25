@@ -18,16 +18,10 @@
 //
 //   Name                Reg   Size
 //   ------------------- ----- ----
-//   ModelViewProj[0]    c0       1
-//   ModelViewProj[1]    c1       1
-//   ModelViewProj[2]    c2       1
-//   ModelViewProj[3]    c3       1
+//   ModelViewProj       c0       4
 //   FogParam            c15      1
 //   FogColor            c16      1
-//   ShadowProj[0]          c21      1
-//   ShadowProj[1]          c22      1
-//   ShadowProj[2]          c23      1
-//   ShadowProj[3]          c24      1
+//   ShadowProj          c21      4
 //   ShadowProjData      c25      1
 //   ShadowProjTransform c26      1
 //

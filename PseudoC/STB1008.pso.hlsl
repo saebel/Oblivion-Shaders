@@ -17,27 +17,26 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   PSLightColor  PSLightColor       1
-//   NormalMap     NormalMap       1
-//   AttMapXY      AttMapXY       1
-//   AttMapZ       AttMapZ       1
-//   NormalCubeMap NormalCubeMap       1
+//   PSLightColor[0]  const_2        1
+//   NormalMap     texture_0       1
+//   AttMapXY      texture_1       1
+//   AttMapZ       texture_2       1
+//   NormalCubeMap texture_3       1
 //
 
-    ps_1_3
-    const_0 = {1, 0, 0, 0};
-    tex texcoord_0
-    tex texcoord_1
-    tex texcoord_2
-    tex texcoord_3
-    r0 = sat((texcoord_0_bx2.x * texcoord_3_bx2.x) + (texcoord_0_bx2.y * texcoord_3_bx2.y) + (texcoord_0_bx2.z * texcoord_3_bx2.z));
+    const int4 const_0 = {1, 0, 0, 0};
+    IN.texcoord_0 = tex2D(NormalMap, texcoord_0);
+    IN.texcoord_1 = tex2D(NormalMap, texcoord_0);
+    IN.texcoord_2 = tex2D(NormalMap, texcoord_0);
+    IN.texcoord_3 = tex2D(NormalMap, texcoord_0);
+    r0 = saturate(dot(2 * ((IN.texcoord_0) - 0.5), 2 * ((IN.texcoord_3) - 0.5)));
     r0.w = r0.w * r0.w;
     r0.w = r0.w * r0.w;
-    r0.xyz = r0.w * PSLightColor;
-    r0.xyz = texcoord_0.w * r0;
-    r1.xyz = texcoord_1 * texcoord_2;
-    texcoord_1 = (const_0.x * r0.x) + (const_0.y * r0.y) + (const_0.z * r0.z);
-    r0.w = texcoord_0.w * texcoord_1.w;
+    r0.xyz = r0.w * PSLightColor[0];
+    r0.xyz = IN.texcoord_0.w * r0;
+    r1.xyz = IN.texcoord_1 * IN.texcoord_2;
+    IN.texcoord_1 = dot(const_0, r0);
+    r0.w = IN.texcoord_0.w * IN.texcoord_1.w;
   + r0.xyz = r0 * r1;
 
 // approximately 12 instruction slots used (4 texture, 8 arithmetic)

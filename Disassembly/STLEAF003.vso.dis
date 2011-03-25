@@ -28,10 +28,7 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   ModelViewProj[0]  c0       1
-//   ModelViewProj[1]  c1       1
-//   ModelViewProj[2]  c2       1
-//   ModelViewProj[3]  c3       1
+//   ModelViewProj  c0       4
 //   AmbientColor   c5       1
 //   DiffColor      c6       1
 //   DiffColorPt    c7       1

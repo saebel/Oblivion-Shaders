@@ -3,7 +3,6 @@
 //
 //   vsa shaderdump19/STB1009.pso /Fcshaderdump19/STB1009.pso.dis
 //
-    ps_1_3
-    r0 = input_0;
+    r0 = IN.input_0;
 
 // approximately 1 instruction slot used

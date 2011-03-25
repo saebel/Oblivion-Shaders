@@ -15,32 +15,32 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   fPassNum        fPassNum       1
-//   sampButterfly   sampButterfly       1
-//   sampSourceImage sampSourceImage       1
+//   fPassNum        const_1       1
+//   sampButterfly   texture_0       1
+//   sampSourceImage texture_2       1
 //
 
-    texcoord input_0.xy;
-    sampler sampButterfly;
-    sampler sampSourceImage;
-    r2.y = texcoord_0.y;
-    r0.x = texcoord_0.x;
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D sampButterfly;
+    sampler2D sampSourceImage;
+    r2.y = IN.texcoord_0.y;
+    r0.x = IN.texcoord_0.x;
     r0.y = fPassNum.x;
-    r1 = sampButterfly[r0];
-    abs r2.x, r1.x
+    r1 = tex2D(sampButterfly, r0);
+    r2.x = abs(r1.x);
     r0.x = r1.y;
-    r0.y = texcoord_0.y;
-    r2 = sampSourceImage[r2];
-    r0 = sampSourceImage[r0];
+    r0.y = IN.texcoord_0.y;
+    r2 = tex2D(sampSourceImage, r2);
+    r0 = tex2D(sampSourceImage, r0);
     r3.w = r1.w * r2.w;
     r3.x = (r1.z * r2.x) - r3.w;
     r2.w = r1.z * r2.w;
-    r3.y = (r1.w * r2.x) - r2.w;
+    r3.y = (r1.w * r2.x) + r2.w;
     r1.xy = (r1.x >= 0.0 ? -r3 : r3);
-    r1.x = r0.x - r1.x;
-    r1.y = r0.w - r1.y;
+    r1.x = r0.x + r1.x;
+    r1.y = r0.w + r1.y;
     r0.xyz = r1.x;
     r0.w = r1.y;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 19 instruction slots used (3 texture, 16 arithmetic)

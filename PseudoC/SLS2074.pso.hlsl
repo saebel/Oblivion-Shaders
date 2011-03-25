@@ -3,8 +3,8 @@
 //
 //   vsa shaderdump19/SLS2074.pso /Fcshaderdump19/SLS2074.pso.dis
 //
-    const_0 = {0.901899993, 0.831399977, 0.721660018, 1};
+    const float4 const_0 = {0.901899993, 0.831399977, 0.721660018, 1};
     r0 = const_0;			// partial precision
-    rendertarget_0 = r0;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 2 instruction slots used

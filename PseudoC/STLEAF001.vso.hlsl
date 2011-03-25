@@ -26,117 +26,120 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   ModelViewProj[0]  ModelViewProj[0]       1
-//   ModelViewProj[1]  ModelViewProj[1]       1
-//   ModelViewProj[2]  ModelViewProj[2]       1
-//   ModelViewProj[3]  ModelViewProj[3]       1
-//   AmbientColor   AmbientColor       1
-//   DiffColor      DiffColor       1
-//   FogParam       FogParam       1
-//   FogColor       FogColor       1
-//   SunDimmer      SunDimmer      1
-//   LightVector    LightVector      1
-//   BillboardRight BillboardRight      1
-//   BillboardUp    BillboardUp      1
-//   RockParams     RockParams      1
-//   RustleParams   RustleParams      1
-//   LeafLighting   LeafLighting      1
-//   WindMatrices   ModelViewProj[1]8     16
-//   LeafBase       ModelViewProj[3]4     48
+//   ModelViewProj[0]  const_0        1
+//   ModelViewProj[1]  const_1        1
+//   ModelViewProj[2]  const_2        1
+//   ModelViewProj[3]  const_3        1
+//   AmbientColor   const_5       1
+//   DiffColor      const_6       1
+//   FogParam       const_8       1
+//   FogColor       const_9       1
+//   SunDimmer      const_10      1
+//   LightVector    const_11      1
+//   BillboardRight const_13      1
+//   BillboardUp    const_14      1
+//   RockParams     const_15      1
+//   RustleParams   const_16      1
+//   LeafLighting   const_17      1
+//   WindMatrices[0]   const_18      4
+//   WindMatrices[1]   const_19      4
+//   WindMatrices[2]   const_20      4
+//   WindMatrices[3]   const_21      4
+//   LeafBase       const_34     48
 //
 
-    def const_4, 6.28318548, -3.14159274, -2.52398507e-007, 2.47609005e-005
-    const_7 = {0.020833334, 0.499999553, 0.25, -0.00138883968};
-    ModelViewProj[1]2 = {0.159154937, 0.25, 0.5, 0};
-    FogParam2 = {0.0416666418, -0.5, 1, 0};
-    position input_0;
-    normal input_1;
-    texcoord input_2;
-    dcl_blendindices input_3
+    const float4 const_4 = {PI * 2, -PI, -2.52398507e-007, 2.47609005e-005};
+    const float4 const_7 = {(1.0 / 48), 0.499999553, 0.25, -0.00138883968};
+    const float4 const_12 = {(1.0 / (PI * 2)), 0.25, 0.5, 0};
+    const float4 const_82 = {(1.0 / 24), -0.5, 1, 0};
+    float4 IN.position : POSITION;
+    float3 IN.normal : NORMAL;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.blendindices : BLENDINDICES;
     r0.w = const_7.x;
-    r1.w = (input_3.z * r0.w) - RockParams.y;
-    r2.w = (r1.w * const_7.y) - const_7.z;
+    r1.w = (IN.blendindices.z * r0.w) + RockParams.y;
+    r2.w = (r1.w * const_7.y) + const_7.z;
     r6.y = pow(2.0, r2.w);	// partial precision
     r1.w = r6.y;
-    r1.w = (r1.w * const_4.x) - const_4.y;
+    r1.w = (r1.w * const_4.x) + const_4.y;
     r1.w = r1.w * r1.w;
-    r2.w = (input_3.z * r0.w) - RustleParams.y;
-    r0.w = (r1.w * const_4.z) - const_4.w;
-    r3.w = (r2.w * const_7.y) - const_7.z;
-    r2.w = (r1.w * r0.w) - const_7.w;
+    r2.w = (IN.blendindices.z * r0.w) + RustleParams.y;
+    r0.w = (r1.w * const_4.z) + const_4.w;
+    r3.w = (r2.w * const_7.y) + const_7.z;
+    r2.w = (r1.w * r0.w) + const_7.w;
     r6.y = pow(2.0, r3.w);	// partial precision
     r0.w = r6.y;
-    r2.w = (r1.w * r2.w) - FogParam2.x;
-    r0.w = (r0.w * const_4.x) - const_4.y;
-    r2.w = (r1.w * r2.w) - FogParam2.y;
+    r2.w = (r1.w * r2.w) + const_82.x;
+    r0.w = (r0.w * const_4.x) + const_4.y;
+    r2.w = (r1.w * r2.w) + const_82.y;
     r0.w = r0.w * r0.w;
-    r2.w = (r1.w * r2.w) - FogParam2.z;
-    r1.w = (r0.w * const_4.z) - const_4.w;
+    r2.w = (r1.w * r2.w) + const_82.z;
+    r1.w = (r0.w * const_4.z) + const_4.w;
     r2.w = r2.w * RockParams.z;
-    r1.w = (r0.w * r1.w) - const_7.w;
+    r1.w = (r0.w * r1.w) + const_7.w;
     r2.w = r2.w * RockParams.x;
-    r1.w = (r0.w * r1.w) - FogParam2.x;
-    r1.xy = (r2.w * ModelViewProj[1]2.x) - ModelViewProj[1]2.yzzw;
-    r1.w = (r0.w * r1.w) - FogParam2.y;
+    r1.w = (r0.w * r1.w) + const_82.x;
+    r1.xy = (r2.w * const_12.x) + const_12.yzzw;
+    r1.w = (r0.w * r1.w) + const_82.y;
     r0.xy = r1 - floor(r1);
-    r0.w = (r0.w * r1.w) - FogParam2.z;
+    r0.w = (r0.w * r1.w) + const_82.z;
     r0.xy = (const_4.x * r0) + const_4.y;
     r0.w = r0.w * RustleParams.z;
     r0.xy = r0 * r0;
     r0.w = r0.w * RustleParams.x;
     r1.xy = (const_4.z * r0) + const_4.w;
-    r3.xy = (r0.w * ModelViewProj[1]2.x) - ModelViewProj[1]2.yzzw;
+    r3.xy = (r0.w * const_12.x) + const_12.yzzw;
     r2.xy = (r1 * r0) + const_7.w;
     r1.xy = r3 - floor(r3);
-    r2.xy = (r2 * r0) + FogParam2.x;
+    r2.xy = (r2 * r0) + const_82.x;
     r1.xy = (const_4.x * r1) + const_4.y;
-    r2.xy = (r2 * r0) + FogParam2.y;
+    r2.xy = (r2 * r0) + const_82.y;
     r1.xy = r1 * r1;
-    r0.xw = (r0.yyzx * r2.yyzx) - FogParam2.z;
+    r0.xw = (r0.yyzx * r2.yyzx) + const_82.z;
     r2.xy = (const_4.z * r1) + const_4.w;
     r0.y = -r0.w;
     r2.xy = (r2 * r1) + const_7.w;
-    r0.z = FogParam2.w;
-    r3.xy = (r2 * r1) + FogParam2.x;
-    a0.x = input_3.z;
-    r2 = input_3.w * ModelViewProj[3]4[a0.x];
-    r3.xy = (r3 * r1) + FogParam2.y;
-    r5.x = (r0.zxyw.x * r2.x) + (r0.zxyw.y * r2.y) + (r0.zxyw.z * r2.z);
-    r3.xw = (r1.yyzx * r3.yyzx) - FogParam2.z;
+    r0.z = const_82.w;
+    r3.xy = (r2 * r1) + const_82.x;
+    offset.x = IN.blendindices.z;
+    r2 = IN.blendindices.w * LeafBase[offset.x];
+    r3.xy = (r3 * r1) + const_82.y;
+    r5.x = dot(r0.zxyw, r2);
+    r3.xw = (r1.yyzx * r3.yyzx) + const_82.z;
     r3.y = -r3.w;
-    r3.z = FogParam2.w;
-    r4.x = (r0.zwxw.x * r2.x) + (r0.zwxw.y * r2.y) + (r0.zwxw.z * r2.z);
-    r1.x = (r3.x * BillboardRight.x) + (r3.y * BillboardRight.y) + (r3.z * BillboardRight.z);
-    r0.x = (r3.x * BillboardUp.x) + (r3.y * BillboardUp.y) + (r3.z * BillboardUp.z);
-    r1.y = (r3.wxzw.x * BillboardRight.x) + (r3.wxzw.y * BillboardRight.y) + (r3.wxzw.z * BillboardRight.z);
-    r0.y = (r3.wxzw.x * BillboardUp.x) + (r3.wxzw.y * BillboardUp.y) + (r3.wxzw.z * BillboardUp.z);
+    r3.z = const_82.w;
+    r4.x = dot(r0.zwxw, r2);
+    r1.x = dot(r3, BillboardRight);
+    r0.x = dot(r3, BillboardUp);
+    r1.y = dot(r3.wxzw, BillboardRight);
+    r0.y = dot(r3.wxzw, BillboardUp);
     r1.zw = BillboardRight;
     r1 = r5.x * r1;
     r0.zw = BillboardUp;
-    r0 = (r4.x * r0) - r1;
-    r1 = r0 - input_0;
-    r0.w = (r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z) + (r2.w * r2.w);
-    a0.x = input_3.y;
-    r0.x = (ModelViewProj[1]8[a0.x].x * r1.x) + (ModelViewProj[1]8[a0.x].y * r1.y) + (ModelViewProj[1]8[a0.x].z * r1.z) + (ModelViewProj[1]8[a0.x].w * r1.w);
+    r0 = (r4.x * r0) + r1;
+    r1 = r0 + IN.position;
+    r0.w = dot(r2, r2);	// normalize + length
+    offset.x = IN.blendindices.y;
+    r0.x = dot(WindMatrices[0 + offset.x], r1);
     r0.w = 1.0 / sqrt(r0.w);
-    r0.y = (ModelViewProj[1]9[a0.x].x * r1.x) + (ModelViewProj[1]9[a0.x].y * r1.y) + (ModelViewProj[1]9[a0.x].z * r1.z) + (ModelViewProj[1]9[a0.x].w * r1.w);
+    r0.y = dot(WindMatrices[1 + offset.x], r1);
     r2.xyz = r2 * r0.w;
-    r0.z = (ModelViewProj[2]0[a0.x].x * r1.x) + (ModelViewProj[2]0[a0.x].y * r1.y) + (ModelViewProj[2]0[a0.x].z * r1.z) + (ModelViewProj[2]0[a0.x].w * r1.w);
-    r2.xyz = (LeafLighting.y * r2) + input_1;
-    r0.w = (ModelViewProj[2]1[a0.x].x * r1.x) + (ModelViewProj[2]1[a0.x].y * r1.y) + (ModelViewProj[2]1[a0.x].z * r1.z) + (ModelViewProj[2]1[a0.x].w * r1.w);
-    r3.x = (r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z);
+    r0.z = dot(WindMatrices[2 + offset.x], r1);
+    r2.xyz = (LeafLighting.y * r2) + IN.normal;
+    r0.w = dot(WindMatrices[3 + offset.x], r1);
+    r3.x = dot(r2, r2);	// normalize + length
     r0 = r0 - r1;
     r2.w = 1.0 / sqrt(r3.x);
-    r0 = (input_3.x * r0) + r1;
+    r0 = (IN.blendindices.x * r0) + r1;
     r1.xyz = r2 * r2.w;
-    position.w = (ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w);
-    r1.x = (r1.x * LightVector.x) + (r1.y * LightVector.y) + (r1.z * LightVector.z);
-    r1.w = (r1.x >= FogParam2.w ? r1.x : FogParam2.w);
-    r1.x = (ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w);
-    r1.y = (ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w);
-    r1.z = (ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w);
-    r0.w = (r1.w < FogParam2.z ? r1.w : FogParam2.z);
-    r2.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
+    OUT.position.w = dot(ModelViewProj[3], r0);
+    r1.x = dot(r1, LightVector);
+    r1.w = max(r1.x, const_82.w);
+    r1.x = dot(ModelViewProj[0], r0);
+    r1.y = dot(ModelViewProj[1], r0);
+    r1.z = dot(ModelViewProj[2], r0);
+    r0.w = min(r1.w, const_82.z);
+    r2.x = dot(r1, r1);	// normalize + length
     r0 = r0.w * DiffColor;
     r1.w = 1.0 / sqrt(r2.x);
     r2.w = SunDimmer.x;
@@ -144,16 +147,16 @@
     r1.w = 1.0 / r1.w;
     r1.w = FogParam.x - r1.w;
     r3.w = 1.0 / FogParam.y;
-    r6.y = pow(2.0, input_3.z);	// partial precision
+    r6.y = pow(2.0, IN.blendindices.z);	// partial precision
     r2.w = r6.y;
     r1.w = r1.w * r3.w;
-    texcoord_1.xyz = r0 * r2.w;
-    r1.w = (r1.w >= FogParam2.w ? r1.w : FogParam2.w);
-    texcoord_1.w = r0.w;
-    r0.w = (r1.w < FogParam2.z ? r1.w : FogParam2.z);
-    position.xyz = r1;
-    texcoord_2.w = FogParam2.z - r0.w;
-    texcoord_0.xy = input_2;
-    texcoord_2.xyz = FogColor;
+    OUT.texcoord_1.xyz = r0 * r2.w;
+    r1.w = max(r1.w, const_82.w);
+    OUT.texcoord_1.w = r0.w;
+    r0.w = min(r1.w, const_82.z);
+    OUT.position.xyz = r1;
+    OUT.texcoord_2.w = const_82.z - r0.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_2.xyz = FogColor;
 
 // approximately 106 instruction slots used

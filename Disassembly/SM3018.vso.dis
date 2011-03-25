@@ -14,13 +14,8 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] c0       1
-//   ModelViewProj[1] c1       1
-//   ModelViewProj[2] c2       1
-//   ModelViewProj[3] c3       1
-//   WorldView[0]     c5       1
-//   WorldView[1]     c6       1
-//   WorldView[2]     c7       1
+//   ModelViewProj c0       4
+//   WorldView     c5       3
 //
 
     vs_3_0

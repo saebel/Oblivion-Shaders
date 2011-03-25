@@ -14,26 +14,26 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   LightColor   LightColor       1
-//   NormalMap    NormalMap       1
+//   LightColor   const_0       1
+//   NormalMap    texture_0       1
 //
 
-    const_1 = {-0.5, 0, 0, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xyz;
-    sampler NormalMap;
-    r1 = NormalMap[texcoord_0];
-    r0.xyz = texcoord_1 - const_1.x;
-    r2.xyz = r0 - r0;
-    r0.xyz = r1 - const_1.x;
-    r0.xyz = r0 - r0;
-    r0.x = sat((r0.x * r2.x) + (r0.y * r2.y) + (r0.z * r2.z));
+    const float4 const_1 = {-0.5, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    sampler2D NormalMap;
+    r1 = tex2D(NormalMap, IN.texcoord_0);
+    r0.xyz = IN.texcoord_1 + const_1.x;
+    r2.xyz = r0 + r0;
+    r0.xyz = r1 + const_1.x;
+    r0.xyz = r0 + r0;
+    r0.x = saturate(dot(r0, r2));
     r0.w = r0.x * r0.x;
     r0.w = r0.w * r0.w;
     r2.w = r0.w * r0.w;
-    r2.w = r2.w * LightColor.x;
+    r2.w = r2.w * LightColor.r;
     r0.w = r1.w * r0.w;
     r0.xyz = r1.w * r2.w;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 13 instruction slots used (1 texture, 12 arithmetic)

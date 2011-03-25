@@ -3,7 +3,7 @@
 //
 //   psa shaderdump19/SM3037.pso /Fcshaderdump19/SM3037.pso.dis
 //
-    const_0 = {0, 0, 0, 0};
-    rendertarget_0 = const_0.x;			// partial precision
+    const int4 const_0 = {0, 0, 0, 0};
+    OUT.color_0 = const_0.x;			// partial precision
 
 // approximately 1 instruction slot used

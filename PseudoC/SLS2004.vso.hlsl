@@ -19,53 +19,51 @@
 //
 //   Name                Reg   Size
 //   ------------------- ----- ----
-//   ModelViewProj[0]    ModelViewProj[0]       1
-//   ModelViewProj[1]    ModelViewProj[1]       1
-//   ModelViewProj[2]    ModelViewProj[2]       1
-//   ModelViewProj[3]    ModelViewProj[3]       1
-//   LightDirection[0]   LightDirection[0]      1
-//   LightDirection[1]   LightDirection[1]      1
-//   LightDirection[2]   LightDirection[2]      1
-//   FogParam            FogParam      1
-//   FogColor            FogColor      1
-//   ShadowProj[0]       ShadowProj[0]      1
-//   ShadowProj[1]       ShadowProj[1]      1
-//   ShadowProj[2]       ShadowProj[2]      1
-//   ShadowProj[3]       ShadowProj[3]      1
-//   ShadowProjData      ShadowProjData      1
-//   ShadowProjTransform ShadowProjTransform      1
+//   ModelViewProj[0]       const_0        1
+//   ModelViewProj[1]       const_1        1
+//   ModelViewProj[2]       const_2        1
+//   ModelViewProj[3]       const_3        1
+//   LightDirection[0]      const_13       1
+//   FogParam            const_23      1
+//   FogColor            const_24      1
+//   ShadowProj[0]          const_28       1
+//   ShadowProj[1]          const_29       1
+//   ShadowProj[2]          const_30       1
+//   ShadowProj[3]          const_31       1
+//   ShadowProjData      const_32      1
+//   ShadowProjTransform const_33      1
 //
 
-    const_4 = {1, 0, 0, 0};
-    position input_0;
-    texcoord input_1;
-    r1.w = (ShadowProj[3].x * input_0.x) + (ShadowProj[3].y * input_0.y) + (ShadowProj[3].z * input_0.z) + (ShadowProj[3].w * input_0.w);
+    const int4 const_4 = {1, 0, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    r1.w = dot(ShadowProj[3], IN.position);
     r0.y = r1.w * ShadowProjTransform.w;
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
     r0.w = 1.0 / r0.y;
-    r1.x = (ShadowProj[0].x * input_0.x) + (ShadowProj[0].y * input_0.y) + (ShadowProj[0].z * input_0.z) + (ShadowProj[0].w * input_0.w);
-    r1.y = (ShadowProj[1].x * input_0.x) + (ShadowProj[1].y * input_0.y) + (ShadowProj[1].z * input_0.z) + (ShadowProj[1].w * input_0.w);
-    r2.xy = (r1.w * ShadowProjTransform) - r1;
-    r0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    r0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    r0.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
+    r1.x = dot(ShadowProj[0], IN.position);
+    r1.y = dot(ShadowProj[1], IN.position);
+    r2.xy = (r1.w * ShadowProjTransform) + r1;
+    r0.x = dot(ModelViewProj[0], IN.position);
+    r0.y = dot(ModelViewProj[1], IN.position);
+    r0.z = dot(ModelViewProj[2], IN.position);
     r1.xy = r1 - ShadowProjData;
-    r3.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
-    texcoord_7.xy = r0.w * r2;
+    r3.x = dot(r0, r0);	// normalize + length
+    OUT.texcoord_7.xy = r0.w * r2;
     r0.w = 1.0 / sqrt(r3.x);
     r1.w = 1.0 / ShadowProjData.w;
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r2.w = 1.0 / FogParam.y;
-    texcoord_7.z = r1.x * r1.w;
+    OUT.texcoord_7.z = r1.x * r1.w;
     r0.w = r0.w * r2.w;
-    texcoord_7.w = (r1.y * -r1.w) - const_4.x;
-    r0.w = (r0.w >= const_4.y ? r0.w : const_4.y);
-    position.xyz = r0;
-    r0.w = (r0.w < const_4.x ? r0.w : const_4.x);
-    color_1.w = const_4.x - r0.w;
-    texcoord_0.xy = input_1;
-    texcoord_1.xyz = LightDirection[0];
-    color_1.xyz = FogColor;
+    OUT.texcoord_7.w = (r1.y * -r1.w) + const_4.x;
+    r0.w = max(r0.w, const_4.y);
+    OUT.position.xyz = r0;
+    r0.w = min(r0.w, const_4.x);
+    OUT.color_1.a = const_4.x - r0.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.xyz = LightDirection[0];
+    OUT.color_1.rgb = FogColor;
 
 // approximately 28 instruction slots used

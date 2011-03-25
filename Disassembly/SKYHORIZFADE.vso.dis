@@ -16,10 +16,7 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] c0       1
-//   ModelViewProj[1] c1       1
-//   ModelViewProj[2] c2       1
-//   ModelViewProj[3] c3       1
+//   ModelViewProj c0       4
 //   BlendColor    c4       3
 //   EyePosition   c7       1
 //   Model         c8       3

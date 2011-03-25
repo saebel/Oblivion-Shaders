@@ -17,47 +17,47 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
-//   WorldMat[0]      WorldMat[0]       1
-//   WorldMat[1]      WorldMat[1]       1
-//   WorldMat[2]      WorldMat[2]       1
-//   WorldMat[3]      WorldMat[3]       1
-//   Tile          Tile       1
-//   QPosAdjust    QPosAdjust       1
-//   DepthOffset   DepthOffset      1
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
+//   WorldMat[0]      const_4        1
+//   WorldMat[1]      const_5        1
+//   WorldMat[2]      const_6        1
+//   WorldMat[3]      const_7        1
+//   Tile          const_8       1
+//   QPosAdjust    const_9       1
+//   DepthOffset   const_10      1
 //
 
-    ModelViewProj[1]1 = {0.5, 0.333333343, 0.000732423679, 0};
-    ModelViewProj[1]2 = {1, -1, 0, 0};
-    position input_0;
-    texcoord input_1;
-    position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    position.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    r1.w = ModelViewProj[1]1.x;
+    const float4 const_11 = {0.5, (1.0 / 3), (3.0 / 4096), 0};
+    const int4 const_12 = {1, -1, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    r1.w = const_11.x;
     r0 = r1.w * ModelViewProj[3];
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    texcoord_2 = (r1.w * ModelViewProj[0]) + r0;
-    texcoord_3 = (r1.w * ModelViewProj[1]) + r0;
-    texcoord_4 = (r1.w * ModelViewProj[2]) + r0;
-    texcoord_1.z = (WorldMat[2].x * input_0.x) + (WorldMat[2].y * input_0.y) + (WorldMat[2].z * input_0.z) + (WorldMat[2].w * input_0.w);
-    texcoord_1.w = (WorldMat[3].x * input_0.x) + (WorldMat[3].y * input_0.y) + (WorldMat[3].z * input_0.z) + (WorldMat[3].w * input_0.w);
-    r0.x = (WorldMat[0].x * input_0.x) + (WorldMat[0].y * input_0.y) + (WorldMat[0].z * input_0.z) + (WorldMat[0].w * input_0.w);
-    r0.y = (WorldMat[1].x * input_0.x) + (WorldMat[1].y * input_0.y) + (WorldMat[1].z * input_0.z) + (WorldMat[1].w * input_0.w);
-    r0.zw = r0.xyxy - QPosAdjust.xyxy;
-    texcoord_1.xy = r0;
-    texcoord_7.zw = r0 * ModelViewProj[1]1.z;
-    texcoord_0 = input_0;
-    texcoord_5 = ModelViewProj[3];
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    OUT.texcoord_2 = (r1.w * ModelViewProj[0]) + r0;
+    OUT.texcoord_3 = (r1.w * ModelViewProj[1]) + r0;
+    OUT.texcoord_4 = (r1.w * ModelViewProj[2]) + r0;
+    OUT.texcoord_1.z = dot(WorldMat[2], IN.position);
+    OUT.texcoord_1.w = dot(WorldMat[3], IN.position);
+    r0.x = dot(WorldMat[0], IN.position);
+    r0.y = dot(WorldMat[1], IN.position);
+    r0.zw = r0.xyxy + QPosAdjust.xyxy;
+    OUT.texcoord_1.xy = r0;
+    OUT.texcoord_7.zw = r0 * const_11.z;
+    OUT.texcoord_0 = IN.position;
+    OUT.texcoord_5 = ModelViewProj[3];
     r1.w = 1.0 / Tile.x;
-    texcoord_6.xy = input_1;
-    r0.zw = (input_1.xyxy * r1.w) - DepthOffset.xyyx;
-    r0.xy = r1.w * input_1;
-    r0.zw = r0 * ModelViewProj[1]1.y;
-    texcoord_6.zw = (ModelViewProj[1]2.xyxy * r0) + ModelViewProj[1]2.xyzx;
-    texcoord_7.xy = r0;
+    OUT.texcoord_6.xy = IN.texcoord_0;
+    r0.zw = (IN.texcoord_0.xyxy * r1.w) + DepthOffset.xyyx;
+    r0.xy = r1.w * IN.texcoord_0;
+    r0.zw = r0 * const_11.y;
+    OUT.texcoord_6.zw = (const_12.xyxy * r0) + const_12.xyzx;
+    OUT.texcoord_7.xy = r0;
 
 // approximately 25 instruction slots used

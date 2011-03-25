@@ -16,34 +16,34 @@
 //
 //   Name               Reg   Size
 //   ------------------ ----- ----
-//   MatAlpha           MatAlpha       1
-//   PSLightColor       PSLightColor       1
-//   NormalMap          NormalMap       1
-//   EnvironmentCubeMap EnvironmentCubeMap       1
+//   MatAlpha           const_3       1
+//   PSLightColor       const_9       1
+//   NormalMap          texture_0       1
+//   EnvironmentCubeMap texture_1       1
 //
 
-    const_0 = {-0.5, 1, 0, 0};
-    texcoord input_0.xy;			// partial precision
-    texcoord_1 input_1;			// partial precision			// centroid
-    texcoord_2 input_2.xyz;			// partial precision			// centroid
-    color input_3.xyz;			// partial precision
-    sampler NormalMap;
-    dcl_cube EnvironmentCubeMap
-    r0.xyz = input_1 - const_0.x;
-    r0.xyz = r0 - r0;			// partial precision
-    r1.xyz = norm(input_2);			// partial precision
-    r0.w = (r0.x * r1.x) + (r0.y * r1.y) + (r0.z * r1.z);			// partial precision
-    r1.w = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);			// partial precision
-    r0.w = r0.w - r0.w;			// partial precision
+    const float4 const_0 = {-0.5, 1, 0, 0};
+    float2 IN.texcoord_0 : TEXCOORD0;			// partial precision
+    float4 input_1 : TEXCOORD1_centroid;			// partial precision
+    float3 input_2 : TEXCOORD2_centroid;			// partial precision
+    float3 IN.color_0 : COLOR0;			// partial precision
+    sampler2D NormalMap;
+    samplerCUBE EnvironmentCubeMap;
+    r0.xyz = IN.input_1 + const_0.x;
+    r0.xyz = r0 + r0;			// partial precision
+    r1.xyz = normalize(IN.input_2);			// partial precision
+    r0.w = dot(r0, r1);			// partial precision
+    r1.w = dot(r0, r0);	// normalize + length			// partial precision
+    r0.w = r0.w + r0.w;			// partial precision
     r1.xyz = r1 * r1.w;			// partial precision
     r0.xyz = (r0.w * r0) - r1;			// partial precision
-    r0 = EnvironmentCubeMap[r0];			// partial precision
-    r1 = NormalMap[input_0];			// partial precision
+    r0 = texCUBE(EnvironmentCubeMap, r0);			// partial precision
+    r1 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
     r0.xyz = r0 * r1.w;			// partial precision
     r0.xyz = r0 * MatAlpha.x;			// partial precision
-    r0.xyz = r0 * input_3;			// partial precision
+    r0.xyz = r0 * IN.color_0;			// partial precision
     r0.xyz = r0 * PSLightColor;			// partial precision
-    rendertarget_0.xyz = r0 * input_1.w;			// partial precision
-    rendertarget_0.w = const_0.y;			// partial precision
+    OUT.color_0.rgb = r0 * IN.input_1.w;			// partial precision
+    OUT.color_0.a = const_0.y;			// partial precision
 
 // approximately 18 instruction slots used (2 texture, 16 arithmetic)

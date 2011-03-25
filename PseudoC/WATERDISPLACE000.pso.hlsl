@@ -4,8 +4,8 @@
 //   vsa shaderdump19/WATERDISPLACE000.pso
 //    /Fcshaderdump19/WATERDISPLACE000.pso.dis
 //
-    const_0 = {0.899999976, 0.5, 0.5, 0.5};
+    const float4 const_0 = {1.0 - 0.1, 0.5, 0.5, 0.5};
     r0 = const_0;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 2 instruction slots used

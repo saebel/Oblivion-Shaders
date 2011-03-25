@@ -14,15 +14,15 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   AmbientColor AmbientColor       1
-//   Src0         Src0       1
+//   AmbientColor const_0       1
+//   Src0         texture_0       1
 //
 
-    color input_0;
-    texcoord input_1.xy;
-    sampler Src0;
-    r0 = Src0[input_1];
-    rendertarget_0.xyz = sat((r0 * input_0) + AmbientColor);
-    rendertarget_0.w = r0.w * input_0.w;
+    float4 IN.color_0 : COLOR0;
+    float2 IN.texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
+    r0 = tex2D(Src0, IN.texcoord_0);
+    OUT.color_0.rgb = saturate((IN.color_0 * r0) + AmbientColor);
+    OUT.color_0.a = r0.w * IN.color_0.a;
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

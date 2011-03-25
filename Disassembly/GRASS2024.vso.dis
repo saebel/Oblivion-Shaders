@@ -32,14 +32,10 @@
 //   AlphaParam    c5       1
 //   AmbientColor  c6       1
 //   AddlParams    c7       1
-//   ModelViewProj[0] c9       1
-//   ModelViewProj[1] c10      1
-//   ModelViewProj[2] c11      1
-//   ModelViewProj[3] c12      1
+//   ModelViewProj c9       4
 //   FogColor      c14      1
 //   FogParam      c15      1
-//   InstanceData[0]  c20      1
-//   InstanceData[1]  c21      1
+//   InstanceData  c20      2
 //
 
     vs_2_0

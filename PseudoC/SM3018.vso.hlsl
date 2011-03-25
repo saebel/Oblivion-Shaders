@@ -14,29 +14,29 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
-//   WorldView[0]     WorldView[0]       1
-//   WorldView[1]     WorldView[1]       1
-//   WorldView[2]     WorldView[2]       1
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
+//   WorldView[0]     const_5        1
+//   WorldView[1]     const_6        1
+//   WorldView[2]     const_7        1
 //
 
-    const_4 = {0, 0, 0, 0};
-    position input_0;
-    texcoord input_1;
-    position output_0;
-    texcoord output_1.xy;
-    texcoord_1 output_2;
-    output_0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    output_0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    output_0.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    output_0.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    output_2.x = (WorldView[0].x * input_0.x) + (WorldView[0].y * input_0.y) + (WorldView[0].z * input_0.z) + (WorldView[0].w * input_0.w);
-    output_2.y = (WorldView[1].x * input_0.x) + (WorldView[1].y * input_0.y) + (WorldView[1].z * input_0.z) + (WorldView[1].w * input_0.w);
-    output_2.z = (WorldView[2].x * input_0.x) + (WorldView[2].y * input_0.y) + (WorldView[2].z * input_0.z) + (WorldView[2].w * input_0.w);
-    output_1.xy = input_1;
-    output_2.w = const_4.x;
+    const int4 const_4 = {0, 0, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 OUT.position : POSITION;
+    float2 OUT.texcoord_0 : TEXCOORD0;
+    float4 OUT.texcoord_1 : TEXCOORD1;
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    OUT.texcoord_1.x = dot(WorldView[0], IN.position);
+    OUT.texcoord_1.y = dot(WorldView[1], IN.position);
+    OUT.texcoord_1.z = dot(WorldView[2], IN.position);
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.w = const_4.x;
 
 // approximately 9 instruction slots used

@@ -15,38 +15,38 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   ModelViewProj[0]  ModelViewProj[0]       1
-//   ModelViewProj[1]  ModelViewProj[1]       1
-//   ModelViewProj[2]  ModelViewProj[2]       1
-//   ModelViewProj[3]  ModelViewProj[3]       1
-//   LightDirection LightDirection      1
-//   LightPosition[0]  LightPosition[0]      1
-//   LightPosition[1]  LightPosition[1]      1
+//   ModelViewProj[0]  const_0        1
+//   ModelViewProj[1]  const_1        1
+//   ModelViewProj[2]  const_2        1
+//   ModelViewProj[3]  const_3        1
+//   LightDirection[0] const_13       1
+//   LightPosition[0]  const_16       1
+//   LightPosition[1]  const_17       1
 //
 
-    const_4 = {0, 1, 0, 0};
-    position input_0;
-    normal input_1;
-    texcoord input_2;
-    position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    position.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
-    r0.xyz = LightPosition[1] - input_0;
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r2.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
-    r1.x = (LightDirection.x * input_1.x) + (LightDirection.y * input_1.y) + (LightDirection.z * input_1.z);
+    const int4 const_4 = {0, 1, 0, 0};
+    float4 IN.position : POSITION;
+    float3 IN.normal : NORMAL;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    r0.xyz = LightPosition[1] - IN.position;
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r2.x = dot(r0, r0);	// normalize + length
+    r1.x = dot(LightDirection[0], IN.normal);
     r1.w = 1.0 / sqrt(r2.x);
     r3.w = 1.0 / LightPosition[1].w;
     r0.w = 1.0 / r1.w;
-    r2.w = (r1.x >= const_4.x ? r1.x : const_4.x);
+    r2.w = max(r1.x, const_4.x);
     r0.w = r3.w * r0.w;
-    color_0.xyz = (r2.w < const_4.y ? r2.w : const_4.y);
-    r0.w = (r0.w >= const_4.x ? r0.w : const_4.x);
+    OUT.color_0.rgb = min(r2.w, const_4.y);
+    r0.w = max(r0.w, const_4.x);
     r0.xyz = r0 * r1.w;
-    r0.w = (r0.w < const_4.y ? r0.w : const_4.y);
-    r0.w = (r0.w * -r0.w) - const_4.y;
-    r0.x = (r0.x * input_1.x) + (r0.y * input_1.y) + (r0.z * input_1.z);
-    color_1.xyz = r0.w * r0.x;
-    texcoord_0.xy = input_2;
+    r0.w = min(r0.w, const_4.y);
+    r0.w = (r0.w * -r0.w) + const_4.y;
+    r0.x = dot(r0, IN.normal);
+    OUT.color_1.rgb = r0.w * r0.x;
+    OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 20 instruction slots used

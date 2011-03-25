@@ -26,94 +26,94 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   Scroll          Scroll       1
-//   EyePos          EyePos       1
-//   ShallowColor    ShallowColor       1
-//   DeepColor       DeepColor       1
-//   ReflectionColor ReflectionColor       1
-//   VarAmounts      VarAmounts       1
-//   FogParam        FogParam       1
-//   FogColor        FogColor      1
-//   FresnelRI       FresnelRI      1
-//   BlendRadius     BlendRadius      1
-//   ReflectionMap   ReflectionMap       1
-//   NormalMap       NormalMap       1
-//   DetailMap       DetailMap       1
-//   DisplacementMap DisplacementMap       1
+//   Scroll          const_0       1
+//   EyePos          const_1       1
+//   ShallowColor    const_5       1
+//   DeepColor       const_6       1
+//   ReflectionColor const_7       1
+//   VarAmounts      const_8       1
+//   FogParam        const_9       1
+//   FogColor        const_10      1
+//   FresnelRI       const_11      1
+//   BlendRadius     const_12      1
+//   ReflectionMap   texture_0       1
+//   NormalMap       texture_1       1
+//   DetailMap       texture_2       1
+//   DisplacementMap texture_4       1
 //
 
-    const_2 = {-0.5, 0.100000001, 0, 0};
-    const_3 = {2, -1, 0, -0.000122070313};
-    texcoord input_1.xyz;			// centroid
-    texcoord input_6.xy;
-    texcoord input_7;
-    dcl_cube ReflectionMap
-    sampler NormalMap;
-    sampler DetailMap;
-    sampler DisplacementMap;
-    r0 = DisplacementMap[texcoord_6];
-    r1.xy = texcoord_6 - const_2.x;
-    dp2r0.w = r1 - r1;, const_3.z
+    const float4 const_2 = {-0.5, 0.1, 0, 0};
+    const float4 const_3 = {2, -1, 0, -(1.0 / 8192)};
+    float3 texcoord_1 : TEXCOORD1_centroid;
+    float2 texcoord_6 : TEXCOORD6;
+    float4 texcoord_7 : TEXCOORD7;
+    samplerCUBE ReflectionMap;
+    sampler2D NormalMap;
+    sampler2D DetailMap;
+    sampler2D DisplacementMap;
+    r0 = tex2D(DisplacementMap, IN.texcoord_6);
+    r1.xy = IN.texcoord_6 + const_2.x;
+    r0.w = dot(r1.xy, r1.xy) + const_3.z;
     r0.w = 1.0 / sqrt(r0.w);
     r2.w = 1.0 / r0.w;
-    r0.w = r2.w - r2.w;
+    r0.w = r2.w + r2.w;
     r1.w = 1.0 / BlendRadius.x;
     r0.w = r0.w * r1.w;
-    r4.w = sat((const_2.y >= r0.w ? const_2.y : r0.w));
-    r1.xy = EyePos - texcoord_1;
-    dp2r0.w = r1 - r1;, const_3.z
+    r4.w = saturate(max(const_2.y, r0.w));
+    r1.xy = EyePos - IN.texcoord_1;
+    r0.w = dot(r1.xy, r1.xy) + const_3.z;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
-    r1.xyz = (const_3.x * r0) - const_3.y;
-    r3.w = sat((r0.w * const_3.w) - const_3.y);
+    r1.xyz = (const_3.x * r0) + const_3.y;
+    r3.w = saturate((r0.w * const_3.w) - const_3.y);
     r1.w = r3.w * r3.w;
-    r4.x = texcoord_7.z - Scroll.x;
-    r4.y = texcoord_7.w - Scroll.y;
-    r0 = NormalMap[r4];
-    r0.xyz = (const_3.x * r0) - const_3.y;
-    add r0.w, -r4.w, -const_3.y
+    r4.x = IN.texcoord_7.z + Scroll.x;
+    r4.y = IN.texcoord_7.w + Scroll.y;
+    r0 = tex2D(NormalMap, r4);
+    r0.xyz = (const_3.x * r0) + const_3.y;
+    r0.w = -(r4.w + const_3.y);
     r0.xy = r1.w * r0;
     r0.w = r0.w * BlendRadius.y;
-    r2.xyz = r0.w * (r1 - r0) + r0;
-    r0.xyz = EyePos - texcoord_1;
-    r3.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
-    r1.xyz = norm(r2);
+    r2.xyz = lerp(r1, r0, r0.w);
+    r0.xyz = EyePos - IN.texcoord_1;
+    r3.x = dot(r0, r0);	// normalize + length
+    r1.xyz = normalize(r2);
     r1.w = 1.0 / sqrt(r3.x);
     r3.xy = const_3;
-    r2.w = (r3.x * -r2.w) - BlendRadius.x;
+    r2.w = (r3.x * -r2.w) + BlendRadius.x;
     r0.xyz = r0 * r1.w;
     r4.w = r3.w * VarAmounts.w;
-    r2.x = (r0.x * r1.x) + (r0.y * r1.y) + (r0.z * r1.z);
-    r0.w = r2.x - r2.x;
+    r2.x = dot(r0, r1);
+    r0.w = r2.x + r2.x;
     r5.w = 1.0 / r1.w;
     r0.xyz = (-r0.w * r1) + r0;
-    r6.w = sat(r2.x);
+    r6.w = saturate(r2.x);
     r2.xy = (const_2.y * r1) + r4;
-    r1 = ReflectionMap[r0];			// partial precision
-    r0 = DetailMap[r2];
-    add r0.w, -r6.w, -const_3.y
+    r1 = texCUBE(ReflectionMap, r0);			// partial precision
+    r0 = tex2D(DetailMap, r2);
+    r0.w = -(r6.w + const_3.y);
     r1.w = r0.w * r0.w;
     r2.xyz = ReflectionColor - r3.y;
     r1.w = r1.w * r1.w;
     r1.xyz = r1 * r2;			// partial precision
     r1.w = r0.w * r1.w;
     r1.xyz = r1 * ReflectionColor;
-    add r0.w, -r3.y, -FresnelRI.x
+    r0.w = -(r3.y + FresnelRI.x);
     r1.xyz = r1 * VarAmounts.y;
-    r3.w = (r0.w * r1.w) - FresnelRI.x;
+    r3.w = (r0.w * r1.w) + FresnelRI.x;
     r2.xyz = DeepColor;
     r2.xyz = ShallowColor - r2;
-    r0.w = (VarAmounts.z >= r3.w ? VarAmounts.z : r3.w);
-    r2.xyz = (r6.w * r2) - DeepColor;			// partial precision
+    r0.w = max(VarAmounts.z, r3.w);
+    r2.xyz = (r6.w * r2) + DeepColor;			// partial precision
     r1.w = FogParam.x - r5.w;
-    r2.xyz = sat((r3.w * r1) + r2);
+    r2.xyz = saturate((r3.w * r1) + r2);
     r3.w = 1.0 / FogParam.y;
-    r1.xyz = r4.w * (r0 - r2) + r2;
-    r1.w = sat(r1.w * r3.w);
+    r1.xyz = lerp(r0, r2, r4.w);
+    r1.w = saturate(r1.w * r3.w);
     r0.xyz = FogColor - r1;
-    add r1.w, -r1.w, -const_3.y
-    r0.xyz = (r1.w * r0) - r1;
+    r1.w = -(r1.w + const_3.y);
+    r0.xyz = (r1.w * r0) + r1;
     r0.w = (r2.w >= 0.0 ? const_3.z : r0.w);
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 68 instruction slots used (4 texture, 64 arithmetic)

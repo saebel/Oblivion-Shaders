@@ -16,47 +16,47 @@
 //
 //   Name             Reg   Size
 //   ---------------- ----- ----
-//   ModelViewProj[0]    ModelViewProj[0]       1
-//   ModelViewProj[1]    ModelViewProj[1]       1
-//   ModelViewProj[2]    ModelViewProj[2]       1
-//   ModelViewProj[3]    ModelViewProj[3]       1
+//   ModelViewProj[0]    const_0        1
+//   ModelViewProj[1]    const_1        1
+//   ModelViewProj[2]    const_2        1
+//   ModelViewProj[3]    const_3        1
 //   ObjToCubeSpace   const_8       4
-//   EyePosition      EyePosition      1
-//   BoundWorldCenter BoundWorldCenter      1
+//   EyePosition      const_25      1
+//   BoundWorldCenter const_46      1
 //
 
-    const_4 = {1, -2, 3, 0};
-    const_5 = {0.5, -0.800000012, 6.66666651, 0};
-    position input_0;
-    texcoord input_1;
-    color input_2;
-    r1.w = (ModelViewProj[1]1.x * input_0.x) + (ModelViewProj[1]1.y * input_0.y) + (ModelViewProj[1]1.z * input_0.z) + (ModelViewProj[1]1.w * input_0.w);
-    r1.x = (const_8.x * input_0.x) + (const_8.y * input_0.y) + (const_8.z * input_0.z) + (const_8.w * input_0.w);
-    r1.y = (const_9.x * input_0.x) + (const_9.y * input_0.y) + (const_9.z * input_0.z) + (const_9.w * input_0.w);
-    r1.z = (ModelViewProj[1]0.x * input_0.x) + (ModelViewProj[1]0.y * input_0.y) + (ModelViewProj[1]0.z * input_0.z) + (ModelViewProj[1]0.w * input_0.w);
+    const int4 const_4 = {1, -2, 3, 0};
+    const float4 const_5 = {0.5, -0.8, 6.66666651, 0};
+    float4 IN.position : POSITION;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float4 IN.color_0 : COLOR0;
+    r1.w = dot(const_11, IN.position);
+    r1.x = dot(ObjToCubeSpace, IN.position);
+    r1.y = dot(const_9, IN.position);
+    r1.z = dot(const_10, IN.position);
     r0 = r1 - BoundWorldCenter;
-    r0.w = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z) + (r0.w * r0.w);
-    position.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
+    r0.w = dot(r0, r0);	// normalize + length
+    OUT.position.x = dot(ModelViewProj[0], IN.position);
     r0.w = 1.0 / sqrt(r0.w);
     r2.xyz = EyePosition - r1;
     r1.xyz = r0 * r0.w;
-    r0.xyz = norm(r2);
-    r3.x = (r1.x * r1.x) + (r1.y * r1.y) + (r1.z * r1.z);
-    r2.x = (r1.x * r0.x) + (r1.y * r0.y) + (r1.z * r0.z);
+    r0.xyz = normalize(r2);
+    r3.x = dot(r1, r1);	// normalize + length
+    r2.x = dot(r1, r0);
     r0.w = 1.0 / sqrt(r3.x);
-    position.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    r0.w = (r2.x * r0.w) - const_5.y;
-    position.z = (ModelViewProj[2].x * input_0.x) + (ModelViewProj[2].y * input_0.y) + (ModelViewProj[2].z * input_0.z) + (ModelViewProj[2].w * input_0.w);
+    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    r0.w = (r2.x * r0.w) + const_5.y;
+    OUT.position.z = dot(ModelViewProj[2], IN.position);
     r0.w = r0.w * const_5.z;
-    position.w = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    r0.w = (r0.w >= const_5.w ? r0.w : const_5.w);
-    texcoord_1.xyz = (const_5.x * r1) + const_5.x;
-    r1.w = (r0.w < const_4.x ? r0.w : const_4.x);
-    r0.w = (r1.w * const_4.y) - const_4.z;
+    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r0.w = max(r0.w, const_5.w);
+    OUT.texcoord_1.xyz = (const_5.x * r1) + const_5.x;
+    r1.w = min(r0.w, const_4.x);
+    r0.w = (r1.w * const_4.y) + const_4.z;
     r1.w = r1.w * r1.w;
-    texcoord_2.xyz = r0;
-    texcoord_1.w = r0.w * r1.w;
-    texcoord_0.xy = input_1;
-    color_0.xyz = input_2;
+    OUT.texcoord_2.xyz = r0;
+    OUT.texcoord_1.w = r0.w * r1.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.color_0.rgb = IN.color_0;
 
 // approximately 30 instruction slots used

@@ -14,24 +14,26 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] ModelViewProj[0]       1
-//   ModelViewProj[1] ModelViewProj[1]       1
-//   ModelViewProj[2] ModelViewProj[2]       1
-//   ModelViewProj[3] ModelViewProj[3]       1
-//   BlendColor    const_4       3
+//   ModelViewProj[0] const_0        1
+//   ModelViewProj[1] const_1        1
+//   ModelViewProj[2] const_2        1
+//   ModelViewProj[3] const_3        1
+//   BlendColor[0]    const_4        1
+//   BlendColor[1]    const_5        1
+//   BlendColor[2]    const_6        1
 //
 
-    position input_0;
-    color input_1;
-    position output_0;
-    dcl_color output_1
-    r0.xyz = const_5 * input_1.y;
-    r0.xyz = (input_1.x * const_4) + r0;
-    output_1.xyz = (input_1.z * const_6) + r0;
-    r0.x = (ModelViewProj[0].x * input_0.x) + (ModelViewProj[0].y * input_0.y) + (ModelViewProj[0].z * input_0.z) + (ModelViewProj[0].w * input_0.w);
-    r0.y = (ModelViewProj[1].x * input_0.x) + (ModelViewProj[1].y * input_0.y) + (ModelViewProj[1].z * input_0.z) + (ModelViewProj[1].w * input_0.w);
-    r0.z = (ModelViewProj[3].x * input_0.x) + (ModelViewProj[3].y * input_0.y) + (ModelViewProj[3].z * input_0.z) + (ModelViewProj[3].w * input_0.w);
-    output_1.w = const_4.w * input_1.w;
-    output_0 = r0.xyzz;
+    float4 IN.position : POSITION;
+    float4 IN.color_0 : COLOR0;
+    float4 OUT.position : POSITION;
+    float4 OUT.color_0 : COLOR0;
+    r0.xyz = BlendColor[1] * IN.color_0.g;
+    r0.xyz = (IN.color_0.r * BlendColor[0]) + r0;
+    OUT.color_0.rgb = (IN.color_0.b * BlendColor[2]) + r0;
+    r0.x = dot(ModelViewProj[0], IN.position);
+    r0.y = dot(ModelViewProj[1], IN.position);
+    r0.z = dot(ModelViewProj[3], IN.position);
+    OUT.color_0.a = BlendColor[0].a * IN.color_0.a;
+    OUT.position = r0.xyzz;
 
 // approximately 8 instruction slots used

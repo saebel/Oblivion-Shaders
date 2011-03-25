@@ -15,21 +15,21 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Params       Params       1
-//   TexMap       TexMap       1
-//   TexMapBlend  TexMapBlend       1
+//   Params       const_4       1
+//   TexMap       texture_0       1
+//   TexMapBlend  texture_1       1
 //
 
-    texcoord input_0.xy;
-    texcoord_1 input_1.xy;
-    color input_2;
-    sampler TexMap;
-    sampler TexMapBlend;
-    r2 = TexMap[input_0];
-    r1 = TexMapBlend[input_1];
-    r0 = Params.x * (r1 - r2) + r2;
-    r0.xyz = r0 * input_2;
-    rendertarget_0.w = r0.w * input_2.w;
-    rendertarget_0.xyz = r0 * Params.y;
+    float2 IN.texcoord_0 : TEXCOORD0;
+    float2 IN.texcoord_1 : TEXCOORD1;
+    float4 IN.color_0 : COLOR0;
+    sampler2D TexMap;
+    sampler2D TexMapBlend;
+    r2 = tex2D(TexMap, IN.texcoord_0);
+    r1 = tex2D(TexMapBlend, IN.texcoord_1);
+    r0 = lerp(r1, r2, Params.x);
+    r0.xyz = r0 * IN.color_0;
+    OUT.color_0.a = r0.w * IN.color_0.a;
+    OUT.color_0.rgb = r0 * Params.y;
 
 // approximately 7 instruction slots used (2 texture, 5 arithmetic)

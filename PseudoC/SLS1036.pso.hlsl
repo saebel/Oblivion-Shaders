@@ -16,20 +16,20 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   AmbientColor   AmbientColor       1
-//   EmittanceColor EmittanceColor       1
-//   DiffuseMap     DiffuseMap       1
-//   GlowMap        GlowMap       1
+//   AmbientColor   const_1       1
+//   EmittanceColor const_6       1
+//   DiffuseMap     texture_0       1
+//   GlowMap        texture_1       1
 //
 
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    sampler DiffuseMap;
-    sampler GlowMap;
-    r1 = GlowMap[texcoord_1];
-    r0 = DiffuseMap[texcoord_0];
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    sampler2D DiffuseMap;
+    sampler2D GlowMap;
+    r1 = tex2D(GlowMap, IN.texcoord_1);
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);
     r0.xyz = EmittanceColor;
     r0.xyz = (r1 * r0) + AmbientColor;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 5 instruction slots used (2 texture, 3 arithmetic)

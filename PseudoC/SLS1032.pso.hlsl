@@ -15,35 +15,35 @@
 //
 //   Name               Reg   Size
 //   ------------------ ----- ----
-//   AmbientColor       AmbientColor       1
-//   NormalMap          NormalMap       1
-//   EnvironmentCubeMap EnvironmentCubeMap       1
+//   AmbientColor       const_1       1
+//   NormalMap          texture_0       1
+//   EnvironmentCubeMap texture_3       1
 //
 
-    const_0 = {2, -1, 1, 0};
-    texcoord input_0.xy;
-    texcoord input_1;
-    texcoord input_2;
-    texcoord input_3;
-    sampler NormalMap;
-    dcl_cube EnvironmentCubeMap
-    r1 = NormalMap[texcoord_0];
-    r2.x = texcoord_1.w;
-    r2.y = texcoord_2.w;
-    r2.z = texcoord_3.w;
-    r1.xyz = (const_0.x * r1) - const_0.y;
-    r0.x = (r1.x * texcoord_1.x) + (r1.y * texcoord_1.y) + (r1.z * texcoord_1.z);
-    r0.y = (r1.x * texcoord_2.x) + (r1.y * texcoord_2.y) + (r1.z * texcoord_2.z);
-    r0.z = (r1.x * texcoord_3.x) + (r1.y * texcoord_3.y) + (r1.z * texcoord_3.z);
-    r3.x = (r0.x * r2.x) + (r0.y * r2.y) + (r0.z * r2.z);
-    r1.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
-    r0.w = r3.x - r3.x;
+    const int4 const_0 = {2, -1, 1, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float4 texcoord_1 : TEXCOORD1;
+    float4 texcoord_2 : TEXCOORD2;
+    float4 texcoord_3 : TEXCOORD3;
+    sampler2D NormalMap;
+    samplerCUBE EnvironmentCubeMap;
+    r1 = tex2D(NormalMap, IN.texcoord_0);
+    r2.x = IN.texcoord_1.w;
+    r2.y = IN.texcoord_2.w;
+    r2.z = IN.texcoord_3.w;
+    r1.xyz = (const_0.x * r1) + const_0.y;
+    r0.x = dot(r1, IN.texcoord_1);
+    r0.y = dot(r1, IN.texcoord_2);
+    r0.z = dot(r1, IN.texcoord_3);
+    r3.x = dot(r0, r2);
+    r1.x = dot(r0, r0);	// normalize + length
+    r0.w = r3.x + r3.x;
     r1.xyz = r2 * r1.x;
     r0.xyz = (r0.w * r0) - r1;
-    r0 = EnvironmentCubeMap[r0];
+    r0 = texCUBE(EnvironmentCubeMap, r0);
     r0.xyz = r1.w * r0;
-    r0.xyz = r0 * AmbientColor.w;
+    r0.xyz = r0 * AmbientColor.a;
     r0.w = const_0.z;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 18 instruction slots used (2 texture, 16 arithmetic)

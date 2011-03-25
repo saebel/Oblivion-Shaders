@@ -3,7 +3,7 @@
 //
 //   psa shaderdump19/SLS1030.pso /Fcshaderdump19/SLS1030.pso.dis
 //
-    color input_0;
-    rendertarget_0 = input_0;
+    float4 IN.color_0 : COLOR0;
+    OUT.color_0 = IN.color_0;
 
 // approximately 1 instruction slot used

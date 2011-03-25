@@ -16,14 +16,8 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   ModelViewProj[0] c0       1
-//   ModelViewProj[1] c1       1
-//   ModelViewProj[2] c2       1
-//   ModelViewProj[3] c3       1
-//   ObjToCubeMap[0]  c10      1
-//   ObjToCubeMap[1]  c11      1
-//   ObjToCubeMap[2]  c12      1
-//   ObjToCubeMap[3]  c13      1
+//   ModelViewProj c0       4
+//   ObjToCubeMap  c10      4
 //   FogParam      c15      1
 //   FogColor      c16      1
 //

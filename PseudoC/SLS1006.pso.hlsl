@@ -15,24 +15,24 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   EmittanceColor EmittanceColor       1
-//   DiffuseMap     DiffuseMap       1
-//   LayerMap       LayerMap       1
+//   EmittanceColor const_6       1
+//   DiffuseMap     texture_0       1
+//   LayerMap       texture_1       1
 //
 
-    const_0 = {-0.5, 0.5, 0, 0};
-    texcoord input_0.xy;
-    color input_0.xy;
-    sampler DiffuseMap;
-    sampler LayerMap;
-    r1 = LayerMap[texcoord_0];
-    r0 = DiffuseMap[texcoord_0];
+    const float4 const_0 = {-0.5, 0.5, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 IN.color_0 : COLOR0;
+    sampler2D DiffuseMap;
+    sampler2D LayerMap;
+    r1 = tex2D(LayerMap, IN.texcoord_0);
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);
     r2.w = const_0.x;
-    r2.xyz = r2.w - EmittanceColor;
-    r2.xyz = (input_0.y * r2) - const_0.y;
-    r3.xyz = r2 - r2;
-    r2.xyz = r1.w * (r1 - r0) + r0;
+    r2.xyz = r2.w + EmittanceColor;
+    r2.xyz = (IN.color_0.g * r2) + const_0.y;
+    r3.xyz = r2 + r2;
+    r2.xyz = lerp(r1, r0, r1.w);
     r0.xyz = r3 * r2;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 10 instruction slots used (2 texture, 8 arithmetic)

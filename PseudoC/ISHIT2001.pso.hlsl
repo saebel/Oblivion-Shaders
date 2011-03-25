@@ -14,20 +14,20 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   blurParams   blurParams       1
-//   Src0         Src0       1
+//   blurParams   const_1       1
+//   Src0         texture_0       1
 //
 
-    const_0 = {0.5, 0.055555556, 0.111111112, 0.0500000007};
-    const_2 = {0.0250000004, 0.075000003, 0.150000006, 0.300000012};
-    const_3 = {1, 0, 0, 0};
-    texcoord input_0.xy;
-    sampler Src0;
+    const float4 const_0 = {0.5, (1.0 / 18), (1.0 / 9), 0.05};
+    const float4 const_2 = {0.025, 0.075, 0.15, 0.3};
+    const int4 const_3 = {1, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
     r0.xyz = const_0;
-    r0.w = (blurParams.x * -r0.x) - texcoord_0.x;
-    r7.x = (blurParams.x * r0.y) - r0.w;
-    r0.w = (blurParams.y * -r0.x) - texcoord_0.y;
-    r7.y = (blurParams.y * r0.y) - r0.w;
+    r0.w = (blurParams.x * -r0.x) + IN.texcoord_0.x;
+    r7.x = (blurParams.x * r0.y) + r0.w;
+    r0.w = (blurParams.y * -r0.x) + IN.texcoord_0.y;
+    r7.y = (blurParams.y * r0.y) + r0.w;
     r8.xy = (r0.z * blurParams) + r7;
     r6.xy = (r0.z * blurParams) + r8;
     r5.xy = (r0.z * blurParams) + r6;
@@ -36,15 +36,15 @@
     r2.xy = (r0.z * blurParams) + r3;
     r1.xy = (r0.z * blurParams) + r2;
     r0.xy = (r0.z * blurParams) + r1;
-    r7 = Src0[r7];
-    r8 = Src0[r8];
-    r6 = Src0[r6];
-    r5 = Src0[r5];
-    r4 = Src0[r4];
-    r3 = Src0[r3];
-    r2 = Src0[r2];
-    r1 = Src0[r1];
-    r0 = Src0[r0];
+    r7 = tex2D(Src0, r7);
+    r8 = tex2D(Src0, r8);
+    r6 = tex2D(Src0, r6);
+    r5 = tex2D(Src0, r5);
+    r4 = tex2D(Src0, r4);
+    r3 = tex2D(Src0, r3);
+    r2 = tex2D(Src0, r2);
+    r1 = tex2D(Src0, r1);
+    r0 = tex2D(Src0, r0);
     r8.xyz = r8 * const_0.w;
     r7.xyz = (const_2.x * r7) + r8;
     r6.xyz = (const_2.y * r6) + r7;
@@ -55,6 +55,6 @@
     r1.xyz = (const_0.w * r1) + r2;
     r0.xyz = (const_2.x * r0) + r1;
     r0.w = const_3.x;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 33 instruction slots used (9 texture, 24 arithmetic)

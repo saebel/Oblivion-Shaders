@@ -14,16 +14,16 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   LightData    LightData      1
-//   BaseMap      BaseMap       1
+//   LightData    const_10      1
+//   BaseMap      texture_0       1
 //
 
-    texcoord input_0.xy;			// partial precision
-    texcoord_1 input_1.z;			// partial precision
-    sampler BaseMap;
+    float2 IN.texcoord_0 : TEXCOORD0;			// partial precision
+    texcoord_1 IN.input_1.z;			// partial precision
+    sampler2D BaseMap;
     r0.w = 1.0 / LightData.w;			// partial precision
-    rendertarget_0.xyz = r0.w * input_1.z;			// partial precision
-    r0 = BaseMap[input_0];			// partial precision
-    rendertarget_0.w = r0.w;			// partial precision
+    OUT.color_0.rgb = r0.w * IN.input_1.z;			// partial precision
+    r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
+    OUT.color_0.a = r0.w;			// partial precision
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

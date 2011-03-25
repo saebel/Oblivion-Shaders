@@ -19,70 +19,70 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   AmbientColor   AmbientColor       1
-//   PSLightColor   PSLightColor       1
-//   EmittanceColor EmittanceColor       1
-//   Toggles        Toggles       1
-//   BaseMap        BaseMap       1
-//   NormalMap      NormalMap       1
-//   GlowMap        GlowMap       1
+//   AmbientColor   const_1       1
+//   PSLightColor[0]   const_2        1
+//   EmittanceColor const_6       1
+//   Toggles        const_7       1
+//   BaseMap        texture_0       1
+//   NormalMap      texture_1       1
+//   GlowMap        texture_4       1
 //
 
-    const_0 = {-0.5, 0.5, 1, 0.699999988};
-    const_3 = {30, 0.200000003, 0, 0};
-    const_4 = {0, 0, 1, 0.5};
-    texcoord input_0.xy;			// partial precision
-    texcoord input_1.xyz;			// partial precision			// centroid
-    texcoord input_3.xyz;			// partial precision			// centroid
-    color input_0.xy;
-    color input_1;
-    sampler BaseMap;
-    sampler NormalMap;
-    sampler GlowMap;
-    r2 = NormalMap[texcoord_0];			// partial precision
-    r1 = GlowMap[texcoord_0];			// partial precision
-    r0 = BaseMap[texcoord_0];			// partial precision
-    r2.xyz = r2 - const_0.x;
-    r3.xyz = r2 - r2;			// partial precision
-    r2.xyz = norm(r3);			// partial precision
+    const float4 const_0 = {-0.5, 0.5, 1, 0.7};
+    const float4 const_3 = {30, 0.2, 0, 0};
+    const float4 const_4 = {0, 0, 1, 0.5};
+    float2 texcoord_0 : TEXCOORD0;			// partial precision
+    float3 texcoord_1 : TEXCOORD1_centroid;			// partial precision
+    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
+    float2 IN.color_0 : COLOR0;
+    float4 IN.color_1 : COLOR1;
+    sampler2D BaseMap;
+    sampler2D NormalMap;
+    sampler2D GlowMap;
+    r2 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
+    r1 = tex2D(GlowMap, IN.texcoord_0);			// partial precision
+    r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
+    r2.xyz = r2 + const_0.x;
+    r3.xyz = r2 + r2;			// partial precision
+    r2.xyz = normalize(r3);			// partial precision
     r4.xy = r2 * const_0.y;			// partial precision
-    r4.w = (r2.z * const_0.y) - const_0.z;			// partial precision
+    r4.w = (r2.z * const_0.y) + const_0.z;			// partial precision
     r3.xyz = (const_4.w * r2) + const_4;			// partial precision
     r3.w = r4.x * r3.x;
-    r3.w = (r4.y * r3.y) - r3.w;
-    r3.w = (r4.w * r3.z) - r3.w;			// partial precision
+    r3.w = (r4.y * r3.y) + r3.w;
+    r3.w = (r4.w * r3.z) + r3.w;			// partial precision
     r3.w = 1.0 / sqrt(r3.w);			// partial precision
     r3.xyz = r3 * r3.w;			// partial precision
-    r4.xyz = norm(texcoord_3);			// partial precision
-    r4.x = (r3.x * r4.x) + (r3.y * r4.y) + (r3.z * r4.z);			// partial precision
+    r4.xyz = normalize(IN.texcoord_3);			// partial precision
+    r4.x = dot(r3, r4);			// partial precision
     r2.w = r2.w * const_0.w;			// partial precision
-    r3.x = (r3.x * texcoord_1.x) + (r3.y * texcoord_1.y) + (r3.z * texcoord_1.z);			// partial precision
+    r3.x = dot(r3, IN.texcoord_1);			// partial precision
     r3.w = r3.x - r4.x;			// partial precision
-    sat abs r3.w, r3.w			// partial precision
+    r3.w = saturate(abs(r3.w));			// partial precision
     r4.w = const_0.z - r3.w;			// partial precision
-    pow r3.w, r4.w, const_3.x			// partial precision
-    r5.x = (r2.x * texcoord_1.x) + (r2.y * texcoord_1.y) + (r2.z * texcoord_1.z);			// partial precision
+    r3.w = pow(abs(r4.w), const_3.x);			// partial precision
+    r5.x = dot(r2, IN.texcoord_1);			// partial precision
     r4.w = r2.w * r3.w;			// partial precision
-    r3.w = r5.x - const_0.y;			// partial precision
-    r2.w = (r3.w >= const_4.x ? r3.w : const_4.x);			// partial precision
+    r3.w = r5.x + const_0.y;			// partial precision
+    r2.w = max(r3.w, const_4.x);			// partial precision
     r3.w = r4.w * r2.w;			// partial precision
     r2.w = const_3.y - r5.x;			// partial precision
     r2.w = (r2.w >= 0.0 ? r4.w : r3.w);			// partial precision
-    r2.xyz = sat(r2.w * PSLightColor);			// partial precision
+    r2.xyz = saturate(r2.w * PSLightColor[0]);			// partial precision
     r2.w = const_0.x;
-    r3.xyz = r2.w - EmittanceColor;
-    r3.xyz = (input_0.y * r3) - const_0.y;
-    r4.xyz = r3 - r3;			// partial precision
-    r3.xyz = r1.w * (r1 - r0) + r0;			// partial precision
-    r1.w = sat(r5.x);			// partial precision
+    r3.xyz = r2.w + EmittanceColor;
+    r3.xyz = (IN.color_0.g * r3) + const_0.y;
+    r4.xyz = r3 + r3;			// partial precision
+    r3.xyz = lerp(r1, r0, r1.w);			// partial precision
+    r1.w = saturate(r5.x);			// partial precision
     r1.xyz = r4 * r3;			// partial precision
-    r0.xyz = PSLightColor;
+    r0.xyz = PSLightColor[0];
     r3.xyz = (r1.w * r0) + AmbientColor;			// partial precision
-    r0.xyz = (r3 >= const_4.x ? r3 : const_4.x);			// partial precision
+    r0.xyz = max(r3, const_4.x);			// partial precision
     r0.xyz = (r1 * r0) + r2;			// partial precision
-    r1.xyz = input_1.w * (input_1 - r0) + r0;			// partial precision
-    r0.w = r0.w * AmbientColor.w;			// partial precision
+    r1.xyz = lerp(IN.color_1, r0, IN.color_1.a);			// partial precision
+    r0.w = r0.w * AmbientColor.a;			// partial precision
     r0.xyz = (Toggles.y <= 0.0 ? r1 : r0);			// partial precision
-    rendertarget_0 = r0;			// partial precision
+    OUT.color_0 = r0;			// partial precision
 
 // approximately 53 instruction slots used (3 texture, 50 arithmetic)

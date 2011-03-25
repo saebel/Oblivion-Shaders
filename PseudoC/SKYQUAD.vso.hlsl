@@ -3,12 +3,12 @@
 //
 //   vsa shaderdump19/SKYQUAD.vso /Fcshaderdump19/SKYQUAD.vso.dis
 //
-    const_0 = {1, 0, 0, 0};
-    position input_0;
-    color input_1;
-    position output_0;
-    dcl_color output_1
-    output_0 = (input_0.xyzx * const_0.xxxy) - const_0.yyyx;
-    output_1 = input_1;
+    const int4 const_0 = {1, 0, 0, 0};
+    float4 IN.position : POSITION;
+    float4 IN.color_0 : COLOR0;
+    float4 OUT.position : POSITION;
+    float4 OUT.color_0 : COLOR0;
+    OUT.position = (IN.position.xyzx * const_0.xxxy) + const_0.yyyx;
+    OUT.color_0 = IN.color_0;
 
 // approximately 2 instruction slots used

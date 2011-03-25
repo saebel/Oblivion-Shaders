@@ -1,0 +1,2 @@
+G:\Oblivion\OBGE GIT\Oblivion-Shader-DB\HLSL\STB1001.p.hlsl(36): warning X4707: texcoord inputs used directly (that is, other than sampling from textures) in shader body in ps_1_3 are always clamped from 0 to 1
+

@@ -15,8 +15,7 @@
 //   Name           Reg   Size
 //   -------------- ----- ----
 //   texRatio0      c6       1
-//   RotationMatrix[0] c8       1
-//   RotationMatrix[1] c9       1
+//   RotationMatrix c8       2
 //
 
     vs_3_0

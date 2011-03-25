@@ -39,31 +39,31 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   TimingData   TimingData       1
-//   HDRParam     HDRParam       1
-//   Src0         Src0       1
-//   AvgLum       AvgLum       1
+//   TimingData   const_0       1
+//   HDRParam     const_1       1
+//   Src0         texture_0       1
+//   AvgLum       texture_1       1
 //
 
-    const_2 = {1, 0.00999999978, 0, 0};
-    texcoord input_0.xy;
-    sampler Src0;
-    sampler AvgLum;
-    r1 = Src0[texcoord_0];
-    r0 = AvgLum[texcoord_0];
+    const float4 const_2 = {1, 0.01, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
+    sampler2D AvgLum;
+    r1 = tex2D(Src0, IN.texcoord_0);
+    r0 = tex2D(AvgLum, IN.texcoord_0);
     r2.y = HDRParam.z;
-    pow r0.w, r2.y, TimingData.z		//       pow(TimingData, HDRParam.z == 0.500000)
+    r0.w = pow(abs(r2.y), TimingData.z);		//       pow(TimingData, HDRParam.z == 0.500000)
     r0.w = const_2.x - r0.w;		// 1.0 - pow(TimingData, HDRParam.z == 0.500000)
-    r2.xyz = r0.w * (r0 - r1) + r1;		// lerp(Src0, AvgLum, 1.0 - pow(something))
-    r0.x = (r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z);
+    r2.xyz = lerp(r0, r1, r0.w);		// lerp(Src0, AvgLum, 1.0 - pow(something))
+    r0.x = dot(r2, r2);	// normalize + length
     r0.w = 1.0 / sqrt(r0.x);
     r0.w = 1.0 / r0.w;			// normalize => sqrt(lerp.x * lerp.x + lerp.y * lerp.y + lerp.z * lerp.z + 1.0 * 1.0)
-    r1.w = (const_2.y >= r0.w ? const_2.y : r0.w);		// max(normalized, 0.00999999978)
-    r0.w = (r1.w < HDRParam.w ? r1.w : HDRParam.w);		// min(normalized, fUpperLUMClamp == 1.400000)
+    r1.w = max(const_2.y, r0.w);		// max(normalized, 0.01)
+    r0.w = min(r1.w, HDRParam.w);		// min(normalized, fUpperLUMClamp == 1.400000)
     r1.w = 1.0 / r1.w;			// 1 / max
     r0.w = r0.w * r1.w;		// min / max
     r0.xyz = r2 * r0.w;		// (min() / max()) * lerp()
     r0.w = const_2.x;			// [x,y,z,1]
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 19 instruction slots used (2 texture, 17 arithmetic)

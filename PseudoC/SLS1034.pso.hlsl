@@ -15,18 +15,18 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   AmbientColor AmbientColor       1
-//   PSLightColor PSLightColor       1
-//   DiffuseMap   DiffuseMap       1
+//   AmbientColor const_1       1
+//   PSLightColor[0] const_2        1
+//   DiffuseMap   texture_0       1
 //
 
-    color input_0.xyz;
-    texcoord input_0.xy;
-    sampler DiffuseMap;
-    r0 = DiffuseMap[texcoord_0];
-    r1.xyz = PSLightColor;
-    r1.xyz = (r1 * input_0) + AmbientColor;
+    float3 IN.color_0 : COLOR0;
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D DiffuseMap;
+    r0 = tex2D(DiffuseMap, IN.texcoord_0);
+    r1.xyz = PSLightColor[0];
+    r1.xyz = (IN.color_0 * r1) + AmbientColor;
     r0.xyz = r0 * r1;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 5 instruction slots used (1 texture, 4 arithmetic)

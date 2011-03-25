@@ -15,128 +15,128 @@
 //
 //   Name              Reg   Size
 //   ----------------- ----- ----
-//   SkinModelViewProj[0] SkinModelViewProj[0]       1
-//   SkinModelViewProj[1] SkinModelViewProj[1]       1
-//   SkinModelViewProj[2] SkinModelViewProj[2]       1
-//   SkinModelViewProj[3] SkinModelViewProj[3]       1
-//   LightDirection    LightDirection      1
-//   Bones[0]             Bones[0]     17
-//   Bones[1]             Bones[1]     17
-//   Bones[2]             Bones[2]     17
+//   SkinModelViewProj[0] const_1        1
+//   SkinModelViewProj[1] const_2        1
+//   SkinModelViewProj[2] const_3        1
+//   SkinModelViewProj[3] const_4        1
+//   LightDirection[0]    const_13       1
+//   Bones[0]             const_42      18
+//   Bones[1]             const_43      18
+//   Bones[2]             const_44      18
 //
 
-    const_0 = {1, 765.01001, 0, 0.5};
-    position input_0;
-    tangent input_1;
-    binormal input_2;
-    normal input_3;
-    texcoord input_4;
-    dcl_blendweight input_5
-    dcl_blendindices input_6
-    r2.x = (input_5.x * const_0.x.x) + (input_5.y * const_0.x.y) + (input_5.z * const_0.x.z);
-    r1 = (input_0.xyzx * const_0.xxxz) - const_0.zzzx;
-    r0 = input_6.zyxw * const_0.y;
+    const float4 const_0 = {1, 765.01001, 0, 0.5};
+    float4 IN.position : POSITION;
+    float3 IN.tangent : TANGENT;
+    float3 IN.binormal : BINORMAL;
+    float3 IN.normal : NORMAL;
+    float4 IN.texcoord_0 : TEXCOORD0;
+    float3 IN.blendweight : BLENDWEIGHT;
+    float4 IN.blendindices : BLENDINDICES;
+    r2.x = dot(IN.blendweight, const_0.x);
+    r1 = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
+    r0 = IN.blendindices.zyxw * const_0.y;
     r2.w = const_0.x - r2.x;
-    a0.x = r0.y;
-    r2.x = (Bones[0][a0.x].x * r1.x) + (Bones[0][a0.x].y * r1.y) + (Bones[0][a0.x].z * r1.z) + (Bones[0][a0.x].w * r1.w);
-    r2.y = (Bones[1][a0.x].x * r1.x) + (Bones[1][a0.x].y * r1.y) + (Bones[1][a0.x].z * r1.z) + (Bones[1][a0.x].w * r1.w);
-    r2.z = (Bones[2][a0.x].x * r1.x) + (Bones[2][a0.x].y * r1.y) + (Bones[2][a0.x].z * r1.z) + (Bones[2][a0.x].w * r1.w);
-    r3.xyz = r2 * input_5.y;
-    a0.x = r0.x;
-    r2.x = (Bones[0][a0.x].x * r1.x) + (Bones[0][a0.x].y * r1.y) + (Bones[0][a0.x].z * r1.z) + (Bones[0][a0.x].w * r1.w);
-    r2.y = (Bones[1][a0.x].x * r1.x) + (Bones[1][a0.x].y * r1.y) + (Bones[1][a0.x].z * r1.z) + (Bones[1][a0.x].w * r1.w);
-    r2.z = (Bones[2][a0.x].x * r1.x) + (Bones[2][a0.x].y * r1.y) + (Bones[2][a0.x].z * r1.z) + (Bones[2][a0.x].w * r1.w);
-    r3.xyz = (input_5.x * r2) + r3;
-    a0.x = r0.z;
-    r2.x = (Bones[0][a0.x].x * r1.x) + (Bones[0][a0.x].y * r1.y) + (Bones[0][a0.x].z * r1.z) + (Bones[0][a0.x].w * r1.w);
-    r2.y = (Bones[1][a0.x].x * r1.x) + (Bones[1][a0.x].y * r1.y) + (Bones[1][a0.x].z * r1.z) + (Bones[1][a0.x].w * r1.w);
-    r2.z = (Bones[2][a0.x].x * r1.x) + (Bones[2][a0.x].y * r1.y) + (Bones[2][a0.x].z * r1.z) + (Bones[2][a0.x].w * r1.w);
-    r3.xyz = (input_5.z * r2) + r3;
-    a0.x = r0.w;
-    r2.x = (Bones[0][a0.x].x * r1.x) + (Bones[0][a0.x].y * r1.y) + (Bones[0][a0.x].z * r1.z) + (Bones[0][a0.x].w * r1.w);
-    r2.y = (Bones[1][a0.x].x * r1.x) + (Bones[1][a0.x].y * r1.y) + (Bones[1][a0.x].z * r1.z) + (Bones[1][a0.x].w * r1.w);
-    r2.z = (Bones[2][a0.x].x * r1.x) + (Bones[2][a0.x].y * r1.y) + (Bones[2][a0.x].z * r1.z) + (Bones[2][a0.x].w * r1.w);
+    offset.x = r0.y;
+    r2.x = dot(Bones[0 + offset.x], r1);
+    r2.y = dot(Bones[1 + offset.x], r1);
+    r2.z = dot(Bones[2 + offset.x], r1);
+    r3.xyz = r2 * IN.blendweight.y;
+    offset.x = r0.x;
+    r2.x = dot(Bones[0 + offset.x], r1);
+    r2.y = dot(Bones[1 + offset.x], r1);
+    r2.z = dot(Bones[2 + offset.x], r1);
+    r3.xyz = (IN.blendweight.x * r2) + r3;
+    offset.x = r0.z;
+    r2.x = dot(Bones[0 + offset.x], r1);
+    r2.y = dot(Bones[1 + offset.x], r1);
+    r2.z = dot(Bones[2 + offset.x], r1);
+    r3.xyz = (IN.blendweight.z * r2) + r3;
+    offset.x = r0.w;
+    r2.x = dot(Bones[0 + offset.x], r1);
+    r2.y = dot(Bones[1 + offset.x], r1);
+    r2.z = dot(Bones[2 + offset.x], r1);
     r1.w = const_0.x;
     r1.xyz = (r2.w * r2) + r3;
-    position.x = (SkinModelViewProj[0].x * r1.x) + (SkinModelViewProj[0].y * r1.y) + (SkinModelViewProj[0].z * r1.z) + (SkinModelViewProj[0].w * r1.w);
-    a0.x = r0.y;
-    r2.x = (Bones[0][a0.x].x * input_1.x) + (Bones[0][a0.x].y * input_1.y) + (Bones[0][a0.x].z * input_1.z);
-    r2.y = (Bones[1][a0.x].x * input_1.x) + (Bones[1][a0.x].y * input_1.y) + (Bones[1][a0.x].z * input_1.z);
-    r2.z = (Bones[2][a0.x].x * input_1.x) + (Bones[2][a0.x].y * input_1.y) + (Bones[2][a0.x].z * input_1.z);
-    r3.xyz = r2 * input_5.y;
-    a0.x = r0.x;
-    r2.x = (Bones[0][a0.x].x * input_1.x) + (Bones[0][a0.x].y * input_1.y) + (Bones[0][a0.x].z * input_1.z);
-    r2.y = (Bones[1][a0.x].x * input_1.x) + (Bones[1][a0.x].y * input_1.y) + (Bones[1][a0.x].z * input_1.z);
-    r2.z = (Bones[2][a0.x].x * input_1.x) + (Bones[2][a0.x].y * input_1.y) + (Bones[2][a0.x].z * input_1.z);
-    r3.xyz = (input_5.x * r2) + r3;
-    a0.x = r0.z;
-    r2.x = (Bones[0][a0.x].x * input_1.x) + (Bones[0][a0.x].y * input_1.y) + (Bones[0][a0.x].z * input_1.z);
-    r2.y = (Bones[1][a0.x].x * input_1.x) + (Bones[1][a0.x].y * input_1.y) + (Bones[1][a0.x].z * input_1.z);
-    r2.z = (Bones[2][a0.x].x * input_1.x) + (Bones[2][a0.x].y * input_1.y) + (Bones[2][a0.x].z * input_1.z);
-    r3.xyz = (input_5.z * r2) + r3;
-    a0.x = r0.w;
-    r2.x = (Bones[0][a0.x].x * input_1.x) + (Bones[0][a0.x].y * input_1.y) + (Bones[0][a0.x].z * input_1.z);
-    r2.y = (Bones[1][a0.x].x * input_1.x) + (Bones[1][a0.x].y * input_1.y) + (Bones[1][a0.x].z * input_1.z);
-    r2.z = (Bones[2][a0.x].x * input_1.x) + (Bones[2][a0.x].y * input_1.y) + (Bones[2][a0.x].z * input_1.z);
-    position.y = (SkinModelViewProj[1].x * r1.x) + (SkinModelViewProj[1].y * r1.y) + (SkinModelViewProj[1].z * r1.z) + (SkinModelViewProj[1].w * r1.w);
+    OUT.position.x = dot(SkinModelViewProj[0], r1);
+    offset.x = r0.y;
+    r2.x = dot(Bones[0 + offset.x], IN.tangent);
+    r2.y = dot(Bones[1 + offset.x], IN.tangent);
+    r2.z = dot(Bones[2 + offset.x], IN.tangent);
+    r3.xyz = r2 * IN.blendweight.y;
+    offset.x = r0.x;
+    r2.x = dot(Bones[0 + offset.x], IN.tangent);
+    r2.y = dot(Bones[1 + offset.x], IN.tangent);
+    r2.z = dot(Bones[2 + offset.x], IN.tangent);
+    r3.xyz = (IN.blendweight.x * r2) + r3;
+    offset.x = r0.z;
+    r2.x = dot(Bones[0 + offset.x], IN.tangent);
+    r2.y = dot(Bones[1 + offset.x], IN.tangent);
+    r2.z = dot(Bones[2 + offset.x], IN.tangent);
+    r3.xyz = (IN.blendweight.z * r2) + r3;
+    offset.x = r0.w;
+    r2.x = dot(Bones[0 + offset.x], IN.tangent);
+    r2.y = dot(Bones[1 + offset.x], IN.tangent);
+    r2.z = dot(Bones[2 + offset.x], IN.tangent);
+    OUT.position.y = dot(SkinModelViewProj[1], r1);
     r2.xyz = (r2.w * r2) + r3;
-    position.z = (SkinModelViewProj[2].x * r1.x) + (SkinModelViewProj[2].y * r1.y) + (SkinModelViewProj[2].z * r1.z) + (SkinModelViewProj[2].w * r1.w);
-    r3.x = (r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z);
-    position.w = (SkinModelViewProj[3].x * r1.x) + (SkinModelViewProj[3].y * r1.y) + (SkinModelViewProj[3].z * r1.z) + (SkinModelViewProj[3].w * r1.w);
+    OUT.position.z = dot(SkinModelViewProj[2], r1);
+    r3.x = dot(r2, r2);	// normalize + length
+    OUT.position.w = dot(SkinModelViewProj[3], r1);
     r1.w = 1.0 / sqrt(r3.x);
     r1.xyz = r2 * r1.w;
-    a0.x = r0.y;
-    r2.x = (Bones[0][a0.x].x * input_2.x) + (Bones[0][a0.x].y * input_2.y) + (Bones[0][a0.x].z * input_2.z);
-    r2.y = (Bones[1][a0.x].x * input_2.x) + (Bones[1][a0.x].y * input_2.y) + (Bones[1][a0.x].z * input_2.z);
-    r2.z = (Bones[2][a0.x].x * input_2.x) + (Bones[2][a0.x].y * input_2.y) + (Bones[2][a0.x].z * input_2.z);
-    r3.xyz = r2 * input_5.y;
-    a0.x = r0.x;
-    r2.x = (Bones[0][a0.x].x * input_2.x) + (Bones[0][a0.x].y * input_2.y) + (Bones[0][a0.x].z * input_2.z);
-    r2.y = (Bones[1][a0.x].x * input_2.x) + (Bones[1][a0.x].y * input_2.y) + (Bones[1][a0.x].z * input_2.z);
-    r2.z = (Bones[2][a0.x].x * input_2.x) + (Bones[2][a0.x].y * input_2.y) + (Bones[2][a0.x].z * input_2.z);
-    r3.xyz = (input_5.x * r2) + r3;
-    a0.x = r0.z;
-    r2.x = (Bones[0][a0.x].x * input_2.x) + (Bones[0][a0.x].y * input_2.y) + (Bones[0][a0.x].z * input_2.z);
-    r2.y = (Bones[1][a0.x].x * input_2.x) + (Bones[1][a0.x].y * input_2.y) + (Bones[1][a0.x].z * input_2.z);
-    r2.z = (Bones[2][a0.x].x * input_2.x) + (Bones[2][a0.x].y * input_2.y) + (Bones[2][a0.x].z * input_2.z);
-    r1.x = (r1.x * LightDirection.x) + (r1.y * LightDirection.y) + (r1.z * LightDirection.z);
-    r4.xyz = (input_5.z * r2) + r3;
-    a0.x = r0.w;
-    r2.x = (Bones[0][a0.x].x * input_2.x) + (Bones[0][a0.x].y * input_2.y) + (Bones[0][a0.x].z * input_2.z);
-    r2.y = (Bones[1][a0.x].x * input_2.x) + (Bones[1][a0.x].y * input_2.y) + (Bones[1][a0.x].z * input_2.z);
-    r2.z = (Bones[2][a0.x].x * input_2.x) + (Bones[2][a0.x].y * input_2.y) + (Bones[2][a0.x].z * input_2.z);
-    a0.x = r0.y;
-    r3.x = (Bones[0][a0.x].x * input_3.x) + (Bones[0][a0.x].y * input_3.y) + (Bones[0][a0.x].z * input_3.z);
-    r3.y = (Bones[1][a0.x].x * input_3.x) + (Bones[1][a0.x].y * input_3.y) + (Bones[1][a0.x].z * input_3.z);
-    r3.z = (Bones[2][a0.x].x * input_3.x) + (Bones[2][a0.x].y * input_3.y) + (Bones[2][a0.x].z * input_3.z);
-    r5.xyz = r3 * input_5.y;
-    a0.x = r0.x;
-    r3.x = (Bones[0][a0.x].x * input_3.x) + (Bones[0][a0.x].y * input_3.y) + (Bones[0][a0.x].z * input_3.z);
-    r3.y = (Bones[1][a0.x].x * input_3.x) + (Bones[1][a0.x].y * input_3.y) + (Bones[1][a0.x].z * input_3.z);
-    r3.z = (Bones[2][a0.x].x * input_3.x) + (Bones[2][a0.x].y * input_3.y) + (Bones[2][a0.x].z * input_3.z);
-    r3.xyz = (input_5.x * r3) + r5;
-    a0.x = r0.z;
-    r0.x = (Bones[0][a0.x].x * input_3.x) + (Bones[0][a0.x].y * input_3.y) + (Bones[0][a0.x].z * input_3.z);
-    r0.y = (Bones[1][a0.x].x * input_3.x) + (Bones[1][a0.x].y * input_3.y) + (Bones[1][a0.x].z * input_3.z);
-    r0.z = (Bones[2][a0.x].x * input_3.x) + (Bones[2][a0.x].y * input_3.y) + (Bones[2][a0.x].z * input_3.z);
-    r3.xyz = (input_5.z * r0) + r3;
-    a0.x = r0.w;
-    r0.x = (Bones[0][a0.x].x * input_3.x) + (Bones[0][a0.x].y * input_3.y) + (Bones[0][a0.x].z * input_3.z);
-    r0.y = (Bones[1][a0.x].x * input_3.x) + (Bones[1][a0.x].y * input_3.y) + (Bones[1][a0.x].z * input_3.z);
-    r0.z = (Bones[2][a0.x].x * input_3.x) + (Bones[2][a0.x].y * input_3.y) + (Bones[2][a0.x].z * input_3.z);
+    offset.x = r0.y;
+    r2.x = dot(Bones[0 + offset.x], IN.binormal);
+    r2.y = dot(Bones[1 + offset.x], IN.binormal);
+    r2.z = dot(Bones[2 + offset.x], IN.binormal);
+    r3.xyz = r2 * IN.blendweight.y;
+    offset.x = r0.x;
+    r2.x = dot(Bones[0 + offset.x], IN.binormal);
+    r2.y = dot(Bones[1 + offset.x], IN.binormal);
+    r2.z = dot(Bones[2 + offset.x], IN.binormal);
+    r3.xyz = (IN.blendweight.x * r2) + r3;
+    offset.x = r0.z;
+    r2.x = dot(Bones[0 + offset.x], IN.binormal);
+    r2.y = dot(Bones[1 + offset.x], IN.binormal);
+    r2.z = dot(Bones[2 + offset.x], IN.binormal);
+    r1.x = dot(r1, LightDirection[0]);
+    r4.xyz = (IN.blendweight.z * r2) + r3;
+    offset.x = r0.w;
+    r2.x = dot(Bones[0 + offset.x], IN.binormal);
+    r2.y = dot(Bones[1 + offset.x], IN.binormal);
+    r2.z = dot(Bones[2 + offset.x], IN.binormal);
+    offset.x = r0.y;
+    r3.x = dot(Bones[0 + offset.x], IN.normal);
+    r3.y = dot(Bones[1 + offset.x], IN.normal);
+    r3.z = dot(Bones[2 + offset.x], IN.normal);
+    r5.xyz = r3 * IN.blendweight.y;
+    offset.x = r0.x;
+    r3.x = dot(Bones[0 + offset.x], IN.normal);
+    r3.y = dot(Bones[1 + offset.x], IN.normal);
+    r3.z = dot(Bones[2 + offset.x], IN.normal);
+    r3.xyz = (IN.blendweight.x * r3) + r5;
+    offset.x = r0.z;
+    r0.x = dot(Bones[0 + offset.x], IN.normal);
+    r0.y = dot(Bones[1 + offset.x], IN.normal);
+    r0.z = dot(Bones[2 + offset.x], IN.normal);
+    r3.xyz = (IN.blendweight.z * r0) + r3;
+    offset.x = r0.w;
+    r0.x = dot(Bones[0 + offset.x], IN.normal);
+    r0.y = dot(Bones[1 + offset.x], IN.normal);
+    r0.z = dot(Bones[2 + offset.x], IN.normal);
     r2.xyz = (r2.w * r2) + r4;
     r0.xyz = (r2.w * r0) + r3;
-    r4.x = (r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z);
-    r3.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
+    r4.x = dot(r2, r2);	// normalize + length
+    r3.x = dot(r0, r0);	// normalize + length
     r1.w = 1.0 / sqrt(r4.x);
     r0.w = 1.0 / sqrt(r3.x);
     r2.xyz = r2 * r1.w;
     r0.xyz = r0 * r0.w;
-    r1.y = (r2.x * LightDirection.x) + (r2.y * LightDirection.y) + (r2.z * LightDirection.z);
-    r1.z = (r0.x * LightDirection.x) + (r0.y * LightDirection.y) + (r0.z * LightDirection.z);
-    texcoord_3.xyz = (const_0.w * r1) + const_0.w;
-    texcoord_0.xy = input_4;
-    texcoord_1.xy = input_4;
-    texcoord_2.xy = input_4;
+    r1.y = dot(r2, LightDirection[0]);
+    r1.z = dot(r0, LightDirection[0]);
+    OUT.texcoord_3.xyz = (const_0.w * r1) + const_0.w;
+    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.xy = IN.texcoord_0;
+    OUT.texcoord_2.xy = IN.texcoord_0;
 
 // approximately 105 instruction slots used

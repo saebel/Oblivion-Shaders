@@ -14,28 +14,28 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   HeightMap    HeightMap       1
+//   HeightMap    texture_0       1
 //
 
-    const_0 = {0, -0.00390625, 2, -1};
-    const_1 = {0.125, 0.5, 0, 0};
-    const_2 = {-0.00390625, 0, -3, 0};
-    texcoord input_0.xy;
-    sampler HeightMap;
-    r3.xy = texcoord_0 - const_0;
-    r2.xy = texcoord_0 - const_0;
-    r1.xy = texcoord_0 - const_2;
-    r0.xy = texcoord_0 - const_2;
-    r3 = HeightMap[r3];
-    r2 = HeightMap[r2];
-    r1 = HeightMap[r1];
-    r0 = HeightMap[r0];
-    r3 = (const_0.z * r3) - const_0.w;
-    r2 = (const_0.z * r2) - r3;
-    r1 = (const_0.z * r1) - r2;
-    r0 = (const_0.z * r0) - r1;
-    r0 = r0 - const_2.z;
+    const float4 const_0 = {0, -(1.0 / 256), 2, -1};
+    const float4 const_1 = {0.125, 0.5, 0, 0};
+    const float4 const_2 = {-(1.0 / 256), 0, -3, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D HeightMap;
+    r3.xy = IN.texcoord_0 + const_0;
+    r2.xy = IN.texcoord_0 - const_0;
+    r1.xy = IN.texcoord_0 + const_2;
+    r0.xy = IN.texcoord_0 - const_2;
+    r3 = tex2D(HeightMap, r3);
+    r2 = tex2D(HeightMap, r2);
+    r1 = tex2D(HeightMap, r1);
+    r0 = tex2D(HeightMap, r0);
+    r3 = (const_0.z * r3) + const_0.w;
+    r2 = (const_0.z * r2) + r3;
+    r1 = (const_0.z * r1) + r2;
+    r0 = (const_0.z * r0) + r1;
+    r0 = r0 + const_2.z;
     r0 = (const_1.x * r0) + const_1.y;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 15 instruction slots used (4 texture, 11 arithmetic)

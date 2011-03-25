@@ -3,8 +3,8 @@
 //
 //   psa shaderdump19/SKYSUNOCCL.pso /Fcshaderdump19/SKYSUNOCCL.pso.dis
 //
-    const_0 = {0.100000001, 1, 0, 0};
-    rendertarget_0 = const_0.xxxy;
-    zbuffer = const_0.y;
+    const float4 const_0 = {0.1, 1, 0, 0};
+    OUT.color_0 = const_0.xxxy;
+    OUT.depth = const_0.y;
 
 // approximately 2 instruction slots used

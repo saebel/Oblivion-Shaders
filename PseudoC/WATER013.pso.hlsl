@@ -22,26 +22,26 @@
 //
 //   Name            Reg   Size
 //   --------------- ----- ----
-//   EyePos          EyePos       1
-//   SunDir          SunDir       1
-//   SunColor        SunColor       1
-//   ShallowColor    ShallowColor       1
-//   DeepColor       DeepColor       1
-//   ReflectionColor ReflectionColor       1
-//   VarAmounts      VarAmounts       1
-//   FogParam        FogParam       1
-//   FogColor        FogColor      1
-//   FresnelRI       FresnelRI      1
+//   EyePos          const_1       1
+//   SunDir          const_2       1
+//   SunColor        const_3       1
+//   ShallowColor    const_5       1
+//   DeepColor       const_6       1
+//   ReflectionColor const_7       1
+//   VarAmounts      const_8       1
+//   FogParam        const_9       1
+//   FogColor        const_10      1
+//   FresnelRI       const_11      1
 //
 
-    const_0 = {1, 1, -1, 0};
-    texcoord input_1.xyz;			// centroid
-    r0.xyz = EyePos - texcoord_1;
-    r1.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
+    const int4 const_0 = {1, 1, -1, 0};
+    float3 texcoord_1 : TEXCOORD1_centroid;
+    r0.xyz = EyePos - IN.texcoord_1;
+    r1.x = dot(r0, r0);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
     r0.xyz = r0 * r0.w;
     r4.w = 1.0 / r0.w;
-    r0.w = sat(r0.z);
+    r0.w = saturate(r0.z);
     r1.w = const_0.x - r0.w;
     r2.w = r1.w * r1.w;
     r2.xyz = r0 * -const_0;
@@ -51,25 +51,25 @@
     r0.xyz = ShallowColor - r0;
     r1.w = const_0.x;
     r2.w = r1.w - FresnelRI.x;
-    r1.xyz = (r0.w * r0) - DeepColor;			// partial precision
-    r2.w = (r2.w * r3.w) - FresnelRI.x;
+    r1.xyz = (r0.w * r0) + DeepColor;			// partial precision
+    r2.w = (r2.w * r3.w) + FresnelRI.x;
     r0.xyz = ReflectionColor - r1;
     r0.w = r1.w - VarAmounts.y;
-    r2.x = sat((r2.x * SunDir.x) + (r2.y * SunDir.y) + (r2.z * SunDir.z));
-    r0.xyz = (r0.w * r0) - r1;			// partial precision
-    pow r1.w, r2.x, VarAmounts.x
+    r2.x = saturate(dot(r2, SunDir));
+    r0.xyz = (r0.w * r0) + r1;			// partial precision
+    r1.w = pow(abs(r2.x), VarAmounts.x);
     r0.xyz = r0 * VarAmounts.y;
-    r3.w = sat(SunDir.w);
+    r3.w = saturate(SunDir.w);
     r1.xyz = (r2.w * r0) + r1;
     r0.w = FogParam.x - r4.w;
     r0.xyz = r1.w * SunColor;
     r1.w = 1.0 / FogParam.y;
-    r1.xyz = sat((r3.w * r0) + r1);
-    r0.w = sat(r0.w * r1.w);
+    r1.xyz = saturate((r3.w * r0) + r1);
+    r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor - r1;
     r1.w = const_0.x - r0.w;
-    r0.w = (VarAmounts.z >= r2.w ? VarAmounts.z : r2.w);
-    r0.xyz = (r1.w * r0) - r1;
-    rendertarget_0 = r0;
+    r0.w = max(VarAmounts.z, r2.w);
+    r0.xyz = (r1.w * r0) + r1;
+    OUT.color_0 = r0;
 
 // approximately 37 instruction slots used

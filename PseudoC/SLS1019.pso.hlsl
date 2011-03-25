@@ -18,42 +18,42 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   AmbientColor AmbientColor       1
-//   PSLightColor PSLightColor       1
-//   BaseMap      BaseMap       1
-//   NormalMap    NormalMap       1
-//   FaceGenMap   FaceGenMap       1
-//   FaceGenMap2  FaceGenMap2       1
+//   AmbientColor const_1       1
+//   PSLightColor[0] const_2        1
+//   BaseMap      texture_0       1
+//   NormalMap    texture_1       1
+//   FaceGenMap   texture_2       1
+//   FaceGenMap2  texture_3       1
 //
 
-    const_0 = {-0.5, 2, 0, 0};
-    texcoord input_0.xy;
-    texcoord input_1.xy;
-    texcoord input_2.xy;
-    texcoord input_3.xy;
-    color input_0.xyz;
-    sampler BaseMap;
-    sampler NormalMap;
-    sampler FaceGenMap;
-    sampler FaceGenMap2;
-    r3 = NormalMap[texcoord_1];
-    r2 = FaceGenMap2[texcoord_3];
-    r1 = FaceGenMap[texcoord_2];
-    r0 = BaseMap[texcoord_0];
-    r3.xyz = r3 - const_0.x;
-    r3.xyz = r3 - r3;
-    r4.xyz = input_0 - const_0.x;
-    r4.xyz = r4 - r4;
-    r4.x = sat((r3.x * r4.x) + (r3.y * r4.y) + (r3.z * r4.z));
+    const float4 const_0 = {-0.5, 2, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float2 texcoord_2 : TEXCOORD2;
+    float2 texcoord_3 : TEXCOORD3;
+    float3 IN.color_0 : COLOR0;
+    sampler2D BaseMap;
+    sampler2D NormalMap;
+    sampler2D FaceGenMap;
+    sampler2D FaceGenMap2;
+    r3 = tex2D(NormalMap, IN.texcoord_1);
+    r2 = tex2D(FaceGenMap2, IN.texcoord_3);
+    r1 = tex2D(FaceGenMap, IN.texcoord_2);
+    r0 = tex2D(BaseMap, IN.texcoord_0);
+    r3.xyz = r3 + const_0.x;
+    r3.xyz = r3 + r3;
+    r4.xyz = IN.color_0 + const_0.x;
+    r4.xyz = r4 + r4;
+    r4.x = saturate(dot(r3, r4));
     r3.xyz = AmbientColor;
-    r3.xyz = sat((r4.x * PSLightColor) - r3);
-    r2.xyz = r2 - r2;
-    r1.xyz = r1 - const_0.x;
-    r0.xyz = (const_0.y * r1) - r0;
+    r3.xyz = saturate((r4.x * PSLightColor[0]) + r3);
+    r2.xyz = r2 + r2;
+    r1.xyz = r1 + const_0.x;
+    r0.xyz = (const_0.y * r1) + r0;
     r0.xyz = r2 * r0;
-    r0.xyz = r0 - r0;
-    r0.w = r0.w * AmbientColor.w;
+    r0.xyz = r0 + r0;
+    r0.w = r0.w * AmbientColor.a;
     r0.xyz = r3 * r0;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 19 instruction slots used (4 texture, 15 arithmetic)

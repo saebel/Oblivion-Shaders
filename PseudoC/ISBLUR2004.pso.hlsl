@@ -13,15 +13,15 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Src0         Src0       1
+//   Src0         texture_0       1
 //
 
-    const_0 = {1, 0, 0, 0};
-    texcoord input_0.xy;
-    sampler Src0;
-    r0 = Src0[texcoord_0];
+    const int4 const_0 = {1, 0, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D Src0;
+    r0 = tex2D(Src0, IN.texcoord_0);
     r0.xyz = r0.w;
     r0.w = const_0.x;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

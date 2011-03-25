@@ -14,16 +14,16 @@
 //
 //   Name           Reg   Size
 //   -------------- ----- ----
-//   EmittanceColor EmittanceColor       1
-//   GlowMap        GlowMap       1
+//   EmittanceColor const_6       1
+//   GlowMap        texture_0       1
 //
 
-    const_0 = {0, 0, 0, 0};
-    texcoord input_1.xy;
-    sampler GlowMap;
-    r0 = GlowMap[texcoord_1];
-    r0.w = r0.x * EmittanceColor.x;
+    const int4 const_0 = {0, 0, 0, 0};
+    float2 texcoord_1 : TEXCOORD1;
+    sampler2D GlowMap;
+    r0 = tex2D(GlowMap, IN.texcoord_1);
+    r0.w = r0.x * EmittanceColor.r;
     r0.xyz = const_0.x;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

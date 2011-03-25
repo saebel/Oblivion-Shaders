@@ -14,61 +14,61 @@
 //
 //   Name          Reg   Size
 //   ------------- ----- ----
-//   fResolution   fResolution       1
-//   amplitudeSamp amplitudeSamp       1
+//   fResolution   const_2       1
+//   amplitudeSamp texture_0       1
 //
 
-    const_0 = {0.800000012, 1.60000002, 1, 0.5};
-    const_1 = {-1, 1, 0, 0};
-    texcoord input_0.xy;
-    sampler amplitudeSamp;
-    r7.y = texcoord_0.y;
+    const float4 const_0 = {0.8, 1.6, 1, 0.5};
+    const int4 const_1 = {-1, 1, 0, 0};
+    float2 texcoord_0 : TEXCOORD0;
+    sampler2D amplitudeSamp;
+    r7.y = IN.texcoord_0.y;
     r0.w = fResolution.x;
-    r6.xy = (r0.w * -const_1) - texcoord_0;
+    r6.xy = (r0.w * -const_1) + IN.texcoord_0;
     r7.x = r6.x;
-    r5.y = texcoord_0.y;
-    r4.xy = texcoord_0 - fResolution.x;
+    r5.y = IN.texcoord_0.y;
+    r4.xy = IN.texcoord_0 - fResolution.x;
     r5.x = r4.x;
     r1.y = r4.y;
-    r3.xy = (r0.w * const_1) - texcoord_0;
+    r3.xy = (r0.w * const_1) + IN.texcoord_0;
     r0.y = r3.y;
-    r2.xy = texcoord_0 - fResolution.x;
-    r1.x = texcoord_0.x;
-    r0.x = texcoord_0.x;
-    r6 = amplitudeSamp[r6];
-    r7 = amplitudeSamp[r7];
-    r5 = amplitudeSamp[r5];
-    r4 = amplitudeSamp[r4];
-    r3 = amplitudeSamp[r3];
-    r2 = amplitudeSamp[r2];
-    r1 = amplitudeSamp[r1];
-    r0 = amplitudeSamp[r0];
-    abs r0.w, r7.x
-    abs r3.w, r6.x
-    abs r1.w, r5.x
-    abs r2.w, r4.x
+    r2.xy = IN.texcoord_0 + fResolution.x;
+    r1.x = IN.texcoord_0.x;
+    r0.x = IN.texcoord_0.x;
+    r6 = tex2D(amplitudeSamp, r6);
+    r7 = tex2D(amplitudeSamp, r7);
+    r5 = tex2D(amplitudeSamp, r5);
+    r4 = tex2D(amplitudeSamp, r4);
+    r3 = tex2D(amplitudeSamp, r3);
+    r2 = tex2D(amplitudeSamp, r2);
+    r1 = tex2D(amplitudeSamp, r1);
+    r0 = tex2D(amplitudeSamp, r0);
+    r0.w = abs(r7.x);
+    r3.w = abs(r6.x);
+    r1.w = abs(r5.x);
+    r2.w = abs(r4.x);
     r5.w = r2.w * const_0.x;
     r1.w = (r1.w * -const_0.y) - r5.w;
-    abs r2.w, r3.x
-    r1.w = (r2.w * -const_0.x) - r1.w;
-    r1.w = (r3.w * const_0.x) - r1.w;
-    r0.w = (r0.w * const_0.y) - r1.w;
-    abs r1.w, r2.x
-    r0.w = (r1.w * const_0.x) - r0.w;
-    abs r4.w, r1.x
+    r2.w = abs(r3.x);
+    r1.w = (r2.w * -const_0.x) + r1.w;
+    r1.w = (r3.w * const_0.x) + r1.w;
+    r0.w = (r0.w * const_0.y) + r1.w;
+    r1.w = abs(r2.x);
+    r0.w = (r1.w * const_0.x) + r0.w;
+    r4.w = abs(r1.x);
     r4.w = (r4.w * -const_0.y) - r5.w;
-    r3.w = (r3.w * -const_0.x) - r4.w;
-    r3.w = (r2.w * const_0.x) - r3.w;
-    abs r2.w, r0.x
+    r3.w = (r3.w * -const_0.x) + r4.w;
+    r3.w = (r2.w * const_0.x) + r3.w;
+    r2.w = abs(r0.x);
     r0.x = -r0.w;
-    r0.w = (r2.w * const_0.y) - r3.w;
-    r0.y = (r1.w * const_0.x) - r0.w;
+    r0.w = (r2.w * const_0.y) + r3.w;
+    r0.y = (r1.w * const_0.x) + r0.w;
     r0.z = const_0.z;
-    r1.x = (r0.x * r0.x) + (r0.y * r0.y) + (r0.z * r0.z);
+    r1.x = dot(r0, r0);	// normalize + length
     r0.z = 1.0 / sqrt(r1.x);
     r0.xy = r0 * r0.z;
     r0.xyz = (const_0.w * r0) + const_0.w;
     r0.w = const_0.z;
-    rendertarget_0 = r0;
+    OUT.color_0 = r0;
 
 // approximately 48 instruction slots used (8 texture, 40 arithmetic)
