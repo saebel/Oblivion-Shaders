@@ -49,7 +49,7 @@
     r0.x = dot(ModelViewProj[0], IN.position);
     r0.y = dot(ModelViewProj[1], IN.position);
     r0.z = dot(ModelViewProj[3], IN.position);
-    OUT.texcoord_2.x = saturate(r0.w * ModelViewProj[2].x);
+    OUT.texcoord_2.x = saturate(r0.w * (1.0 / 7));
     OUT.position = r0.xyzz;
     r0.y = TexCoordYOff.x + IN.texcoord_0.y;
     r0.x = IN.texcoord_0.x;

@@ -35,17 +35,17 @@
     r1 = tex2D(AttMap, r0);			// partial precision
     r2 = tex2D(AttMap, IN.texcoord_1);			// partial precision
     r0 = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
-    r1.w = const_0.y - r2.x;			// partial precision
+    r1.w = 1 - r2.x;			// partial precision
     r2.xyz = IN.texcoord_5;			// partial precision
     r2.xyz = r2 + IN.texcoord_4;			// partial precision
     r1.w = saturate(r1.w - r1.x);			// partial precision
-    r1.y = const_0.z;
+    r1.y = 0.4;
     r1.xyz = r1.y * PointLightColor;			// partial precision
     r1.xyz = (r1.w * r1) + r2;			// partial precision
     r2.xyz = (-r0 * r1) + IN.color_0;			// partial precision
     r0.w = AlphaTestRef.x - r0.w;			// partial precision
     r2.xyz = r2 * IN.color_0.a;			// partial precision
-    r0.w = (r0.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r0.w = (r0.w >= 0.0 ? 1 : 0);			// partial precision
     r0.xyz = (r0 * r1) + r2;			// partial precision
     r0.w = r0.w * IN.texcoord_5.w;			// partial precision
     OUT.color_0 = r0;			// partial precision

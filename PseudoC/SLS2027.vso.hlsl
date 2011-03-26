@@ -41,15 +41,15 @@
     r0.xyz = LightPosition[1] - IN.position;
     r2.xyz = r1 * r0.w;
     r1.xyz = normalize(r0);
-    OUT.texcoord_4.xyz = (const_4.x * r2) + const_4.x;
+    OUT.texcoord_4.xyz = (0.5 * r2) + 0.5;
     OUT.texcoord_2.x = dot(IN.tangent, r1);
     OUT.texcoord_2.y = dot(IN.binormal, r1);
     r0.w = 1.0 / LightPosition[1].w;
     OUT.texcoord_2.z = dot(IN.normal, r1);
     r0.xyz = r0 * r0.w;
-    OUT.texcoord_5.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_5.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4.w = const_4.x;
-    OUT.texcoord_5.w = const_4.x;
+    OUT.texcoord_4.w = 0.5;
+    OUT.texcoord_5.w = 0.5;
 
 // approximately 27 instruction slots used

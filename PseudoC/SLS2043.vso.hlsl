@@ -47,7 +47,7 @@
     r0.y = dot(IN.binormal, LightDirection[0]);
     r0.z = dot(IN.normal, LightDirection[0]);
     r0.w = dot(ShadowProj[3], IN.position);
-    OUT.texcoord_3.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_3.xyz = (0.5 * r0) + 0.5;
     r1.y = r0.w * ShadowProjTransform.w;
     r0.x = dot(ShadowProj[0], IN.position);
     r0.y = dot(ShadowProj[1], IN.position);
@@ -57,7 +57,7 @@
     r0.w = 1.0 / ShadowProjData.w;
     OUT.texcoord_4.xy = r1.w * r1;
     OUT.texcoord_4.z = r0.x * r0.w;
-    OUT.texcoord_4.w = (r0.y * -r0.w) + const_4.y;
+    OUT.texcoord_4.w = (r0.y * -r0.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xy = IN.texcoord_0;
     OUT.texcoord_2 = (IN.color_0.xyzx * const_4.yyyz) + const_4.zzzy;

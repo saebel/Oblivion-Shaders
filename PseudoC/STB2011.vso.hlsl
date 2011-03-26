@@ -88,7 +88,7 @@
     r1.w = 1.0 / LightPosition[1].w;
     r2.xyz = r1 * r1.w;
     r1.xyz = normalize(r3);
-    OUT.texcoord_5.xyz = (const_4.x * r2) + const_4.x;
+    OUT.texcoord_5.xyz = (0.5 * r2) + 0.5;
     OUT.texcoord_4.x = dot(IN.tangent, r1);
     OUT.texcoord_4.y = dot(IN.binormal, r1);
     r2.x = dot(ShadowProj[0], r0);
@@ -111,13 +111,13 @@
     r1.w = 1.0 / ShadowProjData.w;
     r0.w = r0.w * r2.w;
     OUT.texcoord_7.z = r2.x * r1.w;
-    r0.w = max(r0.w, const_4.z);
-    OUT.texcoord_7.w = (r2.y * -r1.w) + const_4.y;
-    r0.w = min(r0.w, const_4.y);
+    r0.w = max(r0.w, 0);
+    OUT.texcoord_7.w = (r2.y * -r1.w) + 1;
+    r0.w = min(r0.w, 1);
     OUT.position.xyz = r1;
-    OUT.color_1.a = const_4.y - r0.w;
+    OUT.color_1.a = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_5.w = const_4.x;
+    OUT.texcoord_5.w = 0.5;
     OUT.color_0 = (IN.blendindices.z * const_4.yyyz) + const_4.zzzy;
     OUT.color_1.rgb = FogColor;
 

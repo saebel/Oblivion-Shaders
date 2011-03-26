@@ -31,8 +31,8 @@
     r1 = tex2D(DecalMap, IN.texcoord_1);
     r0 = tex2D(DiffuseMap, IN.texcoord_0);
     r2.xyz = r2 + r2;
-    r1.xyz = r1 + const_0.x;
-    r0.xyz = (const_0.y * r1) + r0;
+    r1.xyz = r1 + -0.5;
+    r0.xyz = (2 * r1) + r0;
     r0.xyz = r2 * r0;
     r0.xyz = r0 + r0;
     OUT.color_0 = r0;

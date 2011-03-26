@@ -28,7 +28,7 @@
     r0.w = (r1.w * r1.w) + r0.w;
     r0.w = r0.w + alphaAdd.x;
     r0.xyz = r0 * r0.w;
-    r0.w = const_0.w;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 9 instruction slots used (1 texture, 8 arithmetic)

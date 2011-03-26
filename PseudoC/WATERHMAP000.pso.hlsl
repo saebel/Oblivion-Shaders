@@ -31,16 +31,16 @@
     r0 = tex2D(amplitudeSamp, IN.texcoord_0);
     r2.w = r1.x * Time.x;
     r1.w = -r1.x * Time.x;
-    r2.w = (r2.w * const_1.x) + const_1.y;
-    r2.w = r2.w - floor(r2.w);
-    r3.w = (r2.w * const_1.z) + const_1.w;
+    r2.w = (r2.w * (1.0 / (PI * 2))) + 0.5;
+    r2.w = frac(r2.w);
+    r3.w = (r2.w * PI * 2) + -PI;
     r2.x = cos(r3.w); r2.y = sin(r3.w);
     r3.w = r0.y * r2.y;
     r2.w = r0.y * r2.x;
-    r1.w = (r1.w * const_1.x) + const_1.y;
-    r1.w = r1.w - floor(r1.w);
+    r1.w = (r1.w * (1.0 / (PI * 2))) + 0.5;
+    r1.w = frac(r1.w);
     r2.x = (r0.x * r2.x) - r3.w;
-    r3.w = (r1.w * const_1.z) + const_1.w;
+    r3.w = (r1.w * PI * 2) + -PI;
     r1.x = cos(r3.w); r1.y = sin(r3.w);
     r2.y = (r0.x * r2.y) + r2.w;
     r1.w = r0.w * r1.y;
@@ -48,8 +48,8 @@
     r0.w = r0.w * r1.x;
     r0.y = (r0.z * r1.y) - r0.w;
     r0.xy = r2 + r0;
-    r0.z = const_2.x;
-    r0.w = const_2.y;
+    r0.z = 0;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 38 instruction slots used (2 texture, 36 arithmetic)

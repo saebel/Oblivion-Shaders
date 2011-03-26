@@ -30,9 +30,9 @@
     OUT.position.y = dot(ModelViewProj[1], IN.position);
     r0.x = dot(LightDirection[0], IN.normal);
     OUT.position.z = dot(ModelViewProj[2], IN.position);
-    r0.w = max(r0.x, const_4.x);
+    r0.w = max(r0.x, 0);
     OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.w = min(r0.w, const_4.y);
+    r0.w = min(r0.w, 1);
     OUT.color_0.rgb = r0.w * IN.color_0;
     OUT.texcoord_0.xy = IN.texcoord_0;
 

@@ -35,7 +35,7 @@
     r0.y = dot(IN.binormal, LightDirection[0]);
     r0.z = dot(IN.normal, LightDirection[0]);
     OUT.position.w = dot(ModelViewProj[3], IN.position);
-    OUT.texcoord_3.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_3.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xy = IN.texcoord_0;
     OUT.texcoord_2.xy = IN.texcoord_0;

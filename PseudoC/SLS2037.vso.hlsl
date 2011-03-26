@@ -36,9 +36,9 @@
     OUT.position.y = dot(ModelViewProj[1], IN.position);
     OUT.position.z = dot(ModelViewProj[2], IN.position);
     OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r1.xyz = IN.tangent * const_4.x;
+    r1.xyz = IN.tangent * 0.1;
     OUT.texcoord_1.x = dot(r1, ObjToCubeSpace[0]);
-    r0.xyz = IN.binormal * const_4.x;
+    r0.xyz = IN.binormal * 0.1;
     OUT.texcoord_1.y = dot(r0, ObjToCubeSpace[0]);
     OUT.texcoord_1.z = dot(IN.normal, ObjToCubeSpace[0]);
     OUT.texcoord_2.x = dot(r1, ObjToCubeSpace[1]);

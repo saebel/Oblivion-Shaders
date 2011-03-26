@@ -38,10 +38,10 @@
     float4 IN.color_0 : COLOR0;
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
-    r2.x = dot(IN.blendweight, const_0.x);
+    r2.x = dot(IN.blendweight, 1);
     r0 = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1 = IN.blendindices.zyxw * const_0.y;
-    r2.w = const_0.x - r2.x;
+    r1 = IN.blendindices.zyxw * 765.01001;
+    r2.w = 1 - r2.x;
     offset.x = r1.y;
     r2.x = dot(Bones[0 + offset.x], r0);
     r2.y = dot(Bones[1 + offset.x], r0);
@@ -81,7 +81,7 @@
     r2.x = dot(Bones[0 + offset.x], IN.tangent);
     r2.y = dot(Bones[1 + offset.x], IN.tangent);
     r2.z = dot(Bones[2 + offset.x], IN.tangent);
-    r0.w = const_0.x;
+    r0.w = 1;
     r2.xyz = (r2.w * r2) + r3;
     OUT.position.x = dot(SkinModelViewProj[0], r0);
     r3.x = dot(r2, r2);	// normalize + length
@@ -90,7 +90,7 @@
     OUT.position.z = dot(SkinModelViewProj[2], r0);
     r2.xyz = r2 * r3.w;
     OUT.position.w = dot(SkinModelViewProj[3], r0);
-    r2.xyz = r2 * const_0.w;
+    r2.xyz = r2 * 0.1;
     OUT.texcoord_1.x = dot(r2, SkinToCubeSpace[0]);
     offset.x = r1.y;
     r3.x = dot(Bones[0 + offset.x], IN.binormal);
@@ -137,7 +137,7 @@
     r4.x = dot(r1, r1);	// normalize + length
     r3.xyz = r3 * r1.w;
     r1.w = 1.0 / sqrt(r4.x);
-    r3.xyz = r3 * const_0.w;
+    r3.xyz = r3 * 0.1;
     r1.xyz = r1 * r1.w;
     OUT.texcoord_1.y = dot(r3, SkinToCubeSpace[0]);
     OUT.texcoord_1.z = dot(r1, SkinToCubeSpace[0]);

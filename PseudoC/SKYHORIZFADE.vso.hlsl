@@ -43,7 +43,7 @@
     r0.w = dot(Model[2], IN.position);
     OUT.color_0.a = BlendColor[0].a * IN.color_0.a;
     r0.w = r0.w - EyePosition.z;
-    OUT.texcoord_2.x = saturate(r0.w * ModelViewProj[2].x);
+    OUT.texcoord_2.x = saturate(r0.w * (1.0 / 7));
     r0.x = dot(ModelViewProj[0], IN.position);
     r0.y = dot(ModelViewProj[1], IN.position);
     r0.z = dot(ModelViewProj[3], IN.position);

@@ -33,11 +33,11 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
-    r0.w = const_0.x;
-    r0.x = dot(IN.blendweight, const_0.x);
+    r0.w = 1;
+    r0.x = dot(IN.blendweight, 1);
     r2 = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1 = IN.blendindices.zyxw * const_0.y;
-    r3.w = const_0.x - r0.x;
+    r1 = IN.blendindices.zyxw * 765.01001;
+    r3.w = 1 - r0.x;
     offset.x = r1.y;
     r0.x = dot(Bones[0 + offset.x], r2);
     r0.y = dot(Bones[1 + offset.x], r2);
@@ -134,7 +134,7 @@
     r2.y = dot(r3, LightDirection[0]);
     r2.z = dot(r1, LightDirection[0]);
     OUT.position.w = dot(SkinModelViewProj[3], r0);
-    OUT.color_0.rgb = (const_0.w * r2) + const_0.w;
+    OUT.color_0.rgb = (0.5 * r2) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xy = IN.texcoord_0;
     OUT.texcoord_2.xy = IN.texcoord_0;

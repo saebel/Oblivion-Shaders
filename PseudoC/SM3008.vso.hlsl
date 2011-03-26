@@ -58,6 +58,6 @@
     OUT.texcoord_1.w = r0.x;
     OUT.texcoord_2.w = r0.y;
     OUT.texcoord_3.w = r0.z;
-    OUT.color_0.rgb = const_4.x;
+    OUT.color_0.rgb = 1;
 
 // approximately 22 instruction slots used

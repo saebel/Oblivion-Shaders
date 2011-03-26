@@ -65,7 +65,7 @@
     r0.w = 1.0 / ShadowProjData.w;
     OUT.texcoord_6.xy = r1.w * r1;
     OUT.texcoord_6.z = r0.x * r0.w;
-    OUT.texcoord_6.w = (r0.y * -r0.w) + const_4.x;
+    OUT.texcoord_6.w = (r0.y * -r0.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 33 instruction slots used

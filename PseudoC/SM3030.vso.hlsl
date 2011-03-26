@@ -30,6 +30,6 @@
     OUT.position.z = dot(ModelViewProj[2], IN.position);
     OUT.position.w = dot(ModelViewProj[3], IN.position);
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0 = const_4.x;
+    OUT.color_0 = 1;
 
 // approximately 6 instruction slots used

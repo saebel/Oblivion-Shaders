@@ -86,4 +86,4 @@ offset = r0.w;
 
 r0.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
 r0.w = IN.texcoord_1.x - r0.w;
-offset.w = r0.w;
+offset = r0.w;

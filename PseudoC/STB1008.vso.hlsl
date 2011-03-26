@@ -43,33 +43,34 @@
     r0 = r0 - IN.position;
     r1 = IN.position;
     r0 = (IN.blendindices.x * r0) + r1;
-
-    float3 spcvec;
-    float3 spcmod;
-    float3 pntvec;
-    float3 pntdir;
-    float3 pntmod;
-
-    spcvec = EyePosition - r0;
-    pntvec = LightPosition[0] - r0;
-
-    pntdir = normalize(normalize(spcvec) + normalize(pntvec)v);
-
-    OUT.texcoord_3.x = dot(IN.tangent , pntdir);
-    OUT.texcoord_3.y = dot(IN.binormal, pntdir);
-    OUT.texcoord_3.z = dot(IN.normal,   pntdir);
-
-    r0.x = dot(IN.tangent,  IN.normal);
-    r0.y = dot(IN.binormal, IN.normal);
-    r0.z = dot(IN.normal,   IN.normal);
-
-    OUT.color_0.rgb = (const_4.x * r0) + const_4.x;
-
-    pntvec = pntvec / LightPosition[0].w;
-
-    OUT.texcoord_1.xy = (const_4.x * r0) + const_4.x;
-    OUT.texcoord_2.x = (r0.z * const_4.x) + const_4.x;
+    r2.xyz = EyePosition - r0;
+    r1.xyz = LightPosition[0] - r0;
+    r3.x = dot(r2, r2);	// normalize + length
+    r1.w = 1.0 / sqrt(r3.x);
+    r3.x = dot(r1, r1);	// normalize + length
+    r2.xyz = r2 * r1.w;
+    r1.w = 1.0 / sqrt(r3.x);
+    r2.xyz = (r1.w * r1) + r2;
+    OUT.position.x = dot(ModelViewProj[0], r0);
+    r3.x = dot(r2, r2);	// normalize + length
+    OUT.position.y = dot(ModelViewProj[1], r0);
+    r1.w = 1.0 / sqrt(r3.x);
+    OUT.position.z = dot(ModelViewProj[2], r0);
+    r2.xyz = r2 * r1.w;
+    OUT.position.w = dot(ModelViewProj[3], r0);
+    OUT.texcoord_3.x = dot(IN.tangent, r2);
+    OUT.texcoord_3.y = dot(IN.binormal, r2);
+    OUT.texcoord_3.z = dot(IN.normal, r2);
+    r2.xyz = IN.normal;
+    r0.x = dot(IN.tangent, r2);
+    r0.y = dot(IN.binormal, r2);
+    r0.z = dot(IN.normal, IN.normal);
+    r0.w = 1.0 / LightPosition[0].w;
+    OUT.color_0.rgb = (0.5 * r0) + 0.5;
+    r0.xyz = r1 * r0.w;
+    OUT.texcoord_1.xy = (0.5 * r0) + 0.5;
+    OUT.texcoord_2.x = (r0.z * 0.5) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_2.y = const_4.x;
+    OUT.texcoord_2.y = 0.5;
 
 // approximately 37 instruction slots used

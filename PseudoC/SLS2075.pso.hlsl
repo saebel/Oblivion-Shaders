@@ -33,11 +33,11 @@
     sampler2D SourceTexture;
     r1 = tex2D(NormalMap, IN.texcoord_0);
     r0 = tex2D(SourceTexture, IN.texcoord_1);
-    r1.xyz = r1 + const_3.x;
+    r1.xyz = r1 + -0.5;
     r1.xyz = r1 + r1;
     r2.x = dot(r1, IN.texcoord_3);
-    r1.w = max(r2.x, const_3.y);
-    r2.w = const_3.z - r1.w;
+    r1.w = max(r2.x, 0);
+    r2.w = 1 - r1.w;
     r0.xyz = r0 + FillColor;
     r0.w = r0.w * FillColor.a;
     r1.w = pow(abs(r2.w), fVars.x);

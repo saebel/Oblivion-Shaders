@@ -39,24 +39,24 @@
     sampler2D ShadowMap;
     sampler2D ShadowMaskMap;
     r0 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r0 + const_0.x;
+    r0.xyz = r0 + -0.5;
     r1.xyz = r0 + r0;			// partial precision
     r0.xyz = normalize(r1);			// partial precision
     r0.x = saturate(dot(r0, IN.texcoord_1));			// partial precision
     r4.xyz = r0.x * PSLightColor[0];			// partial precision
     r0.x = IN.texcoord_7.z;			// partial precision
     r0.y = IN.texcoord_7.w;			// partial precision
-    r1.xy = IN.texcoord_0 * const_3.x;
+    r1.xy = IN.texcoord_0 * 20;
     r2 = tex2D(ShadowMaskMap, r0);			// partial precision
     r3 = tex2D(ShadowMap, IN.texcoord_7);			// partial precision
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
     r1 = tex2D(ShadowMap, r1);
-    r3.xyz = r3 + const_0.y;			// partial precision
-    r2.xyz = (r2.x * r3) + const_0.z;			// partial precision
+    r3.xyz = r3 + -1;			// partial precision
+    r2.xyz = (r2.x * r3) + 1;			// partial precision
     r3.xyz = (r2 * r4) + AmbientColor;			// partial precision
-    r2.xyz = max(r3, const_0.w);			// partial precision
+    r2.xyz = max(r3, 0);			// partial precision
     r0.xyz = r0 * r2;			// partial precision
-    r1.w = (r1.x * -const_0.x) - const_0.x;
+    r1.w = (r1.x * --0.5) - -0.5;
     r1.xyz = (-r1.w * r0) + IN.color_1;			// partial precision
     r0.xyz = r0 * r1.w;			// partial precision
     r1.xyz = (IN.color_1.a * r1) + r0;			// partial precision

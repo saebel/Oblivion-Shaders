@@ -24,17 +24,17 @@
     sampler2D Src0;
     sampler2D Src1;
     r0 = tex2D(Src1, IN.texcoord_1);
-    r0.w = r0.x + const_0.x;
+    r0.w = r0.x + -0.5;
     r1.w = r0.z * r0.w;
-    r0.w = r0.y + const_0.x;
-    r1.x = (const_0.y * -r1.w) + IN.texcoord_0.x;
+    r0.w = r0.y + -0.5;
+    r1.x = (2 * -r1.w) + IN.texcoord_0.x;
     r0.w = r0.z * r0.w;
-    r1.y = (const_0.y * r0.w) + IN.texcoord_0.y;
+    r1.y = (2 * r0.w) + IN.texcoord_0.y;
     r0 = tex2D(Src1, r1);
     r1 = tex2D(Src0, r1);
     r2 = tex2D(Src0, IN.texcoord_0);
     r0.w = r0.w * r0.w;
-    r3.w = (r0.w <= 0.0 ? const_0.w : const_0.z);
+    r3.w = (r0.w <= 0.0 ? 1 : 0);
     r0 = lerp(r1, r2, r3.w);
     OUT.color_0 = r0;
 

@@ -44,7 +44,7 @@
     sampler2D ShadowMap;
     r1.w = 1.0 / IN.texcoord_1.w;			// partial precision
     r10.xy = r1.w * IN.texcoord_1;			// partial precision
-    r8.xy = saturate((const_6 * r10) + const_6.x);			// partial precision
+    r8.xy = saturate((const_6 * r10) + 0.5);			// partial precision
     r1.xy = const_6;
     r0.xy = (r1 * r10) + const_7;			// partial precision
     r7.xy = saturate(r0 + const_1);			// partial precision
@@ -53,11 +53,11 @@
     r4.xy = saturate(r0 + const_9);			// partial precision
     r3.xy = saturate((r1 * r10) + const_10);			// partial precision
     r2.xy = saturate((r1 * r10) + const_11);			// partial precision
-    r0.z = r0.x + const_6.w;			// partial precision
-    r0.w = r0.x + const_6.w;			// partial precision
-    r1.x = saturate((r0.z >= 0.0 ? const_0.x : r0.w));			// partial precision
-    r1.y = saturate((r0.y >= 0.0 ? const_0.x : r0.y));			// partial precision
-    r10.w = (IN.texcoord_1.y * -r1.w) + const_0.y;			// partial precision
+    r0.z = r0.x + 0.5 + 0.01;			// partial precision
+    r0.w = r0.x + 0.5 + 0.01;			// partial precision
+    r1.x = saturate((r0.z >= 0.0 ? 0 : r0.w));			// partial precision
+    r1.y = saturate((r0.y >= 0.0 ? 0 : r0.y));			// partial precision
+    r10.w = (IN.texcoord_1.y * -r1.w) + 1;			// partial precision
     r0.xy = saturate(r0 + const_12);			// partial precision
     r9 = tex2D(ShadowMap, r8);			// partial precision
     r8 = tex2D(ShadowMap, r7);			// partial precision
@@ -69,63 +69,63 @@
     r2 = tex2D(ShadowMap, r1);			// partial precision
     r0 = tex2D(ShadowMap, r0);			// partial precision
     r1 = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
-    r0.w = (IN.texcoord_1.z * -const_0.w) + r9.x;			// partial precision
-    r0.w = const_6.z - r0.w;			// partial precision
-    r0.w = (r0.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
-    r2.w = (IN.texcoord_1.z * -const_0.w) + r8.x;			// partial precision
-    r2.w = const_6.z - r2.w;			// partial precision
-    r2.w = (r2.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r0.w = (IN.texcoord_1.z * -0.001) + r9.x;			// partial precision
+    r0.w = -0.00136718748 - r0.w;			// partial precision
+    r0.w = (r0.w >= 0.0 ? 1 : 0);			// partial precision
+    r2.w = (IN.texcoord_1.z * -0.001) + r8.x;			// partial precision
+    r2.w = -0.00136718748 - r2.w;			// partial precision
+    r2.w = (r2.w >= 0.0 ? 1 : 0);			// partial precision
     r0.w = r0.w + r2.w;			// partial precision
-    r2.w = (IN.texcoord_1.z * -const_0.w) + r7.x;			// partial precision
-    r2.w = const_6.z - r2.w;			// partial precision
-    r2.w = (r2.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r2.w = (IN.texcoord_1.z * -0.001) + r7.x;			// partial precision
+    r2.w = -0.00136718748 - r2.w;			// partial precision
+    r2.w = (r2.w >= 0.0 ? 1 : 0);			// partial precision
     r0.w = r0.w + r2.w;			// partial precision
-    r2.w = (IN.texcoord_1.z * -const_0.w) + r6.x;			// partial precision
-    r2.w = const_6.z - r2.w;			// partial precision
-    r2.w = (r2.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r2.w = (IN.texcoord_1.z * -0.001) + r6.x;			// partial precision
+    r2.w = -0.00136718748 - r2.w;			// partial precision
+    r2.w = (r2.w >= 0.0 ? 1 : 0);			// partial precision
     r0.w = r0.w + r2.w;			// partial precision
-    r2.w = (IN.texcoord_1.z * -const_0.w) + r5.x;			// partial precision
-    r2.w = const_6.z - r2.w;			// partial precision
-    r2.w = (r2.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r2.w = (IN.texcoord_1.z * -0.001) + r5.x;			// partial precision
+    r2.w = -0.00136718748 - r2.w;			// partial precision
+    r2.w = (r2.w >= 0.0 ? 1 : 0);			// partial precision
     r0.w = r0.w + r2.w;			// partial precision
-    r2.w = (IN.texcoord_1.z * -const_0.w) + r4.x;			// partial precision
-    r2.w = const_6.z - r2.w;			// partial precision
-    r2.w = (r2.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r2.w = (IN.texcoord_1.z * -0.001) + r4.x;			// partial precision
+    r2.w = -0.00136718748 - r2.w;			// partial precision
+    r2.w = (r2.w >= 0.0 ? 1 : 0);			// partial precision
     r0.w = r0.w + r2.w;			// partial precision
-    r2.w = (r10.x * const_0.z) + const_0.z;			// partial precision
-    r3.w = (IN.texcoord_1.z * -const_0.w) + r3.x;			// partial precision
-    r3.w = const_6.z - r3.w;			// partial precision
-    r3.w = (r3.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r2.w = (r10.x * 0.5) + 0.5;			// partial precision
+    r3.w = (IN.texcoord_1.z * -0.001) + r3.x;			// partial precision
+    r3.w = -0.00136718748 - r3.w;			// partial precision
+    r3.w = (r3.w >= 0.0 ? 1 : 0);			// partial precision
     r0.w = r0.w + r3.w;			// partial precision
-    r3.w = (IN.texcoord_1.z * -const_0.w) + r2.x;			// partial precision
-    r3.w = const_6.z - r3.w;			// partial precision
-    r3.w = (r3.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r3.w = (IN.texcoord_1.z * -0.001) + r2.x;			// partial precision
+    r3.w = -0.00136718748 - r3.w;			// partial precision
+    r3.w = (r3.w >= 0.0 ? 1 : 0);			// partial precision
     r0.w = r0.w + r3.w;			// partial precision
-    r3.w = (IN.texcoord_1.z * -const_0.w) + r0.x;			// partial precision
-    r3.w = const_6.z - r3.w;			// partial precision
-    r3.w = (r3.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r3.w = (IN.texcoord_1.z * -0.001) + r0.x;			// partial precision
+    r3.w = -0.00136718748 - r3.w;			// partial precision
+    r3.w = (r3.w >= 0.0 ? 1 : 0);			// partial precision
     r0.w = r0.w + r3.w;			// partial precision
-    r0.w = saturate(r0.w * const_7.z);			// partial precision
-    r0.w = r0.w - const_0.y;			// partial precision
-    r3.w = const_0.y - r2.w;			// partial precision
-    r2.w = (r2.w >= 0.0 ? const_0.x : const_0.y);			// partial precision
-    r3.w = (r3.w >= 0.0 ? const_0.x : const_0.y);			// partial precision
+    r0.w = saturate(r0.w * 0.125);			// partial precision
+    r0.w = r0.w - 1;			// partial precision
+    r3.w = 1 - r2.w;			// partial precision
+    r2.w = (r2.w >= 0.0 ? 0 : 1);			// partial precision
+    r3.w = (r3.w >= 0.0 ? 0 : 1);			// partial precision
     r2.w = r2.w * r3.w;
-    r4.w = (r10.w >= 0.0 ? const_0.x : const_0.y);			// partial precision
-    r3.w = (r10.w * -const_0.z) + const_0.y;			// partial precision
+    r4.w = (r10.w >= 0.0 ? 0 : 1);			// partial precision
+    r3.w = (r10.w * -0.5) + 1;			// partial precision
     r2.w = r2.w * r4.w;
-    r3.w = (r3.w >= 0.0 ? const_0.x : const_0.y);			// partial precision
+    r3.w = (r3.w >= 0.0 ? 0 : 1);			// partial precision
     r2.w = r2.w * r3.w;
-    r3.w = (IN.texcoord_1.z >= 0.0 ? const_0.x : const_0.y);			// partial precision
+    r3.w = (IN.texcoord_1.z >= 0.0 ? 0 : 1);			// partial precision
     r3.w = r2.w * r3.w;
     r2.yz = const_0;
     r0.xyz = (PSLightColor[0].a * r0.w) + r2.y;			// partial precision
-    r0.w = const_0.y;			// partial precision
+    r0.w = 1;			// partial precision
     r0 = (r3.w <= 0.0 ? r0 : const_13);			// partial precision
     r4.w = min(r1.w, r0.w);			// partial precision
-    r5.w = const_0.y - r0.x;			// partial precision
+    r5.w = 1 - r0.x;			// partial precision
     r1.xyz = IN.texcoord_2 - LightData;			// partial precision
-    r6.w = r5.w * const_7.w;			// partial precision
+    r6.w = r5.w * 0.6;			// partial precision
     r1.x = dot(r1, r1);	// normalize + length			// partial precision
     r2.w = 1.0 / sqrt(r1.x);			// partial precision
     r2.w = 1.0 / r2.w;			// partial precision
@@ -135,13 +135,13 @@
     r1.xyz = (r6.w * -PSLightColor[0]) + r2.y;			// partial precision
     r6.w = r2.w * r2.w;			// partial precision
     r1.w = AlphaTestRef.x - r1.w;			// partial precision
-    r2.xyz = lerp(const_0.y, r1, r6.w);			// partial precision
-    r1.xyz = lerp(const_0.y, r2, IN.color_0.a);			// partial precision
-    r1.w = (r1.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
-    r1.xyz = r1 - const_0.y;			// partial precision
+    r2.xyz = lerp(1, r1, r6.w);			// partial precision
+    r1.xyz = lerp(1, r2, IN.color_0.a);			// partial precision
+    r1.w = (r1.w >= 0.0 ? 1 : 0);			// partial precision
+    r1.xyz = r1 - 1;			// partial precision
     r2.w = r1.w * IN.texcoord_5.w;			// partial precision
     r1.w = min(r4.w, r5.w);			// partial precision
-    r1.xyz = (r2.w * r1) + const_0.y;			// partial precision
+    r1.xyz = (r2.w * r1) + 1;			// partial precision
     r1 = (r3.w <= 0.0 ? r1 : r0);			// partial precision
     r0.w = min(r1.w, r2.w);			// partial precision
     r0.xyz = r1;			// partial precision

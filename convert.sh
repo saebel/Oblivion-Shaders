@@ -3,7 +3,7 @@
 SED=sed
 SFLAGS=
 
-for dis in Disassembly/*.dis; do
+for dis in Disassembly/HDR*.dis; do
   echo $dis
   fle=`basename ${dis}`
   fle=`stripext ${fle}`
@@ -26,11 +26,30 @@ for dis in Disassembly/*.dis; do
 	       -e 's/.*output_\([0-9]\+\) : \([A-Z]\+\)\([0-9]\+\);.*/s\/output_\1\\\([^0-9]\\\+\\\)\/OUT.\L\2_\3\\ 1\/g/g'	\
 	       -e 's/.*output_\([0-9]\+\) : \([A-Z]\+\);.*/s\/output_\1\\\([^0-9]\\\+\\\)\/OUT.\L\2\\ 1\/g/g'			\
 	       -e 's/ 1/1/g'								<PseudoC/$fle.hlsl.tmp | sort -r >>PseudoC/$fle.hlsl.sed
-  $SED $SFLAGS -e '/samplerCUBE \([a-zA-Z0-9]\+\);/!d'			\
+
+  $SED $SFLAGS -e '/samplerCUBE \([a-zA-Z0-9]\+\);/!d'					\
 	       -e 's/.*samplerCUBE \([a-zA-Z0-9]\+\);.*/s\/tex2D(\1\/texCUBE(\1\/g/g'	\
 	       -e 's/ 1/1/g'								<PseudoC/$fle.hlsl.tmp | sort -r >>PseudoC/$fle.hlsl.sed
+
+  $SED $SFLAGS -e '/const \([a-zA-Z0-9]\+\) const_\([0-9]\+\) = {.*,.*};/!d'		\
+	       -e 's/.*const_\([0-9]\+\) = {\([^,]\+\), .*};/s\/const_\1.x\\\([^a-z]\\\+\\\)\/\2\\;1\/g/g'	\
+	       -e 's/;1/1/g'								\
+	       -e 's/ \/ / \\\/ /g'							<PseudoC/$fle.hlsl.tmp | sort -r >>PseudoC/$fle.hlsl.sed
+  $SED $SFLAGS -e '/const \([a-zA-Z0-9]\+\) const_\([0-9]\+\) = {.*,.*,.*};/!d'		\
+	       -e 's/.*const_\([0-9]\+\) = {[^,]\+, \([^,]\+\), .*};/s\/const_\1.y\\\([^a-z]\\\+\\\)\/\2\\;1\/g/g'	\
+	       -e 's/;1/1/g'								\
+	       -e 's/ \/ / \\\/ /g'							<PseudoC/$fle.hlsl.tmp | sort -r >>PseudoC/$fle.hlsl.sed
+  $SED $SFLAGS -e '/const \([a-zA-Z0-9]\+\) const_\([0-9]\+\) = {.*,.*,.*,.*};/!d'	\
+	       -e 's/.*const_\([0-9]\+\) = {[^,]\+, [^,]\+, \([^,]\+\), .*};/s\/const_\1.z\\\([^a-z]\\\+\\\)\/\2\\;1\/g/g'	\
+	       -e 's/;1/1/g'								\
+	       -e 's/ \/ / \\\/ /g'							<PseudoC/$fle.hlsl.tmp | sort -r >>PseudoC/$fle.hlsl.sed
+  $SED $SFLAGS -e '/const \([a-zA-Z0-9]\+\) const_\([0-9]\+\) = {.*,.*,.*,.*};/!d'	\
+	       -e 's/.*const_\([0-9]\+\) = {[^,]\+, [^,]\+, [^,]\+, \([^,]\+\)};/s\/const_\1.w\\\([^a-z]\\\+\\\)\/\2\\;1\/g/g'	\
+	       -e 's/;1/1/g'								\
+	       -e 's/ \/ / \\\/ /g'							<PseudoC/$fle.hlsl.tmp | sort -r >>PseudoC/$fle.hlsl.sed
+
   $SED $SFLAGS -e '/^\/\/ \+[][a-zA-Z0-9_]\+ \+[][a-zA-Z0-9_]\+ \+[14]8\?/!d'		\
-	       -e 's/^\/\/ \+\([][a-zA-Z0-9_]\+\) \+\([][a-zA-Z0-9_]\+\) \+[14]8\?/\/^\\\/\\\/\/!s\/\2\\\([^a-z0-9:]\\\+\\\)\/\1\\ 1\/g/g'	\
+	       -e 's/^\/\/ \+\([][a-zA-Z0-9_]\+\) \+\([][a-zA-Z0-9_]\+\) \+[14]8\?.*/\/^\\\/\\\/\/!s\/\2\\\([^a-z0-9:]\\\+\\\)\/\1\\ 1\/g/g'	\
 	       -e 's/\[\([0-9]\+\)\]/\\\[\1\\\]/g'					\
 	       -e 's/ 1/1/g'								<PseudoC/$fle.hlsl.tmp | sort -r >>PseudoC/$fle.hlsl.sed
 

@@ -21,8 +21,8 @@
     const int4 const_2 = {1, 0, 0, 0};
     float4 IN.color_0 : COLOR0;
     float texcoord_0 : TEXCOORD0;			// partial precision
-    r1.w = const_2.x - IN.texcoord_0.x;			// partial precision
-    r0.w = IN.texcoord_0.x + const_2.x;			// partial precision
+    r1.w = 1 - IN.texcoord_0.x;			// partial precision
+    r0.w = IN.texcoord_0.x + 1;			// partial precision
     r1.w = (IN.texcoord_0.x <= 0.0 ? r1.w : r0.w);			// partial precision
     r0.w = r1.w * r1.w;			// partial precision
     r0.w = r0.w * r0.w;			// partial precision

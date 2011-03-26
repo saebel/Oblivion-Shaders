@@ -68,15 +68,15 @@
     r1.w = 1.0 / LightPosition[0].w;
     r0.x = dot(IN.normal, LightDirection[1]);
     r0.w = r0.w * r1.w;
-    r1.w = max(r0.x, const_4.x);
-    r0.w = max(r0.w, const_4.x);
-    r1.w = min(r1.w, const_4.y);
-    r0.w = min(r0.w, const_4.y);
+    r1.w = max(r0.x, 0);
+    r0.w = max(r0.w, 0);
+    r1.w = min(r1.w, 1);
+    r0.w = min(r0.w, 1);
     r0.xyz = r1.w * LightColor[1];
-    r0.w = const_4.y - r0.w;
-    r0.xyz = min(r0, const_4.y);
+    r0.w = 1 - r0.w;
+    r0.xyz = min(r0, 1);
     OUT.color_0.a = r0.w * r0.w;
-    OUT.color_0.rgb = max(r0, const_4.x);
+    OUT.color_0.rgb = max(r0, 0);
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.color_1 = IN.color_0;
 

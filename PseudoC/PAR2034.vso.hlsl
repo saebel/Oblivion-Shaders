@@ -56,8 +56,8 @@
     r0.xyz = r0 * r1.w;
     r4.xyz = normalize(r1);
     OUT.texcoord_7.xyz = r4;
-    OUT.texcoord_5.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_5.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_5.w = const_4.x;
+    OUT.texcoord_5.w = 0.5;
 
 // approximately 38 instruction slots used

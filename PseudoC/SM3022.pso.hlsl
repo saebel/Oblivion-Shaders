@@ -29,7 +29,7 @@
     float3 IN.color_0 : COLOR0;			// partial precision
     sampler2D NormalMap;
     samplerCUBE EnvironmentCubeMap;
-    r0.xyz = IN.input_1 + const_0.x;
+    r0.xyz = IN.input_1 + -0.5;
     r0.xyz = r0 + r0;			// partial precision
     r1.xyz = normalize(IN.input_2);			// partial precision
     r0.w = dot(r0, r1);			// partial precision
@@ -44,6 +44,6 @@
     r0.xyz = r0 * IN.color_0;			// partial precision
     r0.xyz = r0 * PSLightColor;			// partial precision
     OUT.color_0.rgb = r0 * IN.input_1.w;			// partial precision
-    OUT.color_0.a = const_0.y;			// partial precision
+    OUT.color_0.a = 1;			// partial precision
 
 // approximately 18 instruction slots used (2 texture, 16 arithmetic)

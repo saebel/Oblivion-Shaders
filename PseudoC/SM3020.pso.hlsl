@@ -29,7 +29,7 @@
     sampler2D NormalMap;
     samplerCUBE EnvironmentCubeMap;
     r1 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r1 + const_0.x;
+    r0.xyz = r1 + -0.5;
     r1.xyz = r0 + r0;			// partial precision
     r0.xyz = normalize(r1);			// partial precision
     r2.xyz = r0 * const_0.yyzw;			// partial precision
@@ -54,6 +54,6 @@
     r0.xyz = r1.w * r0;			// partial precision
     r0.xyz = r0 * MatAlpha.x;			// partial precision
     OUT.color_0.rgb = r0 * IN.color_0;			// partial precision
-    OUT.color_0.a = const_0.z;			// partial precision
+    OUT.color_0.a = 1;			// partial precision
 
 // approximately 41 instruction slots used (2 texture, 39 arithmetic)

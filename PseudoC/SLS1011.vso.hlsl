@@ -44,11 +44,11 @@
     r1.y = dot(IN.binormal, LightDirection[0]);
     r0.w = r0.w * r1.w;
     r1.z = dot(IN.normal, LightDirection[0]);
-    r0.w = max(r0.w, const_4.y);
-    OUT.texcoord_3.xyz = (const_4.x * r1) + const_4.x;
-    r0.w = min(r0.w, const_4.z);
+    r0.w = max(r0.w, 0);
+    OUT.texcoord_3.xyz = (0.5 * r1) + 0.5;
+    r0.w = min(r0.w, 1);
     OUT.position.xyz = r0;
-    OUT.color_0.a = const_4.z - r0.w;
+    OUT.color_0.a = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xy = IN.texcoord_0;
     OUT.texcoord_2.xy = IN.texcoord_0;

@@ -37,7 +37,7 @@
     OUT.position.x = dot(ModelViewProj[0], IN.position);
     OUT.position.y = dot(ModelViewProj[1], IN.position);
     OUT.position.z = dot(ModelViewProj[2], IN.position);
-    r1.w = const_11.x;
+    r1.w = 0.5;
     r0 = r1.w * ModelViewProj[3];
     OUT.position.w = dot(ModelViewProj[3], IN.position);
     OUT.texcoord_2 = (r1.w * ModelViewProj[0]) + r0;
@@ -49,14 +49,14 @@
     r0.y = dot(WorldMat[1], IN.position);
     r0.zw = r0.xyxy + QPosAdjust.xyxy;
     OUT.texcoord_1.xy = r0;
-    OUT.texcoord_7.zw = r0 * const_11.z;
+    OUT.texcoord_7.zw = r0 * (3.0 / 4096);
     OUT.texcoord_0 = IN.position;
     OUT.texcoord_5 = ModelViewProj[3];
     r1.w = 1.0 / Tile.x;
     OUT.texcoord_6.xy = IN.texcoord_0;
     r0.zw = (IN.texcoord_0.xyxy * r1.w) + DepthOffset.xyyx;
     r0.xy = r1.w * IN.texcoord_0;
-    r0.zw = r0 * const_11.y;
+    r0.zw = r0 * (1.0 / 3);
     OUT.texcoord_6.zw = (const_12.xyxy * r0) + const_12.xyzx;
     OUT.texcoord_7.xy = r0;
 

@@ -23,7 +23,7 @@
     sampler2D GlowMap;
     r0 = tex2D(GlowMap, IN.texcoord_1);
     r0.w = r0.x * EmittanceColor.r;
-    r0.xyz = const_0.x;
+    r0.xyz = 0;
     OUT.color_0 = r0;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

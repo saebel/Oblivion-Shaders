@@ -45,13 +45,13 @@
     r3.y = 1.0 / r2.y;
     r3.z = 1.0 / r2.z;
     r1.xyz = r1 * r3;
-    r4.xyz = abs(r1) - floor(abs(r1));
+    r4.xyz = frac(abs(r1));
     r3.xyz = (r1 >= -r1 ? 1.0 : 0.0);
     r1.xyz = lerp(r4, -r4, r3);
     r3.xyz = r2 * r1;
     r1.xyz = abs(r3) + MinPos;
     r3.xyz = MaxPos - abs(r3);
-    r0.xyz = (const_4.x < r0 ? 1.0 : 0.0);
+    r0.xyz = (0 < r0 ? 1.0 : 0.0);
     r4.xyz = lerp(r1, r3, r0);
     r0.xy = r4 - EyePosition;
     r1.xy = r0 * r0;
@@ -67,24 +67,24 @@
     r3.y = dot(r1.yzww, IN.position);
     r3.x = dot(r0.wyzw, IN.position);
     r3.z = IN.position.z;
-    r0.xyz = (-const_4.w * abs(r2)) + r5;
+    r0.xyz = (-0.5 * abs(r2)) + r5;
     r2.x = 1.0 / abs(r2.x);
     r2.y = 1.0 / abs(r2.y);
     r2.z = 1.0 / abs(r2.z);
     r1.xyz = r0 - r4;
     r0.xyz = r4 + r3;
     r1.xyz = r2 * r1;
-    r0.w = const_4.z;
+    r0.w = 1;
     r1.w = dot(r1, r1);	// normalize + length
     OUT.position.x = dot(WorldViewProj[0], r0);
     r1.w = 1.0 / sqrt(r1.w);
     OUT.position.y = dot(WorldViewProj[1], r0);
     r1.w = 1.0 / r1.w;
     OUT.position.z = dot(WorldViewProj[2], r0);
-    r1.w = const_4.z - r1.w;
+    r1.w = 1 - r1.w;
     OUT.position.w = dot(WorldViewProj[3], r0);
     OUT.color_0.a = r1.w * r1.w;
-    OUT.color_0.rgb = const_4.z;
+    OUT.color_0.rgb = 1;
     OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 52 instruction slots used

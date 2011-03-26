@@ -5,6 +5,6 @@
 //
     const float4 const_0 = {0.1, 1, 0, 0};
     OUT.color_0 = const_0.xxxy;
-    OUT.depth = const_0.y;
+    OUT.depth = 1;
 
 // approximately 2 instruction slots used

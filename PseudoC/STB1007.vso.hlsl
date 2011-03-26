@@ -57,7 +57,7 @@
     r0.x = dot(IN.tangent, r1);
     r0.y = dot(IN.binormal, r1);
     r0.z = dot(IN.normal, r1);
-    OUT.texcoord_1.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_1.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 24 instruction slots used

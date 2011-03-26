@@ -51,16 +51,16 @@
     float4 IN.color_0 : COLOR0;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.texcoord_1 : TEXCOORD1;
-    r0.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
+    r0.w = frac(IN.texcoord_1.x);
     r0.w = IN.texcoord_1.x - r0.w;
     offset.w = r0.w;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r0.x = WindData.w;
-    r0.w = (r0.w * const_8.x) + r0.x;
-    r0.w = (r0.w * const_8.y) + const_8.z;
-    r0.w = r0.w - floor(r0.w);
+    r0.w = (r0.w * (1.0 / 128)) + r0.x;
+    r0.w = (r0.w * (1.0 / (PI * 2))) + 0.5;
+    r0.w = frac(r0.w);
     r0.xy = EyeVector * EyeVector;
-    r2.w = (r0.w * const_16.x) + const_16.y;
+    r2.w = (r0.w * PI * 2) + -PI;
     r1.w = r0.y + r0.x;
     r0.y = sin(r2.w);
     r0.w = 1.0 / sqrt(r1.w);
@@ -101,14 +101,14 @@
     r2.xy = r3.w - AlphaParam.xzzw;
     r3.x = 1.0 / AlphaParam.y;
     r3.y = 1.0 / AlphaParam.w;
-    r2.w = max(r2.w, const_7.w);
+    r2.w = max(r2.w, 0);
     r2.xy = r2 * r3;
-    r2.w = min(r2.w, const_7.y);
-    r2.xy = max(r2, const_7.w);
-    OUT.color_0.a = const_7.y - r2.w;
-    r2.xy = min(r2, const_7.y);
+    r2.w = min(r2.w, 1);
+    r2.xy = max(r2, 0);
+    OUT.color_0.a = 1 - r2.w;
+    r2.xy = min(r2, 1);
     OUT.position = r1;
-    r1.w = const_7.y - r2.y;
+    r1.w = 1 - r2.y;
     OUT.texcoord_5.w = r2.x * r1.w;
     OUT.texcoord_1.x = dot(ObjToCube0, r0);
     OUT.texcoord_1.y = dot(ObjToCube1, r0);
@@ -116,8 +116,8 @@
     OUT.texcoord_1.w = dot(ObjToCube3, r0);
     OUT.texcoord_2 = r0;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4 = const_7.w;
-    OUT.texcoord_5.xyz = const_7.w;
+    OUT.texcoord_4 = 0;
+    OUT.texcoord_5.xyz = 0;
     OUT.color_0.rgb = FogColor;
 
 // approximately 75 instruction slots used

@@ -47,14 +47,14 @@
     sampler2D NormalMap;
     sampler2D DetailMap;
     r0.xy = EyePos - IN.texcoord_1;
-    r0.w = dot(r0.xy, r0.xy) + const_12.z;
+    r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
-    r2.w = saturate((r0.w * const_12.w) - const_12.y);
+    r2.w = saturate((r0.w * -(1.0 / 8192)) - -1);
     r1.w = r2.w * r2.w;
     r4.xy = IN.texcoord_6 + Scroll;
     r0 = tex2D(NormalMap, r4);
-    r2.xyz = (const_12.x * r0) + const_12.y;
+    r2.xyz = (2 * r0) + -1;
     r2.xy = r1.w * r2;
     r1.xyz = EyePos - IN.texcoord_1;
     r3.x = dot(r1, r1);	// normalize + length
@@ -62,10 +62,10 @@
     r1.w = 1.0 / sqrt(r3.x);
     r2.xyz = r1 * r1.w;
     r1.x = saturate(dot(r2, r0));
-    r4.z = const_12.y;
+    r4.z = -1;
     r0.w = -(r4.z + FresnelRI.x);
     r3.x = saturate(dot(r2, -r0));
-    r3.w = -(r1.x + const_12.y);
+    r3.w = -(r1.x + -1);
     r1.xyz = DeepColor;
     r1.xyz = ShallowColor - r1;
     r4.w = r3.w * r3.w;
@@ -83,7 +83,7 @@
     r2.xyz = (-r0.w * r0) - r2;
     r3.w = r2.w * VarAmounts.w;
     r2.x = saturate(dot(r2, SunDir));
-    r3.xy = (const_4.x * r0) + r4;
+    r3.xy = (0.1 * r0) + r4;
     r0.w = pow(abs(r2.x), VarAmounts.x);
     r0.xyz = r0.w * SunColor;
     r0.w = saturate(SunDir.w);
@@ -91,14 +91,14 @@
     r2.xyz = saturate((r0.w * r0) + r1);
     r0 = tex2D(DetailMap, r3);
     r1.w = FogParam.x - r2.w;
-    r0.w = r2.w + const_12.y;
+    r0.w = r2.w + -1;
     r2.w = 1.0 / FogParam.y;
     r1.xyz = lerp(r0, r2, r3.w);
     r1.w = saturate(r1.w * r2.w);
     r0.xyz = FogColor - r1;
-    r1.w = -(r1.w + const_12.y);
+    r1.w = -(r1.w + -1);
     r0.xyz = (r1.w * r0) + r1;
-    r0.w = saturate((r0.w * const_4.y) + const_4.z);
+    r0.w = saturate((r0.w * (1.0 / 1600)) + 0.75);
     OUT.color_0 = r0;
 
 // approximately 59 instruction slots used (2 texture, 57 arithmetic)

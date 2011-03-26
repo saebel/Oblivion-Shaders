@@ -58,7 +58,7 @@
     r1.w = dot(ShadowProj[3], IN.position);
     r0.xyz = r0 * r0.w;
     r1.y = r1.w * ShadowProjTransform.w;
-    OUT.texcoord_4.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_4.xyz = (0.5 * r0) + 0.5;
     r0.w = 1.0 / r1.y;
     r0.x = dot(ShadowProj[0], IN.position);
     r0.y = dot(ShadowProj[1], IN.position);
@@ -67,8 +67,8 @@
     OUT.texcoord_6.xy = r0.w * r1;
     r0.w = 1.0 / ShadowProjData.w;
     OUT.texcoord_6.z = r0.x * r0.w;
-    OUT.texcoord_6.w = (r0.y * -r0.w) + const_4.y;
+    OUT.texcoord_6.w = (r0.y * -r0.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4.w = const_4.x;
+    OUT.texcoord_4.w = 0.5;
 
 // approximately 33 instruction slots used

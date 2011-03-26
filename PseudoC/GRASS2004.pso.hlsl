@@ -35,15 +35,15 @@
     r2 = tex2D(ShadowMap, IN.texcoord_2);			// partial precision
     r1 = tex2D(ShadowMaskMap, IN.texcoord_3);			// partial precision
     r0 = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
-    r2.xyz = r2 + const_0.x;			// partial precision
+    r2.xyz = r2 + -1;			// partial precision
     r1.xyz = r1.x * r2;			// partial precision
-    r2.xyz = (IN.texcoord_3.z * r1) + const_0.y;			// partial precision
+    r2.xyz = (IN.texcoord_3.z * r1) + 1;			// partial precision
     r1.xyz = IN.texcoord_5;			// partial precision
     r1.xyz = (r2 * r1) + IN.texcoord_4;			// partial precision
     r2.xyz = (-r0 * r1) + IN.color_0;			// partial precision
     r0.w = AlphaTestRef.x - r0.w;			// partial precision
     r2.xyz = r2 * IN.color_0.a;			// partial precision
-    r0.w = (r0.w >= 0.0 ? const_0.y : const_0.z);			// partial precision
+    r0.w = (r0.w >= 0.0 ? 1 : 0);			// partial precision
     r0.xyz = (r0 * r1) + r2;			// partial precision
     r0.w = r0.w * IN.texcoord_5.w;			// partial precision
     OUT.color_0 = r0;			// partial precision

@@ -49,12 +49,12 @@
     r4 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
     r1 = tex2D(GlowMap, IN.texcoord_0);
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r4.xyz = r4 + const_0.x;
+    r4.xyz = r4 + -0.5;
     r5.xyz = r4 + r4;			// partial precision
     r4.xyz = normalize(r5);			// partial precision
     r5.xyz = normalize(IN.texcoord_2);			// partial precision
     r5.x = saturate(dot(r4, r5));			// partial precision
-    r1.w = const_0.y - r3.x;			// partial precision
+    r1.w = 1 - r3.x;			// partial precision
     r3.x = saturate(dot(r4, IN.texcoord_1));			// partial precision
     r1.w = saturate(r1.w - r2.x);			// partial precision
     r2.xyz = r5.x * PSLightColor[1];			// partial precision
@@ -63,7 +63,7 @@
     r3.xyz = AmbientColor;
     r1.xyz = (r1 * EmittanceColor) + r3;			// partial precision
     r1.xyz = r2 + r1;			// partial precision
-    r2.xyz = max(r1, const_0.z);			// partial precision
+    r2.xyz = max(r1, 0);			// partial precision
     r1.xyz = r0 * IN.color_0;			// partial precision
     r0.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
     r1.xyz = (-r0 * r2) + IN.color_1;			// partial precision

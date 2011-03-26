@@ -55,15 +55,15 @@
     r1 = tex2D(Src0, IN.texcoord_0);		// blur-surface
     r0 = tex2D(DestBlend, IN.texcoord_1);		// original-surface
 
-    r2.x = dot(r2, const_0.x);		// range.x * 1 + range.y * 1 + range.z * 1
+    r2.x = dot(r2, 1);		// range.x * 1 + range.y * 1 + range.z * 1
     r0.w = max(r2.x, HDRParam.x);	//              max(range, fTargetLUM)
     r0.w = 1.0 / r0.w;		//        1.0 / max(range, fTargetLUM)
-    r1.w = r0.w * const_0.y;	//        0.5 / max(range, fTargetLUM)
+    r1.w = r0.w * 0.5;	//        0.5 / max(range, fTargetLUM)
     r2.xyz = r1 * r1.w;	// blur * 0.5 / max(range, fTargetLUM)
     r0.w = r0.w * HDRParam.x;	// fTargetLUM / max(range, fTargetLUM)
-    r1.xyz = max(r2, const_0.z);	// max(blur * 0.5 / max(range, fTargetLUM), 0)
+    r1.xyz = max(r2, 0);	// max(blur * 0.5 / max(range, fTargetLUM), 0)
     r0.xyz = (r0.w * r0) + r1;	// fTargetLUM / max(range, fTargetLUM) * (max(blur * 0.5 / max(range, fTargetLUM), 0) + original)
-    r0.w = const_0.x;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 13 instruction slots used (3 texture, 10 arithmetic)

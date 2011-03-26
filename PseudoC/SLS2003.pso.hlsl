@@ -39,7 +39,7 @@
     sampler2D ShadowMap;
     sampler2D ShadowMaskMap;
     r0 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r0 + const_0.x;
+    r0.xyz = r0 + -0.5;
     r1.xyz = r0 + r0;			// partial precision
     r0.xyz = normalize(r1);			// partial precision
     r0.x = saturate(dot(r0, IN.texcoord_1));			// partial precision
@@ -49,10 +49,10 @@
     r1 = tex2D(ShadowMaskMap, r0);			// partial precision
     r2 = tex2D(ShadowMap, IN.texcoord_7);			// partial precision
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r2.xyz = r2 + const_0.y;			// partial precision
-    r1.xyz = (r1.x * r2) + const_0.z;			// partial precision
+    r2.xyz = r2 + -1;			// partial precision
+    r1.xyz = (r1.x * r2) + 1;			// partial precision
     r1.xyz = (r1 * r3) + AmbientColor;			// partial precision
-    r2.xyz = max(r1, const_0.w);			// partial precision
+    r2.xyz = max(r1, 0);			// partial precision
     r1.xyz = r0 * IN.color_0;			// partial precision
     r0.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
     r1.xyz = (-r0 * r2) + IN.color_1;			// partial precision

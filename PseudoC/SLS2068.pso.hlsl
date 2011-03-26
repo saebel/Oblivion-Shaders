@@ -34,7 +34,7 @@
     sampler2D ShadowMap;
     r1 = tex2D(NormalMap, IN.texcoord_1);
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r1.xyz = r1 + const_0.x;
+    r1.xyz = r1 + -0.5;
     r2.xyz = r1 + r1;			// partial precision
     r1.xyz = normalize(r2);			// partial precision
     r2.x = saturate(dot(r1, IN.texcoord_3));			// partial precision
@@ -42,9 +42,9 @@
     r1.xyz = (r2.x * r1) + AmbientColor;			// partial precision
     r0.xyz = r0 * IN.texcoord_2;			// partial precision
     r1.xyz = r1 * r0;			// partial precision
-    r0.xy = IN.texcoord_0 * const_0.y;
+    r0.xy = IN.texcoord_0 * 20;
     r0 = tex2D(ShadowMap, r0);
-    r0.w = (r0.x * const_0.z) + const_0.z;
+    r0.w = (r0.x * 0.5) + 0.5;
     r0.xyz = r1 * r0.w;			// partial precision
     r0.w = IN.texcoord_2.w;			// partial precision
     OUT.color_0 = r0;			// partial precision

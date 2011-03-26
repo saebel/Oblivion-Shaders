@@ -44,12 +44,12 @@
     r0.z = dot(IN.normal, r1);
     r1.w = 1.0 / LightPosition[0].w;
     r1.x = dot(r0, r0);	// normalize + length
-    r0.w = (r0.w * -r1.w) + const_4.y;
+    r0.w = (r0.w * -r1.w) + 1;
     r1.w = 1.0 / sqrt(r1.x);
-    r0.w = max(r0.w, const_4.z);
+    r0.w = max(r0.w, 0);
     r0.xyz = r0 * r1.w;
-    r0.w = min(r0.w, const_4.y);
-    OUT.texcoord_3.xyz = (const_4.x * r0) + const_4.x;
+    r0.w = min(r0.w, 1);
+    OUT.texcoord_3.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_2.xyz = r0.w * IN.color_0;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xy = IN.texcoord_0;

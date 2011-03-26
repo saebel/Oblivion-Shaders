@@ -74,10 +74,10 @@
     r0.w = r0.w * r2.w;
     r4.xyz = normalize(r2);
     OUT.texcoord_3.xyz = r4;
-    r0.w = max(r0.w, const_4.x);
+    r0.w = max(r0.w, 0);
     OUT.position.xyz = r1;
-    r0.w = min(r0.w, const_4.y);
-    OUT.color_1.a = const_4.y - r0.w;
+    r0.w = min(r0.w, 1);
+    OUT.color_1.a = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.color_0 = (IN.blendindices.z * const_4.yyyx) + const_4.xxxy;
     OUT.color_1.rgb = FogColor;

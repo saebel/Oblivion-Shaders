@@ -39,14 +39,14 @@
     r2 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
     r1 = tex2D(GlowMap, IN.texcoord_0);
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r2.xyz = r2 + const_0.x;
+    r2.xyz = r2 + -0.5;
     r3.xyz = r2 + r2;			// partial precision
     r2.xyz = normalize(r3);			// partial precision
     r3.x = saturate(dot(r2, IN.texcoord_1));			// partial precision
     r2.xyz = AmbientColor;
     r1.xyz = (r1 * EmittanceColor) + r2;			// partial precision
     r1.xyz = (r3.x * PSLightColor[0]) + r1;			// partial precision
-    r2.xyz = max(r1, const_0.y);			// partial precision
+    r2.xyz = max(r1, 0);			// partial precision
     r1.xyz = r0 * IN.color_0;			// partial precision
     r0.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
     r1.xyz = (-r0 * r2) + IN.color_1;			// partial precision

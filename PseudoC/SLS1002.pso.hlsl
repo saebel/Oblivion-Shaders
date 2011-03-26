@@ -23,9 +23,9 @@
     float3 texcoord_1 : TEXCOORD1;
     sampler2D NormalMap;
     r0 = tex2D(NormalMap, IN.texcoord_0);
-    r0.xyz = r0 + const_0.x;
+    r0.xyz = r0 + -0.5;
     r0.xyz = r0 + r0;
-    r1.xyz = IN.texcoord_1 + const_0.x;
+    r1.xyz = IN.texcoord_1 + -0.5;
     r1.xyz = r1 + r1;
     r0.x = saturate(dot(r0, r1));
     r0.xyz = r0.x * PSLightColor[0];

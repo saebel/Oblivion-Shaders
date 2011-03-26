@@ -45,12 +45,12 @@
     r4 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
     r1 = tex2D(GlowMap, IN.texcoord_0);
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r4 + const_0.x;
+    r0.xyz = r4 + -0.5;
     r4.xyz = r0 + r0;			// partial precision
     r0.xyz = normalize(r4);			// partial precision
     r4.xyz = normalize(IN.texcoord_2);			// partial precision
     r4.x = saturate(dot(r0, r4));			// partial precision
-    r1.w = const_0.y - r3.x;			// partial precision
+    r1.w = 1 - r3.x;			// partial precision
     r3.x = saturate(dot(r0, IN.texcoord_1));			// partial precision
     r1.w = saturate(r1.w - r2.x);			// partial precision
     r0.xyz = r4.x * PSLightColor[1];			// partial precision

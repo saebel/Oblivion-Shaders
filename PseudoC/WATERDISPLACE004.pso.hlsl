@@ -30,12 +30,12 @@
     r2 = tex2D(HeightMap, r2);
     r1 = tex2D(HeightMap, r1);
     r0 = tex2D(HeightMap, r0);
-    r3 = (const_0.z * r3) + const_0.w;
-    r2 = (const_0.z * r2) + r3;
-    r1 = (const_0.z * r1) + r2;
-    r0 = (const_0.z * r0) + r1;
-    r0 = r0 + const_2.z;
-    r0 = (const_1.x * r0) + const_1.y;
+    r3 = (2 * r3) + -1;
+    r2 = (2 * r2) + r3;
+    r1 = (2 * r1) + r2;
+    r0 = (2 * r0) + r1;
+    r0 = r0 + -3;
+    r0 = (0.125 * r0) + 0.5;
     OUT.color_0 = r0;
 
 // approximately 15 instruction slots used (4 texture, 11 arithmetic)

@@ -71,13 +71,13 @@
     r0.w = 1.0 / r0.w;
     r0.x = dot(IN.normal, r0);
     r2.w = 1.0 / LightPosition[2].w;
-    r1.w = max(r0.x, const_4.x);
+    r1.w = max(r0.x, 0);
     r0.w = r0.w * r2.w;
     r1.xyz = r1.w * LightColor[2];
-    r0.w = max(r0.w, const_4.x);
-    r0.w = min(r0.w, const_4.y);
+    r0.w = max(r0.w, 0);
+    r0.w = min(r0.w, 1);
     r0.xyz = LightPosition[1] - IN.position;
-    r0.w = const_4.y - r0.w;
+    r0.w = 1 - r0.w;
     r2.x = dot(r0, r0);	// normalize + length
     r3.w = r0.w * r0.w;
     r1.w = 1.0 / sqrt(r2.x);
@@ -86,16 +86,16 @@
     r1.xyz = r1 * r3.w;
     r0.w = r0.w * r2.w;
     r0.xyz = r0 * r1.w;
-    r0.w = max(r0.w, const_4.x);
+    r0.w = max(r0.w, 0);
     r0.x = dot(IN.normal, r0);
-    r0.w = min(r0.w, const_4.y);
-    r1.w = max(r0.x, const_4.x);
-    r0.w = const_4.y - r0.w;
+    r0.w = min(r0.w, 1);
+    r1.w = max(r0.x, 0);
+    r0.w = 1 - r0.w;
     r0.xyz = r1.w * LightColor[1];
     r0.w = r0.w * r0.w;
     OUT.color_0.rgb = (r0.w * r0) + r1;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0.a = const_4.y;
+    OUT.color_0.a = 1;
     OUT.color_1 = IN.color_0;
 
 // approximately 65 instruction slots used

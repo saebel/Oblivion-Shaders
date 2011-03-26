@@ -73,7 +73,7 @@
     r0.z = dot(ModelViewProj[2], IN.position);
     r1.xyz = r1 * r0.w;
     r3.x = dot(r0, r0);	// normalize + length
-    OUT.texcoord_5.xyz = (const_4.x * r1) + const_4.x;
+    OUT.texcoord_5.xyz = (0.5 * r1) + 0.5;
     r0.w = 1.0 / sqrt(r3.x);
     r1.xyz = normalize(r2);
     r0.w = 1.0 / r0.w;
@@ -82,13 +82,13 @@
     OUT.texcoord_4.x = dot(IN.tangent, r1);
     r0.w = r0.w * r1.w;
     OUT.texcoord_4.y = dot(IN.binormal, r1);
-    r0.w = max(r0.w, const_4.y);
+    r0.w = max(r0.w, 0);
     OUT.texcoord_4.z = dot(IN.normal, r1);
-    r0.w = min(r0.w, const_4.z);
+    r0.w = min(r0.w, 1);
     OUT.position.xyz = r0;
-    OUT.color_1.a = const_4.z - r0.w;
+    OUT.color_1.a = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_5.w = const_4.x;
+    OUT.texcoord_5.w = 0.5;
     OUT.color_0 = IN.color_0;
     OUT.color_1.rgb = FogColor;
 

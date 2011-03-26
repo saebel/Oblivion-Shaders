@@ -30,7 +30,7 @@
     r2.xyz = (-r0 * r1) + IN.color_0;			// partial precision
     r0.w = AlphaTestRef.x - r0.w;			// partial precision
     r2.xyz = r2 * IN.color_0.a;			// partial precision
-    r0.w = (r0.w >= 0.0 ? const_0.y : const_0.x);			// partial precision
+    r0.w = (r0.w >= 0.0 ? 1 : 0);			// partial precision
     r0.xyz = (r0 * r1) + r2;			// partial precision
     r0.w = r0.w * IN.texcoord_5.w;			// partial precision
     OUT.color_0 = r0;			// partial precision

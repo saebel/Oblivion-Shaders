@@ -29,6 +29,6 @@
     r0 = tex2D(TexMap, IN.texcoord_0);
     r0.z = r1.w - r0.w;
     OUT.color_0.a = (Params.x * r0.z) + r0.w;
-    OUT.color_0.rgb = const_0.x;
+    OUT.color_0.rgb = 0;
 
 // approximately 5 instruction slots used (2 texture, 3 arithmetic)

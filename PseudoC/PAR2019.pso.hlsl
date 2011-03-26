@@ -55,7 +55,7 @@
     r3.y = IN.texcoord_4.w;
     r1.w = 1.0 / sqrt(r0.x);			// partial precision
     r0.xy = r1.w * IN.texcoord_7;			// partial precision
-    r0.w = (r0.w * const_0.x) + const_0.y;			// partial precision
+    r0.w = (r0.w * 0.04) + -0.02;			// partial precision
     r2.xy = (r0.w * r0) + IN.texcoord_0;
     r1.x = IN.texcoord_6.z;
     r1.y = IN.texcoord_6.w;
@@ -69,22 +69,22 @@
     r1 = tex2D(AttenuationMap, r0);			// partial precision
     r2 = tex2D(AttenuationMap, IN.texcoord_5);			// partial precision
     r0 = tex2D(GlowMap, IN.texcoord_0);
-    r7.xyz = r7 + const_0.z;
+    r7.xyz = r7 + -0.5;
     r8.xyz = r7 + r7;			// partial precision
     r7.xyz = normalize(r8);			// partial precision
     r8.xyz = normalize(IN.texcoord_2);			// partial precision
-    r0.w = -(r6.x + const_0.w);			// partial precision
+    r0.w = -(r6.x + -1);			// partial precision
     r6.x = saturate(dot(r7, r8));			// partial precision
     r0.w = saturate(r0.w - r5.x);			// partial precision
     r5.xyz = r6.x * PSLightColor[1];			// partial precision
     r5.xyz = r0.w * r5;			// partial precision
-    r4.xyz = r4 + const_0.w;			// partial precision
-    r4.xyz = (r3.x * r4) - const_0.w;			// partial precision
+    r4.xyz = r4 + -1;			// partial precision
+    r4.xyz = (r3.x * r4) - -1;			// partial precision
     r3.x = saturate(dot(r7, IN.texcoord_1));			// partial precision
     r3.xyz = r3.x * PSLightColor[0];			// partial precision
     r3.xyz = (r4 * r3) + r5;			// partial precision
     r4.xyz = normalize(IN.texcoord_3);			// partial precision
-    r0.w = -(r2.x + const_0.w);			// partial precision
+    r0.w = -(r2.x + -1);			// partial precision
     r2.x = saturate(dot(r7, r4));			// partial precision
     r0.w = saturate(r0.w - r1.x);			// partial precision
     r1.xyz = r2.x * PSLightColor[2];			// partial precision
@@ -92,7 +92,7 @@
     r2.xyz = EmittanceColor;
     r0.xyz = (r0 * r2) + AmbientColor;			// partial precision
     r0.xyz = r1 + r0;			// partial precision
-    r0.w = -const_0.w;
+    r0.w = --1;
     OUT.color_0 = r0;			// partial precision
 
 // approximately 51 instruction slots used (9 texture, 42 arithmetic)

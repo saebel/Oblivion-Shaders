@@ -41,14 +41,14 @@
     float4 IN.color_0 : COLOR0;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.texcoord_1 : TEXCOORD1;
-    r0.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
+    r0.w = frac(IN.texcoord_1.x);
     r0.w = IN.texcoord_1.x - r0.w;
     offset.w = r0.w;
-    r0.w = const_6.x;
+    r0.w = 0.01;
     r0.w = r0.w * InstanceData[0 + offset.w].w;
-    r1 = InstanceData[0 + offset.w] - floor(InstanceData[0 + offset.w]);
+    r1 = frac(InstanceData[0 + offset.w]);
     r0.xyz = (IN.position * r0.w) + InstanceData[0 + offset.w];
-    r1.xyz = r1 + const_6.y;
+    r1.xyz = r1 + -0.5;
     r0.w = IN.position.w;
     r1.xyz = r1 + r1;
     OUT.position.w = dot(ModelViewProj[3], r0);			//		(ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w)
@@ -74,18 +74,18 @@
     r1.w = r0.w - AlphaParam.x;
     r3.w = 1.0 / AlphaParam.y;
     r2.w = r2.w * r4.w;		// exp fog	(off - r0) * (1 / div)
-    r1.w = (r1.w * -r3.w) + const_6.w;
-    r2.w = max(r2.w, const_6.z);		// exp fog	max((off - r0) * (1 / div), 0.0)
-    r1.w = max(r1.w, const_6.z);
-    r2.w = min(r2.w, const_6.w);		// exp fog	min(max((off - r0) * (1 / div), 0.0), 1.0)
-    r1.w = min(r1.w, const_6.w);
+    r1.w = (r1.w * -r3.w) + 1;
+    r2.w = max(r2.w, 0);		// exp fog	max((off - r0) * (1 / div), 0.0)
+    r1.w = max(r1.w, 0);
+    r2.w = min(r2.w, 1);		// exp fog	min(max((off - r0) * (1 / div), 0.0), 1.0)
+    r1.w = min(r1.w, 1);
     r0.w = (AlphaParam.x < r0.w ? 1.0 : 0.0);
-    r1.w = r1.w - const_6.w;
-    OUT.color_0.a = const_6.w - r2.w;		// exp fog	1.0 - min(max((off - r0) * (1 / div), 0.0), 1.0)
-    OUT.texcoord_5.w = (r0.w * r1.w) + const_6.w;
+    r1.w = r1.w - 1;
+    OUT.color_0.a = 1 - r2.w;		// exp fog	1.0 - min(max((off - r0) * (1 / div), 0.0), 1.0)
+    OUT.texcoord_5.w = (r0.w * r1.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4.w = const_6.w;
-    OUT.texcoord_5.xyz = const_6.z;
+    OUT.texcoord_4.w = 1;
+    OUT.texcoord_5.xyz = 0;
     OUT.color_0.rgb = FogColor;			// exp fog
 
 // approximately 46 instruction slots used

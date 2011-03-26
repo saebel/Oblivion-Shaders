@@ -48,9 +48,9 @@
     r0 = (IN.blendindices.x * r0) + r1;
     r1.x = dot(IN.normal, LightVector);
     OUT.position.x = dot(ModelViewProj[0], r0);
-    r1.w = max(r1.x, const_4.x);
+    r1.w = max(r1.x, 0);
     OUT.position.y = dot(ModelViewProj[1], r0);
-    r1.w = min(r1.w, const_4.y);
+    r1.w = min(r1.w, 1);
     OUT.position.z = dot(ModelViewProj[2], r0);
     r1.xyz = r1.w * DiffColor;
     OUT.position.w = dot(ModelViewProj[3], r0);

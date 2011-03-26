@@ -47,19 +47,19 @@
     sampler2D ShadowMap;
     sampler2D ShadowMaskMap;
     r0 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r0 + const_0.x;
+    r0.xyz = r0 + -0.5;
     r1.xyz = r0 + r0;			// partial precision
     r0.xyz = normalize(r1);			// partial precision
     r1.xyz = normalize(IN.texcoord_6);			// partial precision
     r1.x = dot(r0, r1);			// partial precision
-    r0.w = max(r1.x, const_3.x);			// partial precision
-    r0.w = const_0.w - r0.w;			// partial precision
+    r0.w = max(r1.x, 0);			// partial precision
+    r0.w = 1 - r0.w;			// partial precision
     r1.w = r0.w * r0.w;			// partial precision
     r1.x = dot(r0, IN.texcoord_1);			// partial precision
     r0.w = r0.w * r1.w;			// partial precision
     r0.xyz = r0.w * PSLightColor[0];			// partial precision
-    r0.xyz = r0 * -const_0.x;			// partial precision
-    r0.w = max(r1.x, const_3.x);			// partial precision
+    r0.xyz = r0 * --0.5;			// partial precision
+    r0.w = max(r1.x, 0);			// partial precision
     r5.xyz = (r0.w * PSLightColor[0]) + r0;			// partial precision
     r0.x = IN.texcoord_7.z;			// partial precision
     r0.y = IN.texcoord_7.w;			// partial precision
@@ -68,13 +68,13 @@
     r2 = tex2D(FaceGenMap1, IN.texcoord_0);			// partial precision
     r1 = tex2D(FaceGenMap0, IN.texcoord_0);			// partial precision
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r4.xyz = r4 + const_0.z;			// partial precision
-    r3.xyz = (r3.x * r4) + const_0.w;			// partial precision
+    r4.xyz = r4 + -1;			// partial precision
+    r3.xyz = (r3.x * r4) + 1;			// partial precision
     r4.xyz = (r3 * r5) + AmbientColor;			// partial precision
-    r3.xyz = max(r4, const_3.x);			// partial precision
+    r3.xyz = max(r4, 0);			// partial precision
     r2.xyz = r2 + r2;			// partial precision
-    r1.xyz = r1 + const_0.x;			// partial precision
-    r0.xyz = (const_0.y * r1) + r0;			// partial precision
+    r1.xyz = r1 + -0.5;			// partial precision
+    r0.xyz = (2 * r1) + r0;			// partial precision
     r0.xyz = r2 * r0;			// partial precision
     r0.xyz = r0 + r0;			// partial precision
     r1.xyz = r0 * IN.color_0;			// partial precision

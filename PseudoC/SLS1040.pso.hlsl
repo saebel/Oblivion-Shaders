@@ -31,16 +31,16 @@
     sampler2D NormalMap;
     r1 = tex2D(NormalMap, IN.texcoord_1);
     r0 = tex2D(BaseMap, IN.texcoord_0);
-    r1.xyz = r1 + const_0.x;
+    r1.xyz = r1 + -0.5;
     r1.xyz = r1 + r1;
-    r2.xyz = IN.texcoord_3 + const_0.x;
+    r2.xyz = IN.texcoord_3 + -0.5;
     r2.xyz = r2 + r2;
     r2.x = saturate(dot(r1, r2));
     r1.xyz = PSLightColor[0];
     r1.xyz = saturate((r2.x * r1) + AmbientColor);
     r0.xyz = r0 * IN.texcoord_2;
     r0.xyz = r1 * r0;
-    r0.w = const_0.y;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 13 instruction slots used (2 texture, 11 arithmetic)

@@ -67,7 +67,7 @@
     r0.w = 1.0 / LightPosition[1].w;
     r1.xyz = r0 * r0.w;
     r0.xyz = LightPosition[2] - IN.position;
-    OUT.texcoord_4.xyz = (const_4.x * r1) + const_4.x;
+    OUT.texcoord_4.xyz = (0.5 * r1) + 0.5;
     r1.xyz = normalize(r0);
     OUT.texcoord_3.x = dot(IN.tangent, r1);
     OUT.texcoord_3.y = dot(IN.binormal, r1);
@@ -75,7 +75,7 @@
     r0.w = 1.0 / LightPosition[2].w;
     r0.xyz = r0 * r0.w;
     r0.w = dot(ShadowProj[3], IN.position);
-    OUT.texcoord_5.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_5.xyz = (0.5 * r0) + 0.5;
     r1.y = r0.w * ShadowProjTransform.w;
     r0.x = dot(ShadowProj[0], IN.position);
     r0.y = dot(ShadowProj[1], IN.position);
@@ -85,9 +85,9 @@
     r0.w = 1.0 / ShadowProjData.w;
     OUT.texcoord_6.xy = r1.w * r1;
     OUT.texcoord_6.z = r0.x * r0.w;
-    OUT.texcoord_6.w = (r0.y * -r0.w) + const_4.y;
+    OUT.texcoord_6.w = (r0.y * -r0.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4.w = const_4.x;
-    OUT.texcoord_5.w = const_4.x;
+    OUT.texcoord_4.w = 0.5;
+    OUT.texcoord_5.w = 0.5;
 
 // approximately 55 instruction slots used

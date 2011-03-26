@@ -45,13 +45,13 @@
     r2.xyz = (r0.w * r0) + r2;
     r0.xyz = normalize(r1);
     r1.xyz = normalize(r2);
-    OUT.texcoord_2.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_2.xyz = (0.5 * r0) + 0.5;
     r0.x = dot(IN.tangent, r1);
     r0.y = dot(IN.binormal, r1);
     r0.z = dot(IN.normal, r1);
-    OUT.texcoord_3.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_3.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xyz = IN.color_0;
-    OUT.texcoord_2.w = const_4.y;
+    OUT.texcoord_2.w = 1;
 
 // approximately 29 instruction slots used

@@ -45,16 +45,16 @@
     r2 = tex2D(Src0, r2);
     r1 = tex2D(Src0, r1);
     r0 = tex2D(Src0, r0);
-    r8.xyz = r8 * const_0.w;
-    r7.xyz = (const_2.x * r7) + r8;
-    r6.xyz = (const_2.y * r6) + r7;
-    r5.xyz = (const_2.z * r5) + r6;
-    r4.xyz = (const_2.w * r4) + r5;
-    r3.xyz = (const_2.z * r3) + r4;
-    r2.xyz = (const_2.y * r2) + r3;
-    r1.xyz = (const_0.w * r1) + r2;
-    r0.xyz = (const_2.x * r0) + r1;
-    r0.w = const_3.x;
+    r8.xyz = r8 * 0.05;
+    r7.xyz = (0.025 * r7) + r8;
+    r6.xyz = (0.075 * r6) + r7;
+    r5.xyz = (0.15 * r5) + r6;
+    r4.xyz = (0.3 * r4) + r5;
+    r3.xyz = (0.15 * r3) + r4;
+    r2.xyz = (0.075 * r2) + r3;
+    r1.xyz = (0.05 * r1) + r2;
+    r0.xyz = (0.025 * r0) + r1;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 33 instruction slots used (9 texture, 24 arithmetic)

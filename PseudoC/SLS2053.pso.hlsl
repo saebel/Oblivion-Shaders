@@ -42,12 +42,12 @@
     r0.w = 1.0 / sqrt(r2.x);
     r3.xyz = r0.w * IN.texcoord_3;			// partial precision
     r0.w = 1.0 / r0.w;
-    r1.xyz = r1 + const_0.x;
+    r1.xyz = r1 + -0.5;
     r1.w = 1.0 / IN.texcoord_3.w;
     r1.xyz = r1 + r1;			// partial precision
     r0.w = saturate(r0.w * r1.w);
     r2.xyz = normalize(r1);			// partial precision
-    r0.w = const_0.y - r0.w;			// partial precision
+    r0.w = 1 - r0.w;			// partial precision
     r1.x = saturate(dot(r2, r3));			// partial precision
     r2.w = r0.w * r1.x;			// partial precision
     r1.x = dot(IN.texcoord_2, IN.texcoord_2);
@@ -57,7 +57,7 @@
     r1.xyz = r3.w * IN.texcoord_2;			// partial precision
     r0.w = saturate(r0.w * r1.w);
     r1.x = saturate(dot(r2, r1));			// partial precision
-    r0.w = const_0.y - r0.w;			// partial precision
+    r0.w = 1 - r0.w;			// partial precision
     r1.w = r1.x * r0.w;			// partial precision
     r1.x = dot(IN.texcoord_4, IN.texcoord_4);
     r3.w = 1.0 / sqrt(r1.x);
@@ -67,7 +67,7 @@
     r3.xyz = r3.w * IN.texcoord_4;			// partial precision
     r0.w = saturate(r0.w * r2.w);
     r2.x = saturate(dot(r2, r3));			// partial precision
-    r0.w = const_0.y - r0.w;			// partial precision
+    r0.w = 1 - r0.w;			// partial precision
     r1.xyz = (r1.w * PSLightColor[0]) + r1;			// partial precision
     r0.w = r2.x * r0.w;			// partial precision
     r1.xyz = (r0.w * PSLightColor[2]) + r1;			// partial precision

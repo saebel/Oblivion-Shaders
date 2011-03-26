@@ -42,14 +42,14 @@
     r0.xyz = r0 * r0.w;
     r4.w = 1.0 / r0.w;
     r0.w = saturate(r0.z);
-    r1.w = const_0.x - r0.w;
+    r1.w = 1 - r0.w;
     r2.w = r1.w * r1.w;
     r2.xyz = r0 * -const_0;
     r2.w = r2.w * r2.w;
     r3.w = r1.w * r2.w;
     r0.xyz = DeepColor;
     r0.xyz = ShallowColor - r0;
-    r1.w = const_0.x;
+    r1.w = 1;
     r2.w = r1.w - FresnelRI.x;
     r1.xyz = (r0.w * r0) + DeepColor;			// partial precision
     r2.w = (r2.w * r3.w) + FresnelRI.x;
@@ -67,7 +67,7 @@
     r1.xyz = saturate((r3.w * r0) + r1);
     r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor - r1;
-    r1.w = const_0.x - r0.w;
+    r1.w = 1 - r0.w;
     r0.w = max(VarAmounts.z, r2.w);
     r0.xyz = (r1.w * r0) + r1;
     OUT.color_0 = r0;

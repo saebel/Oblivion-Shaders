@@ -41,14 +41,14 @@
     r0.x = dot(IN.texcoord_7, IN.texcoord_7);			// partial precision
     r1.w = 1.0 / sqrt(r0.x);			// partial precision
     r0.xy = r1.w * IN.texcoord_7;			// partial precision
-    r0.w = (r0.w * const_0.x) + const_0.y;			// partial precision
+    r0.w = (r0.w * 0.04) + -0.02;			// partial precision
     r1.xy = (r0.w * r0) + IN.texcoord_0;			// partial precision
     r0.x = IN.texcoord_6.z;			// partial precision
     r0.y = IN.texcoord_6.w;			// partial precision
     r2 = tex2D(NormalMap, r1);			// partial precision
     r0 = tex2D(ShadowMaskMap, r0);			// partial precision
     r1 = tex2D(ShadowMap, IN.texcoord_6);			// partial precision
-    r2.xyz = r2 + const_0.z;
+    r2.xyz = r2 + -0.5;
     r3.xyz = r2 + r2;			// partial precision
     r2.xyz = normalize(r3);			// partial precision
     r3.xyz = normalize(IN.texcoord_3);			// partial precision
@@ -57,17 +57,17 @@
     r3.xyz = normalize(IN.texcoord_1);			// partial precision
     r2.w = r2.w * r0.w;			// partial precision
     r2.x = dot(r2, r3);			// partial precision
-    r3.w = r2.x - const_0.z;			// partial precision
-    r0.w = const_0.w - r2.x;			// partial precision
-    r1.w = max(r3.w, const_1.x);			// partial precision
+    r3.w = r2.x - -0.5;			// partial precision
+    r0.w = 0.2 - r2.x;			// partial precision
+    r1.w = max(r3.w, 0);			// partial precision
     r1.w = r2.w * r1.w;			// partial precision
     r0.w = (r0.w >= 0.0 ? r2.w : r1.w);			// partial precision
     r2.xyz = r0.w * PSLightColor[0];			// partial precision
-    r1.xyz = r1 + const_1.y;			// partial precision
-    r0.xyz = (r0.x * r1) + const_1.z;			// partial precision
+    r1.xyz = r1 + -1;			// partial precision
+    r0.xyz = (r0.x * r1) + 1;			// partial precision
     r1.xyz = r2 * r0;			// partial precision
     r0.xyz = saturate(r1);			// partial precision
-    r0.w = dot(r1, const_1.z);			// partial precision
+    r0.w = dot(r1, 1);			// partial precision
     OUT.color_0 = r0;			// partial precision
 
 // approximately 40 instruction slots used (4 texture, 36 arithmetic)

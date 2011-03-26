@@ -33,13 +33,13 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
-    r0 = IN.blendindices.zyxw * const_0.y;
-    r0 = r0 - floor(r0);
-    r1.x = dot(IN.blendweight, const_0.x);
-    r0 = (IN.blendindices.zyxw * const_0.y) - r0;
+    r0 = IN.blendindices.zyxw * 765.01001;
+    r0 = frac(r0);
+    r1.x = dot(IN.blendweight, 1);
+    r0 = (IN.blendindices.zyxw * 765.01001) - r0;
     offset = r0;
     r0 = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1.w = const_0.x - r1.x;
+    r1.w = 1 - r1.x;
     r1.x = dot(Bones[0 + offset.y], r0);
     r1.y = dot(Bones[1 + offset.y], r0);
     r1.z = dot(Bones[2 + offset.y], r0);
@@ -56,7 +56,7 @@
     r1.y = dot(Bones[1 + offset.w], r0);
     r1.z = dot(Bones[2 + offset.w], r0);
     r0.xyz = (r1.w * r1) + r2;
-    r0.w = const_0.x;
+    r0.w = 1;
     r1.x = dot(Bones[0 + offset.y], IN.normal);
     r1.y = dot(Bones[1 + offset.y], IN.normal);
     r1.z = dot(Bones[2 + offset.y], IN.normal);
@@ -79,12 +79,12 @@
     r2.x = dot(SkinWorldViewTranspose[0], r1);
     r2.y = dot(SkinWorldViewTranspose[1], r1);
     OUT.position.w = dot(SkinModelViewProj[3], r0);
-    r1.xy = min(r2, const_0.w);
+    r1.xy = min(r2, 0.1);
     r0.y = dot(SkinModelViewProj[2], r0);
-    OUT.texcoord_1.xy = max(r1, -const_0.w);
-    r0.w = (r0.y * const_7.x) + const_7.y;
+    OUT.texcoord_1.xy = max(r1, -0.1);
+    r0.w = (r0.y * (1.0 / 750)) + 0.8;
     OUT.position.z = r0.y;
-    OUT.texcoord_0.z = max(r0.w, const_0.x);
+    OUT.texcoord_0.z = max(r0.w, 1);
     OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 55 instruction slots used

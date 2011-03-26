@@ -37,9 +37,9 @@
     r0 = tex2D(NormalMap, IN.texcoord_0);
     r1 = tex2D(AttMapXY, IN.texcoord_1);
     r2 = tex2D(AttMapZ, IN.texcoord_2);
-    r3.xyz = r3 + const_0.x;
+    r3.xyz = r3 + -0.5;
     r3.xyz = r3 + r3;
-    r0.xyz = r0 + const_0.x;
+    r0.xyz = r0 + -0.5;
     r0.xyz = r0 + r0;
     r0.x = saturate(dot(r0, r3));
     r1.w = r0.x * r0.x;

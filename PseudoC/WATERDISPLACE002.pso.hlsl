@@ -35,11 +35,11 @@
     r1.w = r3.x + r4.x;
     r1.w = r2.x + r1.w;
     r1.w = r1.x + r1.w;
-    r1.w = (r0.x * -const_0.z) + r1.w;
-    r0 = r0 + const_0.w;
+    r1.w = (r0.x * -4) + r1.w;
+    r0 = r0 + -0.5;
     r0.y = (WadingVars.x * r1.w) + r0.y;
     r0.x = (WadingVars.y * r0.y) + r0.x;
-    r1.x = const_0.w;
+    r1.x = -0.5;
     r0 = (WadingVars.z * r0) - r1.x;
     OUT.color_0 = r0;
 

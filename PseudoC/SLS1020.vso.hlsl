@@ -30,8 +30,8 @@
     OUT.position.z = dot(ModelViewProj[2], IN.position);
     r0.x = dot(LightDirection[0], IN.normal);
     OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.w = max(r0.x, const_4.x);
-    OUT.color_0.rgb = min(r0.w, const_4.y);
+    r0.w = max(r0.x, 0);
+    OUT.color_0.rgb = min(r0.w, 1);
     OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 8 instruction slots used

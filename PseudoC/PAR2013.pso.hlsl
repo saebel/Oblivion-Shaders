@@ -43,7 +43,7 @@
     r0.x = dot(IN.texcoord_7, IN.texcoord_7);			// partial precision
     r1.w = 1.0 / sqrt(r0.x);			// partial precision
     r0.xy = r1.w * IN.texcoord_7;			// partial precision
-    r0.w = (r0.w * const_0.x) + const_0.y;			// partial precision
+    r0.w = (r0.w * 0.04) + -0.02;			// partial precision
     r1.xy = (r0.w * r0) + IN.texcoord_0;
     r0.x = IN.texcoord_4.z;
     r0.y = IN.texcoord_4.w;
@@ -51,13 +51,13 @@
     r1 = tex2D(AttenuationMap, r0);			// partial precision
     r2 = tex2D(AttenuationMap, IN.texcoord_4);			// partial precision
     r0 = tex2D(GlowMap, IN.texcoord_0);
-    r3.xyz = r3 + const_0.z;
+    r3.xyz = r3 + -0.5;
     r4.xyz = r3 + r3;			// partial precision
     r3.xyz = normalize(r4);			// partial precision
     r4.xyz = normalize(IN.texcoord_2);			// partial precision
     r4.x = saturate(dot(r3, r4));			// partial precision
     r3.x = saturate(dot(r3, IN.texcoord_1));			// partial precision
-    r0.w = const_0.w - r2.x;			// partial precision
+    r0.w = 1 - r2.x;			// partial precision
     r2.xyz = r4.x * PSLightColor[1];			// partial precision
     r0.w = saturate(r0.w - r1.x);			// partial precision
     r1.xyz = r2 * r0.w;			// partial precision
@@ -65,7 +65,7 @@
     r2.xyz = EmittanceColor;
     r0.xyz = (r0 * r2) + AmbientColor;			// partial precision
     r0.xyz = r1 + r0;			// partial precision
-    r0.w = const_0.w;
+    r0.w = 1;
     OUT.color_0 = r0;			// partial precision
 
 // approximately 32 instruction slots used (5 texture, 27 arithmetic)

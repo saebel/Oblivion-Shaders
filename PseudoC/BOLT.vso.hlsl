@@ -33,7 +33,7 @@
     float4 IN.color_1 : COLOR1;
     r0.w = (IN.color_1.r >= fVars0.y ? 1.0 : 0.0);
     r2.w = (r0.w * -fVars0.y) + IN.color_1.r;
-    r1.w = r2.w + const_7.x;
+    r1.w = r2.w + -1;
     r3.xyz = const_7;
     offset.x = r2.w;
     r0 = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
@@ -61,11 +61,11 @@
     OUT.position.z = dot(ModelViewProj[2], r0);
     r1.w = (r1.x * r2.y) - r1.z;
     OUT.position.w = dot(ModelViewProj[3], r0);
-    r0.w = (r1.w < const_7.z ? 1.0 : 0.0);
+    r0.w = (r1.w < 0 ? 1.0 : 0.0);
     r0.xy = r1 * r0.w;
     r7.y = pow(2.0, fVars0.z);	// partial precision
     r0.w = r7.y;
-    r0.xy = (const_7.w * r0) + r1;
+    r0.xy = (-2 * r0) + r1;
     r4.w = fVars0.z - r0.w;
     r1.xy = r0 * r0;
     r1.w = 1.0 / r4.w;
@@ -91,7 +91,7 @@
     r6.w = (r0.w >= r3.w ? 1.0 : 0.0);
     r5.w = (r0.w < fVars1.x ? 1.0 : 0.0);
     r2.w = r0.w * fVars2.x;
-    r6.w = (r6.w * -r5.w) + const_7.y;
+    r6.w = (r6.w * -r5.w) + 1;
     r3.w = (r2.w >= r3.w ? 1.0 : 0.0);
     r2.w = (r3.z < fVars2.x ? 1.0 : 0.0);
     r3.w = (r3.w * -r6.w) + r6.w;
@@ -102,7 +102,7 @@
     r0.w = (r0.w * -r2.w) + r2.w;
     OUT.position.xy = (r1.w * r0) + r4;
     OUT.color_0.a = r0.w * fVars2.y;
-    OUT.color_0.rgb = const_7.y;
+    OUT.color_0.rgb = 1;
     OUT.texcoord_0.xy = IN.position;
 
 // approximately 73 instruction slots used

@@ -56,15 +56,15 @@
     r1.xy = r0 * r0.w;
     r2.y = dot(r1.yzww, IN.position);
     r0.w = r1.x;
-    r1.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
+    r1.w = frac(IN.texcoord_1.x);
     r2.x = dot(r0.wyzw, IN.position);
     r0.w = IN.texcoord_1.x - r1.w;
     r2.z = IN.position.z;
     offset.w = r0.w;
     r0.w = r2.w * InstanceData[0 + offset.w].w;
-    r1 = InstanceData[0 + offset.w] - floor(InstanceData[0 + offset.w]);
+    r1 = frac(InstanceData[0 + offset.w]);
     r0.xyz = (r0.w * r2) + InstanceData[0 + offset.w];
-    r1.xyz = r1 + const_7.x;
+    r1.xyz = r1 + -0.5;
     r0.w = IN.position.w;
     r1.xyz = r1 + r1;
     OUT.position.w = dot(ModelViewProj[3], r0);
@@ -90,18 +90,18 @@
     r1.w = r0.w - AlphaParam.x;
     r3.w = 1.0 / AlphaParam.y;
     r2.w = r2.w * r4.w;
-    r1.w = (r1.w * -r3.w) + const_6.z;
-    r2.w = max(r2.w, const_6.y);
-    r1.w = max(r1.w, const_6.y);
-    r2.w = min(r2.w, const_6.z);
-    r1.w = min(r1.w, const_6.z);
+    r1.w = (r1.w * -r3.w) + 1;
+    r2.w = max(r2.w, 0);
+    r1.w = max(r1.w, 0);
+    r2.w = min(r2.w, 1);
+    r1.w = min(r1.w, 1);
     r0.w = (AlphaParam.x < r0.w ? 1.0 : 0.0);
-    r1.w = r1.w + const_6.x;
-    OUT.color_0.a = const_6.z - r2.w;
-    OUT.texcoord_5.w = (r0.w * r1.w) + const_6.z;
+    r1.w = r1.w + -1;
+    OUT.color_0.a = 1 - r2.w;
+    OUT.texcoord_5.w = (r0.w * r1.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4.w = const_6.z;
-    OUT.texcoord_5.xyz = const_6.y;
+    OUT.texcoord_4.w = 1;
+    OUT.texcoord_5.xyz = 0;
     OUT.color_0.rgb = FogColor;
 
 // approximately 59 instruction slots used

@@ -23,12 +23,12 @@
     const float4 const_1 = {0.5, 0.5, 0.5, 1};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D DisplaySampler;
-    r0.xy = IN.texcoord_0 + const_0.x;
-    r0.w = dot(r0.xy, r0.xy) + const_0.y;
+    r0.xy = IN.texcoord_0 + -0.5;
+    r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
-    r0.w = r0.w + const_0.z;
-    r2.w = saturate(r0.w * const_0.w);
+    r0.w = r0.w + -0.4;
+    r2.w = saturate(r0.w * 10);
     r0.xy = IN.texcoord_0 + TextureOffset;
     r1 = tex2D(DisplaySampler, r0);
     r0 = lerp(const_1, r1, r2.w);

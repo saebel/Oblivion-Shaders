@@ -22,15 +22,15 @@
     const float4 const_2 = {1, 1, 1, 0.5};
     const float4 const_3 = {0.21, 0.5, 0.78, 0};
     const int4 const_4 = {0, 0, 0, 1};
-    IN.texcoord_0 = tex2D(s0, texcoord_0);
+    IN.texcoord_0 = tex2D(Src0, texcoord_0);
     r1 = dot(const_0, SpellInput);
-    IN.texcoord_0.w = const_0.w + r1.w;
+    IN.texcoord_0.w = -1 + r1.w;
     IN.texcoord_0.w = IN.texcoord_0.w * IN.texcoord_0.w;
   + r1.xyz = dot(const_2, IN.texcoord_0);
-    r0.w = (-IN.texcoord_0.w * const_2.w) + const_2.w;
-    IN.texcoord_0.w = (r0.w > 0.5 ? const_4.w : const_3.w);
+    r0.w = (-IN.texcoord_0.w * 0.5) + 0.5;
+    IN.texcoord_0.w = (r0.w > 0.5 ? 1 : 0);
   + r1.xyz = r1 * const_3;
     r0.xyz = lerp(r1, IN.texcoord_0, IN.texcoord_0.w);
-  + r0.w = const_4.w;
+  + r0.w = 1;
 
 // approximately 7 instruction slots used (1 texture, 6 arithmetic)

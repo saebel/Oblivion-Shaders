@@ -34,13 +34,13 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
-    r0 = IN.blendindices.zyxw * const_0.y;
-    r0 = r0 - floor(r0);
-    r1.x = dot(IN.blendweight, const_0.x);
-    r0 = (IN.blendindices.zyxw * const_0.y) - r0;
+    r0 = IN.blendindices.zyxw * 765.01001;
+    r0 = frac(r0);
+    r1.x = dot(IN.blendweight, 1);
+    r0 = (IN.blendindices.zyxw * 765.01001) - r0;
     offset = r0;
     r0 = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1.w = const_0.x - r1.x;
+    r1.w = 1 - r1.x;
     r1.x = dot(Bones[0 + offset.y], r0);
     r1.y = dot(Bones[1 + offset.y], r0);
     r1.z = dot(Bones[2 + offset.y], r0);
@@ -57,7 +57,7 @@
     r1.y = dot(Bones[1 + offset.w], r0);
     r1.z = dot(Bones[2 + offset.w], r0);
     r0.xyz = (r1.w * r1) + r2;
-    r0.w = const_0.x;
+    r0.w = 1;
     OUT.position.x = dot(SkinModelViewProj[0], r0);
     OUT.position.y = dot(SkinModelViewProj[1], r0);
     OUT.position.z = dot(SkinModelViewProj[2], r0);

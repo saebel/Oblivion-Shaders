@@ -35,9 +35,9 @@
     r0.x = dot(WorldViewTranspose[0], IN.normal);
     r0.y = dot(WorldViewTranspose[1], IN.normal);
     r0.z = dot(WorldViewTranspose[2], IN.normal);
-    OUT.texcoord_0.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_0.xyz = (0.5 * r0) + 0.5;
     r0.y = dot(ModelViewProj[2], IN.position);
-    OUT.texcoord_1.x = (r0.y * const_4.y) + const_4.z;
+    OUT.texcoord_1.x = (r0.y * 5) + -4.4;
     OUT.position.z = r0.y;
 
 // approximately 10 instruction slots used

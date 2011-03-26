@@ -25,12 +25,12 @@
     r1.x = dot(r0, r0);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
     r0.w = 1.0 / r0.w;
-    r1.w = max(const_0.x, r0.w);
+    r1.w = max(0.01, r0.w);
     r0.w = min(r1.w, HDRParam.x);
     r1.w = 1.0 / r1.w;
     r0.w = r0.w * r1.w;
     r0.xyz = r0 * r0.w;
-    r0.w = const_0.y;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

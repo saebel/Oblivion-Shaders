@@ -32,12 +32,12 @@
     r0.x = dot(WorldViewTranspose[0], IN.normal);
     r0.y = dot(WorldViewTranspose[1], IN.normal);
     OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.xy = min(r0, const_6.x);
-    OUT.texcoord_1.xy = max(r0, const_6.y);
+    r0.xy = min(r0, 0.1);
+    OUT.texcoord_1.xy = max(r0, -0.1);
     r0.y = dot(ModelViewProj[2], IN.position);
-    r0.w = (r0.y * const_6.z) + const_6.w;
+    r0.w = (r0.y * (1.0 / 750)) + 0.8;
     OUT.position.z = r0.y;
-    OUT.texcoord_0.z = max(r0.w, const_7.x);
+    OUT.texcoord_0.z = max(r0.w, 1);
     OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 12 instruction slots used

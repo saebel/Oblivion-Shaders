@@ -23,14 +23,14 @@
     const float4 const_0 = {128, 2.5, 1, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0.z = const_0.y;
+    r0.z = 2.5;
     r3.w = r0.z - const_4.x;
-    r0.w = IN.texcoord_0.x * const_0.x;
-    r1.w = r0.w - floor(r0.w);
+    r0.w = IN.texcoord_0.x * 128;
+    r1.w = frac(r0.w);
     r2.w = r0.z - const_4.y;
-    r0.w = IN.texcoord_0.y * const_0.x;
+    r0.w = IN.texcoord_0.y * 128;
     r0.x = (r1.w <= 0.0 ? const_4.x : r3.w);
-    r0.w = r0.w - floor(r0.w);
+    r0.w = frac(r0.w);
     r0.y = (r0.w <= 0.0 ? const_4.y : r2.w);
     r8.xy = (BlurScale * r0) + IN.texcoord_0;
     r2.w = r0.z - const_3.x;
@@ -91,7 +91,7 @@
     r2.xyz = (const_9.z * r2) + r3;
     r1.xyz = (const_10.z * r1) + r2;
     r0.xyz = (const_11.z * r0) + r1;
-    r0.w = const_0.z;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 70 instruction slots used (9 texture, 61 arithmetic)

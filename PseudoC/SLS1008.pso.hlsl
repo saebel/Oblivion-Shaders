@@ -23,9 +23,9 @@
     float3 texcoord_1 : TEXCOORD1;
     sampler2D NormalMap;
     r1 = tex2D(NormalMap, IN.texcoord_0);
-    r0.xyz = IN.texcoord_1 + const_1.x;
+    r0.xyz = IN.texcoord_1 + -0.5;
     r2.xyz = r0 + r0;
-    r0.xyz = r1 + const_1.x;
+    r0.xyz = r1 + -0.5;
     r0.xyz = r0 + r0;
     r0.x = saturate(dot(r0, r2));
     r0.w = r0.x * r0.x;

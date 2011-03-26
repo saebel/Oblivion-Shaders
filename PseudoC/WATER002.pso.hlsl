@@ -51,14 +51,14 @@
     sampler2D DetailMap;
     sampler2D DepthMap;
     r0.xy = EyePos - IN.texcoord_1;
-    r0.w = dot(r0.xy, r0.xy) + const_13.z;
+    r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
-    r1.w = saturate((r0.w * const_13.w) - const_13.y);
+    r1.w = saturate((r0.w * -(1.0 / 8192)) - -1);
     r2.w = r1.w * r1.w;
     r3.xy = IN.texcoord_6 + Scroll;
     r0 = tex2D(NormalMap, r3);
-    r2.xyz = (const_13.x * r0) + const_13.y;
+    r2.xyz = (2 * r0) + -1;
     r2.xy = r2.w * r2;
     r1.xyz = EyePos - IN.texcoord_1;
     r4.x = dot(r1, r1);	// normalize + length
@@ -72,8 +72,8 @@
     r4.x = saturate(dot(r2, SunDir));
     r2.x = saturate(dot(r1, r0));
     r1.w = pow(abs(r4.x), VarAmounts.x);
-    r4.xy = (const_4.x * r0) + r3;
-    r0.w = -(r2.x + const_13.y);
+    r4.xy = (0.1 * r0) + r3;
+    r0.w = -(r2.x + -1);
     r0.xyz = r1.w * SunColor;
     r1.w = r0.w * r0.w;
     r1.w = r1.w * r1.w;
@@ -82,7 +82,7 @@
     r1.w = r0.w * r1.w;
     r2.xyz = (r2.x * r1) + DeepColor;			// partial precision
     r1.xyz = ReflectionColor - r2;
-    r3.z = const_13.y;
+    r3.z = -1;
     r3.w = -(r3.z + VarAmounts.y);
     r0.w = -(r3.z + FresnelRI.x);
     r1.xyz = (r3.w * r1) + r2;			// partial precision
@@ -100,24 +100,24 @@
     r0.w = FogParam.x - r2.w;
     r1.w = 1.0 / FogParam.y;
     r0.w = saturate(r0.w * r1.w);
-    r2.w = -(r0.w + const_13.y);
-    r1.w = const_4.y - r3.w;
-    r0.w = -(r0.x + const_13.y);
+    r2.w = -(r0.w + -1);
+    r1.w = 0.25 - r3.w;
+    r0.w = -(r0.x + -1);
     r1.w = (r0.w * r1.w) + r3.w;
-    r0.w = r0.x + const_13.y;
+    r0.w = r0.x + -1;
     r3.w = (r0.w >= 0.0 ? r1.w : r3.w);
-    r0.w = r0.x + const_4.z;
-    r1.w = (r0.w * -const_12.x) + const_12.y;
+    r0.w = r0.x + -0.2;
+    r1.w = (r0.w * -(1.0 / 0.35)) + 1;
     r4.w = r1.w * r1.w;
-    r1.w = (r1.w * -r4.w) - const_13.y;
+    r1.w = (r1.w * -r4.w) - -1;
     r4.w = r3.w * r1.w;
     r2.xyz = lerp(r1, r3, r5.w);
-    r1.w = r0.x + const_4.w;
+    r1.w = r0.x + -0.55;
     r1.xyz = FogColor - r2;
     r1.w = (r1.w >= 0.0 ? r4.w : r3.w);
     r1.xyz = (r2.w * r1) + r2;
-    r1.w = (r0.w >= 0.0 ? const_13.z : r1.w);
-    r0 = (r0.x <= 0.0 ? r1 : const_13.z);
+    r1.w = (r0.w >= 0.0 ? 0 : r1.w);
+    r0 = (r0.x <= 0.0 ? r1 : 0);
     OUT.color_0 = r0;
 
 // approximately 74 instruction slots used (3 texture, 71 arithmetic)

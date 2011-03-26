@@ -27,13 +27,13 @@
     sampler2D Src0;
     r1 = tex2D(Src0, IN.texcoord_0);
     r0.x = dot(const_0, r1);
-    r0.x = r0.x + const_0.w;
+    r0.x = r0.x + 0.14;
     r0.yz = const_2.zxyw;
     r2.x = dot(const_3, r0);
     r2.y = dot(const_4, r0);
     r2.z = dot(const_5, r0);
     r0.xyz = lerp(r2, r1, BlendValue.x);
-    r0.w = const_2.z;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

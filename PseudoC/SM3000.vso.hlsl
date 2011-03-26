@@ -48,10 +48,10 @@
     OUT.position.w = dot(ModelViewProj[3], IN.position);
     r0.w = saturate(r0.w * r1.w);		// exp fog	(off - r0) * (1 / div)
     OUT.position.xyz = r0;
-    r0.w = const_4.x - r0.w;		// exp fog	1.0 - sat((off - r0) * (1 / div))
+    r0.w = 1 - r0.w;		// exp fog	1.0 - sat((off - r0) * (1 / div))
     OUT.texcoord_7.w = r0.w * FogParam.z;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0 = const_4.x;
+    OUT.color_0 = 1;
     OUT.texcoord_3.xyz = IN.tangent;
     OUT.texcoord_4.xyz = IN.binormal;
     OUT.texcoord_5.xyz = IN.normal;

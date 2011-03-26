@@ -34,22 +34,22 @@
     sampler2D BaseMap;
     sampler2D NormalMap;
     sampler2D ShadowMap;
-    r0.w = IN.texcoord_7.x + const_0.x;			// partial precision
+    r0.w = IN.texcoord_7.x + -0.1;			// partial precision
     r0 = -r0.w;
-    r1.xy = IN.texcoord_0 * const_0.w;
+    r1.xy = IN.texcoord_0 * 20;
     texkill r0
     r2 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
     r1 = tex2D(ShadowMap, r1);
-    r2.xyz = r2 + const_0.y;
+    r2.xyz = r2 + -0.5;
     r3.xyz = r2 + r2;			// partial precision
     r2.xyz = normalize(r3);			// partial precision
     r3.x = saturate(dot(r2, IN.texcoord_1));			// partial precision
     r2.xyz = AmbientColor;
     r3.xyz = (r3.x * PSLightColor[0]) + r2;			// partial precision
-    r2.xyz = max(r3, const_0.z);			// partial precision
+    r2.xyz = max(r3, 0);			// partial precision
     r0.xyz = r0 * r2;			// partial precision
-    r1.w = (r1.x * -const_0.y) - const_0.y;
+    r1.w = (r1.x * --0.5) - -0.5;
     r1.xyz = (-r1.w * r0) + IN.color_1;			// partial precision
     r0.xyz = r0 * r1.w;			// partial precision
     r1.xyz = (IN.color_1.a * r1) + r0;			// partial precision

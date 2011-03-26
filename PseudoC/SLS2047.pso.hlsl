@@ -42,40 +42,40 @@
     r1 = tex2D(texture_0, IN.texcoord_0);			// partial precision
     r10.w = r8.w * IN.texcoord_2.z;			// partial precision
     r0.w = r0.w * IN.texcoord_1.z;			// partial precision
-    r9.w = const_0.x;
+    r9.w = 8;
     r2.w = min(const_14.x, r9.w);
-    r9.w = r2.w - floor(r2.w);
+    r9.w = frac(r2.w);
     r11.w = r2.w - r9.w;
-    r9.w = (r9.w <= 0.0 ? const_0.z : const_0.y);			// partial precision
-    r2.w = (r2.w >= 0.0 ? const_0.z : const_0.y);			// partial precision
+    r9.w = (r9.w <= 0.0 ? 1 : 0);			// partial precision
+    r2.w = (r2.w >= 0.0 ? 1 : 0);			// partial precision
     r9.w = (r2.w * r9.w) + r11.w;
     r0.xyz = r0 * r0.w;			// partial precision
-    r2.w = const_0.z - r9.w;
-    r0 = (r2.w >= 0.0 ? r0 : const_0.y);			// partial precision
+    r2.w = 1 - r9.w;
+    r0 = (r2.w >= 0.0 ? r0 : 0);			// partial precision
     r2.w = (r8.w * IN.texcoord_2.z) + r0.w;			// partial precision
     r2.xyz = lerp(r8, r0, r10.w);			// partial precision
-    r8.w = const_0.w - r9.w;
+    r8.w = 2 - r9.w;
     r0 = (r8.w >= 0.0 ? r2 : r0);			// partial precision
     r8.w = r7.w * IN.texcoord_3.z;			// partial precision
     r2.w = (r7.w * IN.texcoord_3.z) + r0.w;			// partial precision
     r2.xyz = lerp(r7, r0, r8.w);			// partial precision
-    r7.w = const_2.x - r9.w;
+    r7.w = 3 - r9.w;
     r0 = (r7.w >= 0.0 ? r2 : r0);			// partial precision
     r7.w = r6.w * IN.texcoord_4.z;			// partial precision
     r2.w = (r6.w * IN.texcoord_4.z) + r0.w;			// partial precision
     r2.xyz = lerp(r6, r0, r7.w);			// partial precision
-    r6.w = const_2.y - r9.w;
+    r6.w = 4 - r9.w;
     r0 = (r6.w >= 0.0 ? r2 : r0);			// partial precision
     r6.w = r5.w * IN.texcoord_5.z;			// partial precision
     r2.w = (r5.w * IN.texcoord_5.z) + r0.w;			// partial precision
     r2.xyz = lerp(r5, r0, r6.w);			// partial precision
-    r5.w = const_2.z - r9.w;
+    r5.w = 5 - r9.w;
     r0 = (r5.w >= 0.0 ? r2 : r0);			// partial precision
     r6.w = r4.w * IN.texcoord_6.z;			// partial precision
     r2.w = (r4.w * IN.texcoord_6.z) + r0.w;			// partial precision
-    r5.w = const_2.w - r9.w;
+    r5.w = 6 - r9.w;
     r2.xyz = lerp(r4, r0, r6.w);			// partial precision
-    r4.w = const_1.x - r9.w;
+    r4.w = 7 - r9.w;
     r0 = (r5.w >= 0.0 ? r2 : r0);			// partial precision
     r5.w = r3.w * IN.texcoord_7.z;			// partial precision
     r2.xyz = lerp(r3, r0, r5.w);			// partial precision

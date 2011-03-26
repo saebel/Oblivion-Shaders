@@ -50,14 +50,14 @@
     r0.w = dot(r1, r2);
     r1.w = 1.0 / sqrt(r1.w);
     OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.w = (r0.w * r1.w) + const_5.y;
-    OUT.texcoord_1.xyz = (const_5.x * r1) + const_5.x;
-    r1.w = saturate(r0.w * const_5.z);
-    r0.w = (r1.w * const_4.x) + const_4.y;
+    r0.w = (r0.w * r1.w) + -0.8;
+    OUT.texcoord_1.xyz = (0.5 * r1) + 0.5;
+    r1.w = saturate(r0.w * 6.66666651);
+    r0.w = (r1.w * -2) + 3;
     r1.w = r1.w * r1.w;
     OUT.texcoord_2.xyz = r0;
     OUT.texcoord_1.w = r0.w * r1.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0.rgb = const_5.w;
+    OUT.color_0.rgb = 1;
 
 // approximately 27 instruction slots used

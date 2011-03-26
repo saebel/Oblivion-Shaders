@@ -59,7 +59,7 @@
     r1.w = 1.0 / FogParam.y;
     OUT.position.xyz = r0;
     r0.w = saturate(r0.w * r1.w);
-    r0.z = const_4.x - r0.w;
+    r0.z = 1 - r0.w;
     r0.w = dot(ShadowProj[3], IN.position);
     OUT.texcoord_7.w = r0.z * FogParam.z;
     r0.xyz = r0.w * ShadowProjTransform.xyww;
@@ -71,7 +71,7 @@
     r0.w = 1.0 / ShadowProjData.w;
     OUT.texcoord_1.xy = r0.z * r1;
     OUT.texcoord_1.z = r0.x * r0.w;
-    OUT.texcoord_1.w = (r0.y * -r0.w) + const_4.x;
+    OUT.texcoord_1.w = (r0.y * -r0.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.color_0 = IN.color_0;
     OUT.texcoord_3.xyz = IN.tangent;

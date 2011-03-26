@@ -32,11 +32,11 @@
     sampler2D NormalMap;
     sampler2D SourceTexture;
     r0 = tex2D(NormalMap, IN.texcoord_0);
-    r0.xyz = r0 + const_3.x;
+    r0.xyz = r0 + -0.5;
     r0.xyz = r0 + r0;
     r1.w = dot(r0, IN.input_2);
-    r0.w = max(r1.w, const_3.y);
-    r2.w = const_3.z - r0.w;
+    r0.w = max(r1.w, 0);
+    r2.w = 1 - r0.w;
     r0 = tex2D(SourceTexture, IN.texcoord_1);
     r0.xyz = r0 + FillColor;
     r0.w = r0.w * FillColor.a;

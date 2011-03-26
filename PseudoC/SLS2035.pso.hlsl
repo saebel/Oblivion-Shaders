@@ -38,22 +38,22 @@
     r4 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
     r0 = tex2D(AttenuationMap, r0);			// partial precision
     r1 = tex2D(AttenuationMap, IN.texcoord_4);			// partial precision
-    r4.xyz = r4 + const_0.x;
+    r4.xyz = r4 + -0.5;
     r5.xyz = r4 + r4;			// partial precision
     r4.xyz = normalize(r5);			// partial precision
     r5.xyz = normalize(IN.texcoord_2);			// partial precision
-    r0.w = const_0.y - r3.x;			// partial precision
+    r0.w = 1 - r3.x;			// partial precision
     r3.x = saturate(dot(r4, r5));			// partial precision
     r0.w = saturate(r0.w - r2.x);			// partial precision
     r2.xyz = r3.x * PSLightColor[1];			// partial precision
     r2.xyz = r0.w * r2;			// partial precision
     r3.xyz = normalize(IN.texcoord_1);			// partial precision
-    r0.w = const_0.y - r1.x;			// partial precision
+    r0.w = 1 - r1.x;			// partial precision
     r1.x = saturate(dot(r4, r3));			// partial precision
     r0.w = saturate(r0.w - r0.x);			// partial precision
     r0.xyz = r1.x * PSLightColor[0];			// partial precision
     r0.xyz = (r0.w * r0) + r2;			// partial precision
-    r0.w = const_0.y;			// partial precision
+    r0.w = 1;			// partial precision
     OUT.color_0 = r0;			// partial precision
 
 // approximately 32 instruction slots used (5 texture, 27 arithmetic)

@@ -46,9 +46,9 @@
     sampler2D Src0;
     r0 = tex2D(Src0, IN.texcoord_0);
     r1.xyz = r0 - HDRParam.x;		// in - 1.225
-    r0.xyz = max(r1, const_0.x);		// max(in - 1.225, 0)
+    r0.xyz = max(r1, 0);		// max(in - 1.225, 0)
     r0.xyz = r0 * HDRParam.y;		// max(in - 1.225, 0) * fBrightClamp == 1.350000
-    r0.w = const_0.y;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 6 instruction slots used (1 texture, 5 arithmetic)

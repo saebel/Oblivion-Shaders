@@ -31,12 +31,12 @@
     r0 = tex2D(HeightMap01, IN.texcoord_0);
     r2.w = abs(r1.x);
     r0.w = 1.0 / fDamp.x;
-    r0.w = r0.w * const_0.x;
+    r0.w = r0.w * 0.8;
     r1.w = abs(r0.x);
     r2.w = (r0.w * -r1.w) + r2.w;
     r2.w = r2.w * BlendAmount.x;
     r0.xyz = (r0.w * r1.w) + r2.w;
-    r0.w = const_0.y;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 11 instruction slots used (2 texture, 9 arithmetic)

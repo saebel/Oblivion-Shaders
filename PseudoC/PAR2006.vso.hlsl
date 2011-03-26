@@ -68,7 +68,7 @@
     r0.w = 1.0 / LightPosition[1].w;
     r0.xyz = r0 * r0.w;
     r0.w = dot(ShadowProj[3], IN.position);
-    OUT.texcoord_4.xyz = (const_4.x * r0) + const_4.x;
+    OUT.texcoord_4.xyz = (0.5 * r0) + 0.5;
     r0.y = r0.w * ShadowProjTransform.w;
     r1.w = 1.0 / r0.y;
     r1.x = dot(ShadowProj[0], IN.position);
@@ -87,13 +87,13 @@
     r1.w = 1.0 / ShadowProjData.w;
     r0.w = r0.w * r2.w;
     OUT.texcoord_7.z = r1.x * r1.w;
-    r0.w = max(r0.w, const_4.z);
-    OUT.texcoord_7.w = (r1.y * -r1.w) + const_4.y;
-    r0.w = min(r0.w, const_4.y);
+    r0.w = max(r0.w, 0);
+    OUT.texcoord_7.w = (r1.y * -r1.w) + 1;
+    r0.w = min(r0.w, 1);
     OUT.position.xyz = r0;
-    OUT.color_1.a = const_4.y - r0.w;
+    OUT.color_1.a = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4.w = const_4.x;
+    OUT.texcoord_4.w = 0.5;
     OUT.color_0 = IN.color_0;
     OUT.color_1.rgb = FogColor;
 

@@ -47,7 +47,7 @@
     OUT.position.w = dot(ModelViewProj[3], IN.position);
     r0.w = saturate(r0.w * r1.w);
     OUT.position.xyz = r0;
-    r0.w = const_4.x - r0.w;
+    r0.w = 1 - r0.w;
     OUT.texcoord_2.w = r0.w * FogParam.z;
     OUT.texcoord_1.x = dot(ObjToCubeMap[0], IN.position);
     OUT.texcoord_1.y = dot(ObjToCubeMap[1], IN.position);

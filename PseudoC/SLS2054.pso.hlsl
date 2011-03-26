@@ -31,20 +31,20 @@
     float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
     sampler2D NormalMap;
     r0 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r1.xyz = IN.texcoord_3 + const_0.x;			// partial precision
+    r1.xyz = IN.texcoord_3 + -0.5;			// partial precision
     r1.xyz = r1 + r1;			// partial precision
-    r0.xyz = r0 + const_0.x;
+    r0.xyz = r0 + -0.5;
     r2.xyz = r0 + r0;			// partial precision
     r0.xyz = normalize(r2);			// partial precision
     r2.x = saturate(dot(r0, r1));			// partial precision
-    r1.xyz = IN.texcoord_2 + const_0.x;
+    r1.xyz = IN.texcoord_2 + -0.5;
     r1.w = pow(abs(r2.x), Toggles.z);			// partial precision
     r1.xyz = r1 + r1;			// partial precision
     r2.w = r0.w * r1.w;			// partial precision
     r0.x = dot(r0, r1);			// partial precision
-    r3.w = r0.x + const_0.z;			// partial precision
-    r0.w = const_0.y - r0.x;			// partial precision
-    r1.w = max(r3.w, const_0.w);			// partial precision
+    r3.w = r0.x + 0.5;			// partial precision
+    r0.w = 0.2 - r0.x;			// partial precision
+    r1.w = max(r3.w, 0);			// partial precision
     r1.w = r2.w * r1.w;			// partial precision
     r0.w = (r0.w >= 0.0 ? r2.w : r1.w);			// partial precision
     r0.xyz = r0.w * PSLightColor[0];			// partial precision

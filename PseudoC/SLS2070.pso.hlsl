@@ -11,8 +11,8 @@
     r1.w = dot(const_3, IN.color_0);			// partial precision
     r2.w = dot(const_4, IN.color_1);			// partial precision
     r1.w = r1.w + r2.w;			// partial precision
-    r0.w = (r1.w * const_0.x) + r0.w;			// partial precision
-    r2.w = saturate(r0.w + const_0.y);			// partial precision
+    r0.w = (r1.w * 2) + r0.w;			// partial precision
+    r2.w = saturate(r0.w + -1);			// partial precision
     r0.xyz = r0 * r1;			// partial precision
     r2.xyz = r0 * IN.texcoord_2;			// partial precision
     OUT.color_0 = r2;			// partial precision

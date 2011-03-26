@@ -49,7 +49,7 @@
     OUT.position.w = dot(ModelViewProj[3], IN.position);
     r0.w = saturate(r0.w * r1.w);
     OUT.position.xyz = r0;
-    r0.w = const_4.x - r0.w;
+    r0.w = 1 - r0.w;
     OUT.texcoord_7.w = r0.w * FogParam.z;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.color_0 = IN.color_0;

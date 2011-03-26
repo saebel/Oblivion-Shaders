@@ -46,14 +46,14 @@
     sampler2D NormalMap;
     sampler2D DetailMap;
     r0.xy = EyePos - IN.texcoord_1;
-    r0.w = dot(r0.xy, r0.xy) + const_3.z;
+    r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
-    r2.w = saturate((r0.w * const_3.w) - const_3.y);
+    r2.w = saturate((r0.w * -(1.0 / 8192)) - -1);
     r1.w = r2.w * r2.w;
     r3.xy = IN.texcoord_6 + Scroll;
     r0 = tex2D(NormalMap, r3);
-    r2.xyz = (const_3.x * r0) + const_3.y;
+    r2.xyz = (2 * r0) + -1;
     r2.xy = r1.w * r2;
     r0.xyz = EyePos - IN.texcoord_1;
     r4.x = dot(r0, r0);	// normalize + length
@@ -66,11 +66,11 @@
     r4.w = 1.0 / r1.w;
     r0.xyz = (-r0.w * r1) + r0;
     r5.w = saturate(r2.x);
-    r2.xy = (const_2.x * r1) + r3;
+    r2.xy = (0.1 * r1) + r3;
     r1 = texCUBE(ReflectionMap, r0);			// partial precision
     r0 = tex2D(DetailMap, r2);
-    r0.w = -(r5.w + const_3.y);
-    r3.z = const_3.y;
+    r0.w = -(r5.w + -1);
+    r3.z = -1;
     r2.xyz = ReflectionColor - r3.z;
     r1.w = r0.w * r0.w;
     r1.xyz = r1 * r2;			// partial precision
@@ -89,7 +89,7 @@
     r1.xyz = lerp(r0, r2, r3.w);
     r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor - r1;
-    r1.w = -(r0.w + const_3.y);
+    r1.w = -(r0.w + -1);
     r0.w = max(VarAmounts.z, r2.w);
     r0.xyz = (r1.w * r0) + r1;
     OUT.color_0 = r0;

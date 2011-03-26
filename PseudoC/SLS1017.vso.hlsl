@@ -35,10 +35,10 @@
     r1.w = 1.0 / FogParam.y;
     r0.w = r0.w * r1.w;
     OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.w = max(r0.w, const_4.x);
+    r0.w = max(r0.w, 0);
     OUT.position.xyz = r0;
-    r0.w = min(r0.w, const_4.y);
-    OUT.color_0.a = const_4.y - r0.w;
+    r0.w = min(r0.w, 1);
+    OUT.color_0.a = 1 - r0.w;
     OUT.color_0.rgb = FogColor;
 
 // approximately 15 instruction slots used

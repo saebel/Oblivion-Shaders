@@ -42,13 +42,13 @@
     r1 = texCUBE(NormalCubeMap, IN.texcoord_3);
     r0 = tex2D(NormalMap, IN.texcoord_0);
     r2.xyz = r2 * r3;
-    r1.xyz = r1 + const_0.x;
+    r1.xyz = r1 + -0.5;
     r3.xyz = r1 + r1;
-    r0.xyz = r0 + const_0.x;
+    r0.xyz = r0 + -0.5;
     r1.xyz = r0 + r0;
     r0.x = saturate(dot(r1, r3));
     r0.xyz = r2 * r0.x;
-    r2.xyz = IN.color_0 + const_0.x;
+    r2.xyz = IN.color_0 + -0.5;
     r2.xyz = r2 + r2;
     r2.x = saturate(dot(r1, r2));
     r1.xyz = AmbientColor;

@@ -21,7 +21,7 @@
     sampler2D Src0;
     r0 = tex2D(Src0, IN.texcoord_0);
     r0.xyz = r0.w;
-    r0.w = const_0.x;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

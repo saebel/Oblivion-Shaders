@@ -32,7 +32,7 @@
     r2.x = IN.texcoord_1.w;
     r2.y = IN.texcoord_2.w;
     r2.z = IN.texcoord_3.w;
-    r1.xyz = (const_0.x * r1) + const_0.y;
+    r1.xyz = (2 * r1) + -1;
     r0.x = dot(r1, IN.texcoord_1);
     r0.y = dot(r1, IN.texcoord_2);
     r0.z = dot(r1, IN.texcoord_3);
@@ -45,7 +45,7 @@
     r0.xyz = r1.w * r0;
     r0.xyz = r0 * AmbientColor.a;
     r0.xyz = r0 * IN.color_0;
-    r0.w = const_0.z;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 19 instruction slots used (2 texture, 17 arithmetic)

@@ -59,12 +59,12 @@
     OUT.texcoord_1.w = dot(const_11, r0);
     r0.w = r1.w * r2.w;
     OUT.texcoord_6.xyz = r0;
-    r0.w = max(r0.w, const_4.x);
+    r0.w = max(r0.w, 0);
     OUT.position.xyz = r1;
-    r0.w = min(r0.w, const_4.y);
-    OUT.texcoord_3.w = const_4.y - r0.w;
+    r0.w = min(r0.w, 1);
+    OUT.texcoord_3.w = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_2 = LightPosition[0];
-    OUT.texcoord_3.xyz = const_4.x;
+    OUT.texcoord_3.xyz = 0;
 
 // approximately 32 instruction slots used

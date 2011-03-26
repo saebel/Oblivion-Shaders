@@ -28,7 +28,7 @@
     r0 = tex2D(GlowMap, IN.texcoord_1);
     r1.xyz = r1 * IN.texcoord_2;
     r0.xyz = r0 * r1;
-    r0.w = const_0.x;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 6 instruction slots used (2 texture, 4 arithmetic)

@@ -45,7 +45,7 @@
     float4 texcoord_5 : TEXCOORD5_centroid;
     sampler2D ReflectionMap;
     r1.xyz = IN.texcoord_0;
-    r1.w = const_0.x;
+    r1.w = 1;
     r0.x = dot(IN.texcoord_2, r1);
     r0.y = dot(IN.texcoord_3, r1);
     r0.z = dot(IN.texcoord_4, r1);
@@ -57,7 +57,7 @@
     r1.xyz = r1 * r0.w;
     r4.w = 1.0 / r0.w;
     r0.w = saturate(r1.z);
-    r1.w = const_0.x - r0.w;
+    r1.w = 1 - r0.w;
     r2.w = r1.w * r1.w;
     r0.xyz = r0 - ReflectionColor;
     r2.w = r2.w * r2.w;
@@ -65,7 +65,7 @@
     r0.xyz = (VarAmounts.y * r0) + r2;			// partial precision
     r2.w = r1.w * r2.w;
     r1.xyz = r1 * -const_0;
-    r1.w = const_0.x;
+    r1.w = 1;
     r1.w = r1.w - FresnelRI.x;
     r2.w = (r1.w * r2.w) + FresnelRI.x;
     r2.x = saturate(dot(r1, SunDir));
@@ -81,7 +81,7 @@
     r1.xyz = (r3.w * r0) + r1;
     r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor - r1;
-    r1.w = const_0.x - r0.w;
+    r1.w = 1 - r0.w;
     r0.w = max(VarAmounts.z, r2.w);
     r0.xyz = (r1.w * r0) + r1;
     OUT.color_0 = r0;

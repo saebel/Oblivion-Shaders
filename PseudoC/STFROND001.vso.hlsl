@@ -56,9 +56,9 @@
     r1.z = dot(ModelViewProj[2], r0);
     r2.x = dot(IN.normal, LightVector);
     r0.x = dot(r1, r1);	// normalize + length
-    r1.w = max(r2.x, const_4.x);
+    r1.w = max(r2.x, 0);
     r0.w = 1.0 / sqrt(r0.x);
-    r2.w = min(r1.w, const_4.y);
+    r2.w = min(r1.w, 1);
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r1.w = 1.0 / FogParam.y;
@@ -66,11 +66,11 @@
     r0.w = r0.w * r1.w;
     r1.w = SunDimmer.x;
     r0.xyz = (r1.w * r0) + AmbientColor;
-    r0.w = max(r0.w, const_4.x);
+    r0.w = max(r0.w, 0);
     OUT.texcoord_1.xyz = r0 * IN.color_0;
-    r0.w = min(r0.w, const_4.y);
+    r0.w = min(r0.w, 1);
     OUT.position.xyz = r1;
-    OUT.texcoord_2.w = const_4.y - r0.w;
+    OUT.texcoord_2.w = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_2.xyz = FogColor;
 

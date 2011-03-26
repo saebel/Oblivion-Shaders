@@ -47,10 +47,10 @@
     r2 = tex2D(AttenuationMap, IN.texcoord_5);			// partial precision
     r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
     r6.xyz = normalize(IN.texcoord_2);			// partial precision
-    r0.xyz = r5 + const_0.x;
+    r0.xyz = r5 + -0.5;
     r5.xyz = r0 + r0;			// partial precision
     r0.xyz = normalize(r5);			// partial precision
-    r1.w = const_0.y - r4.x;			// partial precision
+    r1.w = 1 - r4.x;			// partial precision
     r4.x = saturate(dot(r0, r6));			// partial precision
     r1.w = saturate(r1.w - r3.x);			// partial precision
     r3.xyz = r4.x * PSLightColor[1];			// partial precision
@@ -58,7 +58,7 @@
     r4.x = saturate(dot(r0, IN.texcoord_1));			// partial precision
     r3.xyz = (r4.x * PSLightColor[0]) + r3;			// partial precision
     r4.xyz = normalize(IN.texcoord_3);			// partial precision
-    r1.w = const_0.y - r2.x;			// partial precision
+    r1.w = 1 - r2.x;			// partial precision
     r0.x = saturate(dot(r0, r4));			// partial precision
     r1.w = saturate(r1.w - r1.x);			// partial precision
     r0.xyz = r0.x * PSLightColor[2];			// partial precision

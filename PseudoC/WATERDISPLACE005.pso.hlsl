@@ -26,10 +26,10 @@
     sampler2D DisplaceMap;
     r7.xy = IN.texcoord_0 - const_0;
     r6.xy = IN.texcoord_0 + const_0;
-    r5.xy = IN.texcoord_0 + const_0.x;
+    r5.xy = IN.texcoord_0 + -(1.0 / 256);
     r4.xy = IN.texcoord_0 + const_1;
     r3.xy = IN.texcoord_0 - const_1;
-    r2.xy = IN.texcoord_0 + const_0.z;
+    r2.xy = IN.texcoord_0 + (1.0 / 256);
     r1.xy = IN.texcoord_0 + const_2;
     r0.xy = IN.texcoord_0 - const_2;
     r7 = tex2D(DisplaceMap, r7);
@@ -51,7 +51,7 @@
     r1.w = (fDamp.x * -r2.w) + r1.w;
     r3.w = abs(r3.x);
     r1.w = (fDamp.x * r3.w) + r1.w;
-    r0.w = (const_0.w * r0.w) + r1.w;
+    r0.w = (2 * r0.w) + r1.w;
     r1.w = abs(r2.x);
     r0.w = (fDamp.x * r1.w) + r0.w;
     r5.w = abs(r1.x);
@@ -63,14 +63,14 @@
     r2.w = abs(r0.x);
     r2.w = r2.w * fDamp.x;
     r0.x = -r0.w;
-    r0.w = (const_0.w * r2.w) + r3.w;
+    r0.w = (2 * r2.w) + r3.w;
     r0.y = (fDamp.x * r1.w) + r0.w;
-    r0.z = const_1.z;
+    r0.z = 1;
     r1.x = dot(r0, r0);	// normalize + length
     r0.z = 1.0 / sqrt(r1.x);
     r0.xy = r0 * r0.z;
-    r0.xyz = (const_1.w * r0) + const_1.w;
-    r0.w = const_1.z;
+    r0.xyz = (0.5 * r0) + 0.5;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 48 instruction slots used (8 texture, 40 arithmetic)

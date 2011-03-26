@@ -72,13 +72,13 @@
     r1.w = 1.0 / LightPosition[1].w;
     r0.w = r0.w * r2.w;
     r0.xyz = r2 * r1.w;
-    r0.w = max(r0.w, const_4.y);
-    OUT.texcoord_4.xyz = (const_4.x * r0) + const_4.x;
-    r0.w = min(r0.w, const_4.z);
+    r0.w = max(r0.w, 0);
+    OUT.texcoord_4.xyz = (0.5 * r0) + 0.5;
+    r0.w = min(r0.w, 1);
     OUT.position.xyz = r1;
-    OUT.color_1.a = const_4.z - r0.w;
+    OUT.color_1.a = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4.w = const_4.x;
+    OUT.texcoord_4.w = 0.5;
     OUT.color_0 = (IN.blendindices.z * const_4.zzzy) + const_4.yyyz;
     OUT.color_1.rgb = FogColor;
 

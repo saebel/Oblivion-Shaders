@@ -21,7 +21,7 @@
     sampler2D HeightMap;
     r0 = tex2D(HeightMap, IN.texcoord_0);
     r0.xyz = abs(r0.x);
-    r0.w = const_0.x;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

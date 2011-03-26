@@ -43,12 +43,12 @@
     float3 OUT.texcoord_5 : TEXCOORD5;
     float3 OUT.texcoord_6 : TEXCOORD6;
     float4 OUT.texcoord_7 : TEXCOORD7;
-    r1 = const_0.y * IN.blendindices.zyxw;
-    r0 = r1 - floor(r1);
+    r1 = 765.01001 * IN.blendindices.zyxw;
+    r0 = frac(r1);
     r0 = r1 - r0;
-    r1.w = dot(IN.blendweight, const_0.x);
+    r1.w = dot(IN.blendweight, 1);
     offset = r0;
-    r1.w = const_0.x - r1.w;
+    r1.w = 1 - r1.w;
     r0.x = dot(Bones[0 + offset.y], IN.normal);
     r0.y = dot(Bones[1 + offset.y], IN.normal);
     r0.z = dot(Bones[2 + offset.y], IN.normal);
@@ -120,7 +120,7 @@
     r1.y = dot(Bones[1 + offset.w], r0);
     r1.z = dot(Bones[2 + offset.w], r0);
     r0.xyz = (r1.w * r1) + r3;
-    r0.w = const_0.x;
+    r0.w = 1;
     r1.w = dot(r2, r2);	// normalize + length
     r1.x = dot(SkinModelViewProj[0], r0);
     r1.y = dot(SkinModelViewProj[1], r0);
@@ -136,10 +136,10 @@
     OUT.texcoord_6.xyz = r0;
     r0.w = saturate(r0.w * r1.w);
     OUT.position.xyz = r1;
-    r0.w = const_0.x - r0.w;
+    r0.w = 1 - r0.w;
     OUT.texcoord_7.w = r0.w * FogParam.z;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0 = const_0.x;
+    OUT.color_0 = 1;
     OUT.texcoord_7.xyz = FogColor;
 
 // approximately 98 instruction slots used

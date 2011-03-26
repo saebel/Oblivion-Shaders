@@ -37,6 +37,6 @@
     OUT.texcoord_1.y = dot(WorldView[1], IN.position);
     OUT.texcoord_1.z = dot(WorldView[2], IN.position);
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.w = const_4.x;
+    OUT.texcoord_1.w = 0;
 
 // approximately 9 instruction slots used

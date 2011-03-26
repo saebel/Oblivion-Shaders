@@ -36,10 +36,10 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
-    r2.x = dot(IN.blendweight, const_0.x);
+    r2.x = dot(IN.blendweight, 1);
     r1 = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r0 = IN.blendindices.zyxw * const_0.y;
-    r2.w = const_0.x - r2.x;
+    r0 = IN.blendindices.zyxw * 765.01001;
+    r2.w = 1 - r2.x;
     offset.x = r0.y;
     r2.x = dot(Bones[0 + offset.x], r1);
     r2.y = dot(Bones[1 + offset.x], r1);
@@ -59,7 +59,7 @@
     r2.x = dot(Bones[0 + offset.x], r1);
     r2.y = dot(Bones[1 + offset.x], r1);
     r2.z = dot(Bones[2 + offset.x], r1);
-    r1.w = const_0.x;
+    r1.w = 1;
     r1.xyz = (r2.w * r2) + r3;
     OUT.position.x = dot(SkinModelViewProj[0], r1);
     OUT.position.y = dot(SkinModelViewProj[1], r1);
@@ -141,15 +141,15 @@
     r0.w = 1.0 / sqrt(r2.x);
     r5.z = dot(r0, LightDirection[0]);
     r2.xyz = r1 * r0.w;
-    OUT.color_0.rgb = (const_0.w * r5) + const_0.w;
+    OUT.color_0.rgb = (0.5 * r5) + 0.5;
     OUT.texcoord_3.x = dot(r4, r2);
     OUT.texcoord_3.y = dot(r3, r2);
     r0.w = 1.0 / LightPosition[1].w;
     OUT.texcoord_3.z = dot(r0, r2);
     r0.xyz = r1 * r0.w;
-    OUT.texcoord_1.xy = (const_0.w * r0) + const_0.w;
-    OUT.texcoord_2.x = (r0.z * const_0.w) + const_0.w;
+    OUT.texcoord_1.xy = (0.5 * r0) + 0.5;
+    OUT.texcoord_2.x = (r0.z * 0.5) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_2.y = const_0.w;
+    OUT.texcoord_2.y = 0.5;
 
 // approximately 115 instruction slots used

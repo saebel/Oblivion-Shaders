@@ -29,7 +29,7 @@
     r0 = tex2D(Src0, IN.texcoord_0);
     r1.xyz = r1 * blendW.y;
     r0.xyz = (blendW.x * r0) + r1;
-    r0.w = const_1.x;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 6 instruction slots used (2 texture, 4 arithmetic)

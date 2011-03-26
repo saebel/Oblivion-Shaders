@@ -49,7 +49,7 @@
     r4.w = r4.w * r5.w;
     r0.w = (-r0.w >= r0.w ? 1.0 : 0.0);
     r0.w = r4.w * r0.w;
-    r0.z = (r0.w * const_4.y) + IN.position.z;
+    r0.z = (r0.w * -2048) + IN.position.z;
     r0.xyw = IN.position;
     r2.xy = r1.z * HighDetailRange.zwzw;
     r1.x = dot(ModelViewProj[0], r0);
@@ -66,14 +66,14 @@
     r3.w = (r1.w < LODLandFlags.x ? 1.0 : 0.0);
     r1.w = r4.w * r5.w;
     OUT.texcoord_7.x = r2.w * r3.w;
-    r1.w = max(r1.w, const_4.w);
+    r1.w = max(r1.w, 0);
     OUT.position.w = dot(ModelViewProj[3], r0);
-    r0.w = min(r1.w, -const_4.x);
+    r0.w = min(r1.w, --1);
     OUT.position.xyz = r1;
-    OUT.color_1.a = -(r0.w + const_4.x);
+    OUT.color_1.a = -(r0.w + -1);
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xyz = LightDirection[0];
-    OUT.texcoord_7.y = const_4.w;
+    OUT.texcoord_7.y = 0;
     OUT.color_1.rgb = FogColor;
 
 // approximately 40 instruction slots used

@@ -42,7 +42,7 @@
     r3.y = IN.texcoord_5.w;
     r1.w = 1.0 / sqrt(r0.x);			// partial precision
     r0.xy = r1.w * IN.texcoord_7;			// partial precision
-    r0.w = (r0.w * const_0.x) + const_0.y;			// partial precision
+    r0.w = (r0.w * 0.04) + -0.02;			// partial precision
     r2.xy = (r0.w * r0) + IN.texcoord_0;
     r1.x = IN.texcoord_4.z;
     r1.y = IN.texcoord_4.w;
@@ -55,28 +55,28 @@
     r3 = tex2D(AttenuationMap, IN.texcoord_4);			// partial precision
     r0 = tex2D(AttenuationMap, r0);			// partial precision
     r1 = tex2D(AttenuationMap, IN.texcoord_6);			// partial precision
-    r6.xyz = r6 + const_0.z;
+    r6.xyz = r6 + -0.5;
     r7.xyz = r6 + r6;			// partial precision
     r6.xyz = normalize(r7);			// partial precision
     r7.xyz = normalize(IN.texcoord_2);			// partial precision
-    r0.w = const_0.w - r5.x;			// partial precision
+    r0.w = 1 - r5.x;			// partial precision
     r5.x = saturate(dot(r6, r7));			// partial precision
     r0.w = saturate(r0.w - r4.x);			// partial precision
     r4.xyz = r5.x * PSLightColor[1];			// partial precision
     r4.xyz = r0.w * r4;			// partial precision
     r5.xyz = normalize(IN.texcoord_1);			// partial precision
-    r0.w = const_0.w - r3.x;			// partial precision
+    r0.w = 1 - r3.x;			// partial precision
     r3.x = saturate(dot(r6, r5));			// partial precision
     r0.w = saturate(r0.w - r2.x);			// partial precision
     r2.xyz = r3.x * PSLightColor[0];			// partial precision
     r2.xyz = (r0.w * r2) + r4;			// partial precision
     r3.xyz = normalize(IN.texcoord_3);			// partial precision
-    r0.w = const_0.w - r1.x;			// partial precision
+    r0.w = 1 - r1.x;			// partial precision
     r1.x = saturate(dot(r6, r3));			// partial precision
     r0.w = saturate(r0.w - r0.x);			// partial precision
     r0.xyz = r1.x * PSLightColor[2];			// partial precision
     r0.xyz = (r0.w * r0) + r2;			// partial precision
-    r0.w = const_0.w;
+    r0.w = 1;
     OUT.color_0 = r0;			// partial precision
 
 // approximately 50 instruction slots used (8 texture, 42 arithmetic)

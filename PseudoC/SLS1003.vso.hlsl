@@ -43,9 +43,9 @@
     r0.w = 1.0 / LightPosition[0].w;
     OUT.texcoord_3.xyz = r1 * r1.w;
     r0.xyz = r0 * r0.w;
-    OUT.texcoord_1.xy = (const_4.x * r0) + const_4.x;
-    OUT.texcoord_2.x = (r0.z * const_4.x) + const_4.x;
+    OUT.texcoord_1.xy = (0.5 * r0) + 0.5;
+    OUT.texcoord_2.x = (r0.z * 0.5) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_2.y = const_4.x;
+    OUT.texcoord_2.y = 0.5;
 
 // approximately 20 instruction slots used

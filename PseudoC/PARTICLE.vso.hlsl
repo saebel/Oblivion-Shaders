@@ -45,8 +45,8 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_1 : COLOR1;
     r0.w = IN.color_1.r + IN.color_1.x;
-    r0.w = r0.w - floor(r0.w);
-    r0.w = (const_13.x * IN.color_1.r) - r0.w;
+    r0.w = frac(r0.w);
+    r0.w = (2 * IN.color_1.r) - r0.w;
     offset.w = r0.w;
     r1.xzw = fVars0;
     r0.w = r1.x - InstanceData[0 + offset.w].w;
@@ -57,10 +57,10 @@
     r0.w = r3.w * r3.w;
     r1.xyz = (r3.w * r1) + InstanceData[0 + offset.w];
     r0.xyz = r0 * r0.w;
-    r0.xyz = (const_13.y * r0) + r1;
+    r0.xyz = (0.5 * r0) + r1;
     r0.xyz = r0 - fVars3;
     r5.w = 1.0 / fVars0.y;
-    r0.w = const_13.z;
+    r0.w = 1;
     r6.w = r3.w * r5.w;
     r2.xz = fVars2;
     r3.xy = (fVars2.zwzw < r6.w ? 1.0 : 0.0);

@@ -35,9 +35,9 @@
     r2 = tex2D(NormalMap, IN.texcoord_1);
     r1 = tex2D(GlowMap, IN.texcoord_2);
     r0 = tex2D(BaseMap, IN.texcoord_0);
-    r2.xyz = r2 + const_0.x;
+    r2.xyz = r2 + -0.5;
     r2.xyz = r2 + r2;
-    r3.xyz = IN.texcoord_3 + const_0.x;
+    r3.xyz = IN.texcoord_3 + -0.5;
     r3.xyz = r3 + r3;
     r2.x = saturate(dot(r2, r3));
     r1.xyz = r1 + AmbientColor;

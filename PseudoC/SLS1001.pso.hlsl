@@ -37,9 +37,9 @@
     r2 = texCUBE(NormalCubeMap, IN.texcoord_3);
     r0 = tex2D(AttMapXY, IN.texcoord_1);
     r1 = tex2D(AttMapZ, IN.texcoord_2);
-    r3.xyz = r3 + const_0.x;
+    r3.xyz = r3 + -0.5;
     r3.xyz = r3 + r3;
-    r2.xyz = r2 + const_0.x;
+    r2.xyz = r2 + -0.5;
     r2.xyz = r2 + r2;
     r2.x = saturate(dot(r3, r2));
     r2.xyz = r2.x * PSLightColor[0];

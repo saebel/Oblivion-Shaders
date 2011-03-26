@@ -53,27 +53,27 @@
     r2 = tex2D(Src0, r0);
     r1 = tex2D(Src1, IN.texcoord_0);
     r0 = tex2D(Src2, IN.texcoord_0);
-    r9 = (const_4.z * r9) + r8;
+    r9 = (2 * r9) + r8;
     r9 = r6 + r9;
     r9 = r9 - r7;
-    r3 = (const_4.z * -r3) + r9;
+    r3 = (2 * -r3) + r9;
     r3 = r3 - r4;
     r3 = r3 * r3;
-    r5 = (const_4.z * r5) + r8;
+    r5 = (2 * r5) + r8;
     r5 = r7 + r5;
     r5 = r5 - r6;
-    r2 = (const_4.z * -r2) + r5;
+    r2 = (2 * -r2) + r5;
     r2 = r2 - r4;
     r2 = (r2 * r2) + r3;
-    r1.w = r2.w * const_4.w;
+    r1.w = r2.w * 10;
     r2.x = dot(const_0, r2);
-    r0.w = min(r1.w, const_0.w);
+    r0.w = min(r1.w, 0.1);
     r0.w = r2.x + r0.w;
-    r1.xyz = r1 * const_2.y;
-    r1.w = min(r0.w, const_2.x);
-    r1.xyz = (const_2.z * r0) + r1;
+    r1.xyz = r1 * 0.25;
+    r1.w = min(r0.w, 0.5);
+    r1.xyz = (0.75 * r0) + r1;
     r0.xyz = lerp(const_3, r1, r1.w);
-    r0.w = const_4.x;
+    r0.w = 1;
     OUT.color_0 = r0;
 
 // approximately 46 instruction slots used (10 texture, 36 arithmetic)
