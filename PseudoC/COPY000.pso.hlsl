@@ -18,6 +18,6 @@
 
     float2 IN.texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    OUT.color_0 = tex2D(Src0, IN.texcoord_0);
+    OUT.color_0.rgba = tex2D(Src0, IN.texcoord_0);
 
 // approximately 1 instruction slot used (1 texture, 0 arithmetic)

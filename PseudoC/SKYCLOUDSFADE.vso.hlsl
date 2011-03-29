@@ -40,20 +40,20 @@
     float2 OUT.texcoord_1 : TEXCOORD1;
     float OUT.texcoord_2 : TEXCOORD2;
     float4 OUT.color_0 : COLOR0;
-    r0.xyz = BlendColor[1] * IN.color_0.g;
-    r0.xyz = (IN.color_0.r * BlendColor[0]) + r0;
-    OUT.color_0.rgb = (IN.color_0.b * BlendColor[2]) + r0;
+    r0.xyz = BlendColor[1].rgb * IN.color_0.g;
+    r0.xyz = (IN.color_0.r * BlendColor[0].rgb) + r0.xyz;
+    OUT.color_0.rgb = (IN.color_0.b * BlendColor[2].rgb) + r0.xyz;
     OUT.color_0.a = BlendColor[0].a * IN.color_0.a;
-    r0.w = dot(Model[2], IN.position);
+    r0.w = dot(Model[2].xyzw, IN.position.xyzw);
     r0.w = r0.w - EyePosition.z;
-    r0.x = dot(ModelViewProj[0], IN.position);
-    r0.y = dot(ModelViewProj[1], IN.position);
-    r0.z = dot(ModelViewProj[3], IN.position);
+    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    r0.z = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_2.x = saturate(r0.w * (1.0 / 7));
-    OUT.position = r0.xyzz;
+    OUT.position.xyzw = r0.xyzz;
     r0.y = TexCoordYOff.x + IN.texcoord_0.y;
     r0.x = IN.texcoord_0.x;
-    OUT.texcoord_0.xy = r0;
-    OUT.texcoord_1.xy = r0;
+    OUT.texcoord_0.xy = r0.xy;
+    OUT.texcoord_1.xy = r0.xy;
 
 // approximately 15 instruction slots used

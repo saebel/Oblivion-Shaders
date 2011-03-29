@@ -30,32 +30,32 @@
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
-    r0.xyz = EyePosition - IN.position;
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    r1.x = dot(r0, r0);	// normalize + length
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    r0.xyz = EyePosition.xyz - IN.position;
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.w = 1.0 / sqrt(r1.x);
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
-    r0.xyz = (r0.w * r0) + LightDirection[0];
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r2.x = dot(r0, r0);	// normalize + length
-    r1.x = dot(IN.tangent, LightDirection[0]);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    r0.xyz = (r0.w * r0.xyz) + LightDirection[0].xyz;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
+    r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r0.w = 1.0 / sqrt(r2.x);
-    r1.y = dot(IN.binormal, LightDirection[0]);
-    r2.xyz = r0 * r0.w;
-    r1.z = dot(IN.normal, LightDirection[0]);
-    r0.x = dot(IN.tangent, r2);
-    r0.y = dot(IN.binormal, r2);
-    r0.z = dot(IN.normal, r2);
-    r3.x = dot(r1, r1);	// normalize + length
-    r2.x = dot(r0, r0);	// normalize + length
+    r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
+    r2.xyz = r0.xyz * r0.w;
+    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
+    r0.x = dot(IN.tangent.xyz, r2.xyz);
+    r0.y = dot(IN.binormal.xyz, r2.xyz);
+    r0.z = dot(IN.normal.xyz, r2.xyz);
+    r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
+    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r1.w = 1.0 / sqrt(r3.x);
     r0.w = 1.0 / sqrt(r2.x);
-    OUT.texcoord_2.xyz = r1 * r1.w;
-    OUT.texcoord_3.xyz = r0 * r0.w;
+    OUT.texcoord_2.xyz = r1.xyz * r1.w;
+    OUT.texcoord_3.xyz = r0.xyz * r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xy = IN.texcoord_0;
-    OUT.color_0 = const_4.xxxy;
-    OUT.color_1 = IN.color_0;
+    OUT.color_0.rgba = const_4.xxxy;
+    OUT.color_1.rgba = IN.color_0;
 
 // approximately 27 instruction slots used

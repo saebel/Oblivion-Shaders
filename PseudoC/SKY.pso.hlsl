@@ -18,6 +18,6 @@
 
     float4 IN.color_0 : COLOR0;
     OUT.color_0.rgb = IN.color_0 * Params.y;
-    OUT.color_0.a = IN.color_0.w;
+    OUT.color_0.a = IN.color_0.a;
 
 // approximately 2 instruction slots used

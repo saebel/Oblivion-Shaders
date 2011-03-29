@@ -25,11 +25,11 @@
     float2 texcoord_1 : TEXCOORD1;
     sampler2D Src0;
     sampler2D Src1;
-    r1 = tex2D(Src1, IN.texcoord_1);
-    r0 = tex2D(Src0, IN.texcoord_0);
-    r1.xyz = r1 * blendW.y;
-    r0.xyz = (blendW.x * r0) + r1;
+    r1.xyzw = tex2D(Src1, IN.texcoord_1);
+    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    r1.xyz = r1.xyz * blendW.y;
+    r0.xyz = (blendW.x * r0.xyz) + r1.xyz;
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 6 instruction slots used (2 texture, 4 arithmetic)

@@ -32,23 +32,23 @@
     sampler2D NormalMap;
     samplerCUBE EnvironmentCubeMap;
     r0.xyz = IN.texcoord_1 + -0.5;
-    r0.xyz = r0 + r0;			// partial precision
+    r0.xyz = r0.xyz + r0.xyz;			// partial precision
     r1.xyz = normalize(IN.texcoord_2);			// partial precision
-    r3.x = dot(r0, r1);			// partial precision
-    r2.x = dot(r0, r0);	// normalize + length			// partial precision
+    r3.x = dot(r0.xyz, r1.xyz);			// partial precision
+    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length			// partial precision
     r0.w = r3.x + r3.x;			// partial precision
-    r1.xyz = r1 * r2.x;			// partial precision
-    r0.xyz = (r0.w * r0) - r1;			// partial precision
-    r0 = texCUBE(EnvironmentCubeMap, r0);			// partial precision
-    r1 = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r0 * r1.w;			// partial precision
-    r0.xyz = r0 * AmbientColor.a;			// partial precision
-    r1.xyz = r0 * IN.color_0;			// partial precision
+    r1.xyz = r1.xyz * r2.x;			// partial precision
+    r0.xyz = (r0.w * r0.xyz) - r1.xyz;			// partial precision
+    r0.xyzw = texCUBE(EnvironmentCubeMap, r0);			// partial precision
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
+    r0.xyz = r0.xyz * r1.w;			// partial precision
+    r0.xyz = r0.xyz * AmbientColor.a;			// partial precision
+    r1.xyz = r0.xyz * IN.color_0;			// partial precision
     r0.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
-    r0.xyz = r0 * PSLightColor[0];
-    r0.xyz = r0 * IN.texcoord_1.w;			// partial precision
-    r0.xyz = r0 * 3;			// partial precision
+    r0.xyz = r0.xyz * PSLightColor[0].rgb;
+    r0.xyz = r0.xyz * IN.texcoord_1.w;			// partial precision
+    r0.xyz = r0.xyz * 3;			// partial precision
     r0.w = 1;
-    OUT.color_0 = r0;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 21 instruction slots used (2 texture, 19 arithmetic)

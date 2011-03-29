@@ -27,8 +27,8 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D HeightMap01;
     sampler2D HeightMap02;
-    r1 = tex2D(HeightMap02, IN.texcoord_0);
-    r0 = tex2D(HeightMap01, IN.texcoord_0);
+    r1.xyzw = tex2D(HeightMap02, IN.texcoord_0);
+    r0.xyzw = tex2D(HeightMap01, IN.texcoord_0);
     r2.w = abs(r1.x);
     r0.w = 1.0 / fDamp.x;
     r0.w = r0.w * 0.8;
@@ -37,6 +37,6 @@
     r2.w = r2.w * BlendAmount.x;
     r0.xyz = (r0.w * r1.w) + r2.w;
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 11 instruction slots used (2 texture, 9 arithmetic)

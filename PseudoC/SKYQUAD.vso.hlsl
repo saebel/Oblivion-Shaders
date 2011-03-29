@@ -8,7 +8,7 @@
     float4 IN.color_0 : COLOR0;
     float4 OUT.position : POSITION;
     float4 OUT.color_0 : COLOR0;
-    OUT.position = (IN.position.xyzx * const_0.xxxy) + const_0.yyyx;
-    OUT.color_0 = IN.color_0;
+    OUT.position.xyzw = (IN.position.xyzx * const_0.xxxy) + const_0.yyyx;
+    OUT.color_0.rgba = IN.color_0;
 
 // approximately 2 instruction slots used

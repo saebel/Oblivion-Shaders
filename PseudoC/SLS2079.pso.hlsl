@@ -36,9 +36,9 @@
     r0.xy = r0.w * IN.texcoord_1;
     r0.xy = (0.5 * r0) + 0.5;
     r1.xyz = IN.texcoord_2;
-    r1.xyz = IN.texcoord_6 - r1;
+    r1.xyz = IN.texcoord_6 - r1.xyz;
     r0.w = 1 - r0.y;
-    r1.x = dot(r1, r1);	// normalize + length
+    r1.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r1.w = 1.0 / sqrt(r1.x);
     r1.w = 1.0 / r1.w;
     r2.w = IN.texcoord_2.w * 0.5;
@@ -52,19 +52,19 @@
     r4.x = saturate((r0.x >= 0.0 ? 0 : r0.x));
     r4.y = saturate((r0.z >= 0.0 ? 0 : r0.w));
     r0.w = r1.w * 15;			// partial precision
-    r1.xy = const_3;
-    r0.xy = (r1 * r0) + const_5;
+    r1.xy = const_3.xy;
+    r0.xy = (r1.xy * r0.xy) + const_5.xy;
     r0.w = 1.0 / r0.w;			// partial precision
     r3.xy = saturate((r0.w * 0.01) + r0);
     r2.xy = saturate((r0.w * const_4) + r0);
     r1.xy = saturate((r0.w * -const_4) + r0);
     r0.xy = saturate((r0.w * -0.01) + r0);
-    r5 = tex2D(ShadowMap, r4);
-    r4 = tex2D(ShadowMap, r3);
-    r3 = tex2D(ShadowMap, r2);
-    r2 = tex2D(ShadowMap, r1);
-    r1 = tex2D(ShadowMap, r0);
-    r0 = tex2D(BaseMap, IN.texcoord_0);			// partial precision
+    r5.xyzw = tex2D(ShadowMap, r4);
+    r4.xyzw = tex2D(ShadowMap, r3);
+    r3.xyzw = tex2D(ShadowMap, r2);
+    r2.xyzw = tex2D(ShadowMap, r1);
+    r1.xyzw = tex2D(ShadowMap, r0);
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);			// partial precision
     r2.w = 1.0 / IN.texcoord_2.w;
     r1.w = (IN.texcoord_1.z * -r2.w) + r5.x;
     r1.w = -0.000195312503 - r1.w;
@@ -97,6 +97,6 @@
     r1.w = min(r0.w, 1);			// partial precision
     r0.xyz = lerp(1, r1, IN.texcoord_3.w);			// partial precision
     r0.w = min(r1.w, r2.w);			// partial precision
-    OUT.color_0 = r0;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 68 instruction slots used (6 texture, 62 arithmetic)

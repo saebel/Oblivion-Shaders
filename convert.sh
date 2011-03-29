@@ -3,7 +3,7 @@
 SED=sed
 SFLAGS=
 
-for dis in Disassembly/HDR*.dis; do
+for dis in Disassembly/*.dis; do
   echo $dis
   fle=`basename ${dis}`
   fle=`stripext ${fle}`
@@ -55,6 +55,7 @@ for dis in Disassembly/HDR*.dis; do
 
   $SED $SFLAGS -f PseudoC/$fle.hlsl.sed							<PseudoC/$fle.hlsl.tmp |	\
   $SED $SFLAGS -f PseudoC/$fle.hlsl.sed							|	\
+  $SED $SFLAGS -f subst.sed								|	\
   $SED $SFLAGS -f subst.sed								>PseudoC/$fle.hlsl
 
   rm -f PseudoC/$fle.hlsl.sed PseudoC/$fle.hlsl.tmp

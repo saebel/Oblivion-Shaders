@@ -31,20 +31,20 @@
     float4 IN.color_1 : COLOR1;
     sampler2D NormalMap;
     sampler2D SourceTexture;
-    r0 = tex2D(NormalMap, IN.texcoord_0);
-    r0.xyz = r0 + -0.5;
-    r0.xyz = r0 + r0;
-    r1.w = dot(r0, IN.input_2);
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);
+    r0.xyz = r0.xyz + -0.5;
+    r0.xyz = r0.xyz + r0.xyz;
+    r1.w = dot(r0.xyz, IN.input_2.xyz);
     r0.w = max(r1.w, 0);
     r2.w = 1 - r0.w;
-    r0 = tex2D(SourceTexture, IN.texcoord_1);
-    r0.xyz = r0 + FillColor;
+    r0.xyzw = tex2D(SourceTexture, IN.texcoord_1);
+    r0.xyz = r0.xyz + FillColor.rgb;
     r0.w = r0.w * FillColor.a;
     r1.w = pow(abs(r2.w), fVars.x);
-    r0.xyz = r0 * r0.w;
-    r0 = (r1.w * RimColor) + r0;
-    r1.xyz = IN.color_1 - r0;
-    OUT.color_0.rgb = (IN.color_1.a * r1) + r0;
+    r0.xyz = r0.xyz * r0.w;
+    r0.xyzw = (r1.w * RimColor) + r0;
+    r1.xyz = IN.color_1 - r0.xyz;
+    OUT.color_0.rgb = (IN.color_1.a * r1.xyz) + r0.xyz;
     OUT.color_0.a = r0.w;
 
 // approximately 17 instruction slots used (2 texture, 15 arithmetic)

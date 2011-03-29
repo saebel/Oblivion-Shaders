@@ -21,9 +21,9 @@
     const int4 const_0 = {0, 0, 0, 0};
     float2 texcoord_1 : TEXCOORD1;
     sampler2D GlowMap;
-    r0 = tex2D(GlowMap, IN.texcoord_1);
+    r0.xyzw = tex2D(GlowMap, IN.texcoord_1);
     r0.w = r0.x * EmittanceColor.r;
     r0.xyz = 0;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

@@ -16,7 +16,7 @@ struct VS_OUTPUT {
     float4 color_0 : COLOR0;
     float2 texcoord_0 : TEXCOORD0;			// partial precision
     float4 texcoord_4 : TEXCOORD4_centroid;		// partial precision
-    float4 texcoord_5 : TEXCOORD5_centroid;		// partial precision
+    float4 alpha : TEXCOORD5_centroid;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -34,15 +34,15 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     src = tex2D(DiffuseMap, IN.texcoord_0);				// partial precision
 
-    r1 = IN.texcoord_5 + IN.texcoord_4;					// partial precision
+    r1 = IN.alpha + IN.texcoord_4;					// partial precision
     bl = (src * r1) + (IN.color_0 - (src * r1)) * IN.color_0.a;		// partial precision
 
     a = AlphaTestRef.x - src.a;						// partial precision
     a = (a >= 0.0 ? 1 : 0);						// partial precision
-    a * IN.texcoord_5.a;						// partial precision
+    a = a * IN.alpha.a;							// partial precision
 
     OUT.color_0.rgb = bl;						// partial precision
-    OUT.color_0.a   = a;					// partial precision
+    OUT.color_0.a   = a;						// partial precision
 
     return OUT;
 };

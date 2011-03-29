@@ -25,10 +25,10 @@
     float4 OUT.position : POSITION;
     float2 OUT.texcoord_0 : TEXCOORD0;
     r0.xy = (IN.texcoord_0 * texRatio0) + texRatio0.zwzw;
-    r0.xy = r0 + -0.5;
-    r1.xy = r0.y * RotationMatrix[1];
-    r0.xy = (r0.x * RotationMatrix[0]) + r1;
-    OUT.texcoord_0.xy = r0 + 0.5;
-    OUT.position = IN.position;
+    r0.xy = r0.xy + -0.5;
+    r1.xy = r0.y * RotationMatrix[1].xy;
+    r0.xy = (r0.x * RotationMatrix[0].xy) + r1.xy;
+    OUT.texcoord_0.xy = r0.xy + 0.5;
+    OUT.position.xyzw = IN.position;
 
 // approximately 6 instruction slots used

@@ -29,15 +29,15 @@
     sampler2D Src1;
     r0.w = 1;
     r0.w = r0.w - doubleVisParams.w;
-    r0.xy = IN.texcoord_0 - doubleVisParams;
+    r0.xy = IN.texcoord_0 - doubleVisParams.xy;
     r1.y = max(r0.y, r0.w);
     r1.x = max(r0.x, 0);
-    r2.xy = IN.texcoord_0 + doubleVisParams;
+    r2.xy = IN.texcoord_0 + doubleVisParams.xy;
     r0.x = min(doubleVisParams.z, r2.x);
     r0.y = min(r2.y, 1);
-    r2 = tex2D(Src0, r1);
-    r1 = tex2D(Src0, r0);
-    r0 = tex2D(Src1, IN.texcoord_1);
+    r2.xyzw = tex2D(Src0, r1);
+    r1.xyzw = tex2D(Src0, r0);
+    r0.xyzw = tex2D(Src1, IN.texcoord_1);
     r0.w = 1.0 / doubleVisParams.w;
     r0.w = r0.w * doubleVisParams.z;
     r1.w = IN.texcoord_1.x + -0.5;
@@ -51,12 +51,12 @@
     r0.w = 1.0 / r0.w;
     r1.w = r0.w * blurParams.z;
     r0.w = min(r1.w, 1);
-    r1.xyz = r2 + r1;
+    r1.xyz = r2.xyz + r1.xyz;
     r1.w = 1 - r0.w;
-    r1.xyz = r1 * r1.w;
-    r0.xyz = r0 * r0.w;
-    r0.xyz = (0.5 * r1) + r0;
+    r1.xyz = r1.xyz * r1.w;
+    r0.xyz = r0.xyz * r0.w;
+    r0.xyz = (0.5 * r1.xyz) + r0.xyz;
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 31 instruction slots used (3 texture, 28 arithmetic)

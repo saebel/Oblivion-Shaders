@@ -46,27 +46,27 @@
     offset.w = r0.w;
     r0.w = 0.01;
     r0.w = r0.w * InstanceData[0 + offset.w].w;
-    r1 = frac(InstanceData[0 + offset.w]);
+    r1.xyzw = frac(InstanceData[0 + offset.w]);
     r0.xyz = (IN.position * r0.w) + InstanceData[0 + offset.w];
-    r1.xyz = r1 + -0.5;
+    r1.xyz = r1.xyz + -0.5;
     r0.w = IN.position.w;
-    r1.xyz = r1 + r1;
-    OUT.position.w = dot(ModelViewProj[3], r0);			//		(ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w)
-    r2.x = dot(DiffuseDir, r1);
+    r1.xyz = r1.xyz + r1.xyz;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);			//		(ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w)
+    r2.x = dot(DiffuseDir.xyz, r1.xyz);
     r1.xyz = InstanceData[0 + offset.w];
-    r1.xyz = EyePos - r1;
+    r1.xyz = EyePos.xyz - r1.xyz;
     r2.xyz = r2.x * IN.color_0;
-    r3.xyz = r1.w * r2;
-    r2.x = dot(ModelViewProj[0], r0);			//		(ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w)
-    r2.y = dot(ModelViewProj[1], r0);			//		(ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w)
-    r2.z = dot(ModelViewProj[2], r0);			//		(ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w)
-    r0.xyz = DiffuseColor;
-    OUT.texcoord_4.xyz = (r0 * r3) + AmbientColor;
-    r0.x = dot(r2, r2);	// normalize + length			//		(r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z)
-    OUT.position.xyz = r2;
+    r3.xyz = r1.w * r2.xyz;
+    r2.x = dot(ModelViewProj[0].xyzw, r0.xyzw);			//		(ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w)
+    r2.y = dot(ModelViewProj[1].xyzw, r0.xyzw);			//		(ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w)
+    r2.z = dot(ModelViewProj[2].xyzw, r0.xyzw);			//		(ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w)
+    r0.xyz = DiffuseColor.rgb;
+    OUT.texcoord_4.xyz = (r0.xyz * r3.xyz) + AmbientColor.rgb;
+    r0.x = dot(r2.xyz, r2.xyz);	// normalize + length			//		(r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z)
+    OUT.position.xyz = r2.xyz;
     r0.w = 1.0 / sqrt(r0.x);			//		1.0 / sqrt(r0)
     r0.w = 1.0 / r0.w;			//		1.0 / (1.0 / sqrt(r0)) ^= sqrt(r0)
-    r0.x = dot(r1, r1);	// normalize + length
+    r0.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r2.w = FogParam.x - r0.w;		// exp fog	(off - r0)
     r0.w = 1.0 / sqrt(r0.x);
     r4.w = 1.0 / FogParam.y;			// exp fog	(1 / div)
@@ -86,6 +86,6 @@
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_4.w = 1;
     OUT.texcoord_5.xyz = 0;
-    OUT.color_0.rgb = FogColor;			// exp fog
+    OUT.color_0.rgb = FogColor.rgb;			// exp fog
 
 // approximately 46 instruction slots used

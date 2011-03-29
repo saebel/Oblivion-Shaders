@@ -33,22 +33,22 @@
     sampler2D AttMapXY;
     sampler2D AttMapZ;
     samplerCUBE NormalCubeMap;
-    r3 = texCUBE(NormalCubeMap, IN.texcoord_3);
-    r0 = tex2D(NormalMap, IN.texcoord_0);
-    r1 = tex2D(AttMapXY, IN.texcoord_1);
-    r2 = tex2D(AttMapZ, IN.texcoord_2);
-    r3.xyz = r3 + -0.5;
-    r3.xyz = r3 + r3;
-    r0.xyz = r0 + -0.5;
-    r0.xyz = r0 + r0;
-    r0.x = saturate(dot(r0, r3));
+    r3.xyzw = texCUBE(NormalCubeMap, IN.texcoord_3);
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);
+    r1.xyzw = tex2D(AttMapXY, IN.texcoord_1);
+    r2.xyzw = tex2D(AttMapZ, IN.texcoord_2);
+    r3.xyz = r3.xyz + -0.5;
+    r3.xyz = r3.xyz + r3.xyz;
+    r0.xyz = r0.xyz + -0.5;
+    r0.xyz = r0.xyz + r0.xyz;
+    r0.x = saturate(dot(r0.xyz, r3.xyz));
     r1.w = r0.x * r0.x;
     r1.w = r1.w * r1.w;
-    r0.xyz = r1.w * PSLightColor[0];
-    r0.xyz = r0.w * r0;
-    r1.xyz = r1 * r2;
+    r0.xyz = r1.w * PSLightColor[0].rgb;
+    r0.xyz = r0.w * r0.xyz;
+    r1.xyz = r1.xyz * r2.xyz;
     r0.w = r0.w * r0.x;
-    r0.xyz = r0 * r1;
-    OUT.color_0 = r0;
+    r0.xyz = r0.xyz * r1.xyz;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 17 instruction slots used (4 texture, 13 arithmetic)

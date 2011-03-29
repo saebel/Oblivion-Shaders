@@ -20,11 +20,11 @@
     float3 texcoord_1 : TEXCOORD1;			// partial precision
     float4 texcoord_2 : TEXCOORD2;			// partial precision
     sampler2D DiffuseMap;
-    r0 = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
     r1.xyz = IN.texcoord_1;			// partial precision
     r1.xyz = (-r0 * r1) + IN.texcoord_2;			// partial precision
-    r1.xyz = r1 * IN.texcoord_2.w;			// partial precision
-    r0.xyz = (IN.texcoord_1 * r0) + r1;			// partial precision
-    OUT.color_0 = r0;			// partial precision
+    r1.xyz = r1.xyz * IN.texcoord_2.w;			// partial precision
+    r0.xyz = (IN.texcoord_1 * r0.xyz) + r1.xyz;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 6 instruction slots used (1 texture, 5 arithmetic)

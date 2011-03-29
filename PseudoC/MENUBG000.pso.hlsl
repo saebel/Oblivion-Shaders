@@ -25,15 +25,15 @@
     const float4 const_5 = {1, -1.1081773, 1.70506454, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r1 = tex2D(Src0, IN.texcoord_0);
-    r0.x = dot(const_0, r1);
+    r1.xyzw = tex2D(Src0, IN.texcoord_0);
+    r0.x = dot(const_0.xyz, r1.xyz);
     r0.x = r0.x + 0.14;
     r0.yz = const_2.zxyw;
-    r2.x = dot(const_3, r0);
-    r2.y = dot(const_4, r0);
-    r2.z = dot(const_5, r0);
+    r2.x = dot(const_3.xyz, r0.xyz);
+    r2.y = dot(const_4.xyz, r0.xyz);
+    r2.z = dot(const_5.xyz, r0.xyz);
     r0.xyz = lerp(r2, r1, BlendValue.x);
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

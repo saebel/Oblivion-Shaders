@@ -42,10 +42,10 @@
     r0.xy = saturate(IN.texcoord_0);			// partial precision
     r1.w = (r2.w <= 0.0 ? 1 : 0);			// partial precision
     r0.xy = (const_9.ywzw * r0) + const_9.xzzw;			// partial precision
-    r0 = tex2D(DecalMap, r0);			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0);			// partial precision
     if_ne r1.w, -r1.w
       r1.w = r0.w * IN.texcoord_0.z;			// partial precision
-      r1.xyz = r0 * r1.w;			// partial precision
+      r1.xyz = r0.xyz * r1.w;			// partial precision
     else
       r0.w = 0;
       r1.xyz = r0.w;			// partial precision
@@ -53,69 +53,69 @@
     endif
     r0.xy = saturate(IN.texcoord_1);			// partial precision
     r0.xy = (const_10.ywzw * r0) + const_10.xzzw;			// partial precision
-    r0 = tex2D(DecalMap, r0);			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0);			// partial precision
     if_lt 1, r2.w
       r0.w = r0.w * IN.texcoord_1.z;			// partial precision
-      r0.xyz = r0 - r1;			// partial precision
-      r1.xyz = (r0.w * r0) + r1;			// partial precision
+      r0.xyz = r0.xyz - r1.xyz;			// partial precision
+      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
       r1.w = r1.w + r0.w;			// partial precision
     endif
     r0.xy = saturate(IN.texcoord_2);			// partial precision
     r0.xy = (const_11.ywzw * r0) + const_11.xzzw;			// partial precision
-    r0 = tex2D(DecalMap, r0);			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0);			// partial precision
     if_lt 2, r2.w
       r0.w = r0.w * IN.texcoord_2.z;			// partial precision
-      r0.xyz = r0 - r1;			// partial precision
-      r1.xyz = (r0.w * r0) + r1;			// partial precision
+      r0.xyz = r0.xyz - r1.xyz;			// partial precision
+      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
       r1.w = r1.w + r0.w;			// partial precision
     endif
     r0.xy = saturate(IN.texcoord_3);			// partial precision
     r0.xy = (const_12.ywzw * r0) + const_12.xzzw;			// partial precision
-    r0 = tex2D(DecalMap, r0);			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0);			// partial precision
     if_lt 3, r2.w
       r0.w = r0.w * IN.texcoord_3.z;			// partial precision
-      r0.xyz = r0 - r1;			// partial precision
-      r1.xyz = (r0.w * r0) + r1;			// partial precision
+      r0.xyz = r0.xyz - r1.xyz;			// partial precision
+      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
       r1.w = r1.w + r0.w;			// partial precision
     endif
     r0.xy = saturate(IN.texcoord_4);			// partial precision
     r0.xy = (const_13.ywzw * r0) + const_13.xzzw;			// partial precision
-    r0 = tex2D(DecalMap, r0);			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0);			// partial precision
     if_lt 4, r2.w
       r0.w = r0.w * IN.texcoord_4.z;			// partial precision
-      r0.xyz = r0 - r1;			// partial precision
-      r1.xyz = (r0.w * r0) + r1;			// partial precision
+      r0.xyz = r0.xyz - r1.xyz;			// partial precision
+      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
       r1.w = r1.w + r0.w;			// partial precision
     endif
     r0.xy = saturate(IN.texcoord_5);			// partial precision
     r0.xy = (const_14.ywzw * r0) + const_14.xzzw;			// partial precision
-    r0 = tex2D(DecalMap, r0);			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0);			// partial precision
     if_lt 5, r2.w
       r0.w = r0.w * IN.texcoord_5.z;			// partial precision
-      r0.xyz = r0 - r1;			// partial precision
-      r1.xyz = (r0.w * r0) + r1;			// partial precision
+      r0.xyz = r0.xyz - r1.xyz;			// partial precision
+      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
       r1.w = r1.w + r0.w;			// partial precision
     endif
     r0.xy = saturate(IN.texcoord_6);			// partial precision
     r0.xy = (const_15.ywzw * r0) + const_15.xzzw;			// partial precision
-    r0 = tex2D(DecalMap, r0);			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0);			// partial precision
     if_lt 6, r2.w
       r0.w = r0.w * IN.texcoord_6.z;			// partial precision
-      r0.xyz = r0 - r1;			// partial precision
-      r1.xyz = (r0.w * r0) + r1;			// partial precision
+      r0.xyz = r0.xyz - r1.xyz;			// partial precision
+      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
       r1.w = r1.w + r0.w;			// partial precision
     endif
     r0.xy = saturate(IN.texcoord_7);			// partial precision
     r0.xy = (const_16.ywzw * r0) + const_16.xzzw;			// partial precision
-    r0 = tex2D(DecalMap, r0);			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0);			// partial precision
     if_lt 7, r2.w
       r0.w = r0.w * IN.texcoord_7.z;			// partial precision
-      r0.xyz = r0 - r1;			// partial precision
-      OUT.color_0.rgb = (r0.w * r0) + r1;			// partial precision
+      r0.xyz = r0.xyz - r1.xyz;			// partial precision
+      OUT.color_0.rgb = (r0.w * r0.xyz) + r1.xyz;			// partial precision
       r0.w = r1.w + r0.w;			// partial precision
       OUT.color_0.a = saturate(r0.w);			// partial precision
     else
-      OUT.color_0.rgb = r1;			// partial precision
+      OUT.color_0.rgb = r1.xyz;			// partial precision
       r0.w = r1.w;			// partial precision
       OUT.color_0.a = saturate(r0.w);			// partial precision
     endif

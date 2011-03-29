@@ -33,19 +33,19 @@
     sampler2D AttMapXY;
     sampler2D AttMapZ;
     samplerCUBE NormalCubeMap;
-    r3 = tex2D(NormalMap, IN.texcoord_0);
-    r2 = texCUBE(NormalCubeMap, IN.texcoord_3);
-    r0 = tex2D(AttMapXY, IN.texcoord_1);
-    r1 = tex2D(AttMapZ, IN.texcoord_2);
-    r3.xyz = r3 + -0.5;
-    r3.xyz = r3 + r3;
-    r2.xyz = r2 + -0.5;
-    r2.xyz = r2 + r2;
-    r2.x = saturate(dot(r3, r2));
-    r2.xyz = r2.x * PSLightColor[0];
-    r0.xyz = r0 * r1;
-    r0.xyz = r2 * r0;
+    r3.xyzw = tex2D(NormalMap, IN.texcoord_0);
+    r2.xyzw = texCUBE(NormalCubeMap, IN.texcoord_3);
+    r0.xyzw = tex2D(AttMapXY, IN.texcoord_1);
+    r1.xyzw = tex2D(AttMapZ, IN.texcoord_2);
+    r3.xyz = r3.xyz + -0.5;
+    r3.xyz = r3.xyz + r3.xyz;
+    r2.xyz = r2.xyz + -0.5;
+    r2.xyz = r2.xyz + r2.xyz;
+    r2.x = saturate(dot(r3.xyz, r2.xyz));
+    r2.xyz = r2.x * PSLightColor[0].rgb;
+    r0.xyz = r0.xyz * r1.xyz;
+    r0.xyz = r2.xyz * r0.xyz;
     r0.w = PSLightColor[0].a;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 14 instruction slots used (4 texture, 10 arithmetic)

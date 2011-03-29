@@ -18,8 +18,8 @@
 //   DiffuseMap   texture_0       1
 //
 
-    IN.texcoord_0 = tex2D(DiffuseMap, texcoord_0);
-    r0.xyz = AmbientColor;
+    IN.texcoord_0.xyzw = tex2D(DiffuseMap, texcoord_0);
+    r0.xyz = AmbientColor.rgb;
   + r0.w = IN.texcoord_0.w;
 
 // approximately 2 instruction slots used (1 texture, 1 arithmetic)

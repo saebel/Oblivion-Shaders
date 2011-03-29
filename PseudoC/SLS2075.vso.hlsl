@@ -28,27 +28,27 @@
     const int4 const_4 = {0, 1, 0, 0};
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
-    r0.x = dot(ModelViewProj[0], IN.position);
-    r0.y = dot(ModelViewProj[1], IN.position);
-    r0.z = dot(ModelViewProj[2], IN.position);
-    r1.x = dot(r0, r0);	// normalize + length
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.w = 1.0 / sqrt(r1.x);
-    OUT.texcoord_1.x = dot(ObjToCubeSpace, IN.position);
+    OUT.texcoord_1.x = dot(ObjToCubeSpace.xyzw, IN.position.xyzw);
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r1.w = 1.0 / FogParam.y;
-    OUT.texcoord_1.y = dot(const_9, IN.position);
+    OUT.texcoord_1.y = dot(const_9.xyzw, IN.position.xyzw);
     r0.w = r0.w * r1.w;
-    OUT.texcoord_1.z = dot(const_10, IN.position);
+    OUT.texcoord_1.z = dot(const_10.xyzw, IN.position.xyzw);
     r0.w = max(r0.w, 0);
-    OUT.texcoord_1.w = dot(const_11, IN.position);
+    OUT.texcoord_1.w = dot(const_11.xyzw, IN.position.xyzw);
     r0.w = min(r0.w, 1);
-    OUT.position.xyz = r0;
+    OUT.position.xyz = r0.xyz;
     OUT.texcoord_3.w = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_6.xyz = IN.position;
-    OUT.texcoord_2 = LightPosition[0];
+    OUT.texcoord_2.xyzw = LightPosition[0].xyzw;
     OUT.texcoord_3.xyz = 0;
 
 // approximately 22 instruction slots used

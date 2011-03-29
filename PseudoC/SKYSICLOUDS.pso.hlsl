@@ -25,8 +25,8 @@
     float2 IN.texcoord_1 : TEXCOORD1;
     sampler2D TexMap;
     sampler2D TexMapBlend;
-    r1 = tex2D(TexMapBlend, IN.texcoord_1);
-    r0 = tex2D(TexMap, IN.texcoord_0);
+    r1.xyzw = tex2D(TexMapBlend, IN.texcoord_1);
+    r0.xyzw = tex2D(TexMap, IN.texcoord_0);
     r0.z = r1.w - r0.w;
     OUT.color_0.a = (Params.x * r0.z) + r0.w;
     OUT.color_0.rgb = 0;

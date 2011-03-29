@@ -32,28 +32,28 @@
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
-    r0.x = dot(ModelViewProj[0], IN.position);
-    r0.y = dot(ModelViewProj[1], IN.position);
-    r0.z = dot(ModelViewProj[2], IN.position);
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r2.x = dot(r0, r0);	// normalize + length
-    r1.x = dot(IN.tangent, LightDirection[0]);
+    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
+    r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r0.w = 1.0 / sqrt(r2.x);
-    r1.y = dot(IN.binormal, LightDirection[0]);
+    r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r1.w = 1.0 / FogParam.y;
-    r1.z = dot(IN.normal, LightDirection[0]);
+    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     r0.w = r0.w * r1.w;
     OUT.texcoord_3.xyz = (0.5 * r1) + 0.5;
     r0.w = max(r0.w, 0);
-    OUT.position.xyz = r0;
+    OUT.position.xyz = r0.xyz;
     r0.w = min(r0.w, 1);
     OUT.color_1.a = 1 - r0.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xy = IN.texcoord_0;
     OUT.texcoord_2.xy = IN.texcoord_0;
-    OUT.color_0 = IN.color_0;
-    OUT.color_1.rgb = FogColor;
+    OUT.color_0.rgba = IN.color_0;
+    OUT.color_1.rgb = FogColor.rgb;
 
 // approximately 23 instruction slots used

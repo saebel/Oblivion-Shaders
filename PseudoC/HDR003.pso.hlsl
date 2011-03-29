@@ -19,9 +19,9 @@
     const int4 const_0 = {1, 0, 0, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0 = tex2D(Src0, IN.texcoord_0);
+    r0.xyzw = tex2D(Src0, IN.texcoord_0);
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
     // - full screen Shader
     // - copy input to output, set w to 1

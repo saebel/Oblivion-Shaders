@@ -7,20 +7,20 @@
     float4 IN.color_1 : COLOR1;
     sampler2D texture_0;
     sampler2D texture_1;
-    r0 = tex2D(texture_1, IN.texcoord_1);			// partial precision
-    r1 = tex2D(texture_0, IN.texcoord_0);			// partial precision
+    r0.xyzw = tex2D(texture_1, IN.texcoord_1);			// partial precision
+    r1.xyzw = tex2D(texture_0, IN.texcoord_0);			// partial precision
     r0.xyz = (2 * r0) + -1;			// partial precision
     r2.xyz = normalize(r0);			// partial precision
     r0.xyz = (IN.texcoord_3 * 2) + -1;			// partial precision
-    r0.x = saturate(dot(r0, r2));			// partial precision
-    r0.xyz = r0.x * const_2;			// partial precision
-    r0.xyz = r1 * r0;			// partial precision
-    r0.xyz = r0 * IN.texcoord_2;			// partial precision
-    r1.x = dot(const_3, IN.color_0);			// partial precision
-    r1.y = dot(const_4, IN.color_1);			// partial precision
+    r0.x = saturate(dot(r0.xyz, r2.xyz));			// partial precision
+    r0.xyz = r0.x * const_2.xyz;			// partial precision
+    r0.xyz = r1.xyz * r0.xyz;			// partial precision
+    r0.xyz = r0.xyz * IN.texcoord_2;			// partial precision
+    r1.x = dot(const_3.xyzw, IN.color_0.rgba);			// partial precision
+    r1.y = dot(const_4.xyzw, IN.color_1.rgba);			// partial precision
     r1.x = r1.x + r1.y;			// partial precision
     r1.x = (r1.x * 2) + r1.w;			// partial precision
     r0.w = saturate(r1.x + -1);			// partial precision
-    OUT.color_0 = r0;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 17 instruction slots used (2 texture, 15 arithmetic)

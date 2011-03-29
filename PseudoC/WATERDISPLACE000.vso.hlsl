@@ -22,8 +22,8 @@
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
     r0.xyz = (IN.position.xyxw * const_0.xxyw) + const_0.yyxw;
-    OUT.position.x = dot(r0, TranslationMatrix[0]);
-    OUT.position.y = dot(r0, TranslationMatrix[1]);
+    OUT.position.x = dot(r0.xyz, TranslationMatrix[0].xyz);
+    OUT.position.y = dot(r0.xyz, TranslationMatrix[1].xyz);
     OUT.position.zw = IN.position;
     OUT.texcoord_0.xy = IN.texcoord_0;
 

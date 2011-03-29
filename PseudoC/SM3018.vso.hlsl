@@ -29,13 +29,13 @@
     float4 OUT.position : POSITION;
     float2 OUT.texcoord_0 : TEXCOORD0;
     float4 OUT.texcoord_1 : TEXCOORD1;
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
-    OUT.texcoord_1.x = dot(WorldView[0], IN.position);
-    OUT.texcoord_1.y = dot(WorldView[1], IN.position);
-    OUT.texcoord_1.z = dot(WorldView[2], IN.position);
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.x = dot(WorldView[0].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.y = dot(WorldView[1].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.z = dot(WorldView[2].xyzw, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.w = 0;
 

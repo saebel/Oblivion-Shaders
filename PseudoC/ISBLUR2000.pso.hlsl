@@ -21,14 +21,14 @@
     const float4 const_0 = {0.6, 0.73, 0.8, 1};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0 = tex2D(Src0, IN.texcoord_0);
-    r1.x = saturate(dot(const_0, r0));
+    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    r1.x = saturate(dot(const_0.xyz, r0.xyz));
     r1.w = r1.x * alphaAdd.y;
     r0.w = r0.w * alphaAdd.z;
     r0.w = (r1.w * r1.w) + r0.w;
     r0.w = r0.w + alphaAdd.x;
-    r0.xyz = r0 * r0.w;
+    r0.xyz = r0.xyz * r0.w;
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 9 instruction slots used (1 texture, 8 arithmetic)

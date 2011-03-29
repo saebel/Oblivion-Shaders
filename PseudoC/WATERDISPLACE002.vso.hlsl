@@ -20,6 +20,6 @@
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
     OUT.texcoord_0.xy = (IN.texcoord_0 * texRatio0) + texRatio0.zwzw;
-    OUT.position = IN.position;
+    OUT.position.xyzw = IN.position;
 
 // approximately 2 instruction slots used

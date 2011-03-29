@@ -21,16 +21,16 @@
     const float4 const_0 = {0.01, 1, 0, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0 = tex2D(Src0, IN.texcoord_0);
-    r1.x = dot(r0, r0);	// normalize + length
+    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
     r0.w = 1.0 / r0.w;
     r1.w = max(0.01, r0.w);
     r0.w = min(r1.w, HDRParam.x);
     r1.w = 1.0 / r1.w;
     r0.w = r0.w * r1.w;
-    r0.xyz = r0 * r0.w;
+    r0.xyz = r0.xyz * r0.w;
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

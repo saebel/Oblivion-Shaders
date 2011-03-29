@@ -9,6 +9,6 @@
     r0.w = r0.w * IN.texcoord_1.z;			// partial precision
     r0.xyz = saturate(r0.w);			// partial precision
     r0.w = 1;
-    OUT.color_0 = r0;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 5 instruction slots used

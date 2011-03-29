@@ -26,12 +26,12 @@
     r2.x = IN.texcoord_0.x;
     r0.x = IN.texcoord_0.y;
     r0.y = fPassNum.x;
-    r1 = tex2D(sampButterfly, r0);
+    r1.xyzw = tex2D(sampButterfly, r0);
     r2.y = abs(r1.x);
     r0.y = r1.y;
     r0.x = IN.texcoord_0.x;
-    r2 = tex2D(sampSourceImage, r2);
-    r0 = tex2D(sampSourceImage, r0);
+    r2.xyzw = tex2D(sampSourceImage, r2);
+    r0.xyzw = tex2D(sampSourceImage, r0);
     r3.w = r1.w * r2.w;
     r3.x = (r1.z * r2.x) - r3.w;
     r2.w = r1.z * r2.w;
@@ -41,6 +41,6 @@
     r1.y = r0.w + r1.y;
     r0.xyz = r1.x;
     r0.w = r1.y;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 19 instruction slots used (3 texture, 16 arithmetic)

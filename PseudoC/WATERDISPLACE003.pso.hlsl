@@ -23,24 +23,24 @@
     const float4 const_1 = {-(1.0 / 256), 0, 0, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D HeightMap;
-    r3.xy = IN.texcoord_0 + const_0;
-    r2.xy = IN.texcoord_0 - const_0;
-    r1.xy = IN.texcoord_0 + const_1;
-    r0.xy = IN.texcoord_0 - const_1;
-    r3 = tex2D(HeightMap, r3);
-    r4 = tex2D(HeightMap, r2);
-    r2 = tex2D(HeightMap, r1);
-    r1 = tex2D(HeightMap, r0);
-    r0 = tex2D(HeightMap, IN.texcoord_0);
+    r3.xy = IN.texcoord_0 + const_0.xy;
+    r2.xy = IN.texcoord_0 - const_0.xy;
+    r1.xy = IN.texcoord_0 + const_1.xy;
+    r0.xy = IN.texcoord_0 - const_1.xy;
+    r3.xyzw = tex2D(HeightMap, r3);
+    r4.xyzw = tex2D(HeightMap, r2);
+    r2.xyzw = tex2D(HeightMap, r1);
+    r1.xyzw = tex2D(HeightMap, r0);
+    r0.xyzw = tex2D(HeightMap, IN.texcoord_0);
     r1.w = r3.x + r4.x;
     r1.w = r2.x + r1.w;
     r1.w = r1.x + r1.w;
     r1.w = (r0.x * -4) + r1.w;
-    r0 = r0 + -0.5;
+    r0.xyzw = r0 + -0.5;
     r0.y = (RainVars.x * r1.w) + r0.y;
     r0.x = (RainVars.y * r0.y) + r0.x;
     r1.x = -0.5;
-    r0 = (RainVars.z * r0) - r1.x;
-    OUT.color_0 = r0;
+    r0.xyzw = (RainVars.z * r0) - r1.x;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 19 instruction slots used (5 texture, 14 arithmetic)

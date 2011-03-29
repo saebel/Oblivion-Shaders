@@ -23,16 +23,16 @@
     float3 IN.texcoord_0 : TEXCOORD0;			// partial precision
     float2 IN.texcoord_1 : TEXCOORD1;			// partial precision
     sampler2D NormalMap;
-    r0 = tex2D(NormalMap, IN.texcoord_0);
-    r0.xy = r0 + -0.5;
-    r0.xy = r0 + r0;			// partial precision
-    r1.xy = min(r0, 0.1);			// partial precision
-    r0.xy = max(-0.1, r1);			// partial precision
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);
+    r0.xy = r0.xy + -0.5;
+    r0.xy = r0.xy + r0.xy;			// partial precision
+    r1.xy = min(r0.xy, 0.1);			// partial precision
+    r0.xy = max(-0.1, r1.xy);			// partial precision
     r0.xy = (1.0 - 0.1 * r0) + IN.texcoord_1;			// partial precision
     r0.w = 1.0 / IN.texcoord_0.z;			// partial precision
-    r0.xy = r0 * r0.w;			// partial precision
+    r0.xy = r0.xy * r0.w;			// partial precision
     OUT.color_0.xy = (--0.5 * r0) - -0.5;			// partial precision
-    r0.xy = const_1;
+    r0.xy = const_1.xy;
     OUT.color_0.zw = (PSRefractionPower.x * r0.xyxy) + r0.xyyx;			// partial precision
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

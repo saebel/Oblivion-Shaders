@@ -22,18 +22,18 @@
     float2 texcoord_0 : TEXCOORD0;
     float3 texcoord_1 : TEXCOORD1;
     sampler2D NormalMap;
-    r1 = tex2D(NormalMap, IN.texcoord_0);
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);
     r0.xyz = IN.texcoord_1 + -0.5;
-    r2.xyz = r0 + r0;
-    r0.xyz = r1 + -0.5;
-    r0.xyz = r0 + r0;
-    r0.x = saturate(dot(r0, r2));
+    r2.xyz = r0.xyz + r0.xyz;
+    r0.xyz = r1.xyz + -0.5;
+    r0.xyz = r0.xyz + r0.xyz;
+    r0.x = saturate(dot(r0.xyz, r2.xyz));
     r0.w = r0.x * r0.x;
     r0.w = r0.w * r0.w;
     r2.w = r0.w * r0.w;
     r2.w = r2.w * LightColor.r;
     r0.w = r1.w * r0.w;
     r0.xyz = r1.w * r2.w;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 13 instruction slots used (1 texture, 12 arithmetic)

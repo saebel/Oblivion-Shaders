@@ -35,14 +35,14 @@
     r2.xy = IN.texcoord_0 + fResolution.x;
     r1.x = IN.texcoord_0.x;
     r0.x = IN.texcoord_0.x;
-    r6 = tex2D(amplitudeSamp, r6);
-    r7 = tex2D(amplitudeSamp, r7);
-    r5 = tex2D(amplitudeSamp, r5);
-    r4 = tex2D(amplitudeSamp, r4);
-    r3 = tex2D(amplitudeSamp, r3);
-    r2 = tex2D(amplitudeSamp, r2);
-    r1 = tex2D(amplitudeSamp, r1);
-    r0 = tex2D(amplitudeSamp, r0);
+    r6.xyzw = tex2D(amplitudeSamp, r6);
+    r7.xyzw = tex2D(amplitudeSamp, r7);
+    r5.xyzw = tex2D(amplitudeSamp, r5);
+    r4.xyzw = tex2D(amplitudeSamp, r4);
+    r3.xyzw = tex2D(amplitudeSamp, r3);
+    r2.xyzw = tex2D(amplitudeSamp, r2);
+    r1.xyzw = tex2D(amplitudeSamp, r1);
+    r0.xyzw = tex2D(amplitudeSamp, r0);
     r0.w = abs(r7.x);
     r3.w = abs(r6.x);
     r1.w = abs(r5.x);
@@ -64,11 +64,11 @@
     r0.w = (r2.w * 1.6) + r3.w;
     r0.y = (r1.w * 0.8) + r0.w;
     r0.z = 1;
-    r1.x = dot(r0, r0);	// normalize + length
+    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.z = 1.0 / sqrt(r1.x);
-    r0.xy = r0 * r0.z;
+    r0.xy = r0.xy * r0.z;
     r0.xyz = (0.5 * r0) + 0.5;
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 48 instruction slots used (8 texture, 40 arithmetic)

@@ -22,14 +22,14 @@
     float2 texcoord_0 : TEXCOORD0;
     float3 texcoord_1 : TEXCOORD1;
     sampler2D NormalMap;
-    r0 = tex2D(NormalMap, IN.texcoord_0);
-    r0.xyz = r0 + -0.5;
-    r0.xyz = r0 + r0;
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);
+    r0.xyz = r0.xyz + -0.5;
+    r0.xyz = r0.xyz + r0.xyz;
     r1.xyz = IN.texcoord_1 + -0.5;
-    r1.xyz = r1 + r1;
-    r0.x = saturate(dot(r0, r1));
-    r0.xyz = r0.x * PSLightColor[0];
+    r1.xyz = r1.xyz + r1.xyz;
+    r0.x = saturate(dot(r0.xyz, r1.xyz));
+    r0.xyz = r0.x * PSLightColor[0].rgb;
     r0.w = PSLightColor[0].a;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 9 instruction slots used (1 texture, 8 arithmetic)

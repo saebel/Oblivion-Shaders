@@ -18,7 +18,7 @@
 
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0 = tex2D(Src0, IN.texcoord_0);
-    OUT.color_0 = r0;
+    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 2 instruction slots used (1 texture, 1 arithmetic)

@@ -23,11 +23,11 @@
     r0.xy = saturate(IN.texcoord_0);			// partial precision
     r0.x = (PSDecalOffsets.y * r0.x) + PSDecalOffsets.x;			// partial precision
     r0.y = (PSDecalOffsets.w * r0.y) + PSDecalOffsets.z;			// partial precision
-    r1 = tex2D(DecalMap, r0);			// partial precision
-    r0.xyz = r1;			// partial precision
+    r1.xyzw = tex2D(DecalMap, r0);			// partial precision
+    r0.xyz = r1.xyz;			// partial precision
     r0.w = IN.texcoord_0.z;			// partial precision
-    r0 = r0 * IN.texcoord_0.z;			// partial precision
+    r0.xyzw = r0 * IN.texcoord_0.z;			// partial precision
     r0.w = r1.w * r0.w;			// partial precision
-    OUT.color_0 = r0;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 9 instruction slots used (1 texture, 8 arithmetic)

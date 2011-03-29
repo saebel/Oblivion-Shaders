@@ -27,23 +27,23 @@
     float4 texcoord_3 : TEXCOORD3;
     sampler2D NormalMap;
     samplerCUBE EnvironmentCubeMap;
-    r1 = tex2D(NormalMap, IN.texcoord_0);
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);
     r2.x = IN.texcoord_1.w;
     r2.y = IN.texcoord_2.w;
     r2.z = IN.texcoord_3.w;
     r1.xyz = (2 * r1) + -1;
-    r0.x = dot(r1, IN.texcoord_1);
-    r0.y = dot(r1, IN.texcoord_2);
-    r0.z = dot(r1, IN.texcoord_3);
-    r3.x = dot(r0, r2);
-    r1.x = dot(r0, r0);	// normalize + length
+    r0.x = dot(r1.xyz, IN.texcoord_1.xyz);
+    r0.y = dot(r1.xyz, IN.texcoord_2.xyz);
+    r0.z = dot(r1.xyz, IN.texcoord_3.xyz);
+    r3.x = dot(r0.xyz, r2.xyz);
+    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = r3.x + r3.x;
-    r1.xyz = r2 * r1.x;
-    r0.xyz = (r0.w * r0) - r1;
-    r0 = texCUBE(EnvironmentCubeMap, r0);
-    r0.xyz = r1.w * r0;
-    r0.xyz = r0 * AmbientColor.a;
+    r1.xyz = r2.xyz * r1.x;
+    r0.xyz = (r0.w * r0.xyz) - r1.xyz;
+    r0.xyzw = texCUBE(EnvironmentCubeMap, r0);
+    r0.xyz = r1.w * r0.xyz;
+    r0.xyz = r0.xyz * AmbientColor.a;
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 18 instruction slots used (2 texture, 16 arithmetic)

@@ -28,29 +28,29 @@
     float3 IN.binormal : BINORMAL;
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.x = dot(IN.tangent, LightDirection[0]);
-    r0.y = dot(IN.binormal, LightDirection[0]);
-    r0.z = dot(IN.normal, LightDirection[0]);
-    r1.xyz = EyePosition - IN.position;
-    r2.x = dot(r1, r1);	// normalize + length
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
+    r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
+    r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
+    r1.xyz = EyePosition.xyz - IN.position;
+    r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r2.x);
     r3.xyz = normalize(r0);
-    OUT.texcoord_1.xyz = r3;
-    r0.xyz = (r0.w * r1) + LightDirection[0];
-    r2.xyz = r1 * r0.w;
+    OUT.texcoord_1.xyz = r3.xyz;
+    r0.xyz = (r0.w * r1.xyz) + LightDirection[0].xyz;
+    r2.xyz = r1.xyz * r0.w;
     r1.xyz = normalize(r0);
-    OUT.texcoord_3.x = dot(IN.tangent, r1);
-    r0.x = dot(IN.tangent, r2);
-    r0.y = dot(IN.binormal, r2);
-    r0.z = dot(IN.normal, r2);
-    OUT.texcoord_3.y = dot(IN.binormal, r1);
-    OUT.texcoord_3.z = dot(IN.normal, r1);
+    OUT.texcoord_3.x = dot(IN.tangent.xyz, r1.xyz);
+    r0.x = dot(IN.tangent.xyz, r2.xyz);
+    r0.y = dot(IN.binormal.xyz, r2.xyz);
+    r0.z = dot(IN.normal.xyz, r2.xyz);
+    OUT.texcoord_3.y = dot(IN.binormal.xyz, r1.xyz);
+    OUT.texcoord_3.z = dot(IN.normal.xyz, r1.xyz);
     r3.xyz = normalize(r0);
-    OUT.texcoord_7.xyz = r3;
+    OUT.texcoord_7.xyz = r3.xyz;
     OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 30 instruction slots used

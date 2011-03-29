@@ -24,9 +24,9 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 OUT.position : POSITION;
     float2 OUT.texcoord_0 : TEXCOORD0;
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
-    r0.w = dot(ModelViewProj[3], IN.position);
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    r0.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.zw = r0.w * ModelViewProj[2].xyxy;
     OUT.texcoord_0.xy = IN.texcoord_0;
 

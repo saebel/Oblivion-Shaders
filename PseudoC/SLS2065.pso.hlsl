@@ -4,7 +4,7 @@
 //   vsa shaderdump19/SLS2065.pso /Fcshaderdump19/SLS2065.pso.dis
 //
     const float4 const_0 = {0.5, 0.5, 0, 0};
-    r0 = const_0;			// partial precision
-    OUT.color_0 = r0;			// partial precision
+    r0.xyzw = const_0.xyzw;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 2 instruction slots used

@@ -30,31 +30,31 @@
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
-    r1.w = dot(const_11, IN.position);
-    r1.x = dot(ObjToCubeSpace, IN.position);
-    r1.y = dot(const_9, IN.position);
-    r1.z = dot(const_10, IN.position);
-    r0 = r1 - BoundWorldCenter;
-    r0.w = dot(r0, r0);	// normalize + length
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    r1.w = dot(const_11.xyzw, IN.position.xyzw);
+    r1.x = dot(ObjToCubeSpace.xyzw, IN.position.xyzw);
+    r1.y = dot(const_9.xyzw, IN.position.xyzw);
+    r1.z = dot(const_10.xyzw, IN.position.xyzw);
+    r0.xyzw = r1 - BoundWorldCenter;
+    r0.w = dot(r0.xyzw, r0.xyzw);	// normalize + length
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.w = 1.0 / sqrt(r0.w);
-    r2.xyz = EyePosition - r1;
-    r1.xyz = r0 * r0.w;
+    r2.xyz = EyePosition.xyz - r1.xyz;
+    r1.xyz = r0.xyz * r0.w;
     r0.xyz = normalize(r2);
-    r3.x = dot(r1, r1);	// normalize + length
-    r2.x = dot(r1, r0);
+    r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
+    r2.x = dot(r1.xyz, r0.xyz);
     r0.w = 1.0 / sqrt(r3.x);
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.w = (r2.x * r0.w) + -0.8;
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     r0.w = r0.w * 6.66666651;
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.w = max(r0.w, 0);
     OUT.texcoord_1.xyz = (0.5 * r1) + 0.5;
     r1.w = min(r0.w, 1);
     r0.w = (r1.w * -2) + 3;
     r1.w = r1.w * r1.w;
-    OUT.texcoord_2.xyz = r0;
+    OUT.texcoord_2.xyz = r0.xyz;
     OUT.texcoord_1.w = r0.w * r1.w;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.color_0.rgb = IN.color_0;

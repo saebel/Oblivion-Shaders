@@ -22,13 +22,13 @@
 //   NormalMap    texture_1       1
 //
 
-    IN.texcoord_0 = tex2D(BaseMap, texcoord_0);
-    IN.texcoord_1 = tex2D(BaseMap, texcoord_0);
+    IN.texcoord_0.xyzw = tex2D(BaseMap, texcoord_0);
+    IN.texcoord_1.xyzw = tex2D(BaseMap, texcoord_0);
     texcoord IN.texcoord_3
-    r0.xyz = saturate(dot(2 * ((IN.texcoord_1) - 0.5), 2 * ((IN.texcoord_3) - 0.5)));
+    r0.xyz = saturate(dot(2 * ((IN.texcoord_1.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
     r0.xyz = saturate((PSLightColor[0] * r0) + AmbientColor);
     r1.xyz = IN.texcoord_0 * IN.input_0;
   + r0.w = IN.texcoord_0.w;
-    r0.xyz = r0 * r1;
+    r0.xyz = r0.xyz * r1.xyz;
 
 // approximately 7 instruction slots used (3 texture, 4 arithmetic)

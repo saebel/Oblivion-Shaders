@@ -31,27 +31,27 @@
     float4 IN.texcoord_1 : TEXCOORD1;
     float4 IN.texcoord_2 : TEXCOORD2;
     r0.xy = ShadowProjTransform.zwzw - IN.position;
-    r0.xy = r0 * r0;
+    r0.xy = r0.xy * r0.xy;
     r0.w = r0.y + r0.x;
     r0.w = 1.0 / sqrt(r0.w);
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.w = 1.0 / r0.w;
     r0.w = ShadowProjData.x - r0.w;
     r1.w = 1.0 / ShadowProjData.y;
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.w = r0.w * r1.w;
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     r0.w = max(r0.w, 0);
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.w = min(r0.w, 1);
     OUT.texcoord_2.w = 1 - r0.w;
     r0.w = 0.001953125;
-    r0.xy = (IN.texcoord_0 * r0.w) + ShadowProjTransform;
-    OUT.texcoord_0.xy = r0;
-    OUT.texcoord_1.xy = r0;
+    r0.xy = (IN.texcoord_0 * r0.w) + ShadowProjTransform.xy;
+    OUT.texcoord_0.xy = r0.xy;
+    OUT.texcoord_1.xy = r0.xy;
     OUT.texcoord_2.xyz = 1;
-    OUT.texcoord_3.xyz = LightDirection[0];
-    OUT.color_0 = IN.texcoord_1;
-    OUT.color_1 = IN.texcoord_2;
+    OUT.texcoord_3.xyz = LightDirection[0].xyz;
+    OUT.color_0.rgba = IN.texcoord_1;
+    OUT.color_1.rgba = IN.texcoord_2;
 
 // approximately 23 instruction slots used

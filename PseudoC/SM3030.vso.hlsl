@@ -25,11 +25,11 @@
     float4 OUT.position : POSITION;
     float2 OUT.texcoord_0 : TEXCOORD0;
     float4 OUT.color_0 : COLOR0;
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0 = 1;
+    OUT.color_0.rgba = 1;
 
 // approximately 6 instruction slots used

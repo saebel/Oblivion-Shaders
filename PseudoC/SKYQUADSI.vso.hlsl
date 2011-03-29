@@ -6,6 +6,6 @@
     const int4 const_0 = {1, 0, 0, 0};
     float4 IN.position : POSITION;
     float4 OUT.position : POSITION;
-    OUT.position = (IN.position.xyzx * const_0.xxxy) + const_0.yyyx;
+    OUT.position.xyzw = (IN.position.xyzx * const_0.xxxy) + const_0.yyyx;
 
 // approximately 1 instruction slot used

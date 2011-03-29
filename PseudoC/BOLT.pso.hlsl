@@ -27,9 +27,9 @@
     r0.w = r1.w * r1.w;			// partial precision
     r0.w = r0.w * r0.w;			// partial precision
     r0.w = r1.w * r0.w;			// partial precision
-    r0.xyz = r1.w * GlowColor;			// partial precision
-    r0.xyz = (r0.w * CoreColor) + r0;			// partial precision
+    r0.xyz = r1.w * GlowColor.rgb;			// partial precision
+    r0.xyz = (r0.w * CoreColor.rgb) + r0.xyz;			// partial precision
     r0.w = IN.color_0.a;			// partial precision
-    OUT.color_0 = r0;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 10 instruction slots used

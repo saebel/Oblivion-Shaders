@@ -29,20 +29,20 @@
     float3 IN.binormal : BINORMAL;
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
-    r0.xyz = EyePosition - IN.position;
-    r1.x = dot(r0, r0);	// normalize + length
+    r0.xyz = EyePosition.xyz - IN.position;
+    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
-    r0.xyz = (r0.w * r0) + LightDirection[0];
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    r1.x = dot(r0, r0);	// normalize + length
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
+    r0.xyz = (r0.w * r0.xyz) + LightDirection[0].xyz;
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.w = 1.0 / sqrt(r1.x);
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
-    r1.xyz = r0 * r0.w;
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.x = dot(IN.tangent, r1);
-    r0.y = dot(IN.binormal, r1);
-    r0.z = dot(IN.normal, r1);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    r1.xyz = r0.xyz * r0.w;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r0.x = dot(IN.tangent.xyz, r1.xyz);
+    r0.y = dot(IN.binormal.xyz, r1.xyz);
+    r0.z = dot(IN.normal.xyz, r1.xyz);
     OUT.texcoord_1.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
 

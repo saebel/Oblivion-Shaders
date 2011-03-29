@@ -40,38 +40,38 @@
     float2 texcoord_6 : TEXCOORD6;
     sampler2D NormalMap;
     sampler2D DetailMap;
-    r0.xy = EyePos - IN.texcoord_1;
+    r0.xy = EyePos.xy - IN.texcoord_1;
     r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r1.w = saturate((r0.w * -(1.0 / 8192)) - -1);
     r2.w = r1.w * r1.w;
-    r1.xy = IN.texcoord_6 + Scroll;
-    r0 = tex2D(NormalMap, r1);
+    r1.xy = IN.texcoord_6 + Scroll.xy;
+    r0.xyzw = tex2D(NormalMap, r1);
     r0.xyz = (2 * r0) + -1;
-    r0.xy = r2.w * r0;
+    r0.xy = r2.w * r0.xy;
     r2.xyz = normalize(r0);
-    r0.xy = (0.1 * r2) + r1;
-    r0 = tex2D(DetailMap, r0);
+    r0.xy = (0.1 * r2.xy) + r1.xy;
+    r0.xyzw = tex2D(DetailMap, r0);
     r3.w = saturate(r2.y + r2.y);
-    r1.xyz = EyePos - IN.texcoord_1;
+    r1.xyz = EyePos.xyz - IN.texcoord_1;
     r4.w = r1.w * VarAmounts.w;
-    r3.x = dot(r1, r1);	// normalize + length
+    r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r2.w = 1.0 / sqrt(r3.x);
-    r3.xyz = DeepColor;
-    r3.xyz = ShallowColor - r3;
+    r3.xyz = DeepColor.rgb;
+    r3.xyz = ShallowColor.rgb - r3.xyz;
     r0.w = 1.0 / r2.w;
-    r4.xyz = (r3.w * r3) + DeepColor;			// partial precision
+    r4.xyz = (r3.w * r3.xyz) + DeepColor.rgb;			// partial precision
     r0.w = FogParam.x - r0.w;
     r3.xyz = lerp(r0, r4, r4.w);
     r3.w = 1.0 / FogParam.y;
-    r0.xyz = FogColor - r3;
+    r0.xyz = FogColor.rgb - r3.xyz;
     r0.w = saturate(r0.w * r3.w);
-    r1.xyz = r1 * r2.w;
+    r1.xyz = r1.xyz * r2.w;
     r0.w = -(r0.w + -1);
-    r0.xyz = (r0.w * r0) + r3;
+    r0.xyz = (r0.w * r0.xyz) + r3.xyz;
     r2.w = r1.w * r0.x;
-    r1.x = saturate(dot(r1, r2));
+    r1.x = saturate(dot(r1.xyz, r2.xyz));
     r0.w = -(r1.x + -1);
     r1.w = r0.w * r0.w;
     r1.w = r1.w * r1.w;
@@ -81,6 +81,6 @@
     r0.x = (r2.w * 0.2) + r0.x;
     r1.w = (r0.w * r1.w) + FresnelRI.x;
     r0.w = max(VarAmounts.z, r1.w);
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 45 instruction slots used (2 texture, 43 arithmetic)

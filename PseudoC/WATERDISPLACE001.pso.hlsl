@@ -5,7 +5,7 @@
 //    /Fcshaderdump19/WATERDISPLACE001.pso.dis
 //
     const float4 const_0 = {1.0 - 0.1, 0.5, 0.5, 0.5};
-    r0 = const_0;
-    OUT.color_0 = r0;
+    r0.xyzw = const_0.xyzw;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 2 instruction slots used

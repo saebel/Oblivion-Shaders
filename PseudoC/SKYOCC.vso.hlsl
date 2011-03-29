@@ -21,9 +21,9 @@
 
     float4 IN.position : POSITION;
     float4 OUT.position : POSITION;
-    r0.x = dot(ModelViewProj[0], IN.position);
-    r0.y = dot(ModelViewProj[1], IN.position);
-    r0.z = dot(ModelViewProj[3], IN.position);
-    OUT.position = r0.xyzz;
+    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    r0.z = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.position.xyzw = r0.xyzz;
 
 // approximately 4 instruction slots used

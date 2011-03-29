@@ -25,11 +25,11 @@
     float3 IN.color_1 : COLOR1;
     float2 texcoord_0 : TEXCOORD0;
     sampler2D DiffuseMap;
-    r0 = tex2D(DiffuseMap, IN.texcoord_0);
-    r1.xyz = PSLightColor[0];
-    r1.xyz = (IN.color_0 * r1) + AmbientColor;
-    r1.xyz = (IN.color_1 * PSLightColor[1]) + r1;
-    r0.xyz = r0 * r1;
-    OUT.color_0 = r0;
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);
+    r1.xyz = PSLightColor[0].rgb;
+    r1.xyz = (IN.color_0 * r1.xyz) + AmbientColor.rgb;
+    r1.xyz = (IN.color_1 * PSLightColor[1].rgb) + r1.xyz;
+    r0.xyz = r0.xyz * r1.xyz;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 6 instruction slots used (1 texture, 5 arithmetic)

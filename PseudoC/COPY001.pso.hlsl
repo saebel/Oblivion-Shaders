@@ -19,7 +19,7 @@
     const int4 const_0 = {1, -1, 0, 0};
     float2 IN.texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0 = tex2D(Src0, IN.texcoord_0);
-    OUT.color_0 = (r0.xyzx * const_0.xxxy) + const_0.zzzx;
+    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    OUT.color_0.rgba = (r0.xyzx * const_0.xxxy) + const_0.zzzx;
 
 // approximately 2 instruction slots used (1 texture, 1 arithmetic)

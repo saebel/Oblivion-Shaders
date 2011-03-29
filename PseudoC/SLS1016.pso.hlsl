@@ -30,20 +30,20 @@
     float4 IN.color_1 : COLOR1;
     sampler2D BaseMap;
     sampler2D NormalMap;
-    r1 = tex2D(NormalMap, IN.texcoord_1);
-    r0 = tex2D(BaseMap, IN.texcoord_0);
-    r1.xyz = r1 + -0.5;
-    r1.xyz = r1 + r1;
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_1);
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);
+    r1.xyz = r1.xyz + -0.5;
+    r1.xyz = r1.xyz + r1.xyz;
     r2.xyz = IN.texcoord_3 + -0.5;
-    r2.xyz = r2 + r2;
-    r2.x = saturate(dot(r1, r2));
-    r1.xyz = AmbientColor;
+    r2.xyz = r2.xyz + r2.xyz;
+    r2.x = saturate(dot(r1.xyz, r2.xyz));
+    r1.xyz = AmbientColor.rgb;
     r1.xyz = saturate((r2.x * PSLightColor[0]) + r1);
-    r0.xyz = r0 * IN.color_0;
+    r0.xyz = r0.xyz * IN.color_0;
     r2.xyz = (-r0 * r1) + IN.color_1;
-    r2.xyz = r2 * IN.color_1.a;
+    r2.xyz = r2.xyz * IN.color_1.a;
     r0.w = r0.w * AmbientColor.a;
-    r0.xyz = (r0 * r1) + r2;
-    OUT.color_0 = r0;
+    r0.xyz = (r0.xyz * r1.xyz) + r2.xyz;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 15 instruction slots used (2 texture, 13 arithmetic)

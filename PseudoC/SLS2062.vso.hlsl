@@ -28,16 +28,16 @@
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.x = dot(IN.tangent, LightDirection[0]);
-    r0.y = dot(IN.binormal, LightDirection[0]);
-    r0.z = dot(IN.normal, LightDirection[0]);
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
+    r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
+    r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     OUT.texcoord_3.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_1.xy = IN.texcoord_0;
-    OUT.texcoord_2 = (IN.color_0.xyzx * const_4.yyyz) + const_4.zzzy;
+    OUT.texcoord_2.xyzw = (IN.color_0.xyzx * const_4.yyyz) + const_4.zzzy;
 
 // approximately 11 instruction slots used

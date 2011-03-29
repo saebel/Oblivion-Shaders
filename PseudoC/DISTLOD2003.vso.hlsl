@@ -44,45 +44,45 @@
     float4 IN.color_0 : COLOR0;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.texcoord_1 : TEXCOORD1;
-    r2.xyw = const_6;
+    r2.xyw = const_6.xyw;
     r0.xyz = r2.xxyw * EyeDir.xyxw;
-    r0.x = dot(r0, r0);	// normalize + length
+    r0.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r0.x);
     r1.xz = r0.w * -EyeDir.xyyw;
     r1.yw = r1.z * const_6.xxzy;
     r0.xyz = r1.zxww * const_6.xzzw;
-    r1.x = dot(r1.yxww, r0);
+    r1.x = dot(r1.yxww.xyz, r0.xyz);
     r0.w = 1.0 / sqrt(r1.x);
-    r1.xy = r0 * r0.w;
-    r2.y = dot(r1.yzww, IN.position);
+    r1.xy = r0.xy * r0.w;
+    r2.y = dot(r1.yzww.xyz, IN.position.xyz);
     r0.w = r1.x;
     r1.w = frac(IN.texcoord_1.x);
-    r2.x = dot(r0.wyzw, IN.position);
+    r2.x = dot(r0.wyzw.xyz, IN.position.xyz);
     r0.w = IN.texcoord_1.x - r1.w;
     r2.z = IN.position.z;
     offset.w = r0.w;
     r0.w = r2.w * InstanceData[0 + offset.w].w;
-    r1 = frac(InstanceData[0 + offset.w]);
+    r1.xyzw = frac(InstanceData[0 + offset.w]);
     r0.xyz = (r0.w * r2) + InstanceData[0 + offset.w];
-    r1.xyz = r1 + -0.5;
+    r1.xyz = r1.xyz + -0.5;
     r0.w = IN.position.w;
-    r1.xyz = r1 + r1;
-    OUT.position.w = dot(ModelViewProj[3], r0);
-    r2.x = dot(DiffuseDir, r1);
+    r1.xyz = r1.xyz + r1.xyz;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
+    r2.x = dot(DiffuseDir.xyz, r1.xyz);
     r1.xyz = InstanceData[0 + offset.w];
-    r1.xyz = EyePos - r1;
+    r1.xyz = EyePos.xyz - r1.xyz;
     r2.xyz = r2.x * IN.color_0;
-    r3.xyz = r1.w * r2;
-    r2.x = dot(ModelViewProj[0], r0);
-    r2.y = dot(ModelViewProj[1], r0);
-    r2.z = dot(ModelViewProj[2], r0);
-    r0.xyz = DiffuseColor;
-    OUT.texcoord_4.xyz = (r0 * r3) + AmbientColor;
-    r0.x = dot(r2, r2);	// normalize + length
-    OUT.position.xyz = r2;
+    r3.xyz = r1.w * r2.xyz;
+    r2.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
+    r2.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
+    r2.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
+    r0.xyz = DiffuseColor.rgb;
+    OUT.texcoord_4.xyz = (r0.xyz * r3.xyz) + AmbientColor.rgb;
+    r0.x = dot(r2.xyz, r2.xyz);	// normalize + length
+    OUT.position.xyz = r2.xyz;
     r0.w = 1.0 / sqrt(r0.x);
     r0.w = 1.0 / r0.w;
-    r0.x = dot(r1, r1);	// normalize + length
+    r0.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r2.w = FogParam.x - r0.w;
     r0.w = 1.0 / sqrt(r0.x);
     r4.w = 1.0 / FogParam.y;
@@ -102,6 +102,6 @@
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_4.w = 1;
     OUT.texcoord_5.xyz = 0;
-    OUT.color_0.rgb = FogColor;
+    OUT.color_0.rgb = FogColor.rgb;
 
 // approximately 59 instruction slots used

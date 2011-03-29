@@ -4,7 +4,7 @@
 //   psa shaderdump19/SLS1038.pso /Fcshaderdump19/SLS1038.pso.dis
 //
     const int4 const_0 = {0, 0, 0, 0};
-    r0 = 0;
-    OUT.color_0 = r0;
+    r0.xyzw = 0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 2 instruction slots used

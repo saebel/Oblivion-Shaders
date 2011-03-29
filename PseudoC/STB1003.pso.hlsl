@@ -27,15 +27,15 @@
 //   NormalCubeMap texture_3       1
 //
 
-    IN.texcoord_0 = tex2D(NormalMap, texcoord_0);
-    IN.texcoord_1 = tex2D(NormalMap, texcoord_0);
-    IN.texcoord_2 = tex2D(NormalMap, texcoord_0);
-    IN.texcoord_3 = tex2D(NormalMap, texcoord_0);
-    r0.xyz = saturate(dot(2 * ((IN.texcoord_0) - 0.5), 2 * ((IN.texcoord_3) - 0.5)));
+    IN.texcoord_0.xyzw = tex2D(NormalMap, texcoord_0);
+    IN.texcoord_1.xyzw = tex2D(NormalMap, texcoord_0);
+    IN.texcoord_2.xyzw = tex2D(NormalMap, texcoord_0);
+    IN.texcoord_3.xyzw = tex2D(NormalMap, texcoord_0);
+    r0.xyz = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
     r1.xyz = IN.texcoord_1 * IN.texcoord_2;
-    r0.xyz = r0 * r1;
-    r1.xyz = saturate(dot(2 * ((IN.texcoord_0) - 0.5), 2 * ((IN.input_0) - 0.5)));
-    r1.xyz = (PSLightColor[0] * r1) + AmbientColor;
+    r0.xyz = r0.xyz * r1.xyz;
+    r1.xyz = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.input_0.xyz) - 0.5)));
+    r1.xyz = (PSLightColor[0].rgb * r1.xyz) + AmbientColor.rgb;
     r0.xyz = saturate((PSLightColor[1] * r0) + r1);
   + r0.w = AmbientColor.a;
 

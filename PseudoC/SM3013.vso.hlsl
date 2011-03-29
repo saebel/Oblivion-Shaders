@@ -36,25 +36,25 @@
     float3 OUT.texcoord_6 : TEXCOORD6;
     float4 OUT.texcoord_1 : TEXCOORD1;
     float4 OUT.texcoord_2 : TEXCOORD2;
-    r0.x = dot(ModelViewProj[0], IN.position);
-    r0.y = dot(ModelViewProj[1], IN.position);
-    r0.z = dot(ModelViewProj[2], IN.position);
-    r0.w = dot(r0, r0);	// normalize + length
+    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    r0.w = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r0.w = FogParam.x - r0.w;
     r1.w = 1.0 / FogParam.y;
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.w = saturate(r0.w * r1.w);
-    OUT.position.xyz = r0;
+    OUT.position.xyz = r0.xyz;
     r0.w = 1 - r0.w;
     OUT.texcoord_2.w = r0.w * FogParam.z;
-    OUT.texcoord_1.x = dot(ObjToCubeMap[0], IN.position);
-    OUT.texcoord_1.y = dot(ObjToCubeMap[1], IN.position);
-    OUT.texcoord_1.z = dot(ObjToCubeMap[2], IN.position);
-    OUT.texcoord_1.w = dot(ObjToCubeMap[3], IN.position);
+    OUT.texcoord_1.x = dot(ObjToCubeMap[0].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.y = dot(ObjToCubeMap[1].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.z = dot(ObjToCubeMap[2].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.w = dot(ObjToCubeMap[3].xyzw, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0;
     OUT.texcoord_6.xyz = IN.position;
-    OUT.texcoord_2.xyz = FogColor;
+    OUT.texcoord_2.xyz = FogColor.rgb;
 
 // approximately 20 instruction slots used

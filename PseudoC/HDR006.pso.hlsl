@@ -49,21 +49,21 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
     sampler2D AvgLum;
-    r1 = tex2D(Src0, IN.texcoord_0);
-    r0 = tex2D(AvgLum, IN.texcoord_0);
+    r1.xyzw = tex2D(Src0, IN.texcoord_0);
+    r0.xyzw = tex2D(AvgLum, IN.texcoord_0);
     r2.y = HDRParam.z;
     r0.w = pow(abs(r2.y), TimingData.z);		//       pow(TimingData, HDRParam.z == 0.500000)
     r0.w = 1 - r0.w;		// 1.0 - pow(TimingData, HDRParam.z == 0.500000)
     r2.xyz = lerp(r0, r1, r0.w);		// lerp(Src0, AvgLum, 1.0 - pow(something))
-    r0.x = dot(r2, r2);	// normalize + length
+    r0.x = dot(r2.xyz, r2.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r0.x);
     r0.w = 1.0 / r0.w;			// normalize => sqrt(lerp.x * lerp.x + lerp.y * lerp.y + lerp.z * lerp.z + 1.0 * 1.0)
     r1.w = max(0.01, r0.w);		// max(normalized, 0.01)
     r0.w = min(r1.w, HDRParam.w);		// min(normalized, fUpperLUMClamp == 1.400000)
     r1.w = 1.0 / r1.w;			// 1 / max
     r0.w = r0.w * r1.w;		// min / max
-    r0.xyz = r2 * r0.w;		// (min() / max()) * lerp()
+    r0.xyz = r2.xyz * r0.w;		// (min() / max()) * lerp()
     r0.w = 1;			// [x,y,z,1]
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 19 instruction slots used (2 texture, 17 arithmetic)

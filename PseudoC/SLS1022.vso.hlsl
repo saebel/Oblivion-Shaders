@@ -28,13 +28,13 @@
     float4 IN.position : POSITION;
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
-    r0.xyz = LightPosition[1] - IN.position;
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r2.x = dot(r0, r0);	// normalize + length
-    r1.x = dot(LightDirection[0], IN.normal);
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    r0.xyz = LightPosition[1].xyz - IN.position;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
+    r1.x = dot(LightDirection[0].xyz, IN.normal.xyz);
     r1.w = 1.0 / sqrt(r2.x);
     r3.w = 1.0 / LightPosition[1].w;
     r0.w = 1.0 / r1.w;
@@ -42,10 +42,10 @@
     r0.w = r3.w * r0.w;
     OUT.color_0.rgb = min(r2.w, 1);
     r0.w = max(r0.w, 0);
-    r0.xyz = r0 * r1.w;
+    r0.xyz = r0.xyz * r1.w;
     r0.w = min(r0.w, 1);
     r0.w = (r0.w * -r0.w) + 1;
-    r0.x = dot(r0, IN.normal);
+    r0.x = dot(r0.xyz, IN.normal.xyz);
     OUT.color_1.rgb = r0.w * r0.x;
     OUT.texcoord_0.xy = IN.texcoord_0;
 

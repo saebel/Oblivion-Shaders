@@ -22,14 +22,14 @@
     texcoord IN.input_0.xyw;			// partial precision
     float IN.texcoord_1 : TEXCOORD1;			// partial precision
     sampler2D NormalMap;
-    r0 = tex2D(NormalMap, IN.input_0);
-    r0.xy = r0 + -0.5;
-    r0.xy = r0 + r0;
+    r0.xyzw = tex2D(NormalMap, IN.input_0);
+    r0.xy = r0.xy + -0.5;
+    r0.xy = r0.xy + r0.xy;
     r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
-    r0.xy = r0 * r0.w;			// partial precision
+    r0.xy = r0.xy * r0.w;			// partial precision
     r0.w = 1.0 / IN.input_0.w;			// partial precision
-    r0.xy = r0 * r0.w;			// partial precision
+    r0.xy = r0.xy * r0.w;			// partial precision
     OUT.color_0.xy = (0.5 * r0) + 0.5;			// partial precision
     r0.w = IN.texcoord_1.x * IN.texcoord_1.x;			// partial precision
     OUT.color_0.a = r0.w * 0.5;			// partial precision

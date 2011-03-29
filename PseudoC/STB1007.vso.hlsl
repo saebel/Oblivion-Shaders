@@ -36,27 +36,27 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.blendindices : BLENDINDICES;
     offset.x = IN.blendindices.y;
-    r0.x = dot(WindMatrices[0 + offset.x], IN.position);
-    r0.y = dot(WindMatrices[1 + offset.x], IN.position);
-    r0.z = dot(WindMatrices[2 + offset.x], IN.position);
-    r0.w = dot(WindMatrices[3 + offset.x], IN.position);
-    r0 = r0 - IN.position;
-    r1 = IN.position;
-    r0 = (IN.blendindices.x * r0) + r1;
-    r1.xyz = EyePosition - r0;
-    r2.x = dot(r1, r1);	// normalize + length
+    r0.x = dot(WindMatrices[0 + offset.x].xyzw, IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.x].xyzw, IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.x].xyzw, IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.x].xyzw, IN.position.xyzw);
+    r0.xyzw = r0 - IN.position;
+    r1.xyzw = IN.position;
+    r0.xyzw = (IN.blendindices.x * r0) + r1;
+    r1.xyz = EyePosition.xyz - r0.xyz;
+    r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r1.w = 1.0 / sqrt(r2.x);
-    r1.xyz = (r1.w * r1) + LightDirection[0];
-    OUT.position.x = dot(ModelViewProj[0], r0);
-    r2.x = dot(r1, r1);	// normalize + length
-    OUT.position.y = dot(ModelViewProj[1], r0);
+    r1.xyz = (r1.w * r1.xyz) + LightDirection[0].xyz;
+    OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
+    r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
+    OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.w = 1.0 / sqrt(r2.x);
-    OUT.position.z = dot(ModelViewProj[2], r0);
-    r1.xyz = r1 * r1.w;
-    OUT.position.w = dot(ModelViewProj[3], r0);
-    r0.x = dot(IN.tangent, r1);
-    r0.y = dot(IN.binormal, r1);
-    r0.z = dot(IN.normal, r1);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
+    r1.xyz = r1.xyz * r1.w;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
+    r0.x = dot(IN.tangent.xyz, r1.xyz);
+    r0.y = dot(IN.binormal.xyz, r1.xyz);
+    r0.z = dot(IN.normal.xyz, r1.xyz);
     OUT.texcoord_1.xyz = (0.5 * r0) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0;
 

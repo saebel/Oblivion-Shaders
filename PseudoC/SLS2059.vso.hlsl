@@ -30,20 +30,20 @@
     const float4 const_7 = {(1.0 / 300), 0.02, 1, 0};
     float4 IN.position : POSITION;
     float3 IN.normal : NORMAL;
-    OUT.position.x = dot(ModelViewProj[0], IN.position);
-    OUT.position.y = dot(ModelViewProj[1], IN.position);
-    OUT.position.z = dot(ModelViewProj[2], IN.position);
-    OUT.position.w = dot(ModelViewProj[3], IN.position);
-    r0.xyz = EyePosition - IN.position;
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r0.xyz = EyePosition.xyz - IN.position;
     r1.xyz = normalize(r0);
-    r0 = IN.position * (1.0 / 300);
-    OUT.texcoord_1.x = dot(IN.normal, r1);
-    r1.y = dot(WorldViewTranspose[2], r0);
+    r0.xyzw = IN.position * (1.0 / 300);
+    OUT.texcoord_1.x = dot(IN.normal.xyz, r1.xyz);
+    r1.y = dot(WorldViewTranspose[2].xyzw, r0.xyzw);
     r1.w = r1.y * 0.02;
     OUT.texcoord_0.z = r1.y;
-    r1.x = dot(WorldViewTranspose[0], r0);
-    r1.y = dot(WorldViewTranspose[1], r0);
+    r1.x = dot(WorldViewTranspose[0].xyzw, r0.xyzw);
+    r1.y = dot(WorldViewTranspose[1].xyzw, r0.xyzw);
     OUT.texcoord_0.w = max(r1.w, 1);
-    OUT.texcoord_0.xy = r1 - Time.x;
+    OUT.texcoord_0.xy = r1.xy - Time.x;
 
 // approximately 17 instruction slots used

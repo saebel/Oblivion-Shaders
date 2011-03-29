@@ -31,7 +31,7 @@ struct VS_OUTPUT {
     float4 color_0 : COLOR0;
     float2 texcoord_0 : TEXCOORD0;			// partial precision
     float4 texcoord_4 : TEXCOORD4_centroid;		// partial precision
-    float4 texcoord_5 : TEXCOORD5_centroid;		// partial precision
+    float4 alpha : TEXCOORD5_centroid;			// partial precision
 };
 
 // Code:
@@ -89,19 +89,25 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     OUT.position.xyzw = InstanceProj;
 
-    float fdensity = min(max(     (FogParam.x   - length(InstanceProj)) / FogParam.y   , 0), 1);
-    float adensity = min(max(1 - ((AlphaParam.x - length(InstanceEye )) / AlphaParam.y), 0), 1);
-
-    adensity = ((AlphaParam.x < IN.position.w ? 1.0 : 0.0) * (1 - adensity));
-
-    OUT.color_0.rgb = FogColor;
-    OUT.color_0.a = 1 - fdensity;
-
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    /* +term: base ------------------------------------------------------------- */
     OUT.texcoord_4.xyz = (DiffuseColor * Diffusion) + AmbientColor;
     OUT.texcoord_4.w = 1;
-    OUT.texcoord_5.xyz = 0;
-    OUT.texcoord_5.w = 1 - adensity;
+
+    /* +term: alpha ------------------------------------------------------------ */
+    float adensity = min(max(1 - ((AlphaParam.x - length(InstanceEye.xyz)) / AlphaParam.y), 0), 1);
+    adensity = ((AlphaParam.x < IN.position.w ? 1.0 : 0.0) * (1 - adensity));
+
+    OUT.alpha.xyz = 0;
+    OUT.alpha.w = 1 - adensity;
+
+    /* +term: fog -------------------------------------------------------------- */
+    float fdensity = min(max((FogParam.x - length(InstanceProj.xyz)) / FogParam.y, 0), 1);
+
+    OUT.fog.rgb = FogColor;
+    OUT.fog.a = 1 - fdensity;
+
+    /* +term: copy ------------------------------------------------------------- */
+    OUT.texcoord_0.xy = IN.texcoord_0;
 
     return OUT;
 };

@@ -49,20 +49,20 @@
     const int4 const_0 = {1, 0, 0, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0.xy = BlurScale;
+    r0.xy = BlurScale.xy;
     r3.xy = (r0 * const_4) + IN.texcoord_0;		// |3.000000|3.000000| + (in / 256)
     r2.xy = (r0 * BlurOffsets) + IN.texcoord_0;		// |1.000000|3.000000| + (in / 256)
     r1.xy = (r0 * const_5) + IN.texcoord_0;		// |1.000000|1.000000| + (in / 256)
     r0.xy = (r0 * const_6) + IN.texcoord_0;		// |3.000000|1.000000| + (in / 256)
-    r3 = tex2D(Src0, r3);
-    r2 = tex2D(Src0, r2);
-    r1 = tex2D(Src0, r1);
-    r0 = tex2D(Src0, r0);
-    r3.xyz = r3 * const_4.z;		// (in[0] / 4)
-    r2.xyz = (BlurOffsets.z * r2) + r3;            // (in[0] / 4) + (in[1] / 4)
-    r1.xyz = (const_5.z * r1) + r2;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4)
-    r0.xyz = (const_6.z * r0) + r1;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
+    r3.xyzw = tex2D(Src0, r3);
+    r2.xyzw = tex2D(Src0, r2);
+    r1.xyzw = tex2D(Src0, r1);
+    r0.xyzw = tex2D(Src0, r0);
+    r3.xyz = r3.xyz * const_4.z;		// (in[0] / 4)
+    r2.xyz = (BlurOffsets.z * r2.xyz) + r3.xyz;            // (in[0] / 4) + (in[1] / 4)
+    r1.xyz = (const_5.z * r1.xyz) + r2.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4)
+    r0.xyz = (const_6.z * r0.xyz) + r1.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
     r0.w = 1;
-    OUT.color_0 = r0;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 15 instruction slots used (4 texture, 11 arithmetic)

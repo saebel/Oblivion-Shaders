@@ -33,19 +33,19 @@
     sampler2D BaseMap;
     sampler2D NormalMap;
     sampler2D GlowMap;
-    r2 = tex2D(NormalMap, IN.texcoord_1);
-    r1 = tex2D(GlowMap, IN.texcoord_2);
-    r0 = tex2D(BaseMap, IN.texcoord_0);
-    r2.xyz = r2 + -0.5;
-    r2.xyz = r2 + r2;
+    r2.xyzw = tex2D(NormalMap, IN.texcoord_1);
+    r1.xyzw = tex2D(GlowMap, IN.texcoord_2);
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);
+    r2.xyz = r2.xyz + -0.5;
+    r2.xyz = r2.xyz + r2.xyz;
     r3.xyz = IN.texcoord_3 + -0.5;
-    r3.xyz = r3 + r3;
-    r2.x = saturate(dot(r2, r3));
-    r1.xyz = r1 + AmbientColor;
+    r3.xyz = r3.xyz + r3.xyz;
+    r2.x = saturate(dot(r2.xyz, r3.xyz));
+    r1.xyz = r1.xyz + AmbientColor.rgb;
     r1.xyz = saturate((r2.x * PSLightColor[0]) + r1);
-    r0.xyz = r0 * IN.color_0;
+    r0.xyz = r0.xyz * IN.color_0;
     r0.w = r0.w * AmbientColor.a;
-    r0.xyz = r1 * r0;
-    OUT.color_0 = r0;
+    r0.xyz = r1.xyz * r0.xyz;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 14 instruction slots used (3 texture, 11 arithmetic)

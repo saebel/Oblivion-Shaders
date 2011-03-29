@@ -5,7 +5,7 @@
 //
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
-    OUT.position = IN.position;
+    OUT.position.xyzw = IN.position;
     OUT.texcoord_0.xy = IN.texcoord_0;
 
 // approximately 2 instruction slots used

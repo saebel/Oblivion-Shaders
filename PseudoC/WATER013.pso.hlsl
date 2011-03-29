@@ -36,40 +36,40 @@
 
     const int4 const_0 = {1, 1, -1, 0};
     float3 texcoord_1 : TEXCOORD1_centroid;
-    r0.xyz = EyePos - IN.texcoord_1;
-    r1.x = dot(r0, r0);	// normalize + length
+    r0.xyz = EyePos.xyz - IN.texcoord_1;
+    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
-    r0.xyz = r0 * r0.w;
+    r0.xyz = r0.xyz * r0.w;
     r4.w = 1.0 / r0.w;
     r0.w = saturate(r0.z);
     r1.w = 1 - r0.w;
     r2.w = r1.w * r1.w;
-    r2.xyz = r0 * -const_0;
+    r2.xyz = r0.xyz * -const_0.xyz;
     r2.w = r2.w * r2.w;
     r3.w = r1.w * r2.w;
-    r0.xyz = DeepColor;
-    r0.xyz = ShallowColor - r0;
+    r0.xyz = DeepColor.rgb;
+    r0.xyz = ShallowColor.rgb - r0.xyz;
     r1.w = 1;
     r2.w = r1.w - FresnelRI.x;
-    r1.xyz = (r0.w * r0) + DeepColor;			// partial precision
+    r1.xyz = (r0.w * r0.xyz) + DeepColor.rgb;			// partial precision
     r2.w = (r2.w * r3.w) + FresnelRI.x;
-    r0.xyz = ReflectionColor - r1;
+    r0.xyz = ReflectionColor.rgb - r1.xyz;
     r0.w = r1.w - VarAmounts.y;
-    r2.x = saturate(dot(r2, SunDir));
-    r0.xyz = (r0.w * r0) + r1;			// partial precision
+    r2.x = saturate(dot(r2.xyz, SunDir.xyz));
+    r0.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
     r1.w = pow(abs(r2.x), VarAmounts.x);
-    r0.xyz = r0 * VarAmounts.y;
+    r0.xyz = r0.xyz * VarAmounts.y;
     r3.w = saturate(SunDir.w);
-    r1.xyz = (r2.w * r0) + r1;
+    r1.xyz = (r2.w * r0.xyz) + r1.xyz;
     r0.w = FogParam.x - r4.w;
-    r0.xyz = r1.w * SunColor;
+    r0.xyz = r1.w * SunColor.rgb;
     r1.w = 1.0 / FogParam.y;
     r1.xyz = saturate((r3.w * r0) + r1);
     r0.w = saturate(r0.w * r1.w);
-    r0.xyz = FogColor - r1;
+    r0.xyz = FogColor.rgb - r1.xyz;
     r1.w = 1 - r0.w;
     r0.w = max(VarAmounts.z, r2.w);
-    r0.xyz = (r1.w * r0) + r1;
-    OUT.color_0 = r0;
+    r0.xyz = (r1.w * r0.xyz) + r1.xyz;
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 37 instruction slots used

@@ -56,7 +56,7 @@
     sampler2D DetailMap;
     sampler2D DepthMap;
     sampler2D DisplacementMap;
-    r0 = tex2D(DisplacementMap, IN.texcoord_6);
+    r0.xyzw = tex2D(DisplacementMap, IN.texcoord_6);
     r1.xy = IN.texcoord_6 + -0.5;
     r0.w = dot(r1.xy, r1.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
@@ -65,7 +65,7 @@
     r1.w = 1.0 / BlendRadius.x;
     r0.w = r0.w * r1.w;
     r4.w = saturate(max(0.1, r0.w));
-    r1.xy = EyePos - IN.texcoord_1;
+    r1.xy = EyePos.xy - IN.texcoord_1;
     r0.w = dot(r1.xy, r1.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
@@ -74,50 +74,50 @@
     r3.w = r1.w * r1.w;
     r4.x = IN.texcoord_7.z + Scroll.x;
     r4.y = IN.texcoord_7.w + Scroll.y;
-    r0 = tex2D(NormalMap, r4);
+    r0.xyzw = tex2D(NormalMap, r4);
     r0.xyz = (2 * r0) + -1;
     r0.w = -(r4.w + -1);
-    r0.xy = r3.w * r0;
+    r0.xy = r3.w * r0.xy;
     r0.w = r0.w * BlendRadius.y;
     r2.xyz = lerp(r1, r0, r0.w);
-    r1.xyz = EyePos - IN.texcoord_1;
-    r3.x = dot(r1, r1);	// normalize + length
+    r1.xyz = EyePos.xyz - IN.texcoord_1;
+    r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r0.xyz = normalize(r2);
     r3.w = 1.0 / sqrt(r3.x);
-    r1.xyz = r1 * r3.w;
-    r2.x = dot(-r1, r0);
+    r1.xyz = r1.xyz * r3.w;
+    r2.x = dot(-r1.xyz, r0.xyz);
     r0.w = r2.x + r2.x;
-    r3.xy = const_14;
+    r3.xy = const_14.xy;
     r2.w = (r3.x * -r2.w) + BlendRadius.x;
-    r2.xyz = (-r0.w * r0) - r1;
+    r2.xyz = (-r0.w * r0.xyz) - r1.xyz;
     r6.w = r1.w * VarAmounts.w;
-    r3.x = saturate(dot(r2, SunDir));
-    r2.x = saturate(dot(r1, r0));
+    r3.x = saturate(dot(r2.xyz, SunDir.xyz));
+    r2.x = saturate(dot(r1.xyz, r0.xyz));
     r1.w = pow(abs(r3.x), VarAmounts.x);
-    r4.xy = (0.1 * r0) + r4;
+    r4.xy = (0.1 * r0.xy) + r4.xy;
     r0.w = -(r2.x + -1);
-    r0.xyz = r1.w * SunColor;
+    r0.xyz = r1.w * SunColor.rgb;
     r1.w = r0.w * r0.w;
     r1.w = r1.w * r1.w;
-    r1.xyz = DeepColor;
-    r1.xyz = ShallowColor - r1;
+    r1.xyz = DeepColor.rgb;
+    r1.xyz = ShallowColor.rgb - r1.xyz;
     r1.w = r0.w * r1.w;
-    r2.xyz = (r2.x * r1) + DeepColor;			// partial precision
-    r1.xyz = ReflectionColor - r2;
+    r2.xyz = (r2.x * r1.xyz) + DeepColor.rgb;			// partial precision
+    r1.xyz = ReflectionColor.rgb - r2.xyz;
     r4.w = -(r3.y + VarAmounts.y);
     r0.w = -(r3.y + FresnelRI.x);
-    r1.xyz = (r4.w * r1) + r2;			// partial precision
+    r1.xyz = (r4.w * r1.xyz) + r2.xyz;			// partial precision
     r0.w = (r0.w * r1.w) + FresnelRI.x;
-    r1.xyz = r1 * VarAmounts.y;
-    r1.xyz = (r0.w * r1) + r2;
+    r1.xyz = r1.xyz * VarAmounts.y;
+    r1.xyz = (r0.w * r1.xyz) + r2.xyz;
     r1.w = saturate(SunDir.w);
     r4.w = 1.0 / r3.w;
     r3.xyz = saturate((r1.w * r0) + r1);
     r3.w = max(VarAmounts.z, r0.w);
     r0.x = IN.texcoord_6.z;
     r0.y = IN.texcoord_6.w;
-    r1 = tex2D(DetailMap, r4);
-    r0 = tex2D(DepthMap, r0);
+    r1.xyzw = tex2D(DetailMap, r4);
+    r0.xyzw = tex2D(DepthMap, r0);
     r0.w = FogParam.x - r4.w;
     r1.w = 1.0 / FogParam.y;
     r0.w = saturate(r0.w * r1.w);
@@ -135,11 +135,11 @@
     r3.w = r0.x + -0.55;
     r2.xyz = lerp(r1, r3, r6.w);
     r3.w = (r3.w >= 0.0 ? r5.w : r4.w);
-    r1.xyz = FogColor - r2;
+    r1.xyz = FogColor.rgb - r2.xyz;
     r0.w = (r0.w >= 0.0 ? 0 : r3.w);
-    r1.xyz = (r1.w * r1) + r2;
+    r1.xyz = (r1.w * r1.xyz) + r2.xyz;
     r1.w = (r2.w >= 0.0 ? 0 : r0.w);
-    r0 = (r0.x <= 0.0 ? r1 : 0);
-    OUT.color_0 = r0;
+    r0.xyzw = (r0.x <= 0.0 ? r1 : 0);
+    OUT.color_0.rgba = r0.xyzw;
 
 // approximately 91 instruction slots used (4 texture, 87 arithmetic)
