@@ -24,9 +24,9 @@
     float3 texcoord_2 : TEXCOORD2;
     sampler2D BaseMap;
     sampler2D GlowMap;
-    r1.xyzw = tex2D(BaseMap, IN.texcoord_0);
-    r0.xyzw = tex2D(GlowMap, IN.texcoord_1);
-    r1.xyz = r1.xyz * IN.texcoord_2;
+    r1.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(GlowMap, IN.texcoord_1.xy);
+    r1.xyz = r1.xyz * IN.texcoord_2.xyz;
     r0.xyz = r0.xyz * r1.xyz;
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;

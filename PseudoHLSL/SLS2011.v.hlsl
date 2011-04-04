@@ -41,6 +41,12 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 color_0 : COLOR0;
+    float4 color_1 : COLOR1;
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    float3 texcoord_3 : TEXCOORD3;
 };
 
 // Code:
@@ -48,40 +54,36 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {0, 1, 0, 0};
 
-    OUT.color_0.rgba = IN.color_0;
-    OUT.color_1.rgb = FogColor.rgb;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    r2.w = 1.0 / FogParam.y;
-    r2.xyz = normalize(r0);
-    r4.xyz = normalize(r1);
-    OUT.texcoord_1.xyz = r4.xyz;
-    r4.xyz = normalize(r1);
-    OUT.texcoord_3.xyz = r4.xyz;
-    r0.xyz = EyePosition.xyz - IN.position;
-    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r1.z = dot(IN.normal.xyz, r2.xyz);
-    r3.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r3.x);
-    r0.xyz = (r1.w * r0.xyz) + LightDirection[0].xyz;
+    float3 r0;
+    float3 r1;
+    float3 r2;
+
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
+    r0.xyz = ((1.0 / length(r0.xyz)) * r0.xyz) + LightDirection[0].xyz;
+    r2.xyz = normalize(r0.xyz);
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.xyz = r0.xyz;
-    r3.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r3.x);
-    r0.w = 1.0 / r0.w;
-    r0.w = FogParam.x - r0.w;
-    r0.w = r0.w * r2.w;
-    r0.w = max(r0.w, 0);
-    r0.w = min(r0.w, 1);
-    OUT.color_1.a = 1 - r0.w;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r1.x = dot(IN.tangent.xyz, r2.xyz);
     r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
+    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.xyz = normalize(r1.xyz);
+    r1.x = dot(IN.tangent.xyz, r2.xyz);
     r1.y = dot(IN.binormal.xyz, r2.xyz);
+    r1.z = dot(IN.normal.xyz, r2.xyz);
+    OUT.texcoord_3.xyz = normalize(r1.xyz);
+    OUT.position.xyz = r0.xyz;
+    OUT.color_1.a = 1 - saturate((FogParam.x - length(r0.xyz)) / (FogParam.y));
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = IN.color_0.rgba;
+    OUT.color_1.rgb = FogColor.rgb;
 
     return OUT;
 };

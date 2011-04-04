@@ -50,6 +50,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -57,13 +58,17 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_0 = {0, 1, 0, 0};
 
-    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    float4 r0;
+
+    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
+    r0.xyz = max(r0.xyz - HDRParam.x, 0) * HDRParam.y;		// max(in - 1.225, 0) * fBrightClamp == 1.350000
     r0.w = 1;
-    r1.xyz = r0.xyz - HDRParam.x;		// in - 1.225
-    r0.xyz = max(r1.xyz, 0);		// max(in - 1.225, 0)
-    r0.xyz = r0.xyz * HDRParam.y;		// max(in - 1.225, 0) * fBrightClamp == 1.350000
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

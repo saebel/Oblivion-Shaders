@@ -23,10 +23,10 @@
     float3 IN.color_1 : COLOR1;
     float4 texcoord_1 : TEXCOORD1;
     sampler2D DiffuseMap;
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);
-    r1.xyz = IN.color_1;
-    r1.xyz = (SunlightDimmer.x * r1) + IN.color_0;
-    r2.xyz = (-r0 * r1) + IN.texcoord_1;
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    r1.xyz = IN.color_1.rgb;
+    r1.xyz = (SunlightDimmer.x * r1.xyz) + IN.color_0.rgb;
+    r2.xyz = (-r0.xyz * r1.xyz) + IN.texcoord_1.xyz;
     r2.xyz = r2.xyz * IN.texcoord_1.w;
     r0.xyz = (r0.xyz * r1.xyz) + r2.xyz;
     OUT.color_0.rgba = r0.xyzw;

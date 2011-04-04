@@ -54,22 +54,22 @@
     sampler2D ReflectionMap;
     sampler2D NormalMap;
     sampler2D DetailMap;
-    r0.xy = EyePos.xy - IN.texcoord_1;
+    r0.xy = EyePos.xy - IN.texcoord_1.xy;
     r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r1.w = 1.0 / r0.w;
     r2.w = saturate((r1.w * -(1.0 / 8192)) - -1);
     r3.w = r2.w * r2.w;
-    r2.xy = IN.texcoord_6 + Scroll.xy;
-    r0.xyzw = tex2D(NormalMap, r2);
-    r0.xyz = (2 * r0) + -1;
+    r2.xy = IN.texcoord_6.xy + Scroll.xy;
+    r0.xyzw = tex2D(NormalMap, r2.xy);
+    r0.xyz = (2 * r0.xyz) - 1;
     r0.xy = r3.w * r0.xy;
     r0.w = saturate(r1.w * 0.0002);
     r0.w = (r0.w * 2496) + 4;
-    r3.xyz = normalize(r0);
-    r1.xy = (r0.w * r3) + IN.texcoord_0;
+    r3.xyz = normalize(r0.xyz);
+    r1.xy = (r0.w * r3.xy) + IN.texcoord_0.xy;
     r1.z = IN.texcoord_0.z;
-    r1.w = --1;
+    r1.w = 1;
     r0.x = dot(IN.texcoord_2.xyzw, r1.xyzw);
     r0.y = dot(IN.texcoord_3.xyzw, r1.xyzw);
     r0.z = dot(IN.texcoord_4.xyzw, r1.xyzw);
@@ -77,14 +77,14 @@
     r2.w = r2.w * VarAmounts.w;
     r2.xy = (0.1 * r3.xy) + r2.xy;
     r1.xyzw = tex2Dproj(ReflectionMap, r0);			// partial precision
-    r0.xyzw = tex2D(DetailMap, r2);
-    r2.xyz = EyePos.xyz - IN.texcoord_1;
+    r0.xyzw = tex2D(DetailMap, r2.xy);
+    r2.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r4.x = dot(r2.xyz, r2.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r4.x);
     r4.xyz = r2.xyz * r0.w;
     r0.w = 1.0 / r0.w;
     r6.x = saturate(dot(r4.xyz, r3.xyz));
-    r1.w = -(r6.x + -1);
+    r1.w = -(r6.x - 1);
     r1.xyz = r1.xyz - ReflectionColor.rgb;
     r3.w = r1.w * r1.w;
     r2.z = VarAmounts.y;
@@ -94,7 +94,7 @@
     r5.x = dot(-r4.xyz, r3.xyz);
     r2.xyz = DeepColor.rgb;
     r2.xyz = ShallowColor.rgb - r2.xyz;
-    r4.w = r5.x + r5.x;
+    r4.w = 2 * r5.x;
     r5.z = -1;
     r1.w = -(r5.z + FresnelRI.x);
     r3.xyz = (-r4.w * r3.xyz) - r4.xyz;
@@ -102,16 +102,16 @@
     r5.x = saturate(dot(r3.xyz, SunDir.xyz));
     r3.xyz = (r6.x * r2.xyz) + DeepColor.rgb;			// partial precision
     r4.w = pow(abs(r5.x), VarAmounts.x);
-    r2.xyz = lerp(r1, r3, r3.w);
+    r2.xyz = lerp(r1.xyz, r3.xyz, r3.w);
     r1.w = saturate(SunDir.w);
     r1.xyz = r4.w * SunColor.rgb;
     r0.w = FogParam.x - r0.w;
     r2.xyz = (r1.w * r1.xyz) + r2.xyz;
     r1.w = 1.0 / FogParam.y;
-    r1.xyz = lerp(r0, r2, r2.w);
+    r1.xyz = lerp(r0.xyz, r2.xyz, r2.w);
     r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor.rgb - r1.xyz;
-    r1.w = -(r0.w + -1);
+    r1.w = -(r0.w - 1);
     r0.w = max(VarAmounts.z, r3.w);
     r0.xyz = (r1.w * r0.xyz) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;

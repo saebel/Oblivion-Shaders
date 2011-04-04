@@ -36,6 +36,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -43,23 +44,23 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_3 = {-0.5, 0, 1, 0};
 
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);
-    r0.xyz = r0.xyz + -0.5;
-    r0.xyz = r0.xyz + r0.xyz;
-    r1.w = dot(r0.xyz, IN.input_2.xyz);
-    r0.w = max(r1.w, 0);
-    r2.w = 1 - r0.w;
-    r0.xyzw = tex2D(SourceTexture, IN.texcoord_1);
+    float4 r0;
+    float4 r1;
+
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    r1.w = pow(abs(1 - max(dot(2 * (r0.xyz - 0.5), IN.input_2.xyz), 0)), fVars.x);	// [0,1] to [-1,+1]
+    r0.xyzw = tex2D(SourceTexture, IN.texcoord_1.xy);
     r0.w = r0.w * FillColor.a;
-    r0.xyz = r0.xyz + FillColor.rgb;
-    r0.xyz = r0.xyz * r0.w;
-    r1.w = pow(abs(r2.w), fVars.x);
-    r0.xyzw = (r1.w * RimColor) + r0;
+    r0.xyz = (r0.xyz + FillColor.rgb) * r0.w;
+    r0.xyzw = (r1.w * RimColor.rgba) + r0.xyzw;
+    OUT.color_0.rgb = (IN.color_1.a * (IN.color_1.rgb - r0.xyz)) + r0.xyz;
     OUT.color_0.a = r0.w;
-    r1.xyz = IN.color_1 - r0.xyz;
-    OUT.color_0.rgb = (IN.color_1.a * r1.xyz) + r0.xyz;
 
     return OUT;
 };

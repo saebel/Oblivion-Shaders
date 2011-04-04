@@ -22,20 +22,20 @@
     const float4 const_2 = {-(1.0 / 256), 0, -3, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D HeightMap;
-    r3.xy = IN.texcoord_0 + const_0.xy;
-    r2.xy = IN.texcoord_0 - const_0.xy;
-    r1.xy = IN.texcoord_0 + const_2.xy;
-    r0.xy = IN.texcoord_0 - const_2.xy;
-    r3.xyzw = tex2D(HeightMap, r3);
-    r2.xyzw = tex2D(HeightMap, r2);
-    r1.xyzw = tex2D(HeightMap, r1);
-    r0.xyzw = tex2D(HeightMap, r0);
-    r3.xyzw = (2 * r3) + -1;
-    r2.xyzw = (2 * r2) + r3;
-    r1.xyzw = (2 * r1) + r2;
-    r0.xyzw = (2 * r0) + r1;
-    r0.xyzw = r0 + -3;
-    r0.xyzw = (0.125 * r0) + 0.5;
+    r3.xy = IN.texcoord_0.xy + const_0.xy;
+    r2.xy = IN.texcoord_0.xy - const_0.xy;
+    r1.xy = IN.texcoord_0.xy + const_2.xy;
+    r0.xy = IN.texcoord_0.xy - const_2.xy;
+    r3.xyzw = tex2D(HeightMap, r3.xy);
+    r2.xyzw = tex2D(HeightMap, r2.xy);
+    r1.xyzw = tex2D(HeightMap, r1.xy);
+    r0.xyzw = tex2D(HeightMap, r0.xy);
+    r3.xyzw = (2 * r3.xyzw) - 1;
+    r2.xyzw = (2 * r2.xyzw) + r3.xyzw;
+    r1.xyzw = (2 * r1.xyzw) + r2.xyzw;
+    r0.xyzw = (2 * r0.xyzw) + r1.xyzw;
+    r0.xyzw = r0.xyzw - 3;
+    r0.xyzw = (0.125 * r0.xyzw) + 0.5;
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 15 instruction slots used (4 texture, 11 arithmetic)

@@ -39,6 +39,14 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 color_0 : COLOR0;
+    float4 color_1 : COLOR1;
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    float4 texcoord_2 : TEXCOORD2;
+    float4 texcoord_3 : TEXCOORD3;
+    float4 texcoord_4 : TEXCOORD4;
 };
 
 // Code:
@@ -46,30 +54,36 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
-    OUT.color_0.rgba = IN.texcoord_1;
-    OUT.color_1.rgba = IN.texcoord_2;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+
+    float3 r0;
+
+    r0.xyz = LightPosition[0].xyz - IN.position.xyz;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xyz = IN.color_0;
-    OUT.texcoord_2.w = LightPosition[0].w;
-    OUT.texcoord_3.w = LightPosition[1].w;
-    OUT.texcoord_4.w = LightPosition[2].w;
-    r0.xyz = LightPosition[0].xyz - IN.position;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r0.xyz);
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r0.xyz);
     OUT.texcoord_2.z = dot(IN.normal.xyz, r0.xyz);
-    r0.xyz = LightPosition[1].xyz - IN.position;
+    r0.xyz = LightPosition[1].xyz - IN.position.xyz;
     OUT.texcoord_3.x = dot(IN.tangent.xyz, r0.xyz);
     OUT.texcoord_3.y = dot(IN.binormal.xyz, r0.xyz);
     OUT.texcoord_3.z = dot(IN.normal.xyz, r0.xyz);
-    r0.xyz = LightPosition[2].xyz - IN.position;
+    r0.xyz = LightPosition[2].xyz - IN.position.xyz;
     OUT.texcoord_4.x = dot(IN.tangent.xyz, r0.xyz);
     OUT.texcoord_4.y = dot(IN.binormal.xyz, r0.xyz);
     OUT.texcoord_4.z = dot(IN.normal.xyz, r0.xyz);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = IN.color_0.rgb;
+    OUT.texcoord_2.w = LightPosition[0].w;
+    OUT.color_0.rgba = IN.texcoord_1.xyzw;
+    OUT.color_1.rgba = IN.texcoord_2.xyzw;
+    OUT.texcoord_3.w = LightPosition[1].w;
+    OUT.texcoord_4.w = LightPosition[2].w;
 
     return OUT;
 };

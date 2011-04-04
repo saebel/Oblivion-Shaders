@@ -24,25 +24,25 @@
     sampler2D amplitudeSamp;
     r7.y = IN.texcoord_0.y;
     r0.w = fResolution.x;
-    r6.xy = (r0.w * -const_1) + IN.texcoord_0;
+    r6.xy = (r0.w * -const_1.xy) + IN.texcoord_0.xy;
     r7.x = r6.x;
     r5.y = IN.texcoord_0.y;
-    r4.xy = IN.texcoord_0 - fResolution.x;
+    r4.xy = IN.texcoord_0.xy - fResolution.x;
     r5.x = r4.x;
     r1.y = r4.y;
-    r3.xy = (r0.w * const_1) + IN.texcoord_0;
+    r3.xy = (r0.w * const_1.xy) + IN.texcoord_0.xy;
     r0.y = r3.y;
-    r2.xy = IN.texcoord_0 + fResolution.x;
+    r2.xy = IN.texcoord_0.xy + fResolution.x;
     r1.x = IN.texcoord_0.x;
     r0.x = IN.texcoord_0.x;
-    r6.xyzw = tex2D(amplitudeSamp, r6);
-    r7.xyzw = tex2D(amplitudeSamp, r7);
-    r5.xyzw = tex2D(amplitudeSamp, r5);
-    r4.xyzw = tex2D(amplitudeSamp, r4);
-    r3.xyzw = tex2D(amplitudeSamp, r3);
-    r2.xyzw = tex2D(amplitudeSamp, r2);
-    r1.xyzw = tex2D(amplitudeSamp, r1);
-    r0.xyzw = tex2D(amplitudeSamp, r0);
+    r6.xyzw = tex2D(amplitudeSamp, r6.xy);
+    r7.xyzw = tex2D(amplitudeSamp, r7.xy);
+    r5.xyzw = tex2D(amplitudeSamp, r5.xy);
+    r4.xyzw = tex2D(amplitudeSamp, r4.xy);
+    r3.xyzw = tex2D(amplitudeSamp, r3.xy);
+    r2.xyzw = tex2D(amplitudeSamp, r2.xy);
+    r1.xyzw = tex2D(amplitudeSamp, r1.xy);
+    r0.xyzw = tex2D(amplitudeSamp, r0.xy);
     r0.w = abs(r7.x);
     r3.w = abs(r6.x);
     r1.w = abs(r5.x);
@@ -67,7 +67,7 @@
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.z = 1.0 / sqrt(r1.x);
     r0.xy = r0.xy * r0.z;
-    r0.xyz = (0.5 * r0) + 0.5;
+    r0.xyz = (0.5 * r0.xyz) + 0.5;
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 

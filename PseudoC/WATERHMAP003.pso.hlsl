@@ -21,9 +21,9 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D sampScramble;
     sampler2D sampSourceImage;
-    r0.xyzw = tex2D(sampScramble, IN.texcoord_0);
+    r0.xyzw = tex2D(sampScramble, IN.texcoord_0.xy);
     r0.y = IN.texcoord_0.y;
-    r0.xyzw = tex2D(sampSourceImage, r0);
+    r0.xyzw = tex2D(sampSourceImage, r0.xy);
     r0.yzw = r0.x;
     OUT.color_0.rgba = r0.xyzw;
 

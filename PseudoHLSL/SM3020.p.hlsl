@@ -33,6 +33,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -40,35 +41,29 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {-0.5, 0.5, 1, 0};
 
-    OUT.color_0.a = 1;			// partial precision
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r1.xyz + -0.5;
-    r1.xyz = r0.xyz + r0.xyz;			// partial precision
-    r0.xyz = normalize(r1);			// partial precision
-    r1.xyz = normalize(IN.input_1);			// partial precision
-    r2.xyz = r0.xyz * const_0.yyzw;			// partial precision
-    r0.xyz = normalize(r2);			// partial precision
-    r1.x = dot(r0.xyz, r1.xyz);			// partial precision
-    r2.xyz = normalize(IN.input_2);			// partial precision
-    r1.y = dot(r0.xyz, r2.xyz);			// partial precision
-    r2.xyz = normalize(IN.input_3);			// partial precision
-    r1.z = dot(r0.xyz, r2.xyz);			// partial precision
-    r0.xyz = normalize(r1);			// partial precision
-    r1.xyz = normalize(r2);			// partial precision
-    r0.w = dot(r0.xyz, r1.xyz);			// partial precision
-    r0.w = r0.w + r0.w;			// partial precision
-    r2.w = dot(r0.xyz, r0.xyz);	// normalize + length			// partial precision
-    r1.xyz = r1.xyz * r2.w;			// partial precision
-    r0.xyz = (r0.w * r0.xyz) - r1.xyz;			// partial precision
-    r0.xyzw = texCUBE(EnvironmentCubeMap, r0);			// partial precision
-    r0.xyz = r1.w * r0.xyz;			// partial precision
-    r0.xyz = r0.xyz * MatAlpha.x;			// partial precision
-    OUT.color_0.rgb = r0.xyz * IN.color_0;			// partial precision
+    float4 r0;
+    float4 r1;
+    float3 r2;
+
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyz = normalize(normalize(2 * (r1.xyz - 0.5)) * const_0.yyz);			// partial precision	// [0,1] to [-1,+1]
+    r1.x = dot(r0.xyz, normalize(IN.input_1.xyz));			// partial precision
+    r1.y = dot(r0.xyz, normalize(IN.input_2.xyz));			// partial precision
+    r1.z = dot(r0.xyz, normalize(IN.input_3.xyz));			// partial precision
+    r0.xyz = normalize(r1.xyz);			// partial precision
     r2.x = IN.input_1.w;			// partial precision
     r2.y = IN.input_2.w;			// partial precision
     r2.z = IN.input_3.w;			// partial precision
+    r1.xyz = normalize(r2.xyz);			// partial precision
+    r0.xyzw = texCUBE(EnvironmentCubeMap, ((2 * dot(r0.xyz, r1.xyz)) * r0.xyz) - (r1.xyz * dot(r0.xyz, r0.xyz)));			// partial precision
+    OUT.color_0.rgb = ((r1.w * r0.xyz) * MatAlpha.x) * IN.color_0.rgb;			// partial precision
+    OUT.color_0.a = 1;			// partial precision
 
     return OUT;
 };

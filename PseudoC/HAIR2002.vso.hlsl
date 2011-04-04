@@ -36,7 +36,7 @@
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
-    r0.xyz = LightPosition[0].xyz - IN.position;
+    r0.xyz = LightPosition[0].xyz - IN.position.xyz;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
@@ -48,22 +48,22 @@
     r1.y = dot(IN.binormal.xyz, r2.xyz);
     r1.z = dot(IN.normal.xyz, r2.xyz);
     r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r3.xyz = EyePosition.xyz - IN.position;
+    r3.xyz = EyePosition.xyz - IN.position.xyz;
     r1.w = 1.0 / sqrt(r2.x);
-    r2.xyz = normalize(r3);
+    r2.xyz = normalize(r3.xyz);
     OUT.texcoord_2.xyz = r1.xyz * r1.w;
     r1.xyz = (r0.w * r0.xyz) + r2.xyz;
     r0.w = 1.0 / r0.w;
-    r0.xyz = normalize(r1);
+    r0.xyz = normalize(r1.xyz);
     r1.x = dot(IN.tangent.xyz, r0.xyz);
     r1.y = dot(IN.binormal.xyz, r0.xyz);
     r1.z = dot(IN.normal.xyz, r0.xyz);
     r0.x = dot(IN.tangent.xyz, r2.xyz);
     r0.y = dot(IN.binormal.xyz, r2.xyz);
     r0.z = dot(IN.normal.xyz, r2.xyz);
-    r2.xyz = normalize(r1);
+    r2.xyz = normalize(r1.xyz);
     OUT.texcoord_3.xyz = r2.xyz;
-    r2.xyz = normalize(r0);
+    r2.xyz = normalize(r0.xyz);
     OUT.texcoord_1.xyz = r2.xyz;
     r1.w = 1.0 / LightPosition[0].w;
     r0.x = dot(IN.normal.xyz, LightDirection[1].xyz);
@@ -77,7 +77,7 @@
     r0.xyz = min(r0.xyz, 1);
     OUT.color_0.a = r0.w * r0.w;
     OUT.color_0.rgb = max(r0.xyz, 0);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_1.rgba = IN.color_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_1.rgba = IN.color_0.rgba;
 
 // approximately 51 instruction slots used

@@ -21,7 +21,7 @@
     const float4 const_0 = {0.01, 1, 0, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
     r0.w = 1.0 / r0.w;

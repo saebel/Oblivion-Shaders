@@ -51,28 +51,27 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {1, 0, 0, 0};
 
-    OUT.color_0.rgba = 1;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_3.xyz = IN.tangent;
-    OUT.texcoord_4.xyz = IN.binormal;
-    OUT.texcoord_5.xyz = IN.normal;
-    OUT.texcoord_6.xyz = IN.position;
-    OUT.texcoord_7.xyz = FogColor.rgb;
+    float3 r0;
+
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.xyz = r0.xyz;
-    r0.w = dot(r0.xyz, r0.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r0.w);			//		1.0 / sqrt(r0)
-    r0.w = 1.0 / r0.w;			//		1.0 / (1.0 / sqrt(r0)) ^= sqrt(r0)
-    r0.w = FogParam.x - r0.w;		// exp fog	(off - r0)
-    r1.w = 1.0 / FogParam.y;			// exp fog	(1 / div)
-    r0.w = saturate(r0.w * r1.w);		// exp fog	(off - r0) * (1 / div)
-    r0.w = 1 - r0.w;		// exp fog	1.0 - sat((off - r0) * (1 / div))
-    OUT.texcoord_7.w = r0.w * FogParam.z;
+    OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r0.xyz))) / FogParam.y))) * FogParam.z;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = 1;
+    OUT.texcoord_3.xyz = IN.tangent.xyz;
+    OUT.texcoord_4.xyz = IN.binormal.xyz;
+    OUT.texcoord_5.xyz = IN.normal.xyz;
+    OUT.texcoord_6.xyz = IN.position.xyz;
+    OUT.texcoord_7.xyz = FogColor.rgb;
 
     return OUT;
 };

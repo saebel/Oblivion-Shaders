@@ -29,7 +29,7 @@
     float3 IN.binormal : BINORMAL;
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
-    r0.xyz = EyePosition.xyz - IN.position;
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
     r0.xyz = (r0.w * r0.xyz) + LightDirection[0].xyz;
@@ -43,7 +43,7 @@
     r0.x = dot(IN.tangent.xyz, r1.xyz);
     r0.y = dot(IN.binormal.xyz, r1.xyz);
     r0.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.texcoord_1.xyz = (0.5 * r0) + 0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.xyz = (0.5 * r0.xyz) + 0.5;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 16 instruction slots used

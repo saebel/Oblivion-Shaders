@@ -28,6 +28,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -35,22 +36,20 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {-0.5, 2, 0, 1};
 
-    r0.xyzw = tex2D(Src1, IN.texcoord_1);
-    r0.w = r0.x + -0.5;
-    r1.w = r0.z * r0.w;
-    r0.w = r0.y + -0.5;
-    r0.w = r0.z * r0.w;
-    r1.x = (2 * -r1.w) + IN.texcoord_0.x;
-    r1.y = (2 * r0.w) + IN.texcoord_0.y;
-    r0.xyzw = tex2D(Src1, r1);
-    r0.w = r0.w * r0.w;
-    r1.xyzw = tex2D(Src0, r1);
-    r2.xyzw = tex2D(Src0, IN.texcoord_0);
-    r3.w = (r0.w <= 0.0 ? 1 : 0);
-    r0.xyzw = lerp(r1, r2, r3.w);
-    OUT.color_0.rgba = r0.xyzw;
+    float4 r0;
+    float2 r1;
+
+    r0.xyzw = tex2D(Src1, IN.texcoord_1.xy);
+    r1.x = (2 * -(r0.z * (r0.x - 0.5))) + IN.texcoord_0.x;
+    r1.y = (2 * (r0.z * (r0.y - 0.5))) + IN.texcoord_0.y;	// [0,1] to [-1,+1]
+    r0.xyzw = tex2D(Src1, r1.xy);
+    OUT.color_0.rgba = lerp(tex2D(Src0, r1.xy), (tex2D(Src0, IN.texcoord_0.xy)), ((r0.w * r0.w) <= 0.0 ? 1 : 0));
 
     return OUT;
 };

@@ -4,6 +4,6 @@
 //   psa shaderdump19/SLS1030.pso /Fcshaderdump19/SLS1030.pso.dis
 //
     float4 IN.color_0 : COLOR0;
-    OUT.color_0.rgba = IN.color_0;
+    OUT.color_0.rgba = IN.color_0.rgba;
 
 // approximately 1 instruction slot used

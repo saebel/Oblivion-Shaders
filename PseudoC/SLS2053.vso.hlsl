@@ -34,7 +34,7 @@
     OUT.texcoord_1.x = dot(WorldViewTranspose[0].xyzw, IN.position.xyzw);
     OUT.texcoord_1.y = dot(WorldViewTranspose[1].xyzw, IN.position.xyzw);
     OUT.texcoord_1.z = dot(WorldViewTranspose[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.w = LightPosition[0].w;
 
 // approximately 9 instruction slots used

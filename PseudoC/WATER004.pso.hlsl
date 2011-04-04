@@ -45,31 +45,31 @@
     samplerCUBE ReflectionMap;
     sampler2D NormalMap;
     sampler2D DetailMap;
-    r0.xy = EyePos.xy - IN.texcoord_1;
+    r0.xy = EyePos.xy - IN.texcoord_1.xy;
     r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r2.w = saturate((r0.w * -(1.0 / 8192)) - -1);
     r1.w = r2.w * r2.w;
-    r3.xy = IN.texcoord_6 + Scroll.xy;
-    r0.xyzw = tex2D(NormalMap, r3);
-    r2.xyz = (2 * r0) + -1;
+    r3.xy = IN.texcoord_6.xy + Scroll.xy;
+    r0.xyzw = tex2D(NormalMap, r3.xy);
+    r2.xyz = (2 * r0.xyz) - 1;
     r2.xy = r1.w * r2.xy;
-    r0.xyz = EyePos.xyz - IN.texcoord_1;
+    r0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r4.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r1.xyz = normalize(r2);
+    r1.xyz = normalize(r2.xyz);
     r1.w = 1.0 / sqrt(r4.x);
     r0.xyz = r0.xyz * r1.w;
     r3.w = r2.w * VarAmounts.w;
     r2.x = dot(r0.xyz, r1.xyz);
-    r0.w = r2.x + r2.x;
+    r0.w = 2 * r2.x;
     r4.w = 1.0 / r1.w;
     r0.xyz = (-r0.w * r1.xyz) + r0.xyz;
     r5.w = saturate(r2.x);
     r2.xy = (0.1 * r1.xy) + r3.xy;
-    r1.xyzw = texCUBE(ReflectionMap, r0);			// partial precision
-    r0.xyzw = tex2D(DetailMap, r2);
-    r0.w = -(r5.w + -1);
+    r1.xyzw = texCUBE(ReflectionMap, r0.xyz);			// partial precision
+    r0.xyzw = tex2D(DetailMap, r2.xy);
+    r0.w = -(r5.w - 1);
     r3.z = -1;
     r2.xyz = ReflectionColor.rgb - r3.z;
     r1.w = r0.w * r0.w;
@@ -86,10 +86,10 @@
     r0.w = FogParam.x - r4.w;
     r2.xyz = saturate((r2.w * r1) + r2);
     r1.w = 1.0 / FogParam.y;
-    r1.xyz = lerp(r0, r2, r3.w);
+    r1.xyz = lerp(r0.xyz, r2.xyz, r3.w);
     r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor.rgb - r1.xyz;
-    r1.w = -(r0.w + -1);
+    r1.w = -(r0.w - 1);
     r0.w = max(VarAmounts.z, r2.w);
     r0.xyz = (r1.w * r0.xyz) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;

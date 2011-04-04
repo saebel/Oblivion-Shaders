@@ -45,6 +45,12 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    float3 texcoord_3 : TEXCOORD3;
+    float4 texcoord_6 : TEXCOORD6;
+    float3 texcoord_7 : TEXCOORD7;
 };
 
 // Code:
@@ -52,44 +58,44 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {1, 0, 0, 0};
 
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    float4 r0;
+    float3 r1;
+    float3 r2;
+
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
+    r0.w = 1.0 / length(r0.xyz);
+    r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
+    r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
+    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    r0.xyz = EyePosition.xyz - IN.position;
-    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r3.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r3.x);
-    r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r2.x);
-    OUT.texcoord_1.xyz = r1.xyz * r1.w;
-    r1.xyz = normalize(r2);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.xyz = normalize(r1.xyz);
+    r1.xyz = normalize((r0.w * r0.xyz) + LightDirection[0].xyz);
+    r2.xyz = r0.xyz * r0.w;
+    r0.x = dot(IN.tangent.xyz, r2.xyz);
+    r0.y = dot(IN.binormal.xyz, r2.xyz);
+    r0.z = dot(IN.normal.xyz, r2.xyz);
+    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_3.x = dot(IN.tangent.xyz, r1.xyz);
     OUT.texcoord_3.y = dot(IN.binormal.xyz, r1.xyz);
     OUT.texcoord_3.z = dot(IN.normal.xyz, r1.xyz);
-    r2.xyz = (r0.w * r0.xyz) + LightDirection[0].xyz;
-    r2.xyz = r0.xyz * r0.w;
-    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
-    r0.x = dot(IN.tangent.xyz, r2.xyz);
+    OUT.texcoord_7.xyz = normalize(r0.xyz);
     r0.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(IN.binormal.xyz, r2.xyz);
     r0.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
-    r0.z = dot(IN.normal.xyz, r2.xyz);
-    r1.y = r0.w * ShadowProjTransform.w;
-    r1.w = 1.0 / r1.y;
-    r1.xy = (r0.w * ShadowProjTransform.xy) + r0.xy;
-    OUT.texcoord_6.xy = r1.w * r1.xy;
-    r0.w = 1.0 / ShadowProjData.w;
+    OUT.texcoord_6.xy = (1.0 / (r0.w * ShadowProjTransform.w)) * ((r0.w * ShadowProjTransform.xy) + r0.xy);
     r0.xy = r0.xy - ShadowProjData.xy;
-    OUT.texcoord_6.w = (r0.y * -r0.w) + 1;
+    r0.w = 1.0 / ShadowProjData.w;
     OUT.texcoord_6.z = r0.x * r0.w;
-    r2.xyz = normalize(r0);
-    OUT.texcoord_7.xyz = r2.xyz;
+    OUT.texcoord_6.w = (r0.y * -r0.w) + 1;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;
 };

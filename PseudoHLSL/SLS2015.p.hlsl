@@ -37,6 +37,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -44,35 +45,26 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {-0.5, 0.2, 0.5, 0};
 
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r0.w = r0.w * AmbientColor.a;			// partial precision
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r1.xyz = r1.xyz + -0.5;
-    r2.xyz = normalize(IN.texcoord_3);			// partial precision
-    r3.xyz = r1.xyz + r1.xyz;			// partial precision
-    r1.xyz = normalize(r3);			// partial precision
-    r3.x = saturate(dot(r1.xyz, r2.xyz));			// partial precision
-    r2.w = pow(abs(r3.x), Toggles.z);			// partial precision
-    r3.w = r1.w * r2.w;			// partial precision
+    float4 r0;
+    float4 r1;
+    float4 r3;
+
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
+    r3.xyz = 2 * (r1.xyz - 0.5);			// partial precision	// [0,1] to [-1,+1]
+    r1.xyz = normalize(r3.xyz);			// partial precision
     r3.x = dot(r1.xyz, IN.texcoord_1.xyz);			// partial precision
-    r1.xyz = r0.xyz * IN.color_0;			// partial precision
-    r0.xyz = PSLightColor[0].rgb;
-    r1.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
-    r2.w = r3.x + 0.5;			// partial precision
-    r1.w = max(r2.w, 0);			// partial precision
-    r2.w = r3.w * r1.w;			// partial precision
-    r1.w = 0.2 - r3.x;			// partial precision
-    r1.w = (r1.w >= 0.0 ? r3.w : r2.w);			// partial precision
-    r2.xyz = saturate(r1.w * PSLightColor[0]);			// partial precision
-    r1.w = saturate(r3.x);			// partial precision
-    r3.xyz = (r1.w * r0.xyz) + AmbientColor.rgb;			// partial precision
-    r0.xyz = max(r3.xyz, 0);			// partial precision
-    r0.xyz = (r1.xyz * r0.xyz) + r2.xyz;			// partial precision
-    r0.xyz = (Toggles.y <= 0.0 ? r1 : r0);			// partial precision
+    r3.w = r1.w * pow(abs(saturate(dot(r1.xyz, normalize(IN.texcoord_3.xyz)))), Toggles.z);			// partial precision
+    r0.xyz = (((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz)) * max((saturate(r3.x) * PSLightColor[0].rgb) + AmbientColor.rgb, 0)) + saturate((((0.2 - r3.x) >= 0.0 ? r3.w : (r3.w * max(r3.x + 0.5, 0)))) * PSLightColor[0].rgb);			// partial precision
+    r0.w = r0.w * AmbientColor.a;			// partial precision
+    r0.xyz = (Toggles.y <= 0.0 ? lerp(IN.color_1.rgb, r0.xyz, IN.color_1.a) : r0.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
-    r1.xyz = lerp(IN.color_1, r0, IN.color_1.a);			// partial precision
 
     return OUT;
 };

@@ -40,9 +40,9 @@
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r0.x);
-    r0.xyz = EyePosition.xyz - IN.position;
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
     OUT.texcoord_1.xyz = r1.xyz * r0.w;
-    r2.xyz = normalize(r0);
+    r2.xyz = normalize(r0.xyz);
     r1.x = dot(IN.tangent.xyz, r2.xyz);
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
@@ -55,14 +55,14 @@
     r0.w = FogParam.x - r0.w;
     r2.w = 1.0 / FogParam.y;
     r0.w = r0.w * r2.w;
-    r2.xyz = normalize(r1);
+    r2.xyz = normalize(r1.xyz);
     OUT.texcoord_6.xyz = r2.xyz;
     r0.w = max(r0.w, 0);
     OUT.position.xyz = r0.xyz;
     r0.w = min(r0.w, 1);
     OUT.color_1.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0.rgba = IN.color_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = IN.color_0.rgba;
     OUT.color_1.rgb = FogColor.rgb;
 
 // approximately 34 instruction slots used

@@ -50,12 +50,12 @@
     OUT.position.xyz = r0.xyz;
     r0.w = 1 - r0.w;		// exp fog	1.0 - sat((off - r0) * (1 / div))
     OUT.texcoord_7.w = r0.w * FogParam.z;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.rgba = 1;
-    OUT.texcoord_3.xyz = IN.tangent;
-    OUT.texcoord_4.xyz = IN.binormal;
-    OUT.texcoord_5.xyz = IN.normal;
-    OUT.texcoord_6.xyz = IN.position;
+    OUT.texcoord_3.xyz = IN.tangent.xyz;
+    OUT.texcoord_4.xyz = IN.binormal.xyz;
+    OUT.texcoord_5.xyz = IN.normal.xyz;
+    OUT.texcoord_6.xyz = IN.position.xyz;
     OUT.texcoord_7.xyz = FogColor.rgb;
 
 // approximately 20 instruction slots used

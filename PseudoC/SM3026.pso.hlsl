@@ -23,7 +23,7 @@
     sampler2D BaseMap;
     r0.w = 1.0 / LightData.w;			// partial precision
     OUT.color_0.rgb = r0.w * IN.input_1.z;			// partial precision
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     OUT.color_0.a = r0.w;			// partial precision
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

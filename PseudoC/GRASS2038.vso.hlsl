@@ -57,9 +57,9 @@
     r0.w = IN.texcoord_1.x - r0.w;
     offset.w = r0.w;
     r0.xyzw = frac(InstanceData[0 + offset.w]);
-    r0.xyz = r0.xyz + -0.5;
-    r1.xyz = r0.xyz + r0.xyz;
-    r0.xyz = r0.w * IN.color_0;
+    r0.xyz = r0.xyz - 0.5;
+    r1.xyz = 2 * r0.xyz;
+    r0.xyz = r0.w * IN.color_0.rgb;
     r1.x = dot(DiffuseDir.xyz, r1.xyz);
     r1.w = max(r1.x, 0);
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
@@ -75,21 +75,21 @@
     r0.y = sin(r2.w);
     r0.w = 1.0 / sqrt(r1.w);
     r2.w = r0.y * WindData.z;
-    r1.xz = r0.w * -EyeVector.xyyw;
+    r1.xz = r0.w * -EyeVector.xy;
     r0.w = IN.color_0.a * IN.color_0.a;
-    r1.yw = r1.z * -const_8.xzzw;
+    r1.yw = r1.z * -const_8.xz;
     r2.w = r2.w * r0.w;
-    r0.xyz = r1.zxww * const_16.xyyw;
+    r0.xyz = r1.zxw * const_16.xyy;
     r3.yz = const_8.yz;
     r0.w = r3.y * InstanceData[0 + offset.w].w;
-    r1.x = dot(r1.yxww.xyz, r0.xyz);
-    r3.xyz = (r0.w * ScaleMask) + r3.z;
+    r1.x = dot(r1.yxw, r0.xyz);
+    r3.xyz = (r0.w * ScaleMask.xyz) + r3.z;
     r0.w = 1.0 / sqrt(r1.x);
-    r3.xyz = r3.xyz * IN.position;
+    r3.xyz = r3.xyz * IN.position.xyz;
     r1.xy = r0.xy * r0.w;
     r0.w = r1.x;
-    r1.y = dot(r1.yzww.xyz, r3.xyz);
-    r1.x = dot(r0.wyzw.xyz, r3.xyz);
+    r1.y = dot(r1.yzw, r3.xyz);
+    r1.x = dot(r0.wyz, r3.xyz);
     r0.z = r3.z;
     r0.xy = (r2.w * WindData.xy) + r1.xy;
     r1.xyz = r0.xyz + InstanceData[0 + offset.w];
@@ -112,7 +112,7 @@
     r2.w = 1.0 / sqrt(r2.w);
     r1.w = min(r1.w, 1);
     r2.w = 1.0 / r2.w;
-    r2.xy = r2.w - AlphaParam.xzzw;
+    r2.xy = r2.w - AlphaParam.xz;
     r3.x = 1.0 / AlphaParam.y;
     r3.y = 1.0 / AlphaParam.w;
     OUT.color_0.a = 1 - r1.w;
@@ -124,10 +124,10 @@
     r0.w = 1 - r2.y;
     r0.xyz = r1.xyz * r1.w;
     OUT.texcoord_5.w = r2.x * r0.w;
-    OUT.texcoord_1.xyz = (--0.5 * r0) - -0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.xyz = (0.5 * r0.xyz) - -0.5;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.xyzw = AmbientColor.rgba;
-    OUT.texcoord_1.w = --0.5;
+    OUT.texcoord_1.w = 0.5;
     OUT.color_0.rgb = FogColor.rgb;
 
 // approximately 83 instruction slots used

@@ -40,9 +40,9 @@
     r0.z = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.color_0.a = BlendColor[0].a * IN.color_0.a;
     OUT.position.xyzw = r0.xyzz;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xy = IN.texcoord_0;
-    OUT.texcoord_2.xy = IN.texcoord_0;
-    OUT.texcoord_3.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xy = IN.texcoord_0.xy;
+    OUT.texcoord_3.xy = IN.texcoord_0.xy;
 
 // approximately 12 instruction slots used

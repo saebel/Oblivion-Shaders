@@ -36,6 +36,10 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    float3 texcoord_3 : TEXCOORD3;
 };
 
 // Code:
@@ -43,25 +47,28 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    r2.xyz = normalize(r0);
-    OUT.texcoord_1.xyz = r2.xyz;
+
+    float3 r0;
+    float3 r1;
+
     r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r0.xyz = normalize(r1);
+    r1.xyz = EyePosition.xyz - IN.position.xyz;
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.xyz = normalize(r0.xyz);
+    r0.xyz = normalize(((1.0 / length(r1.xyz)) * r1.xyz) + LightDirection[0].xyz);
     OUT.texcoord_3.x = dot(IN.tangent.xyz, r0.xyz);
     OUT.texcoord_3.y = dot(IN.binormal.xyz, r0.xyz);
     OUT.texcoord_3.z = dot(IN.normal.xyz, r0.xyz);
-    r1.xyz = EyePosition.xyz - IN.position;
-    r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r3.x);
-    r1.xyz = (r1.w * r1.xyz) + LightDirection[0].xyz;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;
 };

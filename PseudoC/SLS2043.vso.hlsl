@@ -47,7 +47,7 @@
     r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_3.xyz = (0.5 * r0) + 0.5;
+    OUT.texcoord_3.xyz = (0.5 * r0.xyz) + 0.5;
     r1.y = r0.w * ShadowProjTransform.w;
     r0.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
@@ -58,10 +58,10 @@
     OUT.texcoord_4.xy = r1.w * r1.xy;
     OUT.texcoord_4.z = r0.x * r0.w;
     OUT.texcoord_4.w = (r0.y * -r0.w) + 1;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
     OUT.texcoord_2.xyzw = (IN.color_0.xyzx * const_4.yyyz) + const_4.zzzy;
-    OUT.color_0.rgba = IN.texcoord_1;
-    OUT.color_1.rgba = IN.texcoord_2;
+    OUT.color_0.rgba = IN.texcoord_1.xyzw;
+    OUT.color_1.rgba = IN.texcoord_2.xyzw;
 
 // approximately 24 instruction slots used

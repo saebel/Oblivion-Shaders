@@ -44,7 +44,7 @@
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r0.xyz = EyePosition.xyz - IN.position;
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
     r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     r3.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
@@ -52,7 +52,7 @@
     r1.w = 1.0 / sqrt(r2.x);
     r2.xyz = (r0.w * r0.xyz) + LightDirection[0].xyz;
     OUT.texcoord_1.xyz = r1.xyz * r1.w;
-    r1.xyz = normalize(r2);
+    r1.xyz = normalize(r2.xyz);
     r2.xyz = r0.xyz * r0.w;
     OUT.texcoord_3.x = dot(IN.tangent.xyz, r1.xyz);
     OUT.texcoord_3.y = dot(IN.binormal.xyz, r1.xyz);
@@ -61,7 +61,7 @@
     r0.z = dot(IN.normal.xyz, r2.xyz);
     OUT.texcoord_3.z = dot(IN.normal.xyz, r1.xyz);
     r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
-    r2.xyz = normalize(r0);
+    r2.xyz = normalize(r0.xyz);
     OUT.texcoord_7.xyz = r2.xyz;
     r1.y = r0.w * ShadowProjTransform.w;
     r0.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
@@ -73,6 +73,6 @@
     OUT.texcoord_6.xy = r1.w * r1.xy;
     OUT.texcoord_6.z = r0.x * r0.w;
     OUT.texcoord_6.w = (r0.y * -r0.w) + 1;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 40 instruction slots used

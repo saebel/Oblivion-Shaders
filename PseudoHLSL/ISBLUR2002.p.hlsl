@@ -27,6 +27,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -34,15 +35,27 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {0.5, (1.0 / 18), (1.0 / 9), 0.05};
     const float4 const_2 = {0.025, 0.075, 0.15, 0.3};
     const int4 const_3 = {1, 0, 0, 0};
 
+    float4 r0;
+    float4 r1;
+    float4 r2;
+    float4 r3;
+    float4 r4;
+    float4 r5;
+    float4 r6;
+    float4 r7;
+    float4 r8;
+
     r0.xyz = const_0.xyz;
-    r0.w = (blurParams.x * -r0.x) + IN.texcoord_0.x;
-    r7.x = (blurParams.x * r0.y) + r0.w;
-    r0.w = (blurParams.y * -r0.x) + IN.texcoord_0.y;
-    r7.y = (blurParams.y * r0.y) + r0.w;
+    r7.x = (blurParams.x * r0.y) + ((blurParams.x * -r0.x) + IN.texcoord_0.x);
+    r7.y = (blurParams.y * r0.y) + ((blurParams.y * -r0.x) + IN.texcoord_0.y);
     r8.xy = (r0.z * blurParams.xy) + r7.xy;
     r6.xy = (r0.z * blurParams.xy) + r8.xy;
     r5.xy = (r0.z * blurParams.xy) + r6.xy;
@@ -50,26 +63,17 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r3.xy = (r0.z * blurParams.xy) + r4.xy;
     r2.xy = (r0.z * blurParams.xy) + r3.xy;
     r1.xy = (r0.z * blurParams.xy) + r2.xy;
-    r0.xy = (r0.z * blurParams.xy) + r1.xy;
-    r0.xyzw = tex2D(Src0, r0);
+    r0.xyzw = tex2D(Src0, (r0.z * blurParams.xy) + r1.xy);
+    r1.xyzw = tex2D(Src0, r1.xy);
+    r2.xyzw = tex2D(Src0, r2.xy);
+    r3.xyzw = tex2D(Src0, r3.xy);
+    r4.xyzw = tex2D(Src0, r4.xy);
+    r5.xyzw = tex2D(Src0, r5.xy);
+    r6.xyzw = tex2D(Src0, r6.xy);
+    r7.xyzw = tex2D(Src0, r7.xy);
+    r8.xyzw = tex2D(Src0, r8.xy);
+    r0.xyz = (0.025 * r0.xyz) + ((0.05 * r1.xyz) + ((0.075 * r2.xyz) + ((0.15 * r3.xyz) + ((0.3 * r4.xyz) + ((0.15 * r5.xyz) + ((0.075 * r6.xyz) + ((0.025 * r7.xyz) + (r8.xyz * 0.05))))))));
     r0.w = 1;
-    r1.xyzw = tex2D(Src0, r1);
-    r2.xyzw = tex2D(Src0, r2);
-    r3.xyzw = tex2D(Src0, r3);
-    r4.xyzw = tex2D(Src0, r4);
-    r5.xyzw = tex2D(Src0, r5);
-    r6.xyzw = tex2D(Src0, r6);
-    r7.xyzw = tex2D(Src0, r7);
-    r8.xyzw = tex2D(Src0, r8);
-    r8.xyz = r8.xyz * 0.05;
-    r7.xyz = (0.025 * r7.xyz) + r8.xyz;
-    r6.xyz = (0.075 * r6.xyz) + r7.xyz;
-    r5.xyz = (0.15 * r5.xyz) + r6.xyz;
-    r4.xyz = (0.3 * r4.xyz) + r5.xyz;
-    r3.xyz = (0.15 * r3.xyz) + r4.xyz;
-    r2.xyz = (0.075 * r2.xyz) + r3.xyz;
-    r1.xyz = (0.05 * r1.xyz) + r2.xyz;
-    r0.xyz = (0.025 * r0.xyz) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

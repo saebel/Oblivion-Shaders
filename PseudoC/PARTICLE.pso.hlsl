@@ -19,8 +19,8 @@
     float4 IN.color_0 : COLOR0;
     float2 texcoord_0 : TEXCOORD0;			// partial precision
     sampler2D SourceTexture;
-    r0.xyzw = tex2D(SourceTexture, IN.texcoord_0);			// partial precision
-    r0.xyzw = r0 * IN.color_0;			// partial precision
+    r0.xyzw = tex2D(SourceTexture, IN.texcoord_0.xy);			// partial precision
+    r0.x.zw = r0.xy * IN.color_0.xy;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

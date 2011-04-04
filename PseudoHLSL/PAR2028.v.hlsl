@@ -35,6 +35,10 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 color_0 : COLOR0;
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_6 : TEXCOORD6;
 };
 
 // Code:
@@ -42,18 +46,23 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
-    OUT.color_0.rgba = IN.color_0;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+
+    float3 r0;
+
+    r0.xyz = normalize(EyePosition.xyz - IN.position.xyz);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    r0.xyz = normalize(r1);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_6.x = dot(IN.tangent.xyz, r0.xyz);
     OUT.texcoord_6.y = dot(IN.binormal.xyz, r0.xyz);
     OUT.texcoord_6.z = dot(IN.normal.xyz, r0.xyz);
-    r1.xyz = EyePosition.xyz - IN.position;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = IN.color_0.rgba;
 
     return OUT;
 };

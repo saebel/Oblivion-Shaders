@@ -35,22 +35,22 @@
     r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r1.xyz = EyePosition.xyz - IN.position;
+    r1.xyz = EyePosition.xyz - IN.position.xyz;
     r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r2.x);
-    r3.xyz = normalize(r0);
+    r3.xyz = normalize(r0.xyz);
     OUT.texcoord_1.xyz = r3.xyz;
     r0.xyz = (r0.w * r1.xyz) + LightDirection[0].xyz;
     r2.xyz = r1.xyz * r0.w;
-    r1.xyz = normalize(r0);
+    r1.xyz = normalize(r0.xyz);
     OUT.texcoord_3.x = dot(IN.tangent.xyz, r1.xyz);
     r0.x = dot(IN.tangent.xyz, r2.xyz);
     r0.y = dot(IN.binormal.xyz, r2.xyz);
     r0.z = dot(IN.normal.xyz, r2.xyz);
     OUT.texcoord_3.y = dot(IN.binormal.xyz, r1.xyz);
     OUT.texcoord_3.z = dot(IN.normal.xyz, r1.xyz);
-    r3.xyz = normalize(r0);
+    r3.xyz = normalize(r0.xyz);
     OUT.texcoord_7.xyz = r3.xyz;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 30 instruction slots used

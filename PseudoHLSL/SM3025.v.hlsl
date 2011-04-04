@@ -36,6 +36,7 @@ struct VS_OUTPUT {
     float4 position : POSITION;
     float3 texcoord_0 : TEXCOORD0;
     float texcoord_1 : TEXCOORD1;
+    float1 texcoord_1 : TEXCOORD1;
 };
 
 // Code:
@@ -43,18 +44,24 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_4 = {0.5, 5, -4.4, 0};
 
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    float3 r0;
+
+    r0.x = dot(WorldViewTranspose[0].xyz, IN.normal.xyz);
+    r0.y = dot(WorldViewTranspose[1].xyz, IN.normal.xyz);
+    r0.z = dot(WorldViewTranspose[2].xyz, IN.normal.xyz);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xyz = (0.5 * r0) + 0.5;
-    r0.y = dot(WorldViewTranspose[1].xyz, IN.normal.xyz);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.texcoord_0.xyz = (0.5 * r0.xyz) + 0.5;
     r0.y = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.x = (r0.y * 5) - 4.4;
     OUT.position.z = r0.y;
-    OUT.texcoord_1.x = (r0.y * 5) + -4.4;
-    r0.x = dot(WorldViewTranspose[0].xyz, IN.normal.xyz);
-    r0.z = dot(WorldViewTranspose[2].xyz, IN.normal.xyz);
 
     return OUT;
 };

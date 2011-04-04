@@ -40,7 +40,7 @@
     r0.w = min(r0.w, 1);
     OUT.position.xyz = r0.xyz;
     OUT.color_0.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.rgb = FogColor.rgb;
 
 // approximately 16 instruction slots used

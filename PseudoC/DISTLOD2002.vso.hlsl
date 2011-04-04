@@ -48,14 +48,14 @@
     r0.w = r0.w * InstanceData[0 + offset.w].w;
     r1.xyzw = frac(InstanceData[0 + offset.w]);
     r0.xyz = (IN.position * r0.w) + InstanceData[0 + offset.w];
-    r1.xyz = r1.xyz + -0.5;
+    r1.xyz = r1.xyz - 0.5;
     r0.w = IN.position.w;
-    r1.xyz = r1.xyz + r1.xyz;
+    r1.xyz = 2 * r1.xyz;
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);			//		(ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w)
     r2.x = dot(DiffuseDir.xyz, r1.xyz);
     r1.xyz = InstanceData[0 + offset.w];
     r1.xyz = EyePos.xyz - r1.xyz;
-    r2.xyz = r2.x * IN.color_0;
+    r2.xyz = r2.x * IN.color_0.rgb;
     r3.xyz = r1.w * r2.xyz;
     r2.x = dot(ModelViewProj[0].xyzw, r0.xyzw);			//		(ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w)
     r2.y = dot(ModelViewProj[1].xyzw, r0.xyzw);			//		(ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w)
@@ -83,7 +83,7 @@
     r1.w = r1.w - 1;
     OUT.color_0.a = 1 - r2.w;		// exp fog	1.0 - min(max((off - r0) * (1 / div), 0.0), 1.0)
     OUT.texcoord_5.w = (r0.w * r1.w) + 1;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.w = 1;
     OUT.texcoord_5.xyz = 0;
     OUT.color_0.rgb = FogColor.rgb;			// exp fog

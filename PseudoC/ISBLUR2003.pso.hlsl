@@ -25,8 +25,8 @@
     float2 texcoord_1 : TEXCOORD1;
     sampler2D Src0;
     sampler2D Src1;
-    r1.xyzw = tex2D(Src1, IN.texcoord_1);
-    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    r1.xyzw = tex2D(Src1, IN.texcoord_1.xy);
+    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r1.xyz = r1.xyz * blendW.y;
     r0.xyz = (blendW.x * r0.xyz) + r1.xyz;
     r0.w = 1;

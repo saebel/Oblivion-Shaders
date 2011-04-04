@@ -31,10 +31,10 @@
     float4 IN.color_1 : COLOR1;
     sampler2D NormalMap;
     sampler2D SourceTexture;
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);
-    r0.xyzw = tex2D(SourceTexture, IN.texcoord_1);
-    r1.xyz = r1.xyz + -0.5;
-    r1.xyz = r1.xyz + r1.xyz;
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(SourceTexture, IN.texcoord_1.xy);
+    r1.xyz = r1.xyz - 0.5;
+    r1.xyz = 2 * r1.xyz;
     r2.x = dot(r1.xyz, IN.texcoord_3.xyz);
     r1.w = max(r2.x, 0);
     r2.w = 1 - r1.w;
@@ -42,8 +42,8 @@
     r0.w = r0.w * FillColor.a;
     r1.w = pow(abs(r2.w), fVars.x);
     r0.xyz = r0.xyz * r0.w;
-    r1.xyzw = (r1.w * RimColor) + r0;
-    r0.xyz = lerp(IN.color_1, r1, IN.color_1.a);
+    r1.xyzw = (r1.w * RimColor.rgba) + r0.xyzw;
+    r0.xyz = lerp(IN.color_1.rgb, r1.xyz, IN.color_1.a);
     r0.w = r1.w;
     OUT.color_0.rgba = r0.xyzw;
 

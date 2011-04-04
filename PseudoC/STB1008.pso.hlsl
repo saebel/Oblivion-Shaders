@@ -25,16 +25,16 @@
 //
 
     const int4 const_0 = {1, 0, 0, 0};
-    IN.texcoord_0.xyzw = tex2D(NormalMap, texcoord_0);
-    IN.texcoord_1.xyzw = tex2D(NormalMap, texcoord_0);
-    IN.texcoord_2.xyzw = tex2D(NormalMap, texcoord_0);
-    IN.texcoord_3.xyzw = tex2D(NormalMap, texcoord_0);
+    IN.texcoord_0.xyzw = tex2D(NormalMap, texcoord_0.xy);
+    IN.texcoord_1.xyzw = tex2D(NormalMap, texcoord_0.xy);
+    IN.texcoord_2.xyzw = tex2D(NormalMap, texcoord_0.xy);
+    IN.texcoord_3.xyzw = tex2D(NormalMap, texcoord_0.xy);
     r0.xyzw = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
     r0.w = r0.w * r0.w;
     r0.w = r0.w * r0.w;
     r0.xyz = r0.w * PSLightColor[0].rgb;
     r0.xyz = IN.texcoord_0.w * r0.xyz;
-    r1.xyz = IN.texcoord_1 * IN.texcoord_2;
+    r1.xyz = IN.texcoord_1.xyz * IN.texcoord_2.xyz;
     IN.texcoord_1.xyzw = dot(const_0.xyz, r0.xyz);
     r0.w = IN.texcoord_0.w * IN.texcoord_1.w;
   + r0.xyz = r0.xyz * r1.xyz;

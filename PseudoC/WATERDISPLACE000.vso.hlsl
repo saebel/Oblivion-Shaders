@@ -21,10 +21,10 @@
     const int4 const_0 = {1, 0, 0, 0};
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
-    r0.xyz = (IN.position.xyxw * const_0.xxyw) + const_0.yyxw;
+    r0.xyz = (IN.position.xyx * const_0.xxy) + const_0.yyx;
     OUT.position.x = dot(r0.xyz, TranslationMatrix[0].xyz);
     OUT.position.y = dot(r0.xyz, TranslationMatrix[1].xyz);
-    OUT.position.zw = IN.position;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.position.zw = IN.position.zw;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 5 instruction slots used

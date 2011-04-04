@@ -22,15 +22,15 @@
     float4 texcoord_0 : TEXCOORD0;			// partial precision
     float texcoord_1 : TEXCOORD1;			// partial precision
     sampler2D NormalMap;
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);
-    r0.xy = r0.xy + -0.5;
-    r0.xy = r0.xy + r0.xy;
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    r0.xy = r0.xy - 0.5;
+    r0.xy = 2 * r0.xy;
     r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.xy = r0.xy * r0.w;			// partial precision
     r0.w = 1.0 / IN.texcoord_0.w;			// partial precision
     r0.xy = r0.xy * r0.w;			// partial precision
-    r0.xy = (0.5 * r0) + 0.5;			// partial precision
+    r0.xy = (0.5 * r0.xy) + 0.5;			// partial precision
     r0.w = IN.texcoord_1.x * IN.texcoord_1.x;			// partial precision
     r0.w = r0.w * 0.5;			// partial precision
     r0.z = PSRefractionPower.x;			// partial precision

@@ -26,8 +26,8 @@
     float2 texcoord_1 : TEXCOORD1;
     sampler2D DiffuseMap;
     sampler2D GlowMap;
-    r1.xyzw = tex2D(GlowMap, IN.texcoord_1);
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);
+    r1.xyzw = tex2D(GlowMap, IN.texcoord_1.xy);
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
     r0.xyz = EmittanceColor.rgb;
     r0.xyz = (r1.xyz * r0.xyz) + AmbientColor.rgb;
     OUT.color_0.rgba = r0.xyzw;

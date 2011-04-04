@@ -55,9 +55,9 @@
     r0.w = IN.texcoord_1.x - r0.w;
     offset.w = r0.w;
     r0.xyzw = frac(InstanceData[0 + offset.w]);
-    r0.xyz = r0.xyz + -0.5;
-    r1.xyz = r0.xyz + r0.xyz;
-    r0.xyz = r0.w * IN.color_0;
+    r0.xyz = r0.xyz - 0.5;
+    r1.xyz = 2 * r0.xyz;
+    r0.xyz = r0.w * IN.color_0.rgb;
     r1.x = dot(DiffuseDir.xyz, r1.xyz);
     r1.w = max(r1.x, 0);
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
@@ -71,22 +71,22 @@
     r2.w = (r1.w * PI * 2) + -PI;
     r1.w = frac(r0.w);
     r0.y = sin(r2.w);
-    r0.w = r1.w + -0.5;
+    r0.w = r1.w - 0.5;
     r2.w = r0.y * WindData.z;
-    r0.x = r0.w + r0.w;
+    r0.x = 2 * r0.w;
     r1.w = IN.color_0.a * IN.color_0.a;
-    r0.w = (r0.x * -r0.x) + 1;
+    r0.w = 1.0 - (r0.x * r0.x);
     r1.w = r2.w * r1.w;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r0.yz = const_8.yz;
     r2.w = r0.y * InstanceData[0 + offset.w].w;
     r0.y = -r0.w;
-    r1.xyz = (r2.w * ScaleMask) + r0.z;
-    r1.xyz = r1.xyz * IN.position;
+    r1.xyz = (r2.w * ScaleMask.xyz) + r0.z;
+    r1.xyz = r1.xyz * IN.position.xyz;
     r0.z = 0;
     r3.x = dot(r0.xyz, r1.xyz);
-    r3.y = dot(r0.wxzw.xyz, r1.xyz);
+    r3.y = dot(r0.wxz, r1.xyz);
     r0.z = r1.z;
     r0.xy = (r1.w * WindData.xy) + r3.xy;
     r1.xyz = r0.xyz + InstanceData[0 + offset.w];
@@ -109,7 +109,7 @@
     r2.w = 1.0 / sqrt(r2.w);
     r1.w = min(r1.w, 1);
     r2.w = 1.0 / r2.w;
-    r2.xy = r2.w - AlphaParam.xzzw;
+    r2.xy = r2.w - AlphaParam.xz;
     r3.x = 1.0 / AlphaParam.y;
     r3.y = 1.0 / AlphaParam.w;
     OUT.color_0.a = 1 - r1.w;
@@ -121,10 +121,10 @@
     r0.w = 1 - r2.y;
     r0.xyz = r1.xyz * r1.w;
     OUT.texcoord_5.w = r2.x * r0.w;
-    OUT.texcoord_1.xyz = (--0.5 * r0) - -0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.xyz = (0.5 * r0.xyz) - -0.5;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.xyzw = AmbientColor.rgba;
-    OUT.texcoord_1.w = --0.5;
+    OUT.texcoord_1.w = 0.5;
     OUT.color_0.rgb = FogColor.rgb;
 
 // approximately 82 instruction slots used

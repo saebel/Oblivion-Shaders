@@ -38,7 +38,7 @@
     float4 OUT.color_0 : COLOR0;
     float2 OUT.texcoord_0 : TEXCOORD0;
     r0.xyz = Velocity.xyz;
-    r1.xyz = (Params.x * r0) + IN.texcoord_1;
+    r1.xyz = (Params.x * r0.xyz) + IN.texcoord_1.xyz;
     r6.xyz = MaxPos.xyz;
     r5.xyz = r6.xyz - MinPos.xyz;
     r1.xyz = r1.xyz - MinPos.xyz;
@@ -48,35 +48,35 @@
     r1.xyz = r1.xyz * r2.xyz;
     r3.xyz = frac(abs(r1));
     r2.xyz = (r1 >= -r1 ? 1.0 : 0.0);
-    r1.xyz = lerp(r3, -r3, r2);
+    r1.xyz = lerp(r3.xyz, -r3.xyz, r2);
     r2.xyz = r5.xyz * r1.xyz;
     r1.xyz = abs(r2) + MinPos;
     r2.xyz = MaxPos - abs(r2);
     r0.xyz = (0 < r0 ? 1.0 : 0.0);
-    r4.xyz = lerp(r1, r2, r0);
+    r4.xyz = lerp(r1.xyz, r2.xyz, r0);
     r0.xy = r4.xy - EyePosition.xy;
     r1.xy = r0.xy * r0.xy;
     r0.w = r1.y + r1.x;
     r0.w = 1.0 / sqrt(r0.w);
     r1.xz = -r0.xyyw * r0.w;
-    r1.yw = r1.z * const_4.xyzx;
-    r0.xyz = r1.zxww * const_4.yzzw;
+    r1.yw = r1.z * const_4.xy;
+    r0.xyz = r1.zxw * const_4.yzz;
     r0.w = (Params.z * Params.x) + IN.texcoord_1.x;
-    r1.y = dot(r1.yxww.xyz, r0.xyz);
+    r1.y = dot(r1.yxw, r0.xyz);
     r0.w = (r0.w * (1.0 / (PI * 2))) + 0.5;
     r0.w = frac(r0.w);
     r1.y = 1.0 / sqrt(r1.y);
     r0.w = (r0.w * PI * 2) + -PI;
     r1.xy = r0.xy * r1.y;
     r2.x = cos(r0.w); r2.y = sin(r0.w);
-    r3.xyz = r2.xxyw * const_4.zxzw;
-    r2.xyz = r2.yxxw * const_4.yxzw;
+    r3.xyz = r2.xxy * const_4.zxz;
+    r2.xyz = r2.yxx * const_4.yxz;
     r3.x = dot(r3.xyz, IN.position.xyz);
     r3.z = dot(r2.xyz, IN.position.xyz);
     r3.w = IN.position.y;
     r0.w = r1.x;
-    r3.y = dot(r1.ywzw.xyz, r3.xzww.xyz);
-    r3.x = dot(r0.wzyw.xyz, r3.xzww.xyz);
+    r3.y = dot(r1.ywz, r3.xyz);.xzww
+    r3.x = dot(r0.wzy, r3.xyz);.xzww
     r0.xyz = (-0.5 * abs(r5)) + r6;
     r2.x = 1.0 / abs(r5.x);
     r2.y = 1.0 / abs(r5.y);
@@ -95,6 +95,6 @@
     OUT.position.w = dot(WorldViewProj[3].xyzw, r0.xyzw);
     OUT.color_0.a = r1.w * r1.w;
     OUT.color_0.rgb = 1;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 62 instruction slots used

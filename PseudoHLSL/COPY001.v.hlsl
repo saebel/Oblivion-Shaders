@@ -38,14 +38,17 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {-0.5, 0.5, 0, 0};
 
-    OUT.position.xyzw = IN.position;
-    r0.xy = (IN.texcoord_0 * texRatio0) + texRatio0.zwzw;
-    r0.xy = r0.xy + -0.5;
-    r1.xy = r0.y * RotationMatrix[1].xy;
-    r0.xy = (r0.x * RotationMatrix[0].xy) + r1.xy;
-    OUT.texcoord_0.xy = r0.xy + 0.5;
+    float2 r0;
+
+    r0.xy = ((IN.texcoord_0 * texRatio0.xy) + texRatio0.zw) - 0.5;
+    OUT.texcoord_0.xy = ((r0.x * RotationMatrix[0].xy) + (r0.y * RotationMatrix[1].xy)) + 0.5;
+    OUT.position.xyzw = IN.position.xyzw;
 
     return OUT;
 };

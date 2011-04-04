@@ -23,19 +23,19 @@
     float2 texcoord_1 : TEXCOORD1;
     sampler2D Src0;
     sampler2D Src1;
-    r0.xyzw = tex2D(Src1, IN.texcoord_1);
-    r0.w = r0.x + -0.5;
+    r0.xyzw = tex2D(Src1, IN.texcoord_1.xy);
+    r0.w = r0.x - 0.5;
     r1.w = r0.z * r0.w;
-    r0.w = r0.y + -0.5;
+    r0.w = r0.y - 0.5;
     r1.x = (2 * -r1.w) + IN.texcoord_0.x;
     r0.w = r0.z * r0.w;
     r1.y = (2 * r0.w) + IN.texcoord_0.y;
-    r0.xyzw = tex2D(Src1, r1);
-    r1.xyzw = tex2D(Src0, r1);
-    r2.xyzw = tex2D(Src0, IN.texcoord_0);
+    r0.xyzw = tex2D(Src1, r1.xy);
+    r1.xyzw = tex2D(Src0, r1.xy);
+    r2.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r0.w = r0.w * r0.w;
     r3.w = (r0.w <= 0.0 ? 1 : 0);
-    r0.xyzw = lerp(r1, r2, r3.w);
+    r0.xyzw = lerp(r1.xyzw, r2.xyzw, r3.w);
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 15 instruction slots used (4 texture, 11 arithmetic)

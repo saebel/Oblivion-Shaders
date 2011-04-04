@@ -36,14 +36,14 @@
     sampler2D AttenuationMap;
     r0.x = IN.texcoord_4.z;
     r0.y = IN.texcoord_4.w;
-    r1.xyzw = tex2D(AttenuationMap, r0);			// partial precision
-    r2.xyzw = tex2D(AttenuationMap, IN.texcoord_4);			// partial precision
-    r3.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r0.xyz = normalize(IN.texcoord_7);			// partial precision
-    r3.xyz = r3.xyz + -0.5;
-    r3.xyz = r3.xyz + r3.xyz;			// partial precision
-    r4.xyz = normalize(r3);			// partial precision
+    r1.xyzw = tex2D(AttenuationMap, r0.xy);			// partial precision
+    r2.xyzw = tex2D(AttenuationMap, IN.texcoord_4.xy);			// partial precision
+    r3.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyz = normalize(IN.texcoord_7.xyz);			// partial precision
+    r3.xyz = r3.xyz - 0.5;
+    r3.xyz = 2 * r3.xyz;			// partial precision
+    r4.xyz = normalize(r3.xyz);			// partial precision
     r0.x = dot(r4.xyz, r0.xyz);			// partial precision
     r1.w = max(r0.x, 0);			// partial precision
     r1.w = 1 - r1.w;			// partial precision
@@ -52,7 +52,7 @@
     r0.xyz = r1.w * PSLightColor[1].rgb;			// partial precision
     r3.xyz = r1.w * PSLightColor[0].rgb;			// partial precision
     r0.xyz = r0.xyz * 0.5;			// partial precision
-    r5.xyz = normalize(IN.texcoord_2);			// partial precision
+    r5.xyz = normalize(IN.texcoord_2.xyz);			// partial precision
     r5.x = dot(r4.xyz, r5.xyz);			// partial precision
     r4.x = dot(r4.xyz, IN.texcoord_1.xyz);			// partial precision
     r2.w = max(r5.x, 0);			// partial precision

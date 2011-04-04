@@ -28,6 +28,6 @@
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_0.z = IN.normal.z * DecalFade.x;
-    OUT.texcoord_0.xy = IN.normal;
+    OUT.texcoord_0.xy = IN.normal.xy;
 
 // approximately 6 instruction slots used

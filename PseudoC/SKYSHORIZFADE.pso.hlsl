@@ -20,9 +20,9 @@
     float IN.texcoord_2 : TEXCOORD2;
     float4 IN.color_0 : COLOR0;
     sampler2D TexMap;
-    r0.xyzw = tex2D(TexMap, IN.texcoord_0);
+    r0.xyzw = tex2D(TexMap, IN.texcoord_0.xy);
     r0.w = r0.w * IN.color_0.a;
-    OUT.color_0.rgb = r0.xyz * IN.color_0;
+    OUT.color_0.rgb = r0.xyz * IN.color_0.rgb;
     OUT.color_0.a = r0.w * IN.texcoord_2.x;
 
 // approximately 4 instruction slots used (1 texture, 3 arithmetic)

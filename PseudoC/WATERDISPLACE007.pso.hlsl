@@ -23,15 +23,15 @@
     const float4 const_1 = {0.5, 0.5, 0.5, 1};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D DisplaySampler;
-    r0.xy = IN.texcoord_0 + -0.5;
+    r0.xy = IN.texcoord_0.xy - 0.5;
     r0.w = dot(r0.xy, r0.xy) + 0;
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
-    r0.w = r0.w + -0.4;
+    r0.w = r0.w - 0.4;
     r2.w = saturate(r0.w * 10);
-    r0.xy = IN.texcoord_0 + TextureOffset.xy;
-    r1.xyzw = tex2D(DisplaySampler, r0);
-    r0.xyzw = lerp(const_1, r1, r2.w);
+    r0.xy = IN.texcoord_0.xy + TextureOffset.xy;
+    r1.xyzw = tex2D(DisplaySampler, r0.xy);
+    r0.xyzw = lerp(const_1.xyzw, r1.xyzw, r2.w);
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

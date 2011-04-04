@@ -62,7 +62,7 @@
     r0.z = 1 - r0.w;
     r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_7.w = r0.z * FogParam.z;
-    r0.xyz = r0.w * ShadowProjTransform.xyww;
+    r0.xyz = r0.w * ShadowProjTransform.xyw;
     r2.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
     r2.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
     r0.z = 1.0 / r0.z;
@@ -72,12 +72,12 @@
     OUT.texcoord_1.xy = r0.z * r1.xy;
     OUT.texcoord_1.z = r0.x * r0.w;
     OUT.texcoord_1.w = (r0.y * -r0.w) + 1;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0.rgba = IN.color_0;
-    OUT.texcoord_3.xyz = IN.tangent;
-    OUT.texcoord_4.xyz = IN.binormal;
-    OUT.texcoord_5.xyz = IN.normal;
-    OUT.texcoord_6.xyz = IN.position;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = IN.color_0.rgba;
+    OUT.texcoord_3.xyz = IN.tangent.xyz;
+    OUT.texcoord_4.xyz = IN.binormal.xyz;
+    OUT.texcoord_5.xyz = IN.normal.xyz;
+    OUT.texcoord_6.xyz = IN.position.xyz;
     OUT.texcoord_7.xyz = FogColor.rgb;
 
 // approximately 31 instruction slots used

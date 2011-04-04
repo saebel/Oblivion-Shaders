@@ -29,6 +29,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -36,26 +37,31 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
+
+    float4 r0;
+    float4 r1;
+    float4 r2;
+    float2 r3;
 
     r0.x = IN.texcoord_0.x;
     r0.y = fPassNum.x;
-    r0.y = IN.texcoord_0.y;
-    r1.xyzw = tex2D(sampButterfly, r0);
+    r1.xyzw = tex2D(sampButterfly, r0.xy);
     r0.x = r1.y;
-    r0.xyzw = tex2D(sampSourceImage, r0);
-    r2.x = abs(r1.x);
-    r1.xy = (r1.x >= 0.0 ? -r3 : r3);
-    r1.y = r0.w + r1.y;
-    r0.w = r1.y;
-    r1.x = r0.x + r1.x;
-    r0.xyz = r1.x;
-    OUT.color_0.rgba = r0.xyzw;
+    r0.y = IN.texcoord_0.y;
+    r0.xyzw = tex2D(sampSourceImage, r0.xy);
     r2.y = IN.texcoord_0.y;
-    r2.xyzw = tex2D(sampSourceImage, r2);
-    r3.w = r1.w * r2.w;
-    r2.w = r1.z * r2.w;
-    r3.x = (r1.z * r2.x) - r3.w;
-    r3.y = (r1.w * r2.x) + r2.w;
+    r2.x = abs(r1.x);
+    r2.xyzw = tex2D(sampSourceImage, r2.xy);
+    r3.x = (r1.z * r2.x) - (r1.w * r2.w);
+    r3.y = (r1.w * r2.x) + (r1.z * r2.w);
+    r1.xy = (r1.x >= 0.0 ? -r3.xy : r3.xy);
+    r0.xyz = r0.x + r1.x;
+    r0.w = r0.w + r1.y;
+    OUT.color_0.rgba = r0.xyzw;
 
     return OUT;
 };

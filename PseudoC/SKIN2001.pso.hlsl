@@ -46,11 +46,11 @@
     sampler2D FaceGenMap1;
     sampler2D ShadowMap;
     sampler2D ShadowMaskMap;
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r0.xyz + -0.5;
-    r1.xyz = r0.xyz + r0.xyz;			// partial precision
-    r0.xyz = normalize(r1);			// partial precision
-    r1.xyz = normalize(IN.texcoord_6);			// partial precision
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyz = r0.xyz - 0.5;
+    r1.xyz = 2 * r0.xyz;			// partial precision
+    r0.xyz = normalize(r1.xyz);			// partial precision
+    r1.xyz = normalize(IN.texcoord_6.xyz);			// partial precision
     r1.x = dot(r0.xyz, r1.xyz);			// partial precision
     r0.w = max(r1.x, 0);			// partial precision
     r0.w = 1 - r0.w;			// partial precision
@@ -58,32 +58,32 @@
     r1.x = dot(r0.xyz, IN.texcoord_1.xyz);			// partial precision
     r0.w = r0.w * r1.w;			// partial precision
     r0.xyz = r0.w * PSLightColor[0].rgb;			// partial precision
-    r0.xyz = r0.xyz * --0.5;			// partial precision
+    r0.xyz = r0.xyz * 0.5;			// partial precision
     r0.w = max(r1.x, 0);			// partial precision
     r5.xyz = (r0.w * PSLightColor[0].rgb) + r0.xyz;			// partial precision
     r0.x = IN.texcoord_7.z;			// partial precision
     r0.y = IN.texcoord_7.w;			// partial precision
-    r3.xyzw = tex2D(ShadowMaskMap, r0);			// partial precision
-    r4.xyzw = tex2D(ShadowMap, IN.texcoord_7);			// partial precision
-    r2.xyzw = tex2D(FaceGenMap1, IN.texcoord_0);			// partial precision
-    r1.xyzw = tex2D(FaceGenMap0, IN.texcoord_0);			// partial precision
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r4.xyz = r4.xyz + -1;			// partial precision
-    r3.xyz = (r3.x * r4) + 1;			// partial precision
+    r3.xyzw = tex2D(ShadowMaskMap, r0.xy);			// partial precision
+    r4.xyzw = tex2D(ShadowMap, IN.texcoord_7.xy);			// partial precision
+    r2.xyzw = tex2D(FaceGenMap1, IN.texcoord_0.xy);			// partial precision
+    r1.xyzw = tex2D(FaceGenMap0, IN.texcoord_0.xy);			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
+    r4.xyz = r4.xyz - 1;			// partial precision
+    r3.xyz = (r3.x * r4.xyz) + 1;			// partial precision
     r4.xyz = (r3.xyz * r5.xyz) + AmbientColor.rgb;			// partial precision
     r3.xyz = max(r4.xyz, 0);			// partial precision
-    r2.xyz = r2.xyz + r2.xyz;			// partial precision
-    r1.xyz = r1.xyz + -0.5;			// partial precision
+    r2.xyz = 2 * r2.xyz;			// partial precision
+    r1.xyz = r1.xyz - 0.5;			// partial precision
     r0.xyz = (2 * r1.xyz) + r0.xyz;			// partial precision
     r0.xyz = r2.xyz * r0.xyz;			// partial precision
-    r0.xyz = r0.xyz + r0.xyz;			// partial precision
-    r1.xyz = r0.xyz * IN.color_0;			// partial precision
-    r0.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
-    r1.xyz = (-r0 * r3) + IN.color_1;			// partial precision
+    r0.xyz = 2 * r0.xyz;			// partial precision
+    r1.xyz = r0.xyz * IN.color_0.rgb;			// partial precision
+    r0.xyz = (Toggles.x <= 0.0 ? r1.xyz : r0.xyz);			// partial precision
+    r1.xyz = (-r0.xyz * r3.xyz) + IN.color_1.rgb;			// partial precision
     r0.xyz = r3.xyz * r0.xyz;			// partial precision
     r1.xyz = (IN.color_1.a * r1.xyz) + r0.xyz;			// partial precision
     r0.w = r0.w * AmbientColor.a;			// partial precision
-    r0.xyz = (Toggles.y <= 0.0 ? r1 : r0);			// partial precision
+    r0.xyz = (Toggles.y <= 0.0 ? r1.xyz : r0.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 43 instruction slots used (6 texture, 37 arithmetic)

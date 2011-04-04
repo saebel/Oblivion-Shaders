@@ -25,13 +25,13 @@
     float2 IN.color_0 : COLOR0;
     sampler2D DiffuseMap;
     sampler2D LayerMap;
-    r1.xyzw = tex2D(LayerMap, IN.texcoord_0);
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);
+    r1.xyzw = tex2D(LayerMap, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
     r2.w = -0.5;
     r2.xyz = r2.w + EmittanceColor.rgb;
-    r2.xyz = (IN.color_0.g * r2) + 0.5;
-    r3.xyz = r2.xyz + r2.xyz;
-    r2.xyz = lerp(r1, r0, r1.w);
+    r2.xyz = (IN.color_0.g * r2.xyz) + 0.5;
+    r3.xyz = 2 * r2.xyz;
+    r2.xyz = lerp(r1.xyz, r0.xyz, r1.w);
     r0.xyz = r3.xyz * r2.xyz;
     OUT.color_0.rgba = r0.xyzw;
 

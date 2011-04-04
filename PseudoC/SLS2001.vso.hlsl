@@ -50,8 +50,8 @@
     r0.w = (-r0.w >= r0.w ? 1.0 : 0.0);
     r0.w = r4.w * r0.w;
     r0.z = (r0.w * -2048) + IN.position.z;
-    r0.xyw = IN.position;
-    r2.xy = r1.z * HighDetailRange.zwzw;
+    r0.xyw = IN.position.xyw;
+    r2.xy = r1.z * HighDetailRange.zw;
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
@@ -68,10 +68,10 @@
     OUT.texcoord_7.x = r2.w * r3.w;
     r1.w = max(r1.w, 0);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r0.w = min(r1.w, --1);
+    r0.w = min(r1.w, 1);
     OUT.position.xyz = r1.xyz;
-    OUT.color_1.a = -(r0.w + -1);
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.color_1.a = -(r0.w - 1);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xyz = LightDirection[0].xyz;
     OUT.texcoord_7.y = 0;
     OUT.color_1.rgb = FogColor.rgb;

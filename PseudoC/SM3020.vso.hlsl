@@ -41,6 +41,6 @@
     r0.w = (r0.y * (1.0 / 750)) + 0.8;
     OUT.position.z = r0.y;
     OUT.texcoord_0.z = max(r0.w, 1);
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 12 instruction slots used

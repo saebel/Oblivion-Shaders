@@ -43,6 +43,13 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 color_0 : COLOR0;
+    float4 color_1 : COLOR1;
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float3 texcoord_2 : TEXCOORD2;
+    float3 texcoord_3 : TEXCOORD3;
 };
 
 // Code:
@@ -50,51 +57,38 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {0, 1, 0, 0};
 
-    OUT.color_0.a = 1;
-    OUT.color_1.rgba = IN.color_0;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xy = IN.texcoord_0;
+    float4 r0;
+    float3 r1;
+    float4 r3;
+
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
+    r0.xyz = normalize(((1.0 / length(r0.xyz)) * r0.xyz) + LightDirection[0].xyz);
     r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r2.w = 1.0 / LightPosition[1].w;
-    r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r3.x);
-    OUT.texcoord_2.xyz = r1.xyz * r1.w;
-    r0.xyz = EyePosition.xyz - IN.position;
-    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r2.x);
-    r0.xyz = (r0.w * r0.xyz) + LightDirection[0].xyz;
-    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r2.x);
-    r0.xyz = r0.xyz * r0.w;
-    r1.x = dot(IN.tangent.xyz, r0.xyz);
-    r1.y = dot(IN.binormal.xyz, r0.xyz);
-    r1.z = dot(IN.normal.xyz, r0.xyz);
-    r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r3.x);
-    OUT.texcoord_3.xyz = r1.xyz * r1.w;
-    r0.xyz = LightPosition[1].xyz - IN.position;
-    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r3.w = 1.0 / sqrt(r2.x);
-    r0.w = 1.0 / r3.w;
-    r0.w = r0.w * r2.w;
-    r0.w = max(r0.w, 0);
-    r0.w = min(r0.w, 1);
-    r0.w = 1 - r0.w;
-    r0.w = r0.w * r0.w;
-    r0.xyz = r0.xyz * r3.w;
-    r0.x = dot(IN.normal.xyz, r0.xyz);
-    r2.w = max(r0.x, 0);
-    r2.w = min(r2.w, 1);
-    r0.xyz = r2.w * LightColor[1].rgb;
-    OUT.color_0.rgb = r0.xyz * r0.w;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.texcoord_2.xyz = normalize(r1.xyz);
+    r1.x = dot(IN.tangent.xyz, r0.xyz);
+    r1.y = dot(IN.binormal.xyz, r0.xyz);
+    r1.z = dot(IN.normal.xyz, r0.xyz);
+    r0.xyz = LightPosition[1].xyz - IN.position.xyz;
+    r3.w = 1.0 / length(r0.xyz);
+    r0.w = 1 - saturate((1.0 / r3.w) / LightPosition[1].w);
+    OUT.texcoord_3.xyz = normalize(r1.xyz);
+    OUT.color_0.rgb = (saturate(dot(IN.normal.xyz, r0.xyz * r3.w)) * LightColor[1].rgb) * (r0.w * r0.w);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
+    OUT.color_0.a = 1;
+    OUT.color_1.rgba = IN.color_0.rgba;
 
     return OUT;
 };

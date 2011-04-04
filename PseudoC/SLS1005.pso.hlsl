@@ -27,14 +27,14 @@
     sampler2D DiffuseMap;
     sampler2D DecalMap;
     sampler2D Decal2Map;
-    r2.xyzw = tex2D(Decal2Map, IN.texcoord_2);
-    r1.xyzw = tex2D(DecalMap, IN.texcoord_1);
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);
-    r2.xyz = r2.xyz + r2.xyz;
-    r1.xyz = r1.xyz + -0.5;
+    r2.xyzw = tex2D(Decal2Map, IN.texcoord_2.xy);
+    r1.xyzw = tex2D(DecalMap, IN.texcoord_1.xy);
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    r2.xyz = 2 * r2.xyz;
+    r1.xyz = r1.xyz - 0.5;
     r0.xyz = (2 * r1.xyz) + r0.xyz;
     r0.xyz = r2.xyz * r0.xyz;
-    r0.xyz = r0.xyz + r0.xyz;
+    r0.xyz = 2 * r0.xyz;
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 9 instruction slots used (3 texture, 6 arithmetic)

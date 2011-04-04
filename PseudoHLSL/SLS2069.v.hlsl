@@ -39,6 +39,9 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 position : POSITION;
+    float3 texcoord_0 : TEXCOORD0;
+    float1 texcoord_1 : TEXCOORD1;
 };
 
 // Code:
@@ -46,60 +49,65 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {1, 765.01001, 0, 0.5};
     const float4 const_8 = {5, -4.4, 0, 0};
 
-    OUT.texcoord_0.xyz = (0.5 * r1) + 0.5;
-    r0.xyzw = IN.blendindices.zyxw * 765.01001;
-    r0.xyzw = frac(r0);
-    r0.xyzw = (IN.blendindices.zyxw * 765.01001) - r0;
-    offset.xyzw = r0.xyzw;
+    float4 offset;
+    float4 r0;
+    float4 r1;
+    float3 r2;
+
+    offset.xyzw = (IN.blendindices.zyxw * 765.01001) - frac(IN.blendindices.zyxw * 765.01001);
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1.x = dot(IN.blendweight.xyz, 1.xyz);
-    r1.w = 1 - r1.x;
-    r1.x = dot(Bones[0 + offset.y].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.y].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.y].xyzw, r0.xyzw);
+    r1.w = 1 - dot(IN.blendweight.xyz, const_0.xyz);
+    r1.x = dot(Bones[0 + offset.y], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.y], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.y], r0.xyzw);
     r2.xyz = r1.xyz * IN.blendweight.y;
-    r1.x = dot(Bones[0 + offset.x].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.x].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.x].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.x], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.x], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.x], r0.xyzw);
     r2.xyz = (IN.blendweight.x * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.z].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.z].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.z].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.z], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.z], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.z], r0.xyzw);
     r2.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.w].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.w].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.w].xyzw, r0.xyzw);
-    r0.w = 1;
+    r1.x = dot(Bones[0 + offset.w], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.w], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.w], r0.xyzw);
     r0.xyz = (r1.w * r1.xyz) + r2.xyz;
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
-    OUT.position.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
-    OUT.position.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
-    r0.y = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.z = r0.y;
-    OUT.texcoord_1.x = (r0.y * 5) + -4.4;
-    r1.x = dot(Bones[0 + offset.y].xyz, IN.normal.xyz);
-    r1.y = dot(Bones[1 + offset.y].xyz, IN.normal.xyz);
-    r1.z = dot(Bones[2 + offset.y].xyz, IN.normal.xyz);
+    r1.x = dot(Bones[0 + offset.y], IN.normal.xyz);
+    r1.y = dot(Bones[1 + offset.y], IN.normal.xyz);
+    r1.z = dot(Bones[2 + offset.y], IN.normal.xyz);
     r2.xyz = r1.xyz * IN.blendweight.y;
-    r1.x = dot(Bones[0 + offset.x].xyz, IN.normal.xyz);
-    r1.y = dot(Bones[1 + offset.x].xyz, IN.normal.xyz);
-    r1.z = dot(Bones[2 + offset.x].xyz, IN.normal.xyz);
+    r1.x = dot(Bones[0 + offset.x], IN.normal.xyz);
+    r1.y = dot(Bones[1 + offset.x], IN.normal.xyz);
+    r1.z = dot(Bones[2 + offset.x], IN.normal.xyz);
     r2.xyz = (IN.blendweight.x * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.z].xyz, IN.normal.xyz);
-    r1.y = dot(Bones[1 + offset.z].xyz, IN.normal.xyz);
-    r1.z = dot(Bones[2 + offset.z].xyz, IN.normal.xyz);
+    r1.x = dot(Bones[0 + offset.z], IN.normal.xyz);
+    r1.y = dot(Bones[1 + offset.z], IN.normal.xyz);
+    r1.z = dot(Bones[2 + offset.z], IN.normal.xyz);
     r2.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.w].xyz, IN.normal.xyz);
-    r1.y = dot(Bones[1 + offset.w].xyz, IN.normal.xyz);
-    r1.z = dot(Bones[2 + offset.w].xyz, IN.normal.xyz);
+    r1.x = dot(Bones[0 + offset.w], IN.normal.xyz);
+    r1.y = dot(Bones[1 + offset.w], IN.normal.xyz);
+    r1.z = dot(Bones[2 + offset.w], IN.normal.xyz);
     r1.xyz = (r1.w * r1.xyz) + r2.xyz;
-    r2.xyz = normalize(r1);
+    r0.w = 1;
+    r2.xyz = normalize(r1.xyz);
+    OUT.position.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.x = dot(SkinWorldViewTranspose[0].xyz, r2.xyz);
+    OUT.position.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     r1.y = dot(SkinWorldViewTranspose[1].xyz, r2.xyz);
+    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
     r1.z = dot(SkinWorldViewTranspose[2].xyz, r2.xyz);
+    OUT.texcoord_0.xyz = (0.5 * r1.xyz) + 0.5;
+    r0.y = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
+    OUT.texcoord_1.x = (r0.y * 5) - 4.4;
+    OUT.position.z = r0.y;
 
     return OUT;
 };

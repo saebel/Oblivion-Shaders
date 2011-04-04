@@ -16,8 +16,8 @@
 //   DiffuseMap   texture_0       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(DiffuseMap, texcoord_0);
-    r0.xyz = IN.texcoord_0 * IN.input_0;
+    IN.texcoord_0.xyzw = tex2D(DiffuseMap, texcoord_0.xy);
+    r0.xyz = IN.texcoord_0.xyz * IN.input_0.xyz;
   + r0.w = IN.texcoord_0.w;
 
 // approximately 2 instruction slots used (1 texture, 1 arithmetic)

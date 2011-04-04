@@ -34,29 +34,29 @@
     r1.x = dot(ObjToCubeSpace.xyzw, IN.position.xyzw);
     r1.y = dot(const_9.xyzw, IN.position.xyzw);
     r1.z = dot(const_10.xyzw, IN.position.xyzw);
-    r0.xyzw = r1 - BoundWorldCenter;
+    r0.x.zw = r1.xy - BoundWorldCenter.xy;
     r0.w = dot(r0.xyzw, r0.xyzw);	// normalize + length
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.w = 1.0 / sqrt(r0.w);
     r2.xyz = EyePosition.xyz - r1.xyz;
     r1.xyz = r0.xyz * r0.w;
-    r0.xyz = normalize(r2);
+    r0.xyz = normalize(r2.xyz);
     r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r2.x = dot(r1.xyz, r0.xyz);
     r0.w = 1.0 / sqrt(r3.x);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    r0.w = (r2.x * r0.w) + -0.8;
+    r0.w = (r2.x * r0.w) - 0.8;
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     r0.w = r0.w * 6.66666651;
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.w = max(r0.w, 0);
-    OUT.texcoord_1.xyz = (0.5 * r1) + 0.5;
+    OUT.texcoord_1.xyz = (0.5 * r1.xyz) + 0.5;
     r1.w = min(r0.w, 1);
     r0.w = (r1.w * -2) + 3;
     r1.w = r1.w * r1.w;
     OUT.texcoord_2.xyz = r0.xyz;
     OUT.texcoord_1.w = r0.w * r1.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0.rgb = IN.color_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgb = IN.color_0.rgb;
 
 // approximately 30 instruction slots used

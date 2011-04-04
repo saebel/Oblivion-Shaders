@@ -26,6 +26,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -33,25 +34,16 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {0, -(1.0 / 256), 2, -1};
     const float4 const_1 = {0.125, 0.5, 0, 0};
     const float4 const_2 = {-(1.0 / 256), 0, -3, 0};
 
-    r0.xy = IN.texcoord_0 - const_2.xy;
-    r0.xyzw = tex2D(HeightMap, r0);
-    r0.xyzw = (2 * r0) + r1;
-    r0.xyzw = r0 + -3;
-    r0.xyzw = (0.125 * r0) + 0.5;
-    OUT.color_0.rgba = r0.xyzw;
-    r1.xy = IN.texcoord_0 + const_2.xy;
-    r1.xyzw = tex2D(HeightMap, r1);
-    r1.xyzw = (2 * r1) + r2;
-    r2.xy = IN.texcoord_0 - const_0.xy;
-    r2.xyzw = tex2D(HeightMap, r2);
-    r2.xyzw = (2 * r2) + r3;
-    r3.xy = IN.texcoord_0 + const_0.xy;
-    r3.xyzw = tex2D(HeightMap, r3);
-    r3.xyzw = (2 * r3) + -1;
+
+    OUT.color_0.rgba = (0.125 * (((2 * (tex2D(HeightMap, IN.texcoord_0.xy - const_2.xy))) + ((2 * (tex2D(HeightMap, IN.texcoord_0.xy + const_2.xy))) + ((2 * (tex2D(HeightMap, IN.texcoord_0.xy - const_0.xy))) + ((2 * (tex2D(HeightMap, IN.texcoord_0.xy + const_0.xy))) - 1)))) - 3)) + 0.5;
 
     return OUT;
 };

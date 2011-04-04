@@ -36,7 +36,7 @@
 
     const int4 const_0 = {1, 1, -1, 0};
     float3 texcoord_1 : TEXCOORD1_centroid;
-    r0.xyz = EyePos.xyz - IN.texcoord_1;
+    r0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r1.x);
     r0.xyz = r0.xyz * r0.w;

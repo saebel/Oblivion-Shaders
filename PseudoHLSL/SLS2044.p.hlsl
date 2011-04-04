@@ -35,6 +35,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -42,31 +43,31 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {-0.5, 1, 0, 0};
+
+    float4 r0;
+    float4 r1;
+    float3 r2;
 
     r0.x = IN.texcoord_1.w;			// partial precision
     r0.y = IN.texcoord_2.w;			// partial precision
     r0.z = IN.texcoord_3.w;			// partial precision
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r1.xyz + -0.5;
-    r1.xyz = r0.xyz + r0.xyz;			// partial precision
-    r0.xyz = normalize(r1);			// partial precision
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
+    r1.xyz = 2 * (r1.xyz - 0.5);			// partial precision	// [0,1] to [-1,+1]
+    r2.xyz = normalize(r0.xyz);			// partial precision
+    r0.xyz = normalize(r1.xyz);			// partial precision
     r1.x = dot(r0.xyz, IN.texcoord_1.xyz);			// partial precision
     r1.y = dot(r0.xyz, IN.texcoord_2.xyz);			// partial precision
     r1.z = dot(r0.xyz, IN.texcoord_3.xyz);			// partial precision
-    r0.xyz = normalize(r1);			// partial precision
-    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length			// partial precision
-    r2.xyz = normalize(r0);			// partial precision
-    r1.xyz = r2.xyz * r1.x;			// partial precision
-    r3.x = dot(r0.xyz, r2.xyz);			// partial precision
-    r0.w = r3.x + r3.x;			// partial precision
-    r0.xyz = (r0.w * r0.xyz) - r1.xyz;			// partial precision
-    r0.xyzw = texCUBE(EnvironmentCubeMap, r0);			// partial precision
+    r0.xyz = normalize(r1.xyz);			// partial precision
+    r0.xyzw = texCUBE(EnvironmentCubeMap, ((2 * dot(r0.xyz, r2.xyz)) * r0.xyz) - (r2.xyz * dot(r0.xyz, r0.xyz)));			// partial precision
+    r0.xyz = (r1.w * r0.xyz) * AmbientColor.a;			// partial precision
+    r0.xyz = (Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz);			// partial precision
     r0.w = 1;
-    r0.xyz = r1.w * r0.xyz;			// partial precision
-    r0.xyz = r0.xyz * AmbientColor.a;			// partial precision
-    r1.xyz = r0.xyz * IN.color_0;			// partial precision
-    r0.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

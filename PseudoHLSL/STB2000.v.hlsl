@@ -43,6 +43,11 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    float3 texcoord_2 : TEXCOORD2;
+    float4 texcoord_4 : TEXCOORD4;
 };
 
 // Code:
@@ -50,37 +55,40 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_4 = {0.5, 0, 0, 0};
 
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_4.w = 0.5;
-    OUT.texcoord_4.xyz = (0.5 * r0) + 0.5;
-    r2.xyz = normalize(r1);
-    OUT.texcoord_1.xyz = r2.xyz;
-    r1.xyzw = IN.position;
-    r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r1.xyz = normalize(r0);
-    OUT.texcoord_2.x = dot(IN.tangent.xyz, r1.xyz);
-    OUT.texcoord_2.y = dot(IN.binormal.xyz, r1.xyz);
-    OUT.texcoord_2.z = dot(IN.normal.xyz, r1.xyz);
-    r0.w = frac(IN.blendindices.y);
-    r0.w = IN.blendindices.y - r0.w;
-    offset.w = r0.w;
-    r0.w = dot(WindMatrices[3 + offset.w].xyzw, IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.w].xyzw, IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w].xyzw, IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w].xyzw, IN.position.xyzw);
-    r0.xyzw = r0 - IN.position;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
+    float4 offset;
+    float4 r0;
+    float4 r1;
+
+    offset.w = IN.blendindices.y;
+    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
+    r0.x.zw = r0.xy - IN.position.xy;
+    r1.xyzw = IN.position.xyzw;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    r0.w = 1.0 / LightPosition[1].w;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r0.xyz = LightPosition[1].xyz - r0.xyz;
-    r0.xyz = r0.xyz * r0.w;
+    r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
+    r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
+    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
+    OUT.texcoord_1.xyz = normalize(r1.xyz);
+    r1.xyz = normalize(r0.xyz);
+    OUT.texcoord_2.x = dot(IN.tangent.xyz, r1.xyz);
+    OUT.texcoord_2.y = dot(IN.binormal.xyz, r1.xyz);
+    OUT.texcoord_2.z = dot(IN.normal.xyz, r1.xyz);
+    OUT.texcoord_4.xyz = (0.5 * (r0.xyz / LightPosition[1].w)) + 0.5;	// [-1,+1] to [0,1]
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_4.w = 0.5;
 
     return OUT;
 };

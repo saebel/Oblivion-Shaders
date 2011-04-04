@@ -37,13 +37,13 @@
     r0.w = frac(IN.blendindices.y);
     r0.w = IN.blendindices.y - r0.w;
     offset.w = r0.w;
-    r0.x = dot(WindMatrices[0 + offset.w].xyzw, IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w].xyzw, IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w].xyzw, IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.w].xyzw, IN.position.xyzw);
-    r0.xyzw = r0 - IN.position;
-    r1.xyzw = IN.position;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
+    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
+    r0.x.zw = r0.xy - IN.position.xy;
+    r1.xyzw = IN.position.xyzw;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
@@ -63,7 +63,7 @@
     OUT.position.xyz = r1.xyz;
     r0.w = min(r0.w, 1);
     OUT.texcoord_3.w = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_2.xyzw = LightPosition[0].xyzw;
     OUT.texcoord_3.xyz = 0;
 

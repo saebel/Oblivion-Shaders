@@ -36,7 +36,7 @@
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
-    r0.xyz = LightPosition[0].xyz - IN.position;
+    r0.xyz = LightPosition[0].xyz - IN.position.xyz;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
@@ -46,12 +46,12 @@
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r1.x = dot(IN.tangent.xyz, r2.xyz);
     r1.y = dot(IN.binormal.xyz, r2.xyz);
-    r3.xyz = EyePosition.xyz - IN.position;
+    r3.xyz = EyePosition.xyz - IN.position.xyz;
     r1.z = dot(IN.normal.xyz, r2.xyz);
-    r2.xyz = normalize(r3);
+    r2.xyz = normalize(r3.xyz);
     r3.xyz = (r0.w * r0.xyz) + r2.xyz;
-    r0.xyz = normalize(r3);
-    r5.xyz = normalize(r1);
+    r0.xyz = normalize(r3.xyz);
+    r5.xyz = normalize(r1.xyz);
     OUT.texcoord_2.xyz = r5.xyz;
     r1.x = dot(IN.tangent.xyz, r0.xyz);
     r1.y = dot(IN.binormal.xyz, r0.xyz);
@@ -64,11 +64,11 @@
     r0.z = dot(IN.normal.xyz, r2.xyz);
     OUT.texcoord_3.xyz = r1.xyz * r1.w;
     r1.w = 1.0 / LightPosition[0].w;
-    r5.xyz = normalize(r0);
+    r5.xyz = normalize(r0.xyz);
     OUT.texcoord_1.xyz = r5.xyz;
     r0.w = r0.w * r1.w;
     r0.w = max(r0.w, 0);
-    r0.xyz = LightPosition[2].xyz - IN.position;
+    r0.xyz = LightPosition[2].xyz - IN.position.xyz;
     r0.w = min(r0.w, 1);
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r1.w = 1 - r0.w;
@@ -82,7 +82,7 @@
     r1.xyz = r2.w * LightColor[2].rgb;
     r0.w = max(r0.w, 0);
     r0.w = min(r0.w, 1);
-    r0.xyz = LightPosition[1].xyz - IN.position;
+    r0.xyz = LightPosition[1].xyz - IN.position.xyz;
     r0.w = 1 - r0.w;
     r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r4.w = r0.w * r0.w;
@@ -101,7 +101,7 @@
     r0.w = r0.w * r0.w;
     OUT.color_0.a = r1.w * r1.w;
     OUT.color_0.rgb = (r0.w * r0.xyz) + r1.xyz;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_1.rgba = IN.color_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_1.rgba = IN.color_0.rgba;
 
 // approximately 75 instruction slots used

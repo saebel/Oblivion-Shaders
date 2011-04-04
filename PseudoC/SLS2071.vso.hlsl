@@ -43,9 +43,9 @@
     r0.w = min(r0.y, r0.x);
     r0.w = r1.w * r0.w;
     r1.w = r0.w * r0.w;
-    r2.w = (r1.w * 0.0208350997) + -0.0851330012;
+    r2.w = (r1.w * 0.0208350997) - 0.0851330012;
     r2.w = (r1.w * r2.w) + 0.180141002;
-    r2.w = (r1.w * r2.w) + -0.330299497;
+    r2.w = (r1.w * r2.w) - 0.330299497;
     r1.w = (r1.w * r2.w) + 0.999866009;
     r2.w = r0.w * r1.w;
     r1.w = (r0.y < r0.x ? 1.0 : 0.0);
@@ -55,13 +55,13 @@
     r2.w = (r0.w * -PI) + r1.w;
     r0.w = 0.025;
     OUT.texcoord_1.y = (IN.position.z * r0.w) + UOffset.x;
-    r1.w = r2.w + r2.w;
+    r1.w = 2 * r2.w;
     r0.w = min(IN.position.y, IN.position.x);
     r3.w = max(IN.position.y, IN.position.x);
     r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
     r3.w = (r3.w >= -r3.w ? 1.0 : 0.0);
     r0.w = r0.w * r3.w;
-    r1.xyz = EyePosition.xyz - IN.position;
+    r1.xyz = EyePosition.xyz - IN.position.xyz;
     r1.w = (r0.w * -r1.w) + r2.w;
     r0.x = dot(IN.normal.xyz, r1.xyz);
     r0.yw = const_6.yw;
@@ -83,14 +83,14 @@
     r2.w = 1.0 / FogParam.y;
     r1.w = r1.w * r2.w;
     r1.w = max(r1.w, 0);
-    r2.xyz = normalize(r1);
+    r2.xyz = normalize(r1.xyz);
     OUT.texcoord_3.xyz = r2.xyz;
     r1.w = min(r1.w, 1);
     r1.w = 1 - r1.w;
     r0.w = (r0.w < FogParam.z ? 1.0 : 0.0);
     OUT.position.xyz = r0.xyz;
     OUT.color_1.a = r1.w * r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_1.rgb = FogColor.rgb;
 
 // approximately 57 instruction slots used

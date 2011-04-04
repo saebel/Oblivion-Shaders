@@ -28,6 +28,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -35,20 +36,19 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {-0.5, 0.1, -0.1, 1.0 - 0.1};
     const int4 const_1 = {1, 0, 0, 0};
 
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);
-    r0.w = 1.0 / IN.texcoord_0.z;			// partial precision
-    r0.xy = r0.xy + -0.5;
-    r0.xy = r0.xy + r0.xy;			// partial precision
+    float4 r0;
+
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    r0.xy = (0.5 * (((1.0 - 0.1 * max(-0.1, min(2 * (r0.xy - 0.5), 0.1))) + IN.texcoord_1.xy) / (IN.texcoord_0.z))) + 0.5;			// partial precision	// [0,1] to [-1,+1]
     r0.z = PSRefractionPower.x;			// partial precision
-    r1.xy = min(r0.xy, 0.1);			// partial precision
-    r0.xy = max(-0.1, r1.xy);			// partial precision
-    r0.xy = (1.0 - 0.1 * r0) + IN.texcoord_1;			// partial precision
-    r0.xy = r0.xy * r0.w;			// partial precision
     r0.w = 1;
-    r0.xy = (--0.5 * r0) - -0.5;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

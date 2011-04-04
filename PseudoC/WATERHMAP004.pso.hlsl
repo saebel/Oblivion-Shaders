@@ -22,10 +22,10 @@
     sampler2D sampScramble;
     sampler2D sampSourceImage;
     r0.xy = IN.texcoord_0.y;
-    r0.xyzw = tex2D(sampScramble, r0);
+    r0.xyzw = tex2D(sampScramble, r0.xy);
     r0.y = r0.x;
     r0.x = IN.texcoord_0.x;
-    r0.xyzw = tex2D(sampSourceImage, r0);
+    r0.xyzw = tex2D(sampSourceImage, r0.xy);
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 6 instruction slots used (2 texture, 4 arithmetic)

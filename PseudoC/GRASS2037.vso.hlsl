@@ -55,9 +55,9 @@
     r0.w = IN.texcoord_1.x - r0.w;
     offset.w = r0.w;
     r0.xyzw = frac(InstanceData[0 + offset.w]);
-    r4.xyz = r0.w * IN.color_0;
-    r0.xyz = r0.xyz + -0.5;
-    r2.xyz = r0.xyz + r0.xyz;
+    r4.xyz = r0.w * IN.color_0.rgb;
+    r0.xyz = r0.xyz - 0.5;
+    r2.xyz = 2 * r0.xyz;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r0.x = dot(DiffuseDir.xyz, r2.xyz);
     r1.x = WindData.w;
@@ -80,16 +80,16 @@
     r0.w = r1.y * InstanceData[0 + offset.w].w;
     r3.xy = -r3.xy;
     r3.z = (r2.x * r0.y) + r3.y;
-    r5.xyz = (r0.w * ScaleMask) + r1.z;
+    r5.xyz = (r0.w * ScaleMask.xyz) + r1.z;
     r1.xyz = normalize(r3.xwzw);
-    r3.xyz = r5.xyz * IN.position;
+    r3.xyz = r5.xyz * IN.position.xyz;
     r0.z = r1.y;
     r0.w = r2.y;
-    r0.y = dot(r0.zyww.xyz, r3.xyz);
+    r0.y = dot(r0.zyw, r3.xyz);
     r0.w = r2.x;
     r0.z = r1.x;
-    r2.xy = r1.z * const_3.zwzw;
-    r0.x = dot(r0.zxww.xyz, r3.xyz);
+    r2.xy = r1.z * const_3.zw;
+    r0.x = dot(r0.zxw, r3.xyz);
     r0.z = dot(r2.xyz, r3.xyz);
     r0.xy = (r1.w * WindData.xy) + r0.xy;
     r1.xyz = r0.xyz + InstanceData[0 + offset.w];
@@ -110,7 +110,7 @@
     r2.w = 1.0 / sqrt(r2.w);
     r1.w = r1.w * r3.w;
     r2.w = 1.0 / r2.w;
-    r1.xy = r2.w - AlphaParam.xzzw;
+    r1.xy = r2.w - AlphaParam.xz;
     r2.x = 1.0 / AlphaParam.y;
     r2.y = 1.0 / AlphaParam.w;
     r1.w = max(r1.w, 0);
@@ -122,7 +122,7 @@
     OUT.position.xyzw = r0.xyzw;
     r0.w = 1 - r1.y;
     OUT.texcoord_5.w = r1.x * r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.xyzw = AmbientColor.rgba;
     OUT.color_0.rgb = FogColor.rgb;
 

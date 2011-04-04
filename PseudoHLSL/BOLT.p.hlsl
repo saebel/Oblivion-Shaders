@@ -28,6 +28,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -35,16 +36,18 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_2 = {1, 0, 0, 0};
 
-    r0.w = IN.texcoord_0.x + 1;			// partial precision
-    r1.w = 1 - IN.texcoord_0.x;			// partial precision
-    r1.w = (IN.texcoord_0.x <= 0.0 ? r1.w : r0.w);			// partial precision
+    float4 r0;
+    float4 r1;
+
+    r1.w = (IN.texcoord_0.x <= 0.0 ? (1 - IN.texcoord_0.x) : (IN.texcoord_0.x + 1));			// partial precision
     r0.w = r1.w * r1.w;			// partial precision
-    r0.w = r0.w * r0.w;			// partial precision
-    r0.w = r1.w * r0.w;			// partial precision
-    r0.xyz = r1.w * GlowColor.rgb;			// partial precision
-    r0.xyz = (r0.w * CoreColor.rgb) + r0.xyz;			// partial precision
+    r0.xyz = ((r1.w * (r0.w * r0.w)) * CoreColor.rgb) + (r1.w * GlowColor.rgb);			// partial precision
     r0.w = IN.color_0.a;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 

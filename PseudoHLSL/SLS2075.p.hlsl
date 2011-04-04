@@ -36,6 +36,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -43,21 +44,21 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_3 = {-0.5, 0, 1, 0};
 
-    r0.xyzw = tex2D(SourceTexture, IN.texcoord_1);
+    float4 r0;
+    float4 r1;
+
+    r0.xyzw = tex2D(SourceTexture, IN.texcoord_1.xy);
     r0.w = r0.w * FillColor.a;
-    r0.xyz = r0.xyz + FillColor.rgb;
-    r0.xyz = r0.xyz * r0.w;
-    r0.xyz = lerp(IN.color_1, r1, IN.color_1.a);
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);
-    r1.xyz = r1.xyz + -0.5;
-    r1.xyz = r1.xyz + r1.xyz;
-    r2.x = dot(r1.xyz, IN.texcoord_3.xyz);
-    r1.w = max(r2.x, 0);
-    r2.w = 1 - r1.w;
-    r1.w = pow(abs(r2.w), fVars.x);
-    r1.xyzw = (r1.w * RimColor) + r0;
+    r0.xyz = (r0.xyz + FillColor.rgb) * r0.w;
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    r1.xyzw = (pow(abs(1 - max(dot(2 * (r1.xyz - 0.5), IN.texcoord_3.xyz), 0)), fVars.x) * RimColor.rgba) + r0.xyzw;	// [0,1] to [-1,+1]
+    r0.xyz = lerp(IN.color_1.rgb, r1.xyz, IN.color_1.a);
     r0.w = r1.w;
     OUT.color_0.rgba = r0.xyzw;
 

@@ -57,9 +57,9 @@
     r0.w = IN.texcoord_1.x - r0.w;
     offset.w = r0.w;
     r0.xyzw = frac(InstanceData[0 + offset.w]);
-    r1.xyz = r0.xyz + -0.5;
-    r0.xyz = r0.w * IN.color_0;
-    r2.xyz = r1.xyz + r1.xyz;
+    r1.xyz = r0.xyz - 0.5;
+    r0.xyz = r0.w * IN.color_0.rgb;
+    r2.xyz = 2 * r1.xyz;
     r1.x = dot(DiffuseDir.xyz, r2.xyz);
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r1.w = max(r1.x, 0);
@@ -83,16 +83,16 @@
     r0.w = r1.y * InstanceData[0 + offset.w].w;
     r3.xy = -r3.xy;
     r3.z = (r2.x * r0.y) + r3.y;
-    r5.xyz = (r0.w * ScaleMask) + r1.z;
+    r5.xyz = (r0.w * ScaleMask.xyz) + r1.z;
     r1.xyz = normalize(r3.xwzw);
-    r3.xyz = r5.xyz * IN.position;
+    r3.xyz = r5.xyz * IN.position.xyz;
     r0.z = r1.y;
     r0.w = r2.y;
-    r0.y = dot(r0.zyww.xyz, r3.xyz);
+    r0.y = dot(r0.zyw, r3.xyz);
     r0.w = r2.x;
     r0.z = r1.x;
-    r2.xy = r1.z * const_8.zwzw;
-    r0.x = dot(r0.zxww.xyz, r3.xyz);
+    r2.xy = r1.z * const_8.zw;
+    r0.x = dot(r0.zxw, r3.xyz);
     r0.z = dot(r2.xyz, r3.xyz);
     r0.xy = (r1.w * WindData.xy) + r0.xy;
     r1.xyz = r0.xyz + InstanceData[0 + offset.w];
@@ -115,7 +115,7 @@
     r2.w = 1.0 / sqrt(r2.w);
     r1.w = min(r1.w, 1);
     r2.w = 1.0 / r2.w;
-    r2.xy = r2.w - AlphaParam.xzzw;
+    r2.xy = r2.w - AlphaParam.xz;
     r3.x = 1.0 / AlphaParam.y;
     r3.y = 1.0 / AlphaParam.w;
     OUT.color_0.a = 1 - r1.w;
@@ -127,10 +127,10 @@
     r0.w = 1 - r2.y;
     r0.xyz = r1.xyz * r1.w;
     OUT.texcoord_5.w = r2.x * r0.w;
-    OUT.texcoord_1.xyz = (--0.5 * r0) - -0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_1.xyz = (0.5 * r0.xyz) - -0.5;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.xyzw = AmbientColor.rgba;
-    OUT.texcoord_1.w = --0.5;
+    OUT.texcoord_1.w = 0.5;
     OUT.color_0.rgb = FogColor.rgb;
 
 // approximately 88 instruction slots used

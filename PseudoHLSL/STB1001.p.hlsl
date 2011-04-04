@@ -22,12 +22,12 @@ float4 PSLightColor[4];
 //   NormalMap    texture_1       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(BaseMap, texcoord_0);
-    IN.texcoord_1.xyzw = tex2D(BaseMap, texcoord_0);
+    IN.texcoord_0.xyzw = tex2D(BaseMap, texcoord_0.xy);
+    IN.texcoord_1.xyzw = tex2D(BaseMap, texcoord_0.xy);
     texcoord IN.texcoord_3
     r0.xyz = saturate(dot(2 * ((IN.texcoord_1.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
-    r0.xyz = saturate((PSLightColor[0] * r0) + AmbientColor);
-    r1.xyz = IN.texcoord_0 * IN.input_0;
+    r0.xyz = saturate((PSLightColor[0].rgb * r0.xyz) + AmbientColor.rgb);
+    r1.xyz = IN.texcoord_0.xyz * IN.input_0.xyz;
   + r0.w = IN.texcoord_0.w;
     r0.xyz = r0.xyz * r1.xyz;
 
@@ -46,6 +46,11 @@ struct PS_OUTPUT {
 
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
+
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
 
 
 

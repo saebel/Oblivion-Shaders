@@ -34,9 +34,9 @@
     r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    OUT.texcoord_3.xyz = (0.5 * r0) + 0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xy = IN.texcoord_0;
-    OUT.texcoord_2.xy = IN.texcoord_0;
+    OUT.texcoord_3.xyz = (0.5 * r0.xyz) + 0.5;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xy = IN.texcoord_0.xy;
 
 // approximately 11 instruction slots used

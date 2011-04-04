@@ -42,28 +42,28 @@
     float3 OUT.texcoord_6 : TEXCOORD6;
     float4 OUT.texcoord_1 : TEXCOORD1;
     float4 OUT.texcoord_2 : TEXCOORD2;
-    r1.xyzw = 765.01001 * IN.blendindices.zyxw;
-    r0.xyzw = frac(r1);
-    r2.w = dot(IN.blendweight.xyz, 1.xyz);
-    r0.xyzw = r1 - r0;
+    r1.x.zw = 765.01001 * IN.blendindices.zy;
+    r0.xyzw = frac(r1.xyzw);
+    r2.w = dot(IN.blendweight.xyz, const_0.xyz);.x
+    r0.x.zw = r1.xy - r0.xy;
     offset.xyzw = r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.w = 1 - r2.w;
-    r1.x = dot(Bones[0 + offset.y].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.y].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.y].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.y], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.y], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.y], r0.xyzw);
     r2.xyz = r1.xyz * IN.blendweight.y;
-    r1.x = dot(Bones[0 + offset.x].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.x].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.x].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.x], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.x], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.x], r0.xyzw);
     r2.xyz = (IN.blendweight.x * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.z].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.z].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.z].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.z], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.z], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.z], r0.xyzw);
     r2.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.w].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.w].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.w].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.w], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.w], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.w], r0.xyzw);
     r0.xyz = (r1.w * r1.xyz) + r2.xyz;
     r0.w = 1;
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
@@ -84,7 +84,7 @@
     OUT.texcoord_1.z = dot(ObjToCubeMap[2].xyzw, r0.xyzw);
     OUT.texcoord_1.w = dot(ObjToCubeMap[3].xyzw, r0.xyzw);
     OUT.texcoord_6.xyz = r0.xyz;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_2.xyz = FogColor.rgb;
 
 // approximately 44 instruction slots used

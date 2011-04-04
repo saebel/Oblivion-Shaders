@@ -42,6 +42,11 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 color_1 : COLOR1;
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float3 texcoord_3 : TEXCOORD3;
 };
 
 // Code:
@@ -49,65 +54,44 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_4 = {0.025, 0.0208350997, -0.0851330012, 0.180141002};
     const float4 const_5 = {-0.330299497, 0.999866009, -2, PI / 2};
     const float4 const_6 = {-PI, 0.318471342, 1, 0};
 
-    OUT.color_1.rgb = FogColor.rgb;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    float4 r0;
+    float4 r1;
+    float4 r2;
+    float4 r3;
+
+    OUT.texcoord_1.y = (IN.position.z * 0.025) + UOffset.x;
     r0.xy = abs(IN.position);
-    r0.w = max(r0.y, r0.x);
-    r1.w = 1.0 / r0.w;
-    r0.w = min(r0.y, r0.x);
-    r0.w = r1.w * r0.w;
+    r0.w = (1.0 / max(r0.y, r0.x)) * min(r0.y, r0.x);
     r1.w = r0.w * r0.w;
-    r1.xyz = EyePosition.xyz - IN.position;
-    r2.w = (r1.w * 0.0208350997) + -0.0851330012;
-    r2.w = (r1.w * r2.w) + 0.180141002;
-    r2.w = (r1.w * r2.w) + -0.330299497;
-    r1.w = (r1.w * r2.w) + 0.999866009;
-    r2.w = r0.w * r1.w;
-    r0.w = (r2.w * -2) + PI / 2;
-    r1.w = (r0.y < r0.x ? 1.0 : 0.0);
-    r0.x = dot(IN.normal.xyz, r1.xyz);
-    r1.w = (r0.w * r1.w) + r2.w;
-    r0.w = (IN.position.y < -IN.position.y ? 1.0 : 0.0);
-    r2.w = (r0.w * -PI) + r1.w;
-    r0.w = 0.025;
-    OUT.texcoord_1.y = (IN.position.z * r0.w) + UOffset.x;
+    r2.w = r0.w * ((r1.w * ((r1.w * ((r1.w * ((r1.w * 0.0208350997) - 0.0851330012)) + 0.180141002)) - 0.330299497)) + 0.999866009);
+    r2.w = ((IN.position.y < -IN.position.y ? 1.0 : 0.0) * -PI) + ((((r2.w * -2) + PI / 2) * (r0.y < r0.x ? 1.0 : 0.0)) + r2.w);
     r0.w = min(IN.position.y, IN.position.x);
-    r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
-    r1.w = r2.w + r2.w;
+    r1.xyz = EyePosition.xyz - IN.position.xyz;
     r3.w = max(IN.position.y, IN.position.x);
-    r3.w = (r3.w >= -r3.w ? 1.0 : 0.0);
-    r0.w = r0.w * r3.w;
-    r1.w = (r0.w * -r1.w) + r2.w;
+    r1.w = (((r0.w < -r0.w ? 1.0 : 0.0) * (r3.w >= -r3.w ? 1.0 : 0.0)) * -(2 * r2.w)) + r2.w;
     r0.yw = const_6.yw;
     OUT.texcoord_1.x = (r1.w * r0.y) + VOffset.x;
-    r0.w = (r0.w < FogParam.z ? 1.0 : 0.0);
-    r1.w = (r0.x < 1 ? 1.0 : 0.0);
-    r0.xyz = r1.xyz * r1.w;
-    r2.w = 1.0 / FogParam.y;
-    r2.xyz = (-2 * r0.xyz) + r1.xyz;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r2.xyz = (-2 * (r1.xyz * ((dot(IN.normal.xyz, r1.xyz) < 1 ? 1.0 : 0.0)))) + r1.xyz;
     r1.x = dot(IN.tangent.xyz, r2.xyz);
     r1.y = dot(IN.binormal.xyz, r2.xyz);
     r1.z = dot(IN.normal.xyz, r2.xyz);
-    r2.xyz = normalize(r1);
-    OUT.texcoord_3.xyz = r2.xyz;
+    OUT.texcoord_3.xyz = normalize(r1.xyz);
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.xyz = r0.xyz;
-    r3.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r3.x);
-    r1.w = 1.0 / r1.w;
-    r1.w = FogParam.x - r1.w;
-    r1.w = r1.w * r2.w;
-    r1.w = max(r1.w, 0);
-    r1.w = min(r1.w, 1);
-    r1.w = 1 - r1.w;
-    OUT.color_1.a = r1.w * r0.w;
+    OUT.color_1.a = (1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y)) * (r0.w < FogParam.z ? 1.0 : 0.0);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_1.rgb = FogColor.rgb;
 
     return OUT;
 };

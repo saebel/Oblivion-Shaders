@@ -21,8 +21,8 @@
     float4 IN.color_0 : COLOR0;
     float2 IN.texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0.xyzw = tex2D(Src0, IN.texcoord_0);
-    OUT.color_0.rgb = saturate((IN.color_0 * r0) + AmbientColor);
+    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
+    OUT.color_0.rgb = saturate((IN.color_0.rgb * r0.xyz) + AmbientColor.rgb);
     OUT.color_0.a = r0.w * IN.color_0.a;
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

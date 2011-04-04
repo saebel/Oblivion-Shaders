@@ -30,6 +30,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -37,13 +38,17 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);
-    r1.xyz = IN.color_1;
-    r1.xyz = (SunlightDimmer.x * r1) + IN.color_0;
-    r2.xyz = (-r0 * r1) + IN.texcoord_1;
-    r2.xyz = r2.xyz * IN.texcoord_1.w;
-    r0.xyz = (r0.xyz * r1.xyz) + r2.xyz;
+
+    float4 r0;
+    float3 r1;
+
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    r1.xyz = (SunlightDimmer.x * IN.color_1.rgb) + IN.color_0.rgb;
+    r0.xyz = (r0.xyz * r1.xyz) + (((-r0.xyz * r1.xyz) + IN.texcoord_1.xyz) * IN.texcoord_1.w);
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

@@ -48,6 +48,6 @@
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.xyzw = r0.xyzz;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 12 instruction slots used

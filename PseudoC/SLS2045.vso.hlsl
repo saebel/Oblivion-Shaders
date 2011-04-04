@@ -34,24 +34,24 @@
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    r0.xyz = LightPosition[0].xyz - IN.position;
-    r2.xyz = normalize(r0);
-    r0.xyz = EyePosition.xyz - IN.position;
+    r0.xyz = LightPosition[0].xyz - IN.position.xyz;
+    r2.xyz = normalize(r0.xyz);
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
     r1.x = dot(IN.tangent.xyz, r2.xyz);
     r3.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r1.y = dot(IN.binormal.xyz, r2.xyz);
     r0.w = 1.0 / sqrt(r3.x);
     r1.z = dot(IN.normal.xyz, r2.xyz);
     r2.xyz = (r0.w * r0.xyz) + r2.xyz;
-    r0.xyz = normalize(r1);
-    r1.xyz = normalize(r2);
-    OUT.texcoord_2.xyz = (0.5 * r0) + 0.5;
+    r0.xyz = normalize(r1.xyz);
+    r1.xyz = normalize(r2.xyz);
+    OUT.texcoord_2.xyz = (0.5 * r0.xyz) + 0.5;
     r0.x = dot(IN.tangent.xyz, r1.xyz);
     r0.y = dot(IN.binormal.xyz, r1.xyz);
     r0.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.texcoord_3.xyz = (0.5 * r0) + 0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xyz = IN.color_0;
+    OUT.texcoord_3.xyz = (0.5 * r0.xyz) + 0.5;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = IN.color_0.rgb;
     OUT.texcoord_2.w = 1;
 
 // approximately 29 instruction slots used

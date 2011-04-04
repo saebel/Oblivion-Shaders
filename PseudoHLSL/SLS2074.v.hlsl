@@ -41,6 +41,12 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float4 texcoord_1 : TEXCOORD1;
+    float4 texcoord_2 : TEXCOORD2;
+    float4 texcoord_3 : TEXCOORD3;
+    float3 texcoord_6 : TEXCOORD6;
 };
 
 // Code:
@@ -48,54 +54,50 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {1, 765.01001, 0, 0};
 
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_2.xyzw = LightPosition[0].xyzw;
-    OUT.texcoord_3.xyz = 0;
-    r0.xyzw = IN.blendindices.zyxw * 765.01001;
-    r0.xyzw = frac(r0);
-    r0.xyzw = (IN.blendindices.zyxw * 765.01001) - r0;
-    offset.xyzw = r0.xyzw;
+    float4 offset;
+    float4 r0;
+    float3 r1;
+    float3 r2;
+
+    offset.xyzw = (IN.blendindices.zyxw * 765.01001) - frac(IN.blendindices.zyxw * 765.01001);
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1.x = dot(IN.blendweight.xyz, 1.xyz);
-    r1.w = 1 - r1.x;
-    r1.x = dot(Bones[0 + offset.y].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.y].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.y].xyzw, r0.xyzw);
-    r2.w = 1.0 / FogParam.y;
+    r1.x = dot(Bones[0 + offset.y], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.y], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.y], r0.xyzw);
     r2.xyz = r1.xyz * IN.blendweight.y;
-    r1.x = dot(Bones[0 + offset.x].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.x].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.x].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.x], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.x], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.x], r0.xyzw);
     r2.xyz = (IN.blendweight.x * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.z].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.z].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.z].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.z], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.z], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.z], r0.xyzw);
     r2.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.w].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.w].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.w].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.w], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.w], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.w], r0.xyzw);
+    r0.xyz = ((1 - dot(IN.blendweight.xyz, const_0.xyz)) * r1.xyz) + r2.xyz;
     r0.w = 1;
-    r0.xyz = (r1.w * r1.xyz) + r2.xyz;
     OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_1.w = dot(const_11.xyzw, r0.xyzw);
     OUT.texcoord_1.x = dot(ObjToCubeSpace.xyzw, r0.xyzw);
     OUT.texcoord_1.y = dot(const_9.xyzw, r0.xyzw);
     OUT.texcoord_1.z = dot(const_10.xyzw, r0.xyzw);
+    OUT.texcoord_1.w = dot(const_11.xyzw, r0.xyzw);
     OUT.texcoord_6.xyz = r0.xyz;
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
     OUT.position.xyz = r1.xyz;
-    r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r2.x);
-    r1.w = 1.0 / r1.w;
-    r1.w = FogParam.x - r1.w;
-    r0.w = r1.w * r2.w;
-    r0.w = max(r0.w, 0);
-    r0.w = min(r0.w, 1);
-    OUT.texcoord_3.w = 1 - r0.w;
+    OUT.texcoord_3.w = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xyzw = LightPosition[0].xyzw;
+    OUT.texcoord_3.xyz = 0;
 
     return OUT;
 };

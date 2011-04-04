@@ -27,8 +27,8 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D amplitudeSamp;
     sampler2D freqSamp;
-    r1.xyzw = tex2D(freqSamp, IN.texcoord_0);
-    r0.xyzw = tex2D(amplitudeSamp, IN.texcoord_0);
+    r1.xyzw = tex2D(freqSamp, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(amplitudeSamp, IN.texcoord_0.xy);
     r2.w = r1.x * Time.x;
     r1.w = -r1.x * Time.x;
     r2.w = (r2.w * (1.0 / (PI * 2))) + 0.5;

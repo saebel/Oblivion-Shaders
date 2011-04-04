@@ -33,6 +33,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -40,26 +41,26 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_0 = {2, -1, 1, 0};
 
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);
-    r1.xyz = (2 * r1) + -1;
-    r0.x = dot(r1.xyz, IN.texcoord_1.xyz);
-    r0.y = dot(r1.xyz, IN.texcoord_2.xyz);
-    r0.z = dot(r1.xyz, IN.texcoord_3.xyz);
-    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
+    float4 r0;
+    float4 r1;
+    float3 r2;
+
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    r0.x = dot((2 * r1.xyz) - 1, IN.texcoord_1.xyz);
+    r0.y = dot((2 * r1.xyz) - 1, IN.texcoord_2.xyz);
+    r0.z = dot((2 * r1.xyz) - 1, IN.texcoord_3.xyz);
     r2.x = IN.texcoord_1.w;
     r2.y = IN.texcoord_2.w;
     r2.z = IN.texcoord_3.w;
-    r1.xyz = r2.xyz * r1.x;
-    r3.x = dot(r0.xyz, r2.xyz);
-    r0.w = r3.x + r3.x;
-    r0.xyz = (r0.w * r0.xyz) - r1.xyz;
-    r0.xyzw = texCUBE(EnvironmentCubeMap, r0);
+    r0.xyzw = texCUBE(EnvironmentCubeMap, ((2 * dot(r0.xyz, r2.xyz)) * r0.xyz) - (r2.xyz * dot(r0.xyz, r0.xyz)));
+    r0.xyz = ((r1.w * r0.xyz) * AmbientColor.a) * IN.color_0.rgb;
     r0.w = 1;
-    r0.xyz = r1.w * r0.xyz;
-    r0.xyz = r0.xyz * AmbientColor.a;
-    r0.xyz = r0.xyz * IN.color_0;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

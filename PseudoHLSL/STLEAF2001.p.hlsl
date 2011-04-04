@@ -27,6 +27,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -34,12 +35,15 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
-    r1.xyz = IN.texcoord_1;			// partial precision
-    r1.xyz = (-r0 * r1) + IN.texcoord_2;			// partial precision
-    r1.xyz = r1.xyz * IN.texcoord_2.w;			// partial precision
-    r0.xyz = (IN.texcoord_1 * r0.xyz) + r1.xyz;			// partial precision
+
+    float4 r0;
+
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyz = (IN.texcoord_1.xyz * r0.xyz) + (((-r0.xyz * IN.texcoord_1.xyz) + IN.texcoord_2.xyz) * IN.texcoord_2.w);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

@@ -44,7 +44,7 @@
     const int4 const_0 = {0, 1, 0, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r1.xyz = r0.xyz - HDRParam.x;		// in - 1.225
     r0.xyz = max(r1.xyz, 0);		// max(in - 1.225, 0)
     r0.xyz = r0.xyz * HDRParam.y;		// max(in - 1.225, 0) * fBrightClamp == 1.350000

@@ -61,39 +61,38 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {1, 0, 0, 0};
 
-    OUT.color_0.rgba = 1;
+    float4 r0;
+    float2 r1;
+    float2 r2;
+
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_3.xyz = IN.tangent;
-    OUT.texcoord_4.xyz = IN.binormal;
-    OUT.texcoord_5.xyz = IN.normal;
-    OUT.texcoord_6.xyz = IN.position;
-    OUT.texcoord_7.xyz = FogColor.rgb;
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.xyz = r0.xyz;
-    r0.w = dot(r0.xyz, r0.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r0.w);
-    r0.w = 1.0 / r0.w;
-    r0.w = FogParam.x - r0.w;
-    r1.w = 1.0 / FogParam.y;
-    r0.w = saturate(r0.w * r1.w);
-    r0.z = 1 - r0.w;
-    OUT.texcoord_7.w = r0.z * FogParam.z;
-    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
-    r0.xyz = r0.w * ShadowProjTransform.xyww;
-    r0.w = 1.0 / ShadowProjData.w;
+    OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y)) * FogParam.z;
+    r0.xyz = dot(ShadowProj[3].xyzw, IN.position.xyzw) * ShadowProjTransform.xyw;
     r2.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
     r2.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
     r1.xy = r0.xy + r2.xy;
     r0.xy = r2.xy - ShadowProjData.xy;
-    OUT.texcoord_1.w = (r0.y * -r0.w) + 1;
+    r0.w = 1.0 / ShadowProjData.w;
+    OUT.texcoord_1.xy = (1.0 / r0.z) * r1.xy;
     OUT.texcoord_1.z = r0.x * r0.w;
-    r0.z = 1.0 / r0.z;
-    OUT.texcoord_1.xy = r0.z * r1.xy;
+    OUT.texcoord_1.w = (r0.y * -r0.w) + 1;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = 1;
+    OUT.texcoord_3.xyz = IN.tangent.xyz;
+    OUT.texcoord_4.xyz = IN.binormal.xyz;
+    OUT.texcoord_5.xyz = IN.normal.xyz;
+    OUT.texcoord_6.xyz = IN.position.xyz;
+    OUT.texcoord_7.xyz = FogColor.rgb;
 
     return OUT;
 };

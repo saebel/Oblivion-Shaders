@@ -42,27 +42,27 @@
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    r0.xyz = EyePosition.xyz - IN.position;
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
     r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r2.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.w = 1.0 / sqrt(r1.x);
     r2.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     r1.xyz = (r0.w * r0.xyz) + LightDirection[0].xyz;
-    r3.xyz = normalize(r1);
+    r3.xyz = normalize(r1.xyz);
     r1.x = dot(IN.tangent.xyz, r3.xyz);
     r1.y = dot(IN.binormal.xyz, r3.xyz);
     r1.z = dot(IN.normal.xyz, r3.xyz);
-    r4.xyz = normalize(r2);
+    r4.xyz = normalize(r2.xyz);
     OUT.texcoord_2.xyz = r4.xyz;
     r0.xyz = r0.xyz * r0.w;
-    r4.xyz = normalize(r1);
+    r4.xyz = normalize(r1.xyz);
     OUT.texcoord_3.xyz = r4.xyz;
     r1.x = dot(IN.tangent.xyz, r0.xyz);
     r1.y = dot(IN.binormal.xyz, r0.xyz);
     r1.z = dot(IN.normal.xyz, r0.xyz);
     r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r0.xyz = LightPosition[2].xyz - IN.position;
+    r0.xyz = LightPosition[2].xyz - IN.position.xyz;
     r0.w = 1.0 / sqrt(r2.x);
     r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
     OUT.texcoord_1.xyz = r1.xyz * r0.w;
@@ -76,7 +76,7 @@
     r1.xyz = r1.w * LightColor[2].rgb;
     r0.w = max(r0.w, 0);
     r0.w = min(r0.w, 1);
-    r0.xyz = LightPosition[1].xyz - IN.position;
+    r0.xyz = LightPosition[1].xyz - IN.position.xyz;
     r0.w = 1 - r0.w;
     r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r3.w = r0.w * r0.w;
@@ -94,8 +94,8 @@
     r0.xyz = r1.w * LightColor[1].rgb;
     r0.w = r0.w * r0.w;
     OUT.color_0.rgb = (r0.w * r0.xyz) + r1.xyz;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.a = 1;
-    OUT.color_1.rgba = IN.color_0;
+    OUT.color_1.rgba = IN.color_0.rgba;
 
 // approximately 65 instruction slots used

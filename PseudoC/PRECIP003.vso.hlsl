@@ -41,7 +41,7 @@
     float4 OUT.color_0 : COLOR0;
     float2 OUT.texcoord_0 : TEXCOORD0;
     r0.xyz = Velocity.xyz;
-    r3.xyz = (Params.x * r0) + IN.texcoord_1;
+    r3.xyz = (Params.x * r0.xyz) + IN.texcoord_1.xyz;
     r1.xyz = MaxPos.xyz;
     r2.xyz = r1.xyz - MinPos.xyz;
     r3.xyz = r3.xyz - MinPos.xyz;
@@ -52,7 +52,7 @@
     r5.xyz = frac(abs(r3));
     r4.xyz = (r3 >= -r3 ? 1.0 : 0.0);
     r0.w = (Params.z * Params.x) + IN.texcoord_1.x;
-    r3.xyz = lerp(r5, -r5, r4);
+    r3.xyz = lerp(r5.xyz, -r5.xyz, r4);
     r0.w = (r0.w * (1.0 / (PI * 2))) + 0.5;
     r3.xyz = r2.xyz * r3.xyz;
     r0.w = frac(r0.w);
@@ -60,17 +60,17 @@
     r5.xyz = MaxPos - abs(r3);
     r0.xyz = (0 < r0 ? 1.0 : 0.0);
     r1.w = (r0.w * PI * 2) + -PI;
-    r3.xyz = lerp(r4, r5, r0);
+    r3.xyz = lerp(r4.xyz, r5.xyz, r0);
     r0.x = cos(r1.w); r0.y = sin(r1.w);
     r4.xyz = r3.xyz - EyePosition.xyz;
-    r6.xyz = r0.xxyw * const_5.wxww;
-    r5.xyz = normalize(-r4);
-    r4.xyz = r0.yxxw * const_6.xyz;
-    r0.xyz = r5.yzxw * CameraUp.zxyw;
+    r6.xyz = r0.xxy * const_5.wxw;
+    r5.xyz = normalize(-r4.xyz);
+    r4.xyz = r0.yxx * const_6.xyz;
+    r0.xyz = r5.yzx * CameraUp.zxy;
     r0.w = dot(r6.xyz, IN.position.xyz);
-    r6.xyz = (CameraUp.yzxw * r5.zxyw) - r0.xyz;
+    r6.xyz = (CameraUp.yzx * r5.zxy) - r0.xyz;
     r5.xyz = r5.xyz * IN.position.y;
-    r0.xyz = normalize(r6);
+    r0.xyz = normalize(r6.xyz);
     r0.xyz = (r0.w * r0.xyz) + r5.xyz;
     r0.w = dot(r4.xyz, IN.position.xyz);
     r0.xyz = (r0.w * CameraUp.xyz) + r0.xyz;
@@ -92,6 +92,6 @@
     OUT.position.w = dot(WorldViewProj[3].xyzw, r0.xyzw);
     OUT.color_0.a = r1.w * r1.w;
     OUT.color_0.rgb = 1;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 60 instruction slots used

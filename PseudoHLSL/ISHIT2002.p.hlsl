@@ -32,6 +32,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -39,38 +40,29 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {1, 0, -0.5, 0.5};
 
-    r0.w = 1;
-    r0.w = r0.w - doubleVisParams.w;
-    r0.xy = IN.texcoord_0 - doubleVisParams.xy;
+    float4 r0;
+    float4 r1;
+    float4 r2;
+
+    r0.xy = IN.texcoord_0.xy - doubleVisParams.xy;
+    r1.y = max(r0.y, 1 - doubleVisParams.w);
     r1.x = max(r0.x, 0);
-    r2.xy = IN.texcoord_0 + doubleVisParams.xy;
+    r2.xy = IN.texcoord_0.xy + doubleVisParams.xy;
     r0.x = min(doubleVisParams.z, r2.x);
-    r1.y = max(r0.y, r0.w);
     r0.y = min(r2.y, 1);
-    r0.xyzw = tex2D(Src1, IN.texcoord_1);
-    r0.w = 1.0 / doubleVisParams.w;
-    r0.w = r0.w * doubleVisParams.z;
-    r1.xyzw = tex2D(Src0, r0);
-    r1.w = IN.texcoord_1.x + -0.5;
-    r0.w = r0.w * r1.w;
-    r0.w = r0.w + r0.w;
-    r1.w = IN.texcoord_1.y + -0.5;
-    r1.w = r1.w + r1.w;
-    r1.w = r1.w * r1.w;
-    r0.w = (r0.w * r0.w) + r1.w;
-    r0.w = 1.0 / sqrt(r0.w);
-    r0.w = 1.0 / r0.w;
-    r1.w = r0.w * blurParams.z;
-    r0.w = min(r1.w, 1);
-    r0.xyz = r0.xyz * r0.w;
-    r1.w = 1 - r0.w;
+    r2.xyzw = tex2D(Src0, r1.xy);
+    r1.xyzw = tex2D(Src0, r0.xy);
+    r0.xyzw = tex2D(Src1, IN.texcoord_1.xy);
+    r0.w = 2 * (((1.0 / doubleVisParams.w) * doubleVisParams.z) * (IN.texcoord_1.x - 0.5));	// [0,1] to [-1,+1]
+    r0.w = min(sqrt((r0.w * r0.w) + ((2 * (IN.texcoord_1.y - 0.5)) * (2 * (IN.texcoord_1.y - 0.5)))) * blurParams.z, 1);	// [0,1] to [-1,+1]
+    r0.xyz = (0.5 * ((r2.xyz + r1.xyz) * (1 - r0.w))) + (r0.xyz * r0.w);
     r0.w = 1;
-    r2.xyzw = tex2D(Src0, r1);
-    r1.xyz = r2.xyz + r1.xyz;
-    r1.xyz = r1.xyz * r1.w;
-    r0.xyz = (0.5 * r1.xyz) + r0.xyz;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

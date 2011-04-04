@@ -30,6 +30,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -37,13 +38,19 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_0 = {0, 0, 0, 0};
 
+    float4 r0;
+    float4 r1;
+
+    r0.xyzw = tex2D(TexMap, IN.texcoord_0.xy);
+    r1.xyzw = tex2D(TexMapBlend, IN.texcoord_1.xy);
+    OUT.color_0.a = (Params.x * (r1.w - r0.w)) + r0.w;
     OUT.color_0.rgb = 0;
-    r0.xyzw = tex2D(TexMap, IN.texcoord_0);
-    r1.xyzw = tex2D(TexMapBlend, IN.texcoord_1);
-    r0.z = r1.w - r0.w;
-    OUT.color_0.a = (Params.x * r0.z) + r0.w;
 
     return OUT;
 };

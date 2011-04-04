@@ -3,7 +3,7 @@
 //
 //   vsa shaderdump19/STB1009.pso /Fcshaderdump19/STB1009.pso.dis
 //
-    r0.xyzw = IN.input_0;
+    r0.xyzw = IN.input_0.xyzw;
 
 // approximately 1 instruction slot used
 
@@ -20,6 +20,11 @@ struct PS_OUTPUT {
 
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
+
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
 
 
 

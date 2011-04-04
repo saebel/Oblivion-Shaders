@@ -66,6 +66,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -73,55 +74,46 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_0 = {1, 0, 0, 0};
 
+    float4 r0;
+    float4 r1;
+    float4 r10;
+    float4 r11;
+    float4 r12;
+    float4 r13;
+    float4 r14;
+    float4 r2;
+    float4 r3;
+    float4 r4;
+    float4 r5;
+    float4 r6;
+    float4 r7;
+    float4 r8;
+    float4 r9;
+
     r0.xy = BlurScale.xy;
-    r0.xy = (r0 * const_17) + IN.texcoord_0;
-    r0.xyzw = tex2D(Src0, r0);
+    r10.xyzw = tex2D(Src0, (r0.xy * const_7.xy) + IN.texcoord_0.xy);
+    r11.xyzw = tex2D(Src0, (r0.xy * const_6.xy) + IN.texcoord_0.xy);
+    r12.xyzw = tex2D(Src0, (r0.xy * const_5.xy) + IN.texcoord_0.xy);
+    r13.xyzw = tex2D(Src0, (r0.xy * BlurOffsets.xy) + IN.texcoord_0.xy);
+    r14.xyzw = tex2D(Src0, (r0.xy * const_4.xy) + IN.texcoord_0.xy);
+    r1.xyzw = tex2D(Src0, (r0.xy * const_16.xy) + IN.texcoord_0.xy);
+    r2.xyzw = tex2D(Src0, (r0.xy * const_15.xy) + IN.texcoord_0.xy);
+    r3.xyzw = tex2D(Src0, (r0.xy * const_14.xy) + IN.texcoord_0.xy);
+    r4.xyzw = tex2D(Src0, (r0.xy * const_13.xy) + IN.texcoord_0.xy);
+    r5.xyzw = tex2D(Src0, (r0.xy * const_12.xy) + IN.texcoord_0.xy);
+    r6.xyzw = tex2D(Src0, (r0.xy * const_11.xy) + IN.texcoord_0.xy);
+    r7.xyzw = tex2D(Src0, (r0.xy * const_10.xy) + IN.texcoord_0.xy);
+    r8.xyzw = tex2D(Src0, (r0.xy * const_9.xy) + IN.texcoord_0.xy);
+    r9.xyzw = tex2D(Src0, (r0.xy * const_8.xy) + IN.texcoord_0.xy);
+    r0.xyzw = tex2D(Src0, (r0.xy * const_17.xy) + IN.texcoord_0.xy);
+    r0.xyz = (const_17.z * r0.xyz) + ((const_16.z * r1.xyz) + ((const_15.z * r2.xyz) + ((const_14.z * r3.xyz) + ((const_13.z * r4.xyz) + ((const_12.z * r5.xyz) + ((const_11.z * r6.xyz) + ((const_10.z * r7.xyz) + ((const_9.z * r8.xyz) + ((const_8.z * r9.xyz) + ((const_7.z * r10.xyz) + ((const_6.z * r11.xyz) + ((const_5.z * r12.xyz) + ((BlurOffsets.z * r13.xyz) + (r14.xyz * const_4.z))))))))))))));
     r0.w = 1;
-    r1.xy = (r0 * const_16) + IN.texcoord_0;
-    r1.xyzw = tex2D(Src0, r1);
-    r10.xy = (r0 * const_7) + IN.texcoord_0;
-    r10.xyzw = tex2D(Src0, r10);
-    r11.xy = (r0 * const_6) + IN.texcoord_0;
-    r11.xyzw = tex2D(Src0, r11);
-    r12.xy = (r0 * const_5) + IN.texcoord_0;
-    r12.xyzw = tex2D(Src0, r12);
-    r13.xy = (r0 * BlurOffsets) + IN.texcoord_0;
-    r13.xyzw = tex2D(Src0, r13);
-    r14.xy = (r0 * const_4) + IN.texcoord_0;
-    r14.xyzw = tex2D(Src0, r14);
-    r14.xyz = r14.xyz * const_4.z;
-    r13.xyz = (BlurOffsets.z * r13.xyz) + r14.xyz;
-    r12.xyz = (const_5.z * r12.xyz) + r13.xyz;
-    r11.xyz = (const_6.z * r11.xyz) + r12.xyz;
-    r10.xyz = (const_7.z * r10.xyz) + r11.xyz;
-    r2.xy = (r0 * const_15) + IN.texcoord_0;
-    r2.xyzw = tex2D(Src0, r2);
-    r3.xy = (r0 * const_14) + IN.texcoord_0;
-    r3.xyzw = tex2D(Src0, r3);
-    r4.xy = (r0 * const_13) + IN.texcoord_0;
-    r4.xyzw = tex2D(Src0, r4);
-    r5.xy = (r0 * const_12) + IN.texcoord_0;
-    r5.xyzw = tex2D(Src0, r5);
-    r6.xy = (r0 * const_11) + IN.texcoord_0;
-    r6.xyzw = tex2D(Src0, r6);
-    r7.xy = (r0 * const_10) + IN.texcoord_0;
-    r7.xyzw = tex2D(Src0, r7);
-    r8.xy = (r0 * const_9) + IN.texcoord_0;
-    r8.xyzw = tex2D(Src0, r8);
-    r9.xy = (r0 * const_8) + IN.texcoord_0;
-    r9.xyzw = tex2D(Src0, r9);
-    r9.xyz = (const_8.z * r9.xyz) + r10.xyz;
-    r8.xyz = (const_9.z * r8.xyz) + r9.xyz;
-    r7.xyz = (const_10.z * r7.xyz) + r8.xyz;
-    r6.xyz = (const_11.z * r6.xyz) + r7.xyz;
-    r5.xyz = (const_12.z * r5.xyz) + r6.xyz;
-    r4.xyz = (const_13.z * r4.xyz) + r5.xyz;
-    r3.xyz = (const_14.z * r3.xyz) + r4.xyz;
-    r2.xyz = (const_15.z * r2.xyz) + r3.xyz;
-    r1.xyz = (const_16.z * r1.xyz) + r2.xyz;
-    r0.xyz = (const_17.z * r0.xyz) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

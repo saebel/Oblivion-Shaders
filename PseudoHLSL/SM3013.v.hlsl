@@ -50,28 +50,27 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {1, 0, 0, 0};
 
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.w = dot(ObjToCubeMap[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = dot(ObjToCubeMap[0].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.y = dot(ObjToCubeMap[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.z = dot(ObjToCubeMap[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = FogColor.rgb;
-    OUT.texcoord_6.xyz = IN.position;
+    float3 r0;
+
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.xyz = r0.xyz;
-    r0.w = dot(r0.xyz, r0.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r0.w);
-    r0.w = 1.0 / r0.w;
-    r0.w = FogParam.x - r0.w;
-    r1.w = 1.0 / FogParam.y;
-    r0.w = saturate(r0.w * r1.w);
-    r0.w = 1 - r0.w;
-    OUT.texcoord_2.w = r0.w * FogParam.z;
+    OUT.texcoord_2.w = (1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y)) * FogParam.z;
+    OUT.texcoord_1.x = dot(ObjToCubeMap[0].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.y = dot(ObjToCubeMap[1].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.z = dot(ObjToCubeMap[2].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.w = dot(ObjToCubeMap[3].xyzw, IN.position.xyzw);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_6.xyz = IN.position.xyz;
+    OUT.texcoord_2.xyz = FogColor.rgb;
 
     return OUT;
 };

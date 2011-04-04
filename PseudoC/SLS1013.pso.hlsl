@@ -29,16 +29,16 @@
     float3 IN.color_0 : COLOR0;
     sampler2D BaseMap;
     sampler2D NormalMap;
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_1);
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);
-    r1.xyz = r1.xyz + -0.5;
-    r1.xyz = r1.xyz + r1.xyz;
-    r2.xyz = IN.texcoord_3 + -0.5;
-    r2.xyz = r2.xyz + r2.xyz;
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
+    r1.xyz = r1.xyz - 0.5;
+    r1.xyz = 2 * r1.xyz;
+    r2.xyz = IN.texcoord_3.xyz - 0.5;
+    r2.xyz = 2 * r2.xyz;
     r2.x = saturate(dot(r1.xyz, r2.xyz));
     r1.xyz = PSLightColor[0].rgb;
     r1.xyz = saturate((r2.x * r1) + AmbientColor);
-    r0.xyz = r0.xyz * IN.color_0;
+    r0.xyz = r0.xyz * IN.color_0.rgb;
     r0.xyz = r1.xyz * r0.xyz;
     OUT.color_0.rgba = r0.xyzw;
 

@@ -9,7 +9,7 @@ oldPATH=$PATH
 PATH=/cygdrive/k/ReSources/Windows/SDKs/DirectX\ 9c\ \(MicroSoft\)/Utilities/:$PATH
 FXC=fxc
 
-for hlsl in HLSL/STB1001*.hlsl; do
+for hlsl in HLSL/*.hlsl; do
   fle=`basename ${hlsl}`
   fle=`stripext ${fle}`
   fle=`stripext ${fle}`

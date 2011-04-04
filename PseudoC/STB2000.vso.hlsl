@@ -39,13 +39,13 @@
     r0.w = frac(IN.blendindices.y);
     r0.w = IN.blendindices.y - r0.w;
     offset.w = r0.w;
-    r0.x = dot(WindMatrices[0 + offset.w].xyzw, IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w].xyzw, IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w].xyzw, IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.w].xyzw, IN.position.xyzw);
-    r0.xyzw = r0 - IN.position;
-    r1.xyzw = IN.position;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
+    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
+    r0.x.zw = r0.xy - IN.position.xy;
+    r1.xyzw = IN.position.xyzw;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
@@ -54,16 +54,16 @@
     r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r0.xyz = LightPosition[1].xyz - r0.xyz;
-    r2.xyz = normalize(r1);
+    r2.xyz = normalize(r1.xyz);
     OUT.texcoord_1.xyz = r2.xyz;
-    r1.xyz = normalize(r0);
+    r1.xyz = normalize(r0.xyz);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r1.xyz);
     r0.w = 1.0 / LightPosition[1].w;
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r1.xyz);
     r0.xyz = r0.xyz * r0.w;
     OUT.texcoord_2.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.texcoord_4.xyz = (0.5 * r0) + 0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_4.xyz = (0.5 * r0.xyz) + 0.5;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.w = 0.5;
 
 // approximately 33 instruction slots used

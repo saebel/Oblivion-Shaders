@@ -53,6 +53,10 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float3 texcoord_1 : TEXCOORD1;
+    float4 texcoord_2 : TEXCOORD2;
 };
 
 // Code:
@@ -60,51 +64,41 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {0, 1, 0, 0};
 
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_2.xyz = FogColor.rgb;
+    float1 offset;
+    float4 r0;
+    float4 r1;
+    float4 r2;
+
     offset.x = IN.blendindices.y;
-    r0.w = dot(WindMatrices[3 + offset.x].xyzw, IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.x].xyzw, IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.x].xyzw, IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.x].xyzw, IN.position.xyzw);
-    r0.xyzw = r0 - IN.position;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
+    r0.x = dot(WindMatrices[0 + offset.x], IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.x], IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
+    r0.x.zw = r0.xy - IN.position.xy;
+    r1.xyzw = IN.position.xyzw;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r1.xyzw = IN.position;
     r1.xyz = LightPos.xyz - r0.xyz;
-    r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r2.w = 1.0 / sqrt(r2.x);
-    r1.w = 1.0 / r2.w;
+    r2.w = 1.0 / length(r1.xyz);
     r1.xyz = r1.xyz * r2.w;
-    r1.x = dot(IN.normal.xyz, r1.xyz);
+    r1.w = saturate((1.0 / r2.w) / LightRadius.x);
+    r2.w = 1.0 - (r1.w * r1.w);
+    r1.w = max(dot(IN.normal.xyz, r1.xyz), 0);
+    r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    r3.w = 1.0 / LightRadius.x;
-    r1.w = r1.w * r3.w;
-    r1.w = max(r1.w, 0);
     r1.w = min(r1.w, 1);
-    r2.w = (r1.w * -r1.w) + 1;
-    r1.w = max(r1.x, 0);
-    r1.w = min(r1.w, 1);
-    r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
+    OUT.texcoord_1.xyz = (IN.color_0.rgb * ((SunDimmer.x * (r1.w * DiffColor.rgb)) + AmbientColor.rgb)) + (r2.w * (r1.w * DiffColorPt.xyz));
     OUT.position.xyz = r1.xyz;
-    r0.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r0.x);
-    r0.w = 1.0 / r0.w;
-    r0.w = FogParam.x - r0.w;
-    r0.xyz = r1.w * DiffColor.rgb;
-    r2.xyz = r1.w * DiffColorPt.xyz;
-    r1.w = 1.0 / FogParam.y;
-    r0.w = r0.w * r1.w;
-    r0.w = max(r0.w, 0);
-    r0.w = min(r0.w, 1);
-    OUT.texcoord_2.w = 1 - r0.w;
-    r1.w = SunDimmer.x;
-    r0.xyz = (r1.w * r0.xyz) + AmbientColor.rgb;
-    r2.xyz = r2.w * r2.xyz;
-    OUT.texcoord_1.xyz = (IN.color_0 * r0.xyz) + r2.xyz;
+    OUT.texcoord_2.w = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xyz = FogColor.rgb;
 
     return OUT;
 };

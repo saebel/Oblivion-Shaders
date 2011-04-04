@@ -49,12 +49,12 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
     sampler2D AvgLum;
-    r1.xyzw = tex2D(Src0, IN.texcoord_0);
-    r0.xyzw = tex2D(AvgLum, IN.texcoord_0);
+    r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(AvgLum, IN.texcoord_0.xy);
     r2.y = HDRParam.z;
     r0.w = pow(abs(r2.y), TimingData.z);		//       pow(TimingData, HDRParam.z == 0.500000)
     r0.w = 1 - r0.w;		// 1.0 - pow(TimingData, HDRParam.z == 0.500000)
-    r2.xyz = lerp(r0, r1, r0.w);		// lerp(Src0, AvgLum, 1.0 - pow(something))
+    r2.xyz = lerp(r0.xyz, r1.xyz, r0.w);		// lerp(Src0, AvgLum, 1.0 - pow(something))
     r0.x = dot(r2.xyz, r2.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r0.x);
     r0.w = 1.0 / r0.w;			// normalize => sqrt(lerp.x * lerp.x + lerp.y * lerp.y + lerp.z * lerp.z + 1.0 * 1.0)

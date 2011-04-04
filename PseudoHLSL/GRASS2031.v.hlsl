@@ -57,12 +57,23 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 color_0 : COLOR0;
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_2 : TEXCOORD2;
+    float3 texcoord_3 : TEXCOORD3;
+    float4 texcoord_4 : TEXCOORD4;
+    float4 texcoord_5 : TEXCOORD5;
 };
 
 // Code:
 
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
+
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
     const float4 const_3 = {-0.5, 0.01, 1, (1.0 / 17)};
     const int4 const_16 = {0, 2, -1, 1};
@@ -71,105 +82,63 @@ VS_OUTPUT main(VS_INPUT IN) {
     const float4 const_19 = {D3DSINCOSCONST1};
     const float4 const_22 = {D3DSINCOSCONST2};
 
-    OUT.color_0.rgb = FogColor.rgb;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_3.z = ShadowProjData.z;
-    OUT.texcoord_4.xyzw = AmbientColor.rgba;
-    r0.w = frac(IN.texcoord_1.x);
-    r0.w = IN.texcoord_1.x - r0.w;
-    offset.w = r0.w;
+    float4 offset;
+    float4 r0;
+    float4 r1;
+    float4 r2;
+    float3 r3;
+    float3 r4;
+    float3 r5;
+    float3 r6;
+
+    offset.w = IN.texcoord_1.x;
     r0.xyzw = frac(InstanceData[0 + offset.w]);
-    r1.xyz = abs(r0);
-    r1.xyzw = (r1.yzxz >= r1.xxyy ? 1.0 : 0.0);
-    r2.xyz = r0.xyz + -0.5;
-    r0.xyz = r2.xyz + r2.xyz;
-    r3.xyz = r0.w * IN.color_0;
-    r0.w = -r0.y;
+    r2.xyz = r0.xyz - 0.5;
+    r0.xyz = 2 * r2.xyz;
     r2.x = (2 * r2.y) - r0.z;
-    r2.yz = r0.x * const_16.xzww;
-    r4.xy = r1.ywzw * r1.xzzw;
-    r2.xy = (r4.y * r2) + r0.wxzw;
-    r1.x = -r2.x;
+    r2.yz = r0.x * const_16.xz;
+    r1.xyz = abs(r0);
+    r3.xyz = r0.w * IN.color_0.rgb;
+    r0.w = -r0.y;
+    r1.xyzw = (r1.yzxz >= r1.xxyy ? 1.0 : 0.0);
+    r4.xy = r1.yw * r1.xz;
     r2.z = r4.y * r2.z;
+    r2.xy = (r4.y * r2.xy) + r0.wx;
     r1.yz = (r0.xzyw * const_16.xzww) - r2.yz;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
-    r1.w = r0.w * (1.0 / 17);
-    r1.w = frac(r1.w);
-    r1.xyz = (r4.x * r1.xyz) + r2.xyz;
-    r2.w = r1.w + -0.5;
-    r2.x = r2.w + r2.w;
-    r2.z = 0;
-    r5.xyz = normalize(r1);
-    r1.xyz = r0.yzxw * r5.zxyw;
-    r4.xyz = (r5.yzxw * r0.zxyw) - r1.xyz;
+    r1.x = -r2.x;
+    r5.xyz = normalize((r4.x * r1.xyz) + r2.xyz);
+    r1.xyz = r0.yzx * r5.zxy;
+    r4.xyz = (r5.yzx * r0.zxy) - r1.xyz;
     r1.yz = const_3.yz;
-    r1.w = r1.y * InstanceData[0 + offset.w].w;
-    r1.xyz = (r1.w * ScaleMask) + r1.z;
-    r6.xyz = r1.xyz * IN.position;
-    r1.x = WindData.w;
-    r0.w = (r0.w * (1.0 / 128)) + r1.x;
-    r0.w = (r0.w * (1.0 / (PI * 2))) + 0.5;
-    r0.w = frac(r0.w);
-    r0.w = (r0.w * PI * 2) + -PI;
-    r1.w = (r2.x * -r2.x) + 1;
-    r1.w = 1.0 / sqrt(r1.w);
-    r2.w = 1.0 / r1.w;
-    r1.x = dot(r2.wxzw.xyz, r6.xyz);
-    r1.xyz = r5.xyz * r1.x;
+    r2.x = 2 * (frac(r0.w / 17) - 0.5);	// [0,1] to [-1,+1]
+    r2.w = sqrt(1.0 - (r2.x * r2.x));
+    r2.z = 0;
     r2.y = -r2.w;
-    r6.x = dot(r2.xyz, r6.xyz);
-    r7.xyz = (r6.x * r4.xyz) + r1.xyz;
-    r1.y = sin(r0.w);
-    r0.w = IN.color_0.a * IN.color_0.a;
-    r1.w = r1.y * WindData.z;
-    r0.w = r1.w * r0.w;
-    r1.w = 1.0 / ShadowProjData.w;
-    r1.xyz = (r6.z * r0.xyz) + r7.xyz;
-    r7.x = dot(r2.xyz, IN.normal.xyz);
-    r8.x = dot(r2.wxzw.xyz, IN.normal.xyz);
-    r2.xyz = r5.xyz * r8.x;
-    r2.xyz = (r7.x * r4.xyz) + r2.xyz;
-    r0.xyz = (IN.normal.z * r0.xyz) + r2.xyz;
-    r0.x = dot(DiffuseDir.xyz, r0.xyz);
-    r1.xy = (r0.w * WindData.xy) + r1.xy;
-    r0.w = 1.0 / ShadowProjTransform.w;
+    r6.xyz = (((r1.y * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r1.z) * IN.position.xyz;
+    r1.xyz = (r6.z * r0.xyz) + ((dot(r2.xyz, r6.xyz) * r4.xyz) + (r5.xyz * dot(r2.wxz, r6.xyz)));
+    r1.xy = (((sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) + -PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r1.xy;
+    r0.xyz = (IN.normal.z * r0.xyz) + ((dot(r2.xyz, IN.normal.xyz) * r4.xyz) + (r5.xyz * dot(r2.wxz, IN.normal.xyz)));
     r1.xyz = r1.xyz + InstanceData[0 + offset.w];
     r4.xy = r1.xy - ShadowProjData.xy;
+    r1.w = 1.0 / ShadowProjData.w;
+    OUT.texcoord_2.xy = (r1.xy + ShadowProjTransform.xy) / ShadowProjTransform.w;
     OUT.texcoord_3.x = r4.x * r1.w;
     OUT.texcoord_3.y = (r4.y * -r1.w) + 1;
+    OUT.texcoord_5.xyz = saturate(dot(DiffuseDir.xyz, r0.xyz)) * (r3.xyz * DiffuseColor.rgb) * AddlParams.x;
     r1.w = IN.position.w;
-    r6.xy = r1.xy + ShadowProjTransform.xy;
-    OUT.texcoord_2.xy = r6.xy * r0.w;
-    r0.w = max(r0.x, 0);
-    r0.w = min(r0.w, 1);
-    r0.xyz = r3.xyz * DiffuseColor.rgb;
-    r2.xyz = r0.w * r0.xyz;
-    OUT.texcoord_5.xyz = r2.xyz * AddlParams.x;
-    r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
     r0.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, r1.xyzw);
+    r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
+    OUT.color_0.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.position.xyzw = r0.xyzw;
-    r2.w = dot(r0.xyzw, r0.xyzw);	// normalize + length
-    r2.y = 1.0 / AlphaParam.w;
-    r3.w = 1.0 / sqrt(r2.w);
-    r3.w = 1.0 / r3.w;
-    r1.xy = r3.w - AlphaParam.xzzw;
-    r2.w = 1.0 / FogParam.y;
-    r2.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r2.x);
-    r1.w = 1.0 / r1.w;
-    r1.w = FogParam.x - r1.w;
-    r1.w = r1.w * r2.w;
-    r1.w = max(r1.w, 0);
-    r1.w = min(r1.w, 1);
-    OUT.color_0.a = 1 - r1.w;
-    r2.x = 1.0 / AlphaParam.y;
-    r1.xy = r1.xy * r2.xy;
-    r1.xy = max(r1.xy, 0);
-    r1.xy = min(r1.xy, 1);
-    r1.w = 1 - r1.y;
-    OUT.texcoord_5.w = r1.x * r1.w;
+    r1.xy = saturate((length(r0.xyzw) - AlphaParam.xz) / AlphaParam.yw);
+    OUT.texcoord_5.w = r1.x * (1 - r1.y);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_4.xyzw = AmbientColor.rgba;
+    OUT.texcoord_3.z = ShadowProjData.z;
+    OUT.color_0.rgb = FogColor.rgb;
 
     return OUT;
 };

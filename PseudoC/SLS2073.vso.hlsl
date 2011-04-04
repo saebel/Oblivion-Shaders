@@ -46,8 +46,8 @@
     r0.w = min(r0.w, 1);
     OUT.position.xyz = r0.xyz;
     OUT.texcoord_3.w = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_6.xyz = IN.position;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_6.xyz = IN.position.xyz;
     OUT.texcoord_2.xyzw = LightPosition[0].xyzw;
     OUT.texcoord_3.xyz = 0;
 

@@ -30,7 +30,7 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.texcoord_1 : TEXCOORD1;
     float4 IN.texcoord_2 : TEXCOORD2;
-    r0.xy = ShadowProjTransform.zwzw - IN.position;
+    r0.xy = ShadowProjTransform.zw - IN.position.xy;
     r0.xy = r0.xy * r0.xy;
     r0.w = r0.y + r0.x;
     r0.w = 1.0 / sqrt(r0.w);
@@ -51,7 +51,7 @@
     OUT.texcoord_1.xy = r0.xy;
     OUT.texcoord_2.xyz = 1;
     OUT.texcoord_3.xyz = LightDirection[0].xyz;
-    OUT.color_0.rgba = IN.texcoord_1;
-    OUT.color_1.rgba = IN.texcoord_2;
+    OUT.color_0.rgba = IN.texcoord_1.xyzw;
+    OUT.color_1.rgba = IN.texcoord_2.xyzw;
 
 // approximately 23 instruction slots used

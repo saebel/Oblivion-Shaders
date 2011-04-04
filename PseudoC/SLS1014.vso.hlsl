@@ -34,10 +34,10 @@
     r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.color_0.rgb = (0.5 * r0) + 0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xy = IN.texcoord_0;
-    OUT.texcoord_2.xy = IN.texcoord_0;
-    OUT.texcoord_3.xy = IN.texcoord_0;
+    OUT.color_0.rgb = (0.5 * r0.xyz) + 0.5;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xy = IN.texcoord_0.xy;
+    OUT.texcoord_3.xy = IN.texcoord_0.xy;
 
 // approximately 12 instruction slots used

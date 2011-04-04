@@ -36,13 +36,13 @@
     float3 IN.binormal : BINORMAL;
     float4 IN.blendindices : BLENDINDICES;
     offset.x = IN.blendindices.y;
-    r0.x = dot(WindMatrices[0 + offset.x].xyzw, IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.x].xyzw, IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.x].xyzw, IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.x].xyzw, IN.position.xyzw);
-    r0.xyzw = r0 - IN.position;
-    r1.xyzw = IN.position;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
+    r0.x = dot(WindMatrices[0 + offset.x], IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.x], IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
+    r0.x.zw = r0.xy - IN.position.xy;
+    r1.xyzw = IN.position.xyzw;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     r2.xyz = EyePosition.xyz - r0.xyz;
     r1.xyz = LightPosition[0].xyz - r0.xyz;
     r3.x = dot(r2.xyz, r2.xyz);	// normalize + length
@@ -61,16 +61,16 @@
     OUT.texcoord_3.x = dot(IN.tangent.xyz, r2.xyz);
     OUT.texcoord_3.y = dot(IN.binormal.xyz, r2.xyz);
     OUT.texcoord_3.z = dot(IN.normal.xyz, r2.xyz);
-    r2.xyz = IN.normal;
+    r2.xyz = IN.normal.xyz;
     r0.x = dot(IN.tangent.xyz, r2.xyz);
     r0.y = dot(IN.binormal.xyz, r2.xyz);
     r0.z = dot(IN.normal.xyz, IN.normal.xyz);
     r0.w = 1.0 / LightPosition[0].w;
-    OUT.color_0.rgb = (0.5 * r0) + 0.5;
+    OUT.color_0.rgb = (0.5 * r0.xyz) + 0.5;
     r0.xyz = r1.xyz * r0.w;
-    OUT.texcoord_1.xy = (0.5 * r0) + 0.5;
+    OUT.texcoord_1.xy = (0.5 * r0.xy) + 0.5;
     OUT.texcoord_2.x = (r0.z * 0.5) + 0.5;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_2.y = 0.5;
 
 // approximately 37 instruction slots used

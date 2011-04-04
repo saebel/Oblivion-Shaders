@@ -28,10 +28,10 @@
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xy = IN.texcoord_0;
-    OUT.texcoord_2.xyz = IN.color_0;
-    OUT.color_0.rgba = IN.texcoord_1;
-    OUT.color_1.rgba = IN.texcoord_2;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xyz = IN.color_0.rgb;
+    OUT.color_0.rgba = IN.texcoord_1.xyzw;
+    OUT.color_1.rgba = IN.texcoord_2.xyzw;
 
 // approximately 9 instruction slots used

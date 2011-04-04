@@ -51,11 +51,11 @@
     sampler2D Src0;
     sampler2D DestBlend;
     sampler2D AvgLum;
-    r2.xyzw = tex2D(AvgLum, IN.texcoord_0);		// range-surface
-    r1.xyzw = tex2D(Src0, IN.texcoord_0);		// blur-surface
-    r0.xyzw = tex2D(DestBlend, IN.texcoord_1);		// original-surface
+    r2.xyzw = tex2D(AvgLum, IN.texcoord_0.xy);		// range-surface
+    r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);		// blur-surface
+    r0.xyzw = tex2D(DestBlend, IN.texcoord_1.xy);		// original-surface
 
-    r2.x = dot(r2.xyz, 1.xyz);		// range.x * 1 + range.y * 1 + range.z * 1
+    r2.x = dot(r2.xyz, const_0.xyz);.x		// range.x * 1 + range.y * 1 + range.z * 1
     r0.w = max(r2.x, HDRParam.x);	//              max(range, fTargetLUM)
     r0.w = 1.0 / r0.w;		//        1.0 / max(range, fTargetLUM)
     r1.w = r0.w * 0.5;	//        0.5 / max(range, fTargetLUM)

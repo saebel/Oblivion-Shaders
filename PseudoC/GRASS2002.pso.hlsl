@@ -24,10 +24,10 @@
     float4 texcoord_5 : TEXCOORD5_centroid;			// partial precision
     float4 IN.color_0 : COLOR0;
     sampler2D DiffuseMap;
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);			// partial precision
-    r1.xyz = IN.texcoord_5;			// partial precision
-    r1.xyz = r1.xyz + IN.texcoord_4;			// partial precision
-    r2.xyz = (-r0 * r1) + IN.color_0;			// partial precision
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);			// partial precision
+    r1.xyz = IN.texcoord_5.xyz;			// partial precision
+    r1.xyz = r1.xyz + IN.texcoord_4.xyz;			// partial precision
+    r2.xyz = (-r0.xyz * r1.xyz) + IN.color_0.rgb;			// partial precision
     r0.w = AlphaTestRef.x - r0.w;			// partial precision
     r2.xyz = r2.xyz * IN.color_0.a;			// partial precision
     r0.w = (r0.w >= 0.0 ? 1 : 0);			// partial precision

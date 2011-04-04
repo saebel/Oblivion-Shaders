@@ -40,15 +40,15 @@
     sampler2D AttenuationMap;
     r0.x = IN.texcoord_4.z;
     r0.y = IN.texcoord_4.w;
-    r2.xyzw = tex2D(AttenuationMap, r0);			// partial precision
-    r3.xyzw = tex2D(AttenuationMap, IN.texcoord_4);			// partial precision
-    r4.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r1.xyzw = tex2D(GlowMap, IN.texcoord_0);
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r4.xyz + -0.5;
-    r4.xyz = r0.xyz + r0.xyz;			// partial precision
-    r0.xyz = normalize(r4);			// partial precision
-    r4.xyz = normalize(IN.texcoord_2);			// partial precision
+    r2.xyzw = tex2D(AttenuationMap, r0.xy);			// partial precision
+    r3.xyzw = tex2D(AttenuationMap, IN.texcoord_4.xy);			// partial precision
+    r4.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
+    r1.xyzw = tex2D(GlowMap, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyz = r4.xyz - 0.5;
+    r4.xyz = 2 * r0.xyz;			// partial precision
+    r0.xyz = normalize(r4.xyz);			// partial precision
+    r4.xyz = normalize(IN.texcoord_2.xyz);			// partial precision
     r4.x = saturate(dot(r0.xyz, r4.xyz));			// partial precision
     r1.w = 1 - r3.x;			// partial precision
     r3.x = saturate(dot(r0.xyz, IN.texcoord_1.xyz));			// partial precision

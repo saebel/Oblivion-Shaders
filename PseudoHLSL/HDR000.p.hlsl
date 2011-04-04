@@ -55,6 +55,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -62,22 +63,24 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_0 = {1, 0, 0, 0};
 
+    float4 r0;
+    float4 r1;
+    float4 r2;
+    float4 r3;
+
     r0.xy = BlurScale.xy;
-    r0.xy = (r0 * const_6) + IN.texcoord_0;		// |3.000000|1.000000| + (in / 256)
-    r0.xyzw = tex2D(Src0, r0);
+    r1.xyzw = tex2D(Src0, (r0.xy * const_5.xy) + IN.texcoord_0.xy);
+    r2.xyzw = tex2D(Src0, (r0.xy * BlurOffsets.xy) + IN.texcoord_0.xy);
+    r3.xyzw = tex2D(Src0, (r0.xy * const_4.xy) + IN.texcoord_0.xy);
+    r0.xyzw = tex2D(Src0, (r0.xy * const_6.xy) + IN.texcoord_0.xy);
+    r0.xyz = (const_6.z * r0.xyz) + ((const_5.z * r1.xyz) + ((BlurOffsets.z * r2.xyz) + (r3.xyz * const_4.z)));            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
     r0.w = 1;
-    r1.xy = (r0 * const_5) + IN.texcoord_0;		// |1.000000|1.000000| + (in / 256)
-    r1.xyzw = tex2D(Src0, r1);
-    r2.xy = (r0 * BlurOffsets) + IN.texcoord_0;		// |1.000000|3.000000| + (in / 256)
-    r2.xyzw = tex2D(Src0, r2);
-    r3.xy = (r0 * const_4) + IN.texcoord_0;		// |3.000000|3.000000| + (in / 256)
-    r3.xyzw = tex2D(Src0, r3);
-    r3.xyz = r3.xyz * const_4.z;		// (in[0] / 4)
-    r2.xyz = (BlurOffsets.z * r2.xyz) + r3.xyz;            // (in[0] / 4) + (in[1] / 4)
-    r1.xyz = (const_5.z * r1.xyz) + r2.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4)
-    r0.xyz = (const_6.z * r0.xyz) + r1.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

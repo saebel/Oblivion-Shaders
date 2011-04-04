@@ -32,6 +32,6 @@
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.w = max(r0.x, 0);
     OUT.color_0.rgb = min(r0.w, 1);
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
 // approximately 8 instruction slots used

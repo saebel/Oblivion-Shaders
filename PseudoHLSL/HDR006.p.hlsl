@@ -54,6 +54,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -61,22 +62,21 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_2 = {1, 0.01, 0, 0};
 
-    r0.xyzw = tex2D(AvgLum, IN.texcoord_0);
-    r2.y = HDRParam.z;
-    r0.w = pow(abs(r2.y), TimingData.z);		//       pow(TimingData, HDRParam.z == 0.500000)
-    r0.w = 1 - r0.w;		// 1.0 - pow(TimingData, HDRParam.z == 0.500000)
-    r2.xyz = lerp(r0, r1, r0.w);		// lerp(Src0, AvgLum, 1.0 - pow(something))
-    r0.x = dot(r2.xyz, r2.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r0.x);
-    r0.w = 1.0 / r0.w;			// normalize => sqrt(lerp.x * lerp.x + lerp.y * lerp.y + lerp.z * lerp.z + 1.0 * 1.0)
-    r1.xyzw = tex2D(Src0, IN.texcoord_0);
-    r1.w = max(0.01, r0.w);		// max(normalized, 0.01)
-    r0.w = min(r1.w, HDRParam.w);		// min(normalized, fUpperLUMClamp == 1.400000)
-    r1.w = 1.0 / r1.w;			// 1 / max
-    r0.w = r0.w * r1.w;		// min / max
-    r0.xyz = r2.xyz * r0.w;		// (min() / max()) * lerp()
+    float4 r0;
+    float4 r1;
+    float3 r2;
+
+    r0.xyzw = tex2D(AvgLum, IN.texcoord_0.xy);
+    r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);
+    r2.xyz = lerp(r0.xyz, r1.xyz, 1 - pow(abs(HDRParam.z), TimingData.z));		// lerp(Src0, AvgLum, 1.0 - pow(something))
+    r1.w = max(0.01, length(r2.xyz)));		// max(normalized, 0.01)
+    r0.xyz = r2.xyz * (min(r1.w, HDRParam.w) / r1.w);		// (min() / max()) * lerp()
     r0.w = 1;			// [x,y,z,1]
     OUT.color_0.rgba = r0.xyzw;
 

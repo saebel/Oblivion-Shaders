@@ -22,11 +22,11 @@
     float2 texcoord_0 : TEXCOORD0;
     float3 texcoord_1 : TEXCOORD1;
     sampler2D NormalMap;
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);
-    r0.xyz = IN.texcoord_1 + -0.5;
-    r2.xyz = r0.xyz + r0.xyz;
-    r0.xyz = r1.xyz + -0.5;
-    r0.xyz = r0.xyz + r0.xyz;
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    r0.xyz = IN.texcoord_1.xyz - 0.5;
+    r2.xyz = 2 * r0.xyz;
+    r0.xyz = r1.xyz - 0.5;
+    r0.xyz = 2 * r0.xyz;
     r0.x = saturate(dot(r0.xyz, r2.xyz));
     r0.w = r0.x * r0.x;
     r0.w = r0.w * r0.w;

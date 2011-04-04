@@ -34,6 +34,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -41,24 +42,20 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {-0.5, 1, 0, 0};
 
+    float4 r0;
+    float4 r1;
+
+    r1.xyz = normalize(IN.input_2.xyz);			// partial precision
+    r0.xyzw = texCUBE(EnvironmentCubeMap, ((2 * dot(2 * (IN.input_1.xyz - 0.5), r1.xyz)) * (2 * (IN.input_1.xyz - 0.5))) - (r1.xyz * dot(2 * (IN.input_1.xyz - 0.5), r0.xyz)));			// partial precision	// [0,1] to [-1,+1]
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
+    OUT.color_0.rgb = ((((r0.xyz * r1.w) * MatAlpha.x) * IN.color_0.rgb) * PSLightColor.rgb) * IN.input_1.w;			// partial precision
     OUT.color_0.a = 1;			// partial precision
-    r0.xyz = IN.input_1 + -0.5;
-    r0.xyz = r0.xyz + r0.xyz;			// partial precision
-    r1.w = dot(r0.xyz, r0.xyz);	// normalize + length			// partial precision
-    r1.xyz = normalize(IN.input_2);			// partial precision
-    r0.w = dot(r0.xyz, r1.xyz);			// partial precision
-    r0.w = r0.w + r0.w;			// partial precision
-    r1.xyz = r1.xyz * r1.w;			// partial precision
-    r0.xyz = (r0.w * r0.xyz) - r1.xyz;			// partial precision
-    r0.xyzw = texCUBE(EnvironmentCubeMap, r0);			// partial precision
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r0.xyz * r1.w;			// partial precision
-    r0.xyz = r0.xyz * MatAlpha.x;			// partial precision
-    r0.xyz = r0.xyz * IN.color_0;			// partial precision
-    r0.xyz = r0.xyz * PSLightColor.rgb;			// partial precision
-    OUT.color_0.rgb = r0.xyz * IN.input_1.w;			// partial precision
 
     return OUT;
 };

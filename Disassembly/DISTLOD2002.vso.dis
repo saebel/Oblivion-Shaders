@@ -48,41 +48,41 @@
     add r1.xyz, r1, c6.y
     mov r0.w, v0.w
     add r1.xyz, r1, r1
-    dp4 oPos.w, c3, r0			//		(c3.x * r0.x) + (c3.y * r0.y) + (c3.z * r0.z) + (c3.w * r0.w)
+    dp4 oPos.w, c3, r0
     dp3 r2.x, c4, r1
     mov r1.xyz, c20[a0.w]
     add r1.xyz, -r1, c9
     mul r2.xyz, r2.x, v1
     mul r3.xyz, r1.w, r2
-    dp4 r2.x, c0, r0			//		(c0.x * r0.x) + (c0.y * r0.y) + (c0.z * r0.z) + (c0.w * r0.w)
-    dp4 r2.y, c1, r0			//		(c1.x * r0.x) + (c1.y * r0.y) + (c1.z * r0.z) + (c1.w * r0.w)
-    dp4 r2.z, c2, r0			//		(c2.x * r0.x) + (c2.y * r0.y) + (c2.z * r0.z) + (c2.w * r0.w)
+    dp4 r2.x, c0, r0
+    dp4 r2.y, c1, r0
+    dp4 r2.z, c2, r0
     mov r0.xyz, c5
     mad oT4.xyz, r3, r0, c13
-    dp3 r0.x, r2, r2			//		(r2.x * r2.x) + (r2.y * r2.y) + (r2.z * r2.z)
+    dp3 r0.x, r2, r2
     mov oPos.xyz, r2
-    rsq r0.w, r0.x			//		1.0 / sqrt(r0)
-    rcp r0.w, r0.w			//		1.0 / (1.0 / sqrt(r0)) ^= sqrt(r0)
-    dp3 r0.x, r1, r1
-    add r2.w, -r0.w, c11.x		// exp fog	(off - r0)
     rsq r0.w, r0.x
-    rcp r4.w, c11.y			// exp fog	(1 / div)
+    rcp r0.w, r0.w
+    dp3 r0.x, r1, r1
+    add r2.w, -r0.w, c11.x
+    rsq r0.w, r0.x
+    rcp r4.w, c11.y
     rcp r0.w, r0.w
     add r1.w, r0.w, -c12.x
     rcp r3.w, c12.y
-    mul r2.w, r2.w, r4.w		// exp fog	(off - r0) * (1 / div)
+    mul r2.w, r2.w, r4.w
     mad r1.w, r1.w, -r3.w, c6.w
-    max r2.w, r2.w, c6.z		// exp fog	max((off - r0) * (1 / div), 0.0)
+    max r2.w, r2.w, c6.z
     max r1.w, r1.w, c6.z
-    min r2.w, r2.w, c6.w		// exp fog	min(max((off - r0) * (1 / div), 0.0), 1.0)
+    min r2.w, r2.w, c6.w
     min r1.w, r1.w, c6.w
     slt r0.w, c12.x, r0.w
     add r1.w, r1.w, -c6.w
-    add oD0.w, -r2.w, c6.w		// exp fog	1.0 - min(max((off - r0) * (1 / div), 0.0), 1.0)
+    add oD0.w, -r2.w, c6.w
     mad oT5.w, r0.w, r1.w, c6.w
     mov oT0.xy, v2
     mov oT4.w, c6.w
     mov oT5.xyz, c6.z
-    mov oD0.xyz, c10			// exp fog
+    mov oD0.xyz, c10
 
 // approximately 46 instruction slots used

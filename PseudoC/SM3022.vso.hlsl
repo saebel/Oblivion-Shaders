@@ -37,9 +37,9 @@
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    r0.xyz = EyePosition.xyz - IN.position;
-    r1.xyz = normalize(r0);
-    r0.xyzw = (1.0 / 300) * IN.position;
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
+    r1.xyz = normalize(r0.xyz);
+    r0.x.zw = (1.0 / 300) * IN.position.xy;
     OUT.texcoord_1.x = dot(IN.normal.xyz, r1.xyz);
     r1.y = dot(WorldViewTranspose[2].xyzw, r0.xyzw);
     r1.w = r1.y * 0.02;

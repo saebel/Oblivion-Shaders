@@ -45,15 +45,15 @@
     r1.w = 1.0 / FogParam.y;
     r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     r0.w = r0.w * r1.w;
-    OUT.texcoord_3.xyz = (0.5 * r1) + 0.5;
+    OUT.texcoord_3.xyz = (0.5 * r1.xyz) + 0.5;
     r0.w = max(r0.w, 0);
     OUT.position.xyz = r0.xyz;
     r0.w = min(r0.w, 1);
     OUT.color_1.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xy = IN.texcoord_0;
-    OUT.texcoord_2.xy = IN.texcoord_0;
-    OUT.color_0.rgba = IN.color_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = IN.color_0.rgba;
     OUT.color_1.rgb = FogColor.rgb;
 
 // approximately 23 instruction slots used

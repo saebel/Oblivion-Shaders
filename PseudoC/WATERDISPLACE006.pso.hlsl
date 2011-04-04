@@ -27,8 +27,8 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D HeightMap01;
     sampler2D HeightMap02;
-    r1.xyzw = tex2D(HeightMap02, IN.texcoord_0);
-    r0.xyzw = tex2D(HeightMap01, IN.texcoord_0);
+    r1.xyzw = tex2D(HeightMap02, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(HeightMap01, IN.texcoord_0.xy);
     r2.w = abs(r1.x);
     r0.w = 1.0 / fDamp.x;
     r0.w = r0.w * 0.8;

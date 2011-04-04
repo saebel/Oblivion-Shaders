@@ -35,27 +35,27 @@
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
     r0.xyzw = IN.blendindices.zyxw * 765.01001;
-    r0.xyzw = frac(r0);
-    r1.x = dot(IN.blendweight.xyz, 1.xyz);
-    r0.xyzw = (IN.blendindices.zyxw * 765.01001) - r0;
+    r0.xyzw = frac(r0.xyzw);
+    r1.x = dot(IN.blendweight.xyz, const_0.xyz);.x
+    r0.xyzw = (IN.blendindices.zyxw * 765.01001) - r0.xyzw;
     offset.xyzw = r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.w = 1 - r1.x;
-    r1.x = dot(Bones[0 + offset.y].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.y].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.y].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.y], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.y], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.y], r0.xyzw);
     r2.xyz = r1.xyz * IN.blendweight.y;
-    r1.x = dot(Bones[0 + offset.x].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.x].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.x].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.x], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.x], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.x], r0.xyzw);
     r2.xyz = (IN.blendweight.x * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.z].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.z].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.z].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.z], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.z], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.z], r0.xyzw);
     r2.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.w].xyzw, r0.xyzw);
-    r1.y = dot(Bones[1 + offset.w].xyzw, r0.xyzw);
-    r1.z = dot(Bones[2 + offset.w].xyzw, r0.xyzw);
+    r1.x = dot(Bones[0 + offset.w], r0.xyzw);
+    r1.y = dot(Bones[1 + offset.w], r0.xyzw);
+    r1.z = dot(Bones[2 + offset.w], r0.xyzw);
     r0.xyz = (r1.w * r1.xyz) + r2.xyz;
     r0.w = 1;
     OUT.position.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
@@ -65,7 +65,7 @@
     OUT.texcoord_1.x = dot(SkinWorldViewTranspose[0].xyzw, r0.xyzw);
     OUT.texcoord_1.y = dot(SkinWorldViewTranspose[1].xyzw, r0.xyzw);
     OUT.texcoord_1.z = dot(SkinWorldViewTranspose[2].xyzw, r0.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.w = LightPosition[0].w;
 
 // approximately 33 instruction slots used

@@ -60,6 +60,10 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float4 texcoord_1 : TEXCOORD1;
+    float4 texcoord_2 : TEXCOORD2;
 };
 
 // Code:
@@ -67,113 +71,76 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_4 = {PI * 2, -PI, -2.52398507e-007, 2.47609005e-005};
     const float4 const_7 = {(1.0 / 48), 0.499999553, 0.25, -0.00138883968};
     const float4 const_12 = {(1.0 / (PI * 2)), 0.25, 0.5, 0};
     const float4 const_82 = {(1.0 / 24), -0.5, 1, 0};
 
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_2.xyz = FogColor.rgb;
+    float1 offset;
+    float4 r0;
+    float4 r1;
+    float4 r2;
+    float4 r3;
+    float1 r4;
+
     offset.x = IN.blendindices.z;
-    r0.w = (1.0 / 48);
-    r0.xy = frac(r1);
-    r0.xy = (PI * 2 * r0) + -PI;
-    r0.xy = r0.xy * r0.xy;
-    r1.w = (IN.blendindices.z * r0.w) + RockParams.y;
-    r2.w = (r1.w * 0.499999553) + 0.25;
-    r2.xy = (r1 * r0) + -0.00138883968;
-    r2.xy = (r2 * r0) + (1.0 / 24);
-    r2.xy = (r2 * r0) + -0.5;
-    r6.y = pow(2.0, r2.w);	// partial precision
-    r1.w = r6.y;
-    r1.w = (r1.w * PI * 2) + -PI;
-    r1.w = r1.w * r1.w;
-    r2.w = (IN.blendindices.z * r0.w) + RustleParams.y;
-    r0.w = (r1.w * -2.52398507e-007) + 2.47609005e-005;
-    r3.w = (r2.w * 0.499999553) + 0.25;
-    r2.w = (r1.w * r0.w) + -0.00138883968;
-    r2.w = (r1.w * r2.w) + (1.0 / 24);
-    r2.w = (r1.w * r2.w) + -0.5;
-    r2.w = (r1.w * r2.w) + 1;
-    r2.w = r2.w * RockParams.z;
-    r2.w = r2.w * RockParams.x;
-    r1.xy = (r2.w * (1.0 / (PI * 2))) + const_12.yzzw;
-    r1.xy = (-2.52398507e-007 * r0) + 2.47609005e-005;
-    r1.xy = frac(r3);
-    r1.xy = (PI * 2 * r1) + -PI;
-    r1.xy = r1.xy * r1.xy;
-    r6.y = pow(2.0, r3.w);	// partial precision
-    r0.w = r6.y;
-    r0.w = (r0.w * PI * 2) + -PI;
+    r0.w = (pow(2.0, (((IN.blendindices.z / 48) + RustleParams.y) * 0.499999553) + 0.25) * PI * 2) + -PI;
     r0.w = r0.w * r0.w;
-    r1.w = (r0.w * -2.52398507e-007) + 2.47609005e-005;
-    r1.w = (r0.w * r1.w) + -0.00138883968;
-    r1.w = (r0.w * r1.w) + (1.0 / 24);
-    r1.w = (r0.w * r1.w) + -0.5;
-    r0.w = (r0.w * r1.w) + 1;
-    r0.w = r0.w * RustleParams.z;
-    r0.w = r0.w * RustleParams.x;
-    r3.xy = (r0.w * (1.0 / (PI * 2))) + const_12.yzzw;
+    r1.w = (pow(2.0, (((IN.blendindices.z / 48) + RockParams.y) * 0.499999553) + 0.25) * PI * 2) + -PI;
+    r1.w = r1.w * r1.w;
+    r0.xy = (PI * 2 * frac((((((r1.w * ((r1.w * ((r1.w * ((r1.w * ((r1.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24))) - 0.5)) + 1) * RockParams.z) * RockParams.x) / (PI * 2)) + const_12.yz)) + -PI;
+    r0.xy = r0.xy * r0.xy;
+    r1.xy = (-2.52398507e-007 * r0.xy) + 2.47609005e-005;
+    r2.xy = (r1 * r0.xy) - 0.00138883968;
+    r1.xy = (PI * 2 * frac((((((r0.w * ((r0.w * ((r0.w * ((r0.w * ((r0.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24))) - 0.5)) + 1) * RustleParams.z) * RustleParams.x) / (PI * 2)) + const_12.yz)) + -PI;
+    r2.xy = (r2 * r0.xy) + (1.0 / 24);
+    r2.xy = (r2 * r0.xy) - 0.5;
     r0.xw = (r0.yyzx * r2.yyzx) + 1;
-    r0.y = -r0.w;
-    r0.z = 0;
-    r3.xy = (r2 * r1) + (1.0 / 24);
-    r3.xy = (r3 * r1) + -0.5;
-    r3.xw = (r1.yyzx * r3.yyzx) + 1;
-    r1.zw = BillboardRight.zw;
-    r3.z = 0;
-    r1.y = dot(r3.wxzw.xyz, BillboardRight.xyz);
-    r3.y = -r3.w;
-    r1.x = dot(r3.xyz, BillboardRight.xyz);
-    r2.xy = (-2.52398507e-007 * r1) + 2.47609005e-005;
-    r2.xy = (r2 * r1) + -0.00138883968;
+    r1.xy = r1.xy * r1.xy;
+    r2.xy = (-2.52398507e-007 * r1.xy) + 2.47609005e-005;
+    r2.xy = (r2 * r1.xy) - 0.00138883968;
+    r3.xy = (r2 * r1.xy) + (1.0 / 24);
     r2.xyzw = IN.blendindices.w * LeafBase[offset.x];
     offset.x = IN.blendindices.y;
-    r4.x = dot(r0.zwxw.xyz, r2.xyz);
-    r5.x = dot(r0.zxyw.xyz, r2.xyz);
+    r0.y = -r0.w;
+    r0.z = 0;
+    r3.xy = (r3 * r1.xy) - 0.5;
+    r3.xw = (r1.yyzx * r3.yyzx) + 1;
+    r3.y = -r3.w;
+    r3.z = 0;
+    r1.x = dot(r3.xyz, BillboardRight.xyz);
+    r1.y = dot(r3.wxz, BillboardRight.xyz);
+    r1.zw = BillboardRight.zw;
+    r1.x.zw = dot(r0.zxy, r2.xyz) * r1.xy;
+    r4.x = dot(r0.zwx, r2.xyz);
     r0.x = dot(r3.xyz, BillboardUp.xyz);
-    r0.y = dot(r3.wxzw.xyz, BillboardUp.xyz);
+    r0.y = dot(r3.wxz, BillboardUp.xyz);
     r0.zw = BillboardUp.zw;
-    r0.xyzw = (r4.x * r0) + r1;
-    r0.w = dot(r2.xyzw, r2.xyzw);	// normalize + length
-    r0.w = 1.0 / sqrt(r0.w);
-    r1.xyzw = r5.x * r1;
-    r1.xyzw = r0 + IN.position;
-    r0.x = dot(WindMatrices[0 + offset.x].xyzw, r1.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.x].xyzw, r1.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.x].xyzw, r1.xyzw);
-    r2.xyz = r2.xyz * r0.w;
-    r0.w = dot(WindMatrices[3 + offset.x].xyzw, r1.xyzw);
-    r0.xyzw = r0 - r1;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
+    r0.xyzw = (r4.x * r0.xyzw) + r1.xyzw;
+    r1.x.zw = r0.xy + IN.position.xy;
+    r0.x = dot(WindMatrices[0 + offset.x], r1.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.x], r1.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.x], r1.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.x], r1.xyzw);
+    r0.x.zw = r0.xy - r1.xy;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r2.xyz = (LeafLighting.y * r2) + IN.normal;
-    r3.w = 1.0 / FogParam.y;
-    r3.x = dot(r2.xyz, r2.xyz);	// normalize + length
-    r2.w = 1.0 / sqrt(r3.x);
-    r1.xyz = r2.xyz * r2.w;
-    r1.x = dot(r1.xyz, LightVector.xyz);
-    r1.w = max(r1.x, 0);
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.xyz = r1.xyz;
-    r0.w = min(r1.w, 1);
-    r0.xyzw = r0.w * DiffColor;
-    r2.w = SunDimmer.x;
-    r0.xyzw = (r2.w * r0) + AmbientColor;
+    r0.w = saturate(dot(normalize((LeafLighting.y * (r2.xyz / length(r2.xyzw))) + IN.normal.xyz), LightVector.xyz));
+    r0.x.zw = r0.w * DiffColor.xy;
+    r0.xyzw = (SunDimmer.x * r0.xyzw) + AmbientColor.rgba;
+    OUT.texcoord_1.xyz = r0.xyz * pow(2.0, IN.blendindices.z);
     OUT.texcoord_1.w = r0.w;
-    r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r2.x);
-    r1.w = 1.0 / r1.w;
-    r1.w = FogParam.x - r1.w;
-    r1.w = r1.w * r3.w;
-    r1.w = max(r1.w, 0);
-    r0.w = min(r1.w, 1);
-    OUT.texcoord_2.w = 1 - r0.w;
-    r6.y = pow(2.0, IN.blendindices.z);	// partial precision
-    r2.w = r6.y;
-    OUT.texcoord_1.xyz = r0.xyz * r2.w;
+    OUT.position.xyz = r1.xyz;
+    OUT.texcoord_2.w = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xyz = FogColor.rgb;
 
     return OUT;
 };

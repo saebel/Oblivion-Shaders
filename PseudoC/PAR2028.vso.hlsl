@@ -29,14 +29,14 @@
     float4 IN.color_0 : COLOR0;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    r1.xyz = EyePosition.xyz - IN.position;
+    r1.xyz = EyePosition.xyz - IN.position.xyz;
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    r0.xyz = normalize(r1);
+    r0.xyz = normalize(r1.xyz);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_6.x = dot(IN.tangent.xyz, r0.xyz);
     OUT.texcoord_6.y = dot(IN.binormal.xyz, r0.xyz);
     OUT.texcoord_6.z = dot(IN.normal.xyz, r0.xyz);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0.rgba = IN.color_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = IN.color_0.rgba;
 
 // approximately 13 instruction slots used

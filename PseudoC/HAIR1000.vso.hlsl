@@ -30,7 +30,7 @@
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
-    r0.xyz = EyePosition.xyz - IN.position;
+    r0.xyz = EyePosition.xyz - IN.position.xyz;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
@@ -53,9 +53,9 @@
     r0.w = 1.0 / sqrt(r2.x);
     OUT.texcoord_2.xyz = r1.xyz * r1.w;
     OUT.texcoord_3.xyz = r0.xyz * r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
     OUT.color_0.rgba = const_4.xxxy;
-    OUT.color_1.rgba = IN.color_0;
+    OUT.color_1.rgba = IN.color_0.rgba;
 
 // approximately 27 instruction slots used

@@ -56,15 +56,15 @@
     r1.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r0.w = r1.w * (1.0 / 17);
     r0.w = frac(r0.w);
-    r0.w = r0.w + -0.5;
-    r0.x = r0.w + r0.w;
-    r0.w = (r0.x * -r0.x) + 1;
+    r0.w = r0.w - 0.5;
+    r0.x = 2 * r0.w;
+    r0.w = 1.0 - (r0.x * r0.x);
     r0.w = 1.0 / sqrt(r0.w);
     r1.z = IN.normal.z;
     r0.w = 1.0 / r0.w;
     r0.z = 0;
     r0.y = -r0.w;
-    r1.y = dot(r0.wxzw.xyz, IN.normal.xyz);
+    r1.y = dot(r0.wxz, IN.normal.xyz);
     r1.x = dot(r0.xyz, IN.normal.xyz);
     r2.z = (1.0 / 128);
     r1.w = (r1.w * r2.z) + WindData.w;
@@ -72,15 +72,15 @@
     r2.w = max(r1.x, 0);
     r3.w = frac(InstanceData[0 + offset.w].w);
     r2.w = min(r2.w, 1);
-    r2.xyz = r3.w * IN.color_0;
+    r2.xyz = r3.w * IN.color_0.rgb;
     r1.xy = const_3.xy;
     r3.w = r1.x * InstanceData[0 + offset.w].w;
     r1.w = (r1.w * (1.0 / (PI * 2))) + 0.5;
-    r1.xyz = (r3.w * ScaleMask) + r1.y;
+    r1.xyz = (r3.w * ScaleMask.xyz) + r1.y;
     r1.w = frac(r1.w);
-    r3.xyz = r1.xyz * IN.position;
+    r3.xyz = r1.xyz * IN.position.xyz;
     r3.w = (r1.w * PI * 2) + -PI;
-    r4.y = dot(r0.wxzw.xyz, r3.xyz);
+    r4.y = dot(r0.wxz, r3.xyz);
     r1.y = sin(r3.w);
     r1.w = r1.y * WindData.z;
     r0.w = IN.color_0.a * IN.color_0.a;
@@ -106,7 +106,7 @@
     r2.w = 1.0 / sqrt(r2.w);
     r1.w = r1.w * r3.w;
     r2.w = 1.0 / r2.w;
-    r1.xy = r2.w - AlphaParam.xzzw;
+    r1.xy = r2.w - AlphaParam.xz;
     r2.x = 1.0 / AlphaParam.y;
     r2.y = 1.0 / AlphaParam.w;
     r1.w = max(r1.w, 0);
@@ -118,7 +118,7 @@
     OUT.position.xyzw = r0.xyzw;
     r0.w = 1 - r1.y;
     OUT.texcoord_5.w = r1.x * r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.xyzw = AmbientColor.rgba;
     OUT.color_0.rgb = FogColor.rgb;
 

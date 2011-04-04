@@ -42,26 +42,26 @@
     sampler2D NormalMap;
     sampler2D GlowMap;
     sampler2D AttenuationMap;
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0);			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r0.x = dot(IN.texcoord_7.xyz, IN.texcoord_7.xyz);			// partial precision
     r2.x = IN.texcoord_4.z;
     r2.y = IN.texcoord_4.w;
     r1.w = 1.0 / sqrt(r0.x);			// partial precision
-    r0.xy = r1.w * IN.texcoord_7;			// partial precision
-    r0.w = (r0.w * 0.04) + -0.02;			// partial precision
-    r1.xy = (r0.w * r0) + IN.texcoord_0;
+    r0.xy = r1.w * IN.texcoord_7.xy;			// partial precision
+    r0.w = (r0.w * 0.04) - 0.02;			// partial precision
+    r1.xy = (r0.w * r0.xy) + IN.texcoord_0.xy;
     r0.x = IN.texcoord_5.z;
     r0.y = IN.texcoord_5.w;
-    r3.xyzw = tex2D(AttenuationMap, r2);			// partial precision
-    r4.xyzw = tex2D(AttenuationMap, IN.texcoord_4);			// partial precision
-    r5.xyzw = tex2D(NormalMap, r1);			// partial precision
-    r1.xyzw = tex2D(AttenuationMap, r0);			// partial precision
-    r2.xyzw = tex2D(AttenuationMap, IN.texcoord_5);			// partial precision
-    r0.xyzw = tex2D(GlowMap, IN.texcoord_0);
-    r5.xyz = r5.xyz + -0.5;
-    r6.xyz = r5.xyz + r5.xyz;			// partial precision
-    r5.xyz = normalize(r6);			// partial precision
-    r6.xyz = normalize(IN.texcoord_2);			// partial precision
+    r3.xyzw = tex2D(AttenuationMap, r2.xy);			// partial precision
+    r4.xyzw = tex2D(AttenuationMap, IN.texcoord_4.xy);			// partial precision
+    r5.xyzw = tex2D(NormalMap, r1.xy);			// partial precision
+    r1.xyzw = tex2D(AttenuationMap, r0.xy);			// partial precision
+    r2.xyzw = tex2D(AttenuationMap, IN.texcoord_5.xy);			// partial precision
+    r0.xyzw = tex2D(GlowMap, IN.texcoord_0.xy);
+    r5.xyz = r5.xyz - 0.5;
+    r6.xyz = 2 * r5.xyz;			// partial precision
+    r5.xyz = normalize(r6.xyz);			// partial precision
+    r6.xyz = normalize(IN.texcoord_2.xyz);			// partial precision
     r0.w = 1 - r4.x;			// partial precision
     r4.x = saturate(dot(r5.xyz, r6.xyz));			// partial precision
     r0.w = saturate(r0.w - r3.x);			// partial precision
@@ -69,7 +69,7 @@
     r3.xyz = r0.w * r3.xyz;			// partial precision
     r4.x = saturate(dot(r5.xyz, IN.texcoord_1.xyz));			// partial precision
     r3.xyz = (r4.x * PSLightColor[0].rgb) + r3.xyz;			// partial precision
-    r4.xyz = normalize(IN.texcoord_3);			// partial precision
+    r4.xyz = normalize(IN.texcoord_3.xyz);			// partial precision
     r0.w = 1 - r2.x;			// partial precision
     r2.x = saturate(dot(r5.xyz, r4.xyz));			// partial precision
     r0.w = saturate(r0.w - r1.x);			// partial precision

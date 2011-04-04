@@ -43,21 +43,26 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_4 = {0.1, -0.1, (1.0 / 750), 0.8};
     const int4 const_7 = {1, 0, 0, 0};
 
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    float2 r0;
+
     r0.x = dot(WorldViewTranspose[0].xyz, IN.normal.xyz);
     r0.y = dot(WorldViewTranspose[1].xyz, IN.normal.xyz);
     r0.xy = min(r0.xy, 0.1);
+    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
+    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_1.xy = max(r0.xy, -0.1);
     r0.y = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.z = r0.y;
-    r0.w = (r0.y * (1.0 / 750)) + 0.8;
-    OUT.texcoord_0.z = max(r0.w, 1);
+    OUT.texcoord_0.z = max((r0.y / 750)) + 0.8, 1;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;
 };

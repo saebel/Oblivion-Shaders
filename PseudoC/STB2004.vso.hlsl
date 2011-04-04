@@ -40,13 +40,13 @@
     r0.w = frac(IN.blendindices.y);
     r0.w = IN.blendindices.y - r0.w;
     offset.w = r0.w;
-    r0.x = dot(WindMatrices[0 + offset.w].xyzw, IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w].xyzw, IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w].xyzw, IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.w].xyzw, IN.position.xyzw);
-    r0.xyzw = r0 - IN.position;
-    r1.xyzw = IN.position;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
+    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
+    r0.x.zw = r0.xy - IN.position.xy;
+    r1.xyzw = IN.position.xyzw;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
@@ -60,13 +60,13 @@
     r0.w = FogParam.x - r0.w;
     r2.w = 1.0 / FogParam.y;
     r0.w = r0.w * r2.w;
-    r3.xyz = normalize(r2);
+    r3.xyz = normalize(r2.xyz);
     OUT.texcoord_1.xyz = r3.xyz;
     r0.w = max(r0.w, 0);
     OUT.position.xyz = r1.xyz;
     r0.w = min(r0.w, 1);
     OUT.color_1.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.rgba = (IN.blendindices.z * const_4.yyyx) + const_4.xxxy;
     OUT.color_1.rgb = FogColor.rgb;
 

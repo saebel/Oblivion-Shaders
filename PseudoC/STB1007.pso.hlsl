@@ -19,7 +19,7 @@
 //
 
     const int4 const_1 = {1, 0, 0, 0};
-    IN.texcoord_0.xyzw = tex2D(NormalMap, texcoord_0);
+    IN.texcoord_0.xyzw = tex2D(NormalMap, texcoord_0.xy);
     texcoord IN.texcoord_1
     r0.xyzw = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_1.xyz) - 0.5)));
     r0.w = r0.w * r0.w;

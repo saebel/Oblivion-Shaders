@@ -55,6 +55,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -62,19 +63,21 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {1, 0.5, 0, 0};
 
-    r0.xyzw = tex2D(DestBlend, IN.texcoord_1);		// original-surface
-    r1.xyzw = tex2D(Src0, IN.texcoord_0);		// blur-surface
-    r2.xyzw = tex2D(AvgLum, IN.texcoord_0);		// range-surface
-    r2.x = dot(r2.xyz, 1.xyz);		// range.x * 1 + range.y * 1 + range.z * 1
-    r0.w = max(r2.x, HDRParam.x);	//              max(range, fTargetLUM)
-    r0.w = 1.0 / r0.w;		//        1.0 / max(range, fTargetLUM)
-    r1.w = r0.w * 0.5;	//        0.5 / max(range, fTargetLUM)
-    r0.w = r0.w * HDRParam.x;	// fTargetLUM / max(range, fTargetLUM)
-    r2.xyz = r1.xyz * r1.w;	// blur * 0.5 / max(range, fTargetLUM)
-    r1.xyz = max(r2.xyz, 0);	// max(blur * 0.5 / max(range, fTargetLUM), 0)
-    r0.xyz = (r0.w * r0.xyz) + r1.xyz;	// fTargetLUM / max(range, fTargetLUM) * (max(blur * 0.5 / max(range, fTargetLUM), 0) + original)
+    float4 r0;
+    float4 r1;
+    float4 r2;
+
+    r0.xyzw = tex2D(DestBlend, IN.texcoord_1.xy);		// original-surface
+    r2.xyzw = tex2D(AvgLum, IN.texcoord_0.xy);		// range-surface
+    r0.w = 1.0 / max(dot(r2.xyz, const_0.xyz), HDRParam.x);		//        1.0 / max(range, fTargetLUM)
+    r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);		// blur-surface
+    r0.xyz = ((r0.w * HDRParam.x) * r0.xyz) + max(r1.xyz * (r0.w * 0.5), 0);	// fTargetLUM / max(range, fTargetLUM) * (max(blur * 0.5 / max(range, fTargetLUM), 0) + original)
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 

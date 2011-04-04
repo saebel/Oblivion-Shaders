@@ -29,10 +29,10 @@
     float4 texcoord_5 : TEXCOORD5;			// partial precision
     sampler2D NormalMap;
     sampler2D AttenuationMap;
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
-    r0.xyz = r0.xyz + -0.5;
-    r1.xyz = r0.xyz + r0.xyz;			// partial precision
-    r0.xyz = normalize(r1);			// partial precision
+    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyz = r0.xyz - 0.5;
+    r1.xyz = 2 * r0.xyz;			// partial precision
+    r0.xyz = normalize(r1.xyz);			// partial precision
     r2.xy = r0.xy * 0.5;			// partial precision
     r2.w = (r0.z * 0.5) + 1;			// partial precision
     r1.xyz = (0.5 * r0.xyz) + const_3.xyz;			// partial precision
@@ -41,9 +41,9 @@
     r1.w = (r2.w * r1.z) + r1.w;			// partial precision
     r1.w = 1.0 / sqrt(r1.w);			// partial precision
     r2.xyz = r1.xyz * r1.w;			// partial precision
-    r1.xyz = normalize(IN.texcoord_3);			// partial precision
+    r1.xyz = normalize(IN.texcoord_3.xyz);			// partial precision
     r3.x = dot(r2.xyz, r1.xyz);			// partial precision
-    r1.xyz = normalize(IN.texcoord_1);			// partial precision
+    r1.xyz = normalize(IN.texcoord_1.xyz);			// partial precision
     r0.w = r0.w * 0.7;			// partial precision
     r2.x = dot(r2.xyz, r1.xyz);			// partial precision
     r1.w = r2.x - r3.x;			// partial precision
@@ -59,14 +59,14 @@
     r2.w = (r0.w >= 0.0 ? r2.w : r1.w);			// partial precision
     r0.x = IN.texcoord_5.z;			// partial precision
     r0.y = IN.texcoord_5.w;			// partial precision
-    r0.xyzw = tex2D(AttenuationMap, r0);			// partial precision
-    r1.xyzw = tex2D(AttenuationMap, IN.texcoord_5);			// partial precision
+    r0.xyzw = tex2D(AttenuationMap, r0.xy);			// partial precision
+    r1.xyzw = tex2D(AttenuationMap, IN.texcoord_5.xy);			// partial precision
     r0.w = 1 - r1.x;			// partial precision
     r1.xyz = r2.w * PSLightColor[0].rgb;			// partial precision
     r0.w = saturate(r0.w - r0.x);			// partial precision
     r1.xyz = r1.xyz * r0.w;			// partial precision
-    r0.xyz = saturate(r1);			// partial precision
-    r0.w = dot(r1.xyz, 1.xyz);			// partial precision
+    r0.xyz = saturate(r1.xyz);			// partial precision
+    r0.w = dot(r1.xyz, const_0.xyz);.y			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 47 instruction slots used (3 texture, 44 arithmetic)

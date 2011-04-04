@@ -47,27 +47,27 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    r1.xyz = EyePosition.xyz - IN.position;
+    r1.xyz = EyePosition.xyz - IN.position.xyz;
     r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r0.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r2.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.w = 1.0 / sqrt(r0.x);
     r2.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     r0.xyz = (r0.w * r1.xyz) + LightDirection[0].xyz;
-    r3.xyz = normalize(r0);
+    r3.xyz = normalize(r0.xyz);
     r0.x = dot(IN.tangent.xyz, r3.xyz);
     r0.y = dot(IN.binormal.xyz, r3.xyz);
     r0.z = dot(IN.normal.xyz, r3.xyz);
-    r4.xyz = normalize(r2);
+    r4.xyz = normalize(r2.xyz);
     OUT.texcoord_1.xyz = r4.xyz;
     r2.xyz = r1.xyz * r0.w;
-    r4.xyz = normalize(r0);
+    r4.xyz = normalize(r0.xyz);
     OUT.texcoord_3.xyz = r4.xyz;
     r1.x = dot(IN.tangent.xyz, r2.xyz);
     r1.y = dot(IN.binormal.xyz, r2.xyz);
     r1.z = dot(IN.normal.xyz, r2.xyz);
     r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r0.xyz = LightPosition[1].xyz - IN.position;
+    r0.xyz = LightPosition[1].xyz - IN.position.xyz;
     r0.w = 1.0 / sqrt(r3.x);
     r3.x = dot(r0.xyz, r0.xyz);	// normalize + length
     OUT.texcoord_6.xyz = r1.xyz * r0.w;
@@ -79,8 +79,8 @@
     OUT.texcoord_2.z = dot(IN.normal.xyz, r1.xyz);
     r0.w = 1.0 / LightPosition[1].w;
     r1.xyz = r0.xyz * r0.w;
-    r0.xyz = normalize(r2);
-    OUT.texcoord_5.xyz = (0.5 * r1) + 0.5;
+    r0.xyz = normalize(r2.xyz);
+    OUT.texcoord_5.xyz = (0.5 * r1.xyz) + 0.5;
     OUT.texcoord_4.x = dot(IN.tangent.xyz, r0.xyz);
     OUT.texcoord_4.y = dot(IN.binormal.xyz, r0.xyz);
     r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
@@ -108,9 +108,9 @@
     r0.w = min(r0.w, 1);
     OUT.position.xyz = r0.xyz;
     OUT.color_1.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_5.w = 0.5;
-    OUT.color_0.rgba = IN.color_0;
+    OUT.color_0.rgba = IN.color_0.rgba;
     OUT.color_1.rgb = FogColor.rgb;
 
 // approximately 74 instruction slots used

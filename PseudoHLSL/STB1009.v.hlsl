@@ -38,6 +38,8 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 color_0 : COLOR0;
+    float4 position : POSITION;
 };
 
 // Code:
@@ -45,31 +47,31 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {0, 1, 0, 0};
 
-    OUT.color_0.rgb = FogColor.rgb;
+    float1 offset;
+    float4 r0;
+    float4 r1;
+
     offset.x = IN.blendindices.y;
-    r0.w = dot(WindMatrices[3 + offset.x].xyzw, IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.x].xyzw, IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.x].xyzw, IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.x].xyzw, IN.position.xyzw);
-    r0.xyzw = r0 - IN.position;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r1.xyzw = IN.position;
+    r0.x = dot(WindMatrices[0 + offset.x], IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.x], IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
+    r0.x.zw = r0.xy - IN.position.xy;
+    r1.xyzw = IN.position.xyzw;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     OUT.position.xyz = r1.xyz;
-    r2.w = 1.0 / FogParam.y;
-    r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r2.x);
-    r1.w = 1.0 / r1.w;
-    r1.w = FogParam.x - r1.w;
-    r1.w = r1.w * r2.w;
-    r0.w = max(r1.w, 0);
-    r0.w = min(r0.w, 1);
-    OUT.color_0.a = 1 - r0.w;
+    OUT.color_0.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
+    OUT.color_0.rgb = FogColor.rgb;
 
     return OUT;
 };

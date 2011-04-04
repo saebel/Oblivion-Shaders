@@ -53,7 +53,7 @@
     r0.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
     r0.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
     r0.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     r0.xyz = EyePosition.xyz - r0.xyz;
     OUT.texcoord_1.w = r0.x;
     OUT.texcoord_2.w = r0.y;

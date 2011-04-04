@@ -52,13 +52,13 @@
     r0.w = frac(IN.blendindices.y);
     r0.w = IN.blendindices.y - r0.w;
     offset.w = r0.w;
-    r0.x = dot(WindMatrices[0 + offset.w].xyzw, IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w].xyzw, IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w].xyzw, IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.w].xyzw, IN.position.xyzw);
-    r0.xyzw = r0 - IN.position;
-    r1.xyzw = IN.position;
-    r0.xyzw = (IN.blendindices.x * r0) + r1;
+    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
+    r0.x.zw = r0.xy - IN.position.xy;
+    r1.xyzw = IN.position.xyzw;
+    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r2.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r2.z = dot(IN.normal.xyz, LightDirection[0].xyz);
@@ -67,7 +67,7 @@
     r1.w = 1.0 / sqrt(r1.x);
     r1.xyz = LightPosition[1].xyz - r0.xyz;
     OUT.texcoord_1.xyz = r2.xyz * r1.w;
-    r2.xyz = normalize(r1);
+    r2.xyz = normalize(r1.xyz);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r2.xyz);
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r2.xyz);
     OUT.texcoord_2.z = dot(IN.normal.xyz, r2.xyz);
@@ -76,7 +76,7 @@
     r2.x = dot(ShadowProj[0].xyzw, r0.xyzw);
     r2.y = dot(ShadowProj[1].xyzw, r0.xyzw);
     r1.w = dot(ShadowProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_4.xyz = (0.5 * r1) + 0.5;
+    OUT.texcoord_4.xyz = (0.5 * r1.xyz) + 0.5;
     r3.xy = (r1.w * ShadowProjTransform.xy) + r2.xy;
     r2.xy = r2.xy - ShadowProjData.xy;
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
@@ -98,7 +98,7 @@
     r0.w = min(r0.w, 1);
     OUT.position.xyz = r1.xyz;
     OUT.color_1.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.w = 0.5;
     OUT.color_0.rgba = (IN.blendindices.z * const_4.yyyz) + const_4.zzzy;
     OUT.color_1.rgb = FogColor.rgb;

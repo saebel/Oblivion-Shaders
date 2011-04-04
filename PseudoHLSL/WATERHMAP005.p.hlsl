@@ -27,6 +27,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -34,56 +35,55 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {0.8, 1.6, 1, 0.5};
     const int4 const_1 = {-1, 1, 0, 0};
 
-    r0.w = fResolution.x;
-    r0.x = IN.texcoord_0.x;
-    r1.x = IN.texcoord_0.x;
-    r2.xy = IN.texcoord_0 + fResolution.x;
-    r2.xyzw = tex2D(amplitudeSamp, r2);
-    r4.xy = IN.texcoord_0 - fResolution.x;
-    r1.y = r4.y;
-    r1.xyzw = tex2D(amplitudeSamp, r1);
-    r5.x = r4.x;
-    r4.xyzw = tex2D(amplitudeSamp, r4);
-    r2.w = abs(r4.x);
-    r4.w = abs(r1.x);
-    r5.y = IN.texcoord_0.y;
-    r5.xyzw = tex2D(amplitudeSamp, r5);
-    r1.w = abs(r5.x);
-    r5.w = r2.w * 0.8;
-    r1.w = (r1.w * -1.6) - r5.w;
-    r3.xy = (r0.w * const_1) + IN.texcoord_0;
+    float4 r0;
+    float4 r1;
+    float4 r2;
+    float4 r3;
+    float4 r4;
+    float4 r5;
+    float4 r6;
+    float4 r7;
+
+    r3.xy = (fResolution.x * const_1.xy) + IN.texcoord_0.xy;
     r0.y = r3.y;
-    r3.xyzw = tex2D(amplitudeSamp, r3);
-    r2.w = abs(r3.x);
-    r1.w = (r2.w * -0.8) + r1.w;
-    r4.w = (r4.w * -1.6) - r5.w;
-    r6.xy = (r0.w * -const_1) + IN.texcoord_0;
-    r0.xyzw = tex2D(amplitudeSamp, r0);
-    r0.z = 1;
-    r7.x = r6.x;
-    r6.xyzw = tex2D(amplitudeSamp, r6);
-    r3.w = abs(r6.x);
-    r1.w = (r3.w * 0.8) + r1.w;
-    r3.w = (r3.w * -0.8) + r4.w;
-    r3.w = (r2.w * 0.8) + r3.w;
-    r2.w = abs(r0.x);
+    r0.x = IN.texcoord_0.x;
+    r0.xyzw = tex2D(amplitudeSamp, r0.xy);
+    r2.xyzw = tex2D(amplitudeSamp, IN.texcoord_0.xy + fResolution.x);
+    r3.xyzw = tex2D(amplitudeSamp, r3.xy);
+    r6.xy = (fResolution.x * -const_1.xy) + IN.texcoord_0.xy;
     r7.y = IN.texcoord_0.y;
-    r7.xyzw = tex2D(amplitudeSamp, r7);
-    r0.w = abs(r7.x);
-    r0.w = (r0.w * 1.6) + r1.w;
+    r7.x = r6.x;
+    r6.xyzw = tex2D(amplitudeSamp, r6.xy);
+    r3.w = abs(r6.x);
+    r2.w = abs(r3.x);
+    r4.xy = IN.texcoord_0.xy - fResolution.x;
+    r1.y = r4.y;
+    r5.y = IN.texcoord_0.y;
+    r5.x = r4.x;
+    r4.xyzw = tex2D(amplitudeSamp, r4.xy);
+    r5.xyzw = tex2D(amplitudeSamp, r5.xy);
+    r5.w = abs(r4.x) * 0.8;
+    r7.xyzw = tex2D(amplitudeSamp, r7.xy);
+    r0.w = (abs(r7.x) * 1.6) + ((r3.w * 0.8) + ((r2.w * -0.8) + ((abs(r5.x) * -1.6) - r5.w)));
+    r1.x = IN.texcoord_0.x;
+    r1.xyzw = tex2D(amplitudeSamp, r1.xy);
     r1.w = abs(r2.x);
-    r0.w = (r1.w * 0.8) + r0.w;
-    r0.x = -r0.w;
-    r0.w = (r2.w * 1.6) + r3.w;
-    r0.y = (r1.w * 0.8) + r0.w;
-    r0.w = 1;
-    r1.x = dot(r0.xyz, r0.xyz);	// normalize + length
-    r0.z = 1.0 / sqrt(r1.x);
+    r3.w = (r2.w * 0.8) + ((r3.w * -0.8) + ((abs(r1.x) * -1.6) - r5.w));
+    r2.w = abs(r0.x);
+    r0.x = -((r1.w * 0.8) + r0.w);
+    r0.y = (r1.w * 0.8) + ((r2.w * 1.6) + r3.w);
+    r0.z = 1;
+    r0.z = 1.0 / length(r0.xyz);
     r0.xy = r0.xy * r0.z;
-    r0.xyz = (0.5 * r0) + 0.5;
+    r0.xyz = (0.5 * r0.xyz) + 0.5;	// [-1,+1] to [0,1]
+    r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

@@ -44,14 +44,14 @@
     float4 texcoord_4 : TEXCOORD4_centroid;
     float4 texcoord_5 : TEXCOORD5_centroid;
     sampler2D ReflectionMap;
-    r1.xyz = IN.texcoord_0;
+    r1.xyz = IN.texcoord_0.xyz;
     r1.w = 1;
     r0.x = dot(IN.texcoord_2.xyzw, r1.xyzw);
     r0.y = dot(IN.texcoord_3.xyzw, r1.xyzw);
     r0.z = dot(IN.texcoord_4.xyzw, r1.xyzw);
     r0.w = dot(IN.texcoord_5.xyzw, r1.xyzw);
     r0.xyzw = tex2Dproj(ReflectionMap, r0);			// partial precision
-    r1.xyz = EyePos.xyz - IN.texcoord_1;
+    r1.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r2.x);
     r1.xyz = r1.xyz * r0.w;
@@ -74,7 +74,7 @@
     r1.w = pow(abs(r2.x), VarAmounts.x);
     r2.xyz = (r0.w * r1.xyz) + DeepColor.rgb;			// partial precision
     r3.w = saturate(SunDir.w);
-    r1.xyz = lerp(r0, r2, r2.w);
+    r1.xyz = lerp(r0.xyz, r2.xyz, r2.w);
     r0.w = FogParam.x - r4.w;
     r0.xyz = r1.w * SunColor.rgb;
     r1.w = 1.0 / FogParam.y;

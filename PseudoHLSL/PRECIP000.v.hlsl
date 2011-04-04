@@ -50,58 +50,52 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_4 = {0, -1, 1, 0.5};
 
-    OUT.color_0.rgb = 1;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    r0.xyz = Velocity.xyz;
+    float4 r0;
+    float4 r1;
+    float3 r2;
+    float3 r3;
+    float3 r4;
+
     r0.xyz = (0 < r0 ? 1.0 : 0.0);
-    r1.xyz = (Params.x * r0) + IN.texcoord_1;
-    r1.xyz = r1.xyz - MinPos.xyz;
-    r4.xyz = frac(abs(r1));
-    r4.xyz = lerp(r1, r3, r0);
-    r0.xy = r4.xy - EyePosition.xy;
-    r5.xyz = MaxPos.xyz;
-    r2.xyz = r5.xyz - MinPos.xyz;
+    r2.xyz = MaxPos.xyz - MinPos.xyz;
     r3.x = 1.0 / r2.x;
     r3.y = 1.0 / r2.y;
     r3.z = 1.0 / r2.z;
-    r1.xyz = r1.xyz * r3.xyz;
-    r1.xyz = lerp(r4, -r4, r3);
+    r1.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) * r3.xyz;
     r3.xyz = (r1 >= -r1 ? 1.0 : 0.0);
-    r3.xyz = r2.xyz * r1.xyz;
+    r4.xyz = frac(abs(r1));
+    r3.xyz = r2.xyz * lerp(r4.xyz, -r4.xyz, r3);
     r1.xyz = abs(r3) + MinPos;
+    r4.xyz = lerp(r1.xyz, (MaxPos - abs(r3)), r0);
+    r0.xy = r4.xy - EyePosition.xy;
     r1.xy = r0.xy * r0.xy;
-    r0.w = r1.y + r1.x;
-    r0.w = 1.0 / sqrt(r0.w);
-    r1.xz = -r0.xyyw * r0.w;
-    r1.yw = r1.z * const_4.xyzx;
-    r0.xyz = r1.zxww * const_4.yzzw;
-    r0.w = dot(r1.yxww.xyz, r0.xyz);
-    r0.w = 1.0 / sqrt(r0.w);
-    r1.xy = r0.xy * r0.w;
+    r1.xz = -r0.xyyw / sqrt(r1.y + r1.x);
+    r1.yw = r1.z * const_4.xy;
+    r0.xyz = r1.zxw * const_4.yzz;
+    r1.xy = r0.xy / sqrt(dot(r1.yxw, r0.xyz));
     r0.w = r1.x;
+    r3.y = dot(r1.yzw, IN.position.xyz);
+    r3.x = dot(r0.wyz, IN.position.xyz);
+    r3.z = IN.position.z;
+    r0.xyz = r4.xyz + r3.xyz;
+    r0.w = 1;
     r2.x = 1.0 / abs(r2.x);
     r2.y = 1.0 / abs(r2.y);
     r2.z = 1.0 / abs(r2.z);
-    r3.xyz = MaxPos - abs(r3);
-    r3.x = dot(r0.wyzw.xyz, IN.position.xyz);
-    r0.w = 1;
-    r0.xyz = (-0.5 * abs(r2)) + r5;
-    r3.y = dot(r1.yzww.xyz, IN.position.xyz);
-    r1.xyz = r0.xyz - r4.xyz;
-    r1.xyz = r2.xyz * r1.xyz;
-    r1.w = dot(r1.xyz, r1.xyz);	// normalize + length
-    r1.w = 1.0 / sqrt(r1.w);
-    r1.w = 1.0 / r1.w;
-    r1.w = 1 - r1.w;
-    OUT.color_0.a = r1.w * r1.w;
-    r3.z = IN.position.z;
-    r0.xyz = r4.xyz + r3.xyz;
-    OUT.position.w = dot(WorldViewProj[3].xyzw, r0.xyzw);
+    r1.w = 1 - length(r2.xyz * (((-0.5 * abs(r2)) + r5) - r4.xyz));
     OUT.position.x = dot(WorldViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);
+    OUT.position.w = dot(WorldViewProj[3].xyzw, r0.xyzw);
+    OUT.color_0.a = r1.w * r1.w;
+    OUT.color_0.rgb = 1;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;
 };

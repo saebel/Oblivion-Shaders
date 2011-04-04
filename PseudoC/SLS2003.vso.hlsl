@@ -47,7 +47,7 @@
     r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     r1.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
     r1.y = r1.w * ShadowProjTransform.w;
-    r4.xyz = normalize(r0);
+    r4.xyz = normalize(r0.xyz);
     OUT.texcoord_1.xyz = r4.xyz;
     r0.w = 1.0 / r1.y;
     r1.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
@@ -71,8 +71,8 @@
     OUT.position.xyz = r0.xyz;
     r0.w = min(r0.w, 1);
     OUT.color_1.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.color_0.rgba = IN.color_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgba = IN.color_0.rgba;
     OUT.color_1.rgb = FogColor.rgb;
 
 // approximately 35 instruction slots used

@@ -20,7 +20,7 @@
 
     float2 texcoord_0 : TEXCOORD0;
     sampler2D DiffuseMap;
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
     r0.xyz = AmbientColor.rgb;
     OUT.color_0.rgba = r0.xyzw;
 

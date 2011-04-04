@@ -53,8 +53,8 @@
     OUT.texcoord_1.y = dot(ObjToCubeMap[1].xyzw, IN.position.xyzw);
     OUT.texcoord_1.z = dot(ObjToCubeMap[2].xyzw, IN.position.xyzw);
     OUT.texcoord_1.w = dot(ObjToCubeMap[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_6.xyz = IN.position;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_6.xyz = IN.position.xyz;
     OUT.texcoord_2.xyz = FogColor.rgb;
 
 // approximately 20 instruction slots used

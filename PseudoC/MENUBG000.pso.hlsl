@@ -25,14 +25,14 @@
     const float4 const_5 = {1, -1.1081773, 1.70506454, 0};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r1.xyzw = tex2D(Src0, IN.texcoord_0);
+    r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r0.x = dot(const_0.xyz, r1.xyz);
     r0.x = r0.x + 0.14;
     r0.yz = const_2.zxyw;
     r2.x = dot(const_3.xyz, r0.xyz);
     r2.y = dot(const_4.xyz, r0.xyz);
     r2.z = dot(const_5.xyz, r0.xyz);
-    r0.xyz = lerp(r2, r1, BlendValue.x);
+    r0.xyz = lerp(r2.xyz, r1.xyz, BlendValue.x);
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 

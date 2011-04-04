@@ -44,6 +44,7 @@ struct VS_OUTPUT {
     float2 texcoord_0 : TEXCOORD0;
     float texcoord_2 : TEXCOORD2;
     float4 color_0 : COLOR0;
+    float1 texcoord_2 : TEXCOORD2;
 };
 
 // Code:
@@ -51,20 +52,22 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 ModelViewProj[2] = {(1.0 / 7), 0, 0, 0};
 
-    OUT.color_0.a = BlendColor[0].a * IN.color_0.a;
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    r0.w = dot(Model[2].xyzw, IN.position.xyzw);
-    r0.w = r0.w - EyePosition.z;
-    OUT.texcoord_2.x = saturate(r0.w * (1.0 / 7));
-    r0.xyz = BlendColor[1].rgb * IN.color_0.g;
-    r0.xyz = (IN.color_0.r * BlendColor[0].rgb) + r0.xyz;
-    OUT.color_0.rgb = (IN.color_0.b * BlendColor[2].rgb) + r0.xyz;
+    float3 r0;
+
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.color_0.rgb = (IN.color_0.b * BlendColor[2].rgb) + ((IN.color_0.r * BlendColor[0].rgb) + (BlendColor[1].rgb * IN.color_0.g));
+    OUT.color_0.a = BlendColor[0].a * IN.color_0.a;
+    OUT.texcoord_2.x = saturate((dot(Model[2].xyzw, IN.position.xyzw) - EyePosition.z) / 7);
     OUT.position.xyzw = r0.xyzz;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;
 };

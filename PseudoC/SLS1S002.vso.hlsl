@@ -32,29 +32,29 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
-    r2.x = dot(IN.blendweight.xyz, 1.xyz);
+    r2.x = dot(IN.blendweight.xyz, const_0.xyz);.x
     r0.xyzw = IN.blendindices.zyxw * 765.01001;
     r1.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r2.w = 1 - r2.x;
     offset.x = r0.y;
-    r2.x = dot(Bones[0 + offset.x].xyzw, r1.xyzw);
-    r2.y = dot(Bones[1 + offset.x].xyzw, r1.xyzw);
-    r2.z = dot(Bones[2 + offset.x].xyzw, r1.xyzw);
+    r2.x = dot(Bones[0 + offset.x], r1.xyzw);
+    r2.y = dot(Bones[1 + offset.x], r1.xyzw);
+    r2.z = dot(Bones[2 + offset.x], r1.xyzw);
     r3.xyz = r2.xyz * IN.blendweight.y;
     offset.x = r0.x;
-    r2.x = dot(Bones[0 + offset.x].xyzw, r1.xyzw);
-    r2.y = dot(Bones[1 + offset.x].xyzw, r1.xyzw);
-    r2.z = dot(Bones[2 + offset.x].xyzw, r1.xyzw);
+    r2.x = dot(Bones[0 + offset.x], r1.xyzw);
+    r2.y = dot(Bones[1 + offset.x], r1.xyzw);
+    r2.z = dot(Bones[2 + offset.x], r1.xyzw);
     r2.xyz = (IN.blendweight.x * r2.xyz) + r3.xyz;
     offset.x = r0.z;
-    r0.x = dot(Bones[0 + offset.x].xyzw, r1.xyzw);
-    r0.y = dot(Bones[1 + offset.x].xyzw, r1.xyzw);
-    r0.z = dot(Bones[2 + offset.x].xyzw, r1.xyzw);
+    r0.x = dot(Bones[0 + offset.x], r1.xyzw);
+    r0.y = dot(Bones[1 + offset.x], r1.xyzw);
+    r0.z = dot(Bones[2 + offset.x], r1.xyzw);
     r2.xyz = (IN.blendweight.z * r0.xyz) + r2.xyz;
     offset.x = r0.w;
-    r0.x = dot(Bones[0 + offset.x].xyzw, r1.xyzw);
-    r0.y = dot(Bones[1 + offset.x].xyzw, r1.xyzw);
-    r0.z = dot(Bones[2 + offset.x].xyzw, r1.xyzw);
+    r0.x = dot(Bones[0 + offset.x], r1.xyzw);
+    r0.y = dot(Bones[1 + offset.x], r1.xyzw);
+    r0.z = dot(Bones[2 + offset.x], r1.xyzw);
     r0.xyz = (r2.w * r0.xyz) + r2.xyz;
     r0.w = 1;
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
@@ -71,7 +71,7 @@
     r0.w = min(r1.w, 1);
     OUT.position.xyz = r1.xyz;
     OUT.color_0.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.rgb = FogColor.rgb;
 
 // approximately 41 instruction slots used

@@ -44,20 +44,20 @@
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     r2.xyz = r0.xyz - BoundWorldCenter.xyz;
     r0.xyz = EyePosition.xyz - r0.xyz;
-    r1.xyz = normalize(r2);
-    r2.xyz = normalize(r0);
+    r1.xyz = normalize(r2.xyz);
+    r2.xyz = normalize(r0.xyz);
     r1.w = dot(r1.xyz, r1.xyz);	// normalize + length
     r0.w = dot(r1.xyz, r2.xyz);
     r1.w = 1.0 / sqrt(r1.w);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    r0.w = (r0.w * r1.w) + -0.8;
-    OUT.texcoord_1.xyz = (0.5 * r1) + 0.5;
+    r0.w = (r0.w * r1.w) - 0.8;
+    OUT.texcoord_1.xyz = (0.5 * r1.xyz) + 0.5;
     r1.w = saturate(r0.w * 6.66666651);
     r0.w = (r1.w * -2) + 3;
     r1.w = r1.w * r1.w;
     OUT.texcoord_2.xyz = r0.xyz;
     OUT.texcoord_1.w = r0.w * r1.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.rgb = 1;
 
 // approximately 27 instruction slots used

@@ -29,6 +29,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -36,34 +37,34 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_1 = {(1.0 / (PI * 2)), 0.5, PI * 2, -PI};
     const int4 const_2 = {0, 1, 0, 0};
     const float4 const_3 = {D3DSINCOSCONST1};
     const float4 const_4 = {D3DSINCOSCONST2};
 
-    r0.xyzw = tex2D(amplitudeSamp, IN.texcoord_0);
-    r1.xyzw = tex2D(freqSamp, IN.texcoord_0);
-    r1.w = -r1.x * Time.x;
-    r1.w = (r1.w * (1.0 / (PI * 2))) + 0.5;
-    r1.w = frac(r1.w);
-    r2.w = r1.x * Time.x;
-    r2.w = (r2.w * (1.0 / (PI * 2))) + 0.5;
-    r2.w = frac(r2.w);
-    r3.w = (r2.w * PI * 2) + -PI;
+    float4 r0;
+    float4 r1;
+    float4 r2;
+    float4 r3;
+
+    r1.xyzw = tex2D(freqSamp, IN.texcoord_0.xy);
+    r3.w = (frac(((r1.x * Time.x) / (PI * 2)) + 0.5) * PI * 2) + -PI;
     r2.x = cos(r3.w); r2.y = sin(r3.w);
-    r2.w = r0.y * r2.x;
-    r3.w = r0.y * r2.y;
-    r2.x = (r0.x * r2.x) - r3.w;
-    r2.y = (r0.x * r2.y) + r2.w;
-    r3.w = (r1.w * PI * 2) + -PI;
-    r1.w = r0.w * r1.y;
+    r3.w = (frac(((-r1.x * Time.x) / (PI * 2)) + 0.5) * PI * 2) + -PI;
+    r0.xyzw = tex2D(amplitudeSamp, IN.texcoord_0.xy);
     r1.x = cos(r3.w); r1.y = sin(r3.w);
-    r0.w = r0.w * r1.x;
-    r0.y = (r0.z * r1.y) - r0.w;
-    r0.w = 1;
-    r0.x = (r0.z * r1.x) + r1.w;
+    r2.w = r0.y * r2.x;
+    r2.x = (r0.x * r2.x) - (r0.y * r2.y);
+    r2.y = (r0.x * r2.y) + r2.w;
+    r0.x = (r0.z * r1.x) + (r0.w * r1.y);
+    r0.y = (r0.z * r1.y) - (r0.w * r1.x);
     r0.xy = r2.xy + r0.xy;
     r0.z = 0;
+    r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

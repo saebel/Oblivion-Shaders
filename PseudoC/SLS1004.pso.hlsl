@@ -19,8 +19,8 @@
     float2 texcoord_0 : TEXCOORD0;
     float3 IN.color_0 : COLOR0;
     sampler2D DiffuseMap;
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0);
-    r0.xyz = r0.xyz * IN.color_0;
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    r0.xyz = r0.xyz * IN.color_0.rgb;
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

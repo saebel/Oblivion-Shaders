@@ -30,28 +30,28 @@
     float3 IN.color_0 : COLOR0;
     sampler2D NormalMap;
     samplerCUBE EnvironmentCubeMap;
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0);			// partial precision
+    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
     r0.x = IN.texcoord_1.w;			// partial precision
     r0.y = IN.texcoord_2.w;			// partial precision
     r0.z = IN.texcoord_3.w;			// partial precision
-    r2.xyz = normalize(r0);			// partial precision
-    r0.xyz = r1.xyz + -0.5;
-    r1.xyz = r0.xyz + r0.xyz;			// partial precision
-    r0.xyz = normalize(r1);			// partial precision
+    r2.xyz = normalize(r0.xyz);			// partial precision
+    r0.xyz = r1.xyz - 0.5;
+    r1.xyz = 2 * r0.xyz;			// partial precision
+    r0.xyz = normalize(r1.xyz);			// partial precision
     r1.x = dot(r0.xyz, IN.texcoord_1.xyz);			// partial precision
     r1.y = dot(r0.xyz, IN.texcoord_2.xyz);			// partial precision
     r1.z = dot(r0.xyz, IN.texcoord_3.xyz);			// partial precision
-    r0.xyz = normalize(r1);			// partial precision
+    r0.xyz = normalize(r1.xyz);			// partial precision
     r3.x = dot(r0.xyz, r2.xyz);			// partial precision
     r1.x = dot(r0.xyz, r0.xyz);	// normalize + length			// partial precision
-    r0.w = r3.x + r3.x;			// partial precision
+    r0.w = 2 * r3.x;			// partial precision
     r1.xyz = r2.xyz * r1.x;			// partial precision
     r0.xyz = (r0.w * r0.xyz) - r1.xyz;			// partial precision
-    r0.xyzw = texCUBE(EnvironmentCubeMap, r0);			// partial precision
+    r0.xyzw = texCUBE(EnvironmentCubeMap, r0.xyz);			// partial precision
     r0.xyz = r1.w * r0.xyz;			// partial precision
     r0.xyz = r0.xyz * AmbientColor.a;			// partial precision
-    r1.xyz = r0.xyz * IN.color_0;			// partial precision
-    r0.xyz = (Toggles.x <= 0.0 ? r1 : r0);			// partial precision
+    r1.xyz = r0.xyz * IN.color_0.rgb;			// partial precision
+    r0.xyz = (Toggles.x <= 0.0 ? r1.xyz : r0.xyz);			// partial precision
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 

@@ -36,6 +36,11 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float3 color_0 : COLOR0;
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float4 texcoord_1 : TEXCOORD1;
+    float3 texcoord_2 : TEXCOORD2;
 };
 
 // Code:
@@ -43,37 +48,35 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const int4 const_4 = {1, -2, 3, 0};
     const float4 const_5 = {0.5, -0.8, 6.66666651, 0};
 
-    OUT.color_0.rgb = IN.color_0;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    float4 r0;
+    float4 r1;
+    float3 r2;
+
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0;
-    OUT.texcoord_1.xyz = (0.5 * r1) + 0.5;
-    r0.xyzw = r1 - BoundWorldCenter;
-    r0.w = dot(r0.xyzw, r0.xyzw);	// normalize + length
-    r0.w = 1.0 / sqrt(r0.w);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    r1.w = dot(const_11.xyzw, IN.position.xyzw);
     r1.x = dot(ObjToCubeSpace.xyzw, IN.position.xyzw);
     r1.y = dot(const_9.xyzw, IN.position.xyzw);
     r1.z = dot(const_10.xyzw, IN.position.xyzw);
+    r0.x.zw = r1.xy - BoundWorldCenter.xy;
     r2.xyz = EyePosition.xyz - r1.xyz;
-    r1.xyz = r0.xyz * r0.w;
-    r3.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    r0.w = 1.0 / sqrt(r3.x);
-    r0.xyz = normalize(r2);
+    r1.xyz = r0.xyz / length(r0.xyzw);
+    OUT.texcoord_1.xyz = (0.5 * r1.xyz) + 0.5;	// [-1,+1] to [0,1]
+    r0.xyz = normalize(r2.xyz);
     OUT.texcoord_2.xyz = r0.xyz;
-    r2.x = dot(r1.xyz, r0.xyz);
-    r0.w = (r2.x * r0.w) + -0.8;
-    r0.w = r0.w * 6.66666651;
-    r0.w = max(r0.w, 0);
-    r1.w = dot(const_11.xyzw, IN.position.xyzw);
-    r1.w = min(r0.w, 1);
-    r0.w = (r1.w * -2) + 3;
-    r1.w = r1.w * r1.w;
-    OUT.texcoord_1.w = r0.w * r1.w;
+    r1.w = saturate(((dot(r1.xyz, r0.xyz) / length(r1.xyz)) - 0.8) * 6.66666651);
+    OUT.texcoord_1.w = ((r1.w * -2) + 3) * (r1.w * r1.w);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.color_0.rgb = IN.color_0.rgb;
 
     return OUT;
 };

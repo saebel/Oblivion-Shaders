@@ -21,7 +21,7 @@
     const float4 const_0 = {0.6, 0.73, 0.8, 1};
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
-    r0.xyzw = tex2D(Src0, IN.texcoord_0);
+    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r1.x = saturate(dot(const_0.xyz, r0.xyz));
     r1.w = r1.x * alphaAdd.y;
     r0.w = r0.w * alphaAdd.z;

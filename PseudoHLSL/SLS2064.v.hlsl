@@ -37,6 +37,13 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
+    float4 color_0 : COLOR0;
+    float4 color_1 : COLOR1;
+    float4 position : POSITION;
+    float2 texcoord_0 : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float4 texcoord_2 : TEXCOORD2;
+    float3 texcoord_3 : TEXCOORD3;
 };
 
 // Code:
@@ -44,31 +51,28 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_4 = {0.001953125, 0, 1, 0};
 
-    OUT.color_0.rgba = IN.texcoord_1;
-    OUT.color_1.rgba = IN.texcoord_2;
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    float2 r0;
+
+    r0.xy = ShadowProjTransform.zw - IN.position.xy;
+    r0.xy = r0.xy * r0.xy;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = 1;
-    OUT.texcoord_3.xyz = LightDirection[0].xyz;
-    r0.xy = ShadowProjTransform.zwzw - IN.position;
-    r0.xy = r0.xy * r0.xy;
-    r0.w = r0.y + r0.x;
-    r0.w = 1.0 / sqrt(r0.w);
-    r0.w = 1.0 / r0.w;
-    r0.w = ShadowProjData.x - r0.w;
-    r1.w = 1.0 / ShadowProjData.y;
-    r0.w = r0.w * r1.w;
-    r0.w = max(r0.w, 0);
-    r0.w = min(r0.w, 1);
-    OUT.texcoord_2.w = 1 - r0.w;
-    r0.w = 0.001953125;
-    r0.xy = (IN.texcoord_0 * r0.w) + ShadowProjTransform.xy;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.texcoord_2.w = 1 - saturate((ShadowProjData.x - sqrt(r0.y + r0.x)) / ShadowProjData.y);
+    r0.xy = (IN.texcoord_0 * 0.001953125) + ShadowProjTransform.xy;
     OUT.texcoord_0.xy = r0.xy;
     OUT.texcoord_1.xy = r0.xy;
+    OUT.texcoord_2.xyz = 1;
+    OUT.texcoord_3.xyz = LightDirection[0].xyz;
+    OUT.color_0.rgba = IN.texcoord_1.xyzw;
+    OUT.color_1.rgba = IN.texcoord_2.xyzw;
 
     return OUT;
 };

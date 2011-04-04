@@ -47,9 +47,9 @@
     r0.w = min(abs(IN.position.y), abs(IN.position.x));
     r0.w = r0.z * r0.w;
     r0.z = r0.w * r0.w;
-    r0.y = (r0.z * 0.0208350997) + -0.0851330012;
+    r0.y = (r0.z * 0.0208350997) - 0.0851330012;
     r0.y = (r0.z * r0.y) + 0.180141002;
-    r0.y = (r0.z * r0.y) + -0.330299497;
+    r0.y = (r0.z * r0.y) - 0.330299497;
     r0.z = (r0.z * r0.y) + 0.999866009;
     r0.y = 0.025;
     OUT.texcoord_1.y = (IN.position.z * r0.y) + UOffset.x;
@@ -60,10 +60,10 @@
     r0.w = (IN.position.y < -IN.position.y ? 1.0 : 0.0);
     r0.x = (r0.w * -PI) + r0.z;
     r0.w = min(IN.position.y, IN.position.x);
-    r0.y = r0.x + r0.x;
+    r0.y = 2 * r0.x;
     r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
     r0.z = max(IN.position.y, IN.position.x);
-    r1.xyz = EyePosition.xyz - IN.position;
+    r1.xyz = EyePosition.xyz - IN.position.xyz;
     r1.w = (r0.z >= -r0.z ? 1.0 : 0.0);
     r0.z = dot(IN.normal.xyz, r1.xyz);
     r0.w = r0.w * r1.w;
@@ -93,7 +93,7 @@
     r0.w = (r2.w < FogParam.z ? 1.0 : 0.0);
     OUT.position.xyz = r0.xyz;
     OUT.color_1.a = r1.w * r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_1.rgb = FogColor.rgb;
 
 // approximately 53 instruction slots used

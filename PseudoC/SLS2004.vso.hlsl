@@ -62,7 +62,7 @@
     OUT.position.xyz = r0.xyz;
     r0.w = min(r0.w, 1);
     OUT.color_1.a = 1 - r0.w;
-    OUT.texcoord_0.xy = IN.texcoord_0;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xyz = LightDirection[0].xyz;
     OUT.color_1.rgb = FogColor.rgb;
 

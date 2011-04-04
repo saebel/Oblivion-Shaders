@@ -33,7 +33,7 @@
     float4 IN.color_1 : COLOR1;
     r0.w = (IN.color_1.r >= fVars0.y ? 1.0 : 0.0);
     r2.w = (r0.w * -fVars0.y) + IN.color_1.r;
-    r1.w = r2.w + -1;
+    r1.w = r2.w - 1;
     r3.xyz = const_7.xyz;
     offset.x = r2.w;
     r0.xyzw = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
@@ -72,12 +72,12 @@
     r0.w = r1.y + r1.x;
     r6.w = r1.w * IN.color_1.r;
     r2.w = 1.0 / sqrt(r0.w);
-    r0.w = max(-r6.w, r6.w);
+    r0.w = abs(r6.w);
     r0.xy = r0.xy * r2.w;
     r7.y = pow(2.0, r0.w);	// partial precision
     r5.w = r7.y;
     r0.w = (r6.w >= -r6.w ? 1.0 : 0.0);
-    r3.w = r5.w + r5.w;
+    r3.w = 2 * r5.w;
     r7.y = pow(2.0, r6.w);	// partial precision
     r2.w = r7.y;
     r0.w = (r0.w * r3.w) - r5.w;
@@ -103,6 +103,6 @@
     OUT.position.xy = (r1.w * r0.xy) + r4.xy;
     OUT.color_0.a = r0.w * fVars2.y;
     OUT.color_0.rgb = 1;
-    OUT.texcoord_0.xy = IN.position;
+    OUT.texcoord_0.xy = IN.position.xy;
 
 // approximately 73 instruction slots used

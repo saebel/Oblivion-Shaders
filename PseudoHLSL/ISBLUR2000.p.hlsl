@@ -27,6 +27,7 @@ struct VS_OUTPUT {
 };
 
 struct PS_OUTPUT {
+    float4 color_0 : COLOR0;
 };
 
 // Code:
@@ -34,15 +35,18 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	PI	3.14159274
+#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
+#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+
     const float4 const_0 = {0.6, 0.73, 0.8, 1};
 
-    r0.xyzw = tex2D(Src0, IN.texcoord_0);
-    r0.w = r0.w * alphaAdd.z;
-    r1.x = saturate(dot(const_0.xyz, r0.xyz));
-    r1.w = r1.x * alphaAdd.y;
-    r0.w = (r1.w * r1.w) + r0.w;
-    r0.w = r0.w + alphaAdd.x;
-    r0.xyz = r0.xyz * r0.w;
+    float4 r0;
+    float4 r1;
+
+    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
+    r1.w = saturate(dot(const_0.xyz, r0.xyz)) * alphaAdd.y;
+    r0.xyz = r0.xyz * (((r1.w * r1.w) + (r0.w * alphaAdd.z)) + alphaAdd.x);
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 
