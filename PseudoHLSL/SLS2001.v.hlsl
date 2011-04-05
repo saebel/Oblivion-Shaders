@@ -54,10 +54,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {-1, -2048, 0.6, 0};
 
     float4 r0;
@@ -72,14 +68,14 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.w = abs(dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw) - HighDetailRange.y);
     r0.z = ((((r2.w < HighDetailRange.z ? 1.0 : 0.0) * (r3.w < HighDetailRange.w ? 1.0 : 0.0)) * (-r0.w >= r0.w ? 1.0 : 0.0)) * -2048) + IN.position.z;
     r0.xyw = IN.position.xyw;
-    r2.xy = r1.z * HighDetailRange.zw;
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
+    r2.xy = r1.z * HighDetailRange.zw;
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
     OUT.texcoord_7.x = ((r2.w < r2.x ? 1.0 : 0.0) * (r3.w < r2.y ? 1.0 : 0.0)) * (r1.w < LODLandFlags.x ? 1.0 : 0.0);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     OUT.position.xyz = r1.xyz;
-    OUT.color_1.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
+    OUT.color_1.a = -(saturate((FogParam.x - length(r1.xyz)) / FogParam.y) - 1);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xyz = LightDirection[0].xyz;
     OUT.texcoord_7.y = 0;

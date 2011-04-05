@@ -117,7 +117,7 @@
     r0.z = r0.w + r0.z;			// partial precision
     r0.w = r3.y;			// partial precision
     r3.y = r3.x;			// partial precision
-    r1.x.zw = r3.w * const_3.xy;			// partial precision
+    r1.xyzw = r3.w * const_3.xyzw;			// partial precision
     r2.y = saturate(r0.w);			// partial precision
     r2.x = saturate(r0.x + r1.w);			// partial precision
     r4.xyzw = tex2D(ShadowMap, r2.xy);

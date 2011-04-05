@@ -38,7 +38,7 @@
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     r1.w = 0.5;
-    r0.x.zw = r1.w * ModelViewProj[3].xy;
+    r0.xyzw = r1.w * ModelViewProj[3].xyzw;
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_2.xyzw = (r1.w * ModelViewProj[0].xyzw) + r0.xyzw;
     OUT.texcoord_3.xyzw = (r1.w * ModelViewProj[1].xyzw) + r0.xyzw;

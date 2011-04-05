@@ -44,10 +44,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {-0.5, 0, 0, 0};
 
     float4 r0;
@@ -56,11 +52,11 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r3;
 
     r0.xyzw = tex2D(AttMapXY, IN.texcoord_1.xy);
+    r0.w = PSLightColor[0].a;
     r1.xyzw = tex2D(AttMapZ, IN.texcoord_2.xy);
     r2.xyzw = texCUBE(NormalCubeMap, IN.texcoord_3.xyz);
     r3.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
     r0.xyz = (saturate(dot(2 * (r3.xyz - 0.5), 2 * (r2.xyz - 0.5))) * PSLightColor[0].rgb) * (r0.xyz * r1.xyz);	// [0,1] to [-1,+1]
-    r0.w = PSLightColor[0].a;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

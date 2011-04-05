@@ -56,21 +56,14 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {1, 765.01001, 0, 0};
 
     float4 offset;
     float4 r0;
-    float4 r1;
+    float3 r1;
     float3 r2;
 
-    r1.x.zw = 765.01001 * IN.blendindices.zy;
-    r0.xyzw = frac(r1.xyzw);
-    r0.x.zw = r1.xy - r0.xy;
-    offset.xyzw = r0.xyzw;
+    offset.xyzw = r1.xyzw - frac(765.01001 * IN.blendindices.zyxw);
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.x = dot(Bones[0 + offset.y], r0.xyzw);
     r1.y = dot(Bones[1 + offset.y], r0.xyzw);
@@ -87,12 +80,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], r0.xyzw);
     r1.y = dot(Bones[1 + offset.w], r0.xyzw);
     r1.z = dot(Bones[2 + offset.w], r0.xyzw);
-    r0.xyz = ((1 - dot(IN.blendweight.xyz, const_0.xyz)) * r1.xyz) + r2.xyz;
     r0.w = 1;
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
+    r0.xyz = ((1 - dot(IN.blendweight.xyz, 1)) * r1.xyz) + r2.xyz;
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
+    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
     OUT.position.xyz = r1.xyz;
     OUT.texcoord_2.w = (1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y)) * FogParam.z;
     OUT.texcoord_1.x = dot(ObjToCubeMap[0].xyzw, r0.xyzw);

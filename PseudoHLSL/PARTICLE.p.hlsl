@@ -34,16 +34,9 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
 
-    float4 r0;
-
-    r0.xyzw = tex2D(SourceTexture, IN.texcoord_0.xy);			// partial precision
-    r0.x.zw = r0.xy * IN.color_0.xy;			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    OUT.color_0.rgba = (tex2D(SourceTexture, IN.texcoord_0.xy)) * IN.color_0.rgba;			// partial precision
 
     return OUT;
 };

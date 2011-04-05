@@ -59,10 +59,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {0.5, 1, 0, 0};
 
     float4 r0;
@@ -70,14 +66,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r2;
     float3 r3;
 
-    r0.xyz = EyePosition.xyz - IN.position.xyz;
+    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
     r2.xyz = normalize(LightPosition[0].xyz - IN.position.xyz);
-    r0.xyz = ((1.0 / length(r0.xyz)) * r0.xyz) + r2.xyz;
-    r1.xyz = normalize(r0.xyz);
+    r1.xyz = normalize(normalize(EyePosition.xyz - IN.position.xyz) + r2.xyz);
     r0.x = dot(IN.tangent.xyz, r1.xyz);
     r0.y = dot(IN.binormal.xyz, r1.xyz);
     r0.z = dot(IN.normal.xyz, r1.xyz);
-    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
     r3.x = dot(IN.tangent.xyz, r2.xyz);
     r3.y = dot(IN.binormal.xyz, r2.xyz);
     r3.z = dot(IN.normal.xyz, r2.xyz);
@@ -90,8 +84,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
     OUT.texcoord_4.xy = (1.0 / (r0.w * ShadowProjTransform.w)) * ((r0.w * ShadowProjTransform.xy) + r0.xy);
-    r0.xy = r0.xy - ShadowProjData.xy;
     r0.w = 1.0 / ShadowProjData.w;
+    r0.xy = r0.xy - ShadowProjData.xy;
     OUT.texcoord_4.z = r0.x * r0.w;
     OUT.texcoord_4.w = (r0.y * -r0.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

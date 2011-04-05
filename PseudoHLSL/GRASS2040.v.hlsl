@@ -83,28 +83,28 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     offset.w = IN.texcoord_1.x;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
-    r1.w = (sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) + -PI) * WindData.z) * (IN.color_0.a * IN.color_0.a);
     r0.x = 2 * (frac(r0.w / 17) - 0.5);	// [0,1] to [-1,+1]
-    r0.w = sqrt(1.0 - (r0.x * r0.x));
+    r1.w = (sin((frac((((r0.w / 128) + WindData.w) / ((PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a);
+    r0.w = sqrt(1.0 - (r0.x * r0.x));	// arcsin = 1 / sqrt(1 - x²)
     r0.y = -r0.w;
     r0.z = 0;
     r1.xy = const_8.xy;
     r1.xyz = (((r1.x * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r1.y) * IN.position.xyz;
-    r2.x = dot(r0.xyz, r1.xyz);
     r2.y = dot(r0.wxz, r1.xyz);
-    r0.z = r1.z;
-    r0.xy = (r1.w * WindData.xy) + r2.xy;
-    r0.xyz = r0.xyz + InstanceData[0 + offset.w];
     r0.w = IN.position.w;
+    r2.x = dot(r0.xyz, r1.xyz);
+    r0.xy = (r1.w * WindData.xy) + r2.xy;
+    r0.z = r1.z;
+    r0.xyz = r0.xyz + InstanceData[0 + offset.w];
+    r1.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    r1.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
+    r0.xyzw = (r0.xyzx * const_13.zzzw) + const_13.wwwz;
+    r2.xy = saturate((length(r1.xyzw) - AlphaParam.xz) / AlphaParam.yw);
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
     OUT.position.xyzw = r1.xyzw;
-    r2.xy = saturate((length(r1.xyzw) - AlphaParam.xz) / AlphaParam.yw);
     OUT.texcoord_5.w = r2.x * (1 - r2.y);
-    r0.xyzw = (r0.xyzx * const_13.zzzw) + const_13.wwwz;
     OUT.texcoord_1.x = dot(ObjToCube0.xyzw, r0.xyzw);
     OUT.texcoord_1.y = dot(ObjToCube1.xyzw, r0.xyzw);
     OUT.texcoord_1.z = dot(ObjToCube2.xyzw, r0.xyzw);

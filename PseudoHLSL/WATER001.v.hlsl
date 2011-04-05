@@ -56,23 +56,19 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_11 = {0.5, 8.13802108e-005, (3.0 / 4096), 0};
     const int4 const_12 = {1, -1, 0, 0};
 
     float4 r0;
 
-    r0.x.zw = 0.5 * ModelViewProj[3].xy;
+    r0.xyzw = 0.5 * ModelViewProj[3].xyzw;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyzw = (0.5 * ModelViewProj[0].xyzw) + r0.xyzw;
-    OUT.texcoord_3.xyzw = (0.5 * ModelViewProj[1].xyzw) + r0.xyzw;
-    OUT.texcoord_4.xyzw = (0.5 * ModelViewProj[2].xyzw) + r0.xyzw;
+    OUT.texcoord_2.xyzw = (r1.w * ModelViewProj[0].xyzw) + r0.xyzw;
+    OUT.texcoord_3.xyzw = (r1.w * ModelViewProj[1].xyzw) + r0.xyzw;
+    OUT.texcoord_4.xyzw = (r1.w * ModelViewProj[2].xyzw) + r0.xyzw;
     r0.x = dot(WorldMat[0].xyzw, IN.position.xyzw);
     r0.y = dot(WorldMat[1].xyzw, IN.position.xyzw);
     OUT.texcoord_1.z = dot(WorldMat[2].xyzw, IN.position.xyzw);

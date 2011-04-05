@@ -49,10 +49,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
 
     float3 r0;
 
@@ -62,8 +58,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.color_0.rgb = (IN.color_0.b * BlendColor[2].rgb) + ((IN.color_0.r * BlendColor[0].rgb) + (BlendColor[1].rgb * IN.color_0.g));
     OUT.color_0.a = BlendColor[0].a * IN.color_0.a;
     OUT.position.xyzw = r0.xyzz;
-    r0.y = TexCoordYOff.x + IN.texcoord_0.y;
     r0.x = IN.texcoord_0.x;
+    r0.y = TexCoordYOff.x + IN.texcoord_0.y;
     OUT.texcoord_0.xy = r0.xy;
     OUT.texcoord_1.xy = r0.xy;
     OUT.texcoord_2.xy = r0.xy;

@@ -16,7 +16,7 @@
 //   Src0         texture_0       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(Src0, texcoord_0.xy);
+    IN.texcoord_0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r0.xyzw = IN.texcoord_0.xyzw;
 
 // approximately 2 instruction slots used (1 texture, 1 arithmetic)

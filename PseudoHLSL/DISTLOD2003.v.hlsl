@@ -62,10 +62,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_6 = {-1, 0, 1, 0.01};
     const float4 const_7 = {-0.5, 0, 0, 0};
 
@@ -79,13 +75,13 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.xz = (1.0 / length(r2.xxy * EyeDir.xyx)) * -EyeDir.xy;
     r1.yw = r1.z * const_6.xx;
     r0.xyz = r1.zxw * const_6.xzz;
-    r1.xy = r0.xy / sqrt(dot(r1.yxw, r0.xyz));
+    r1.xy = r0.xy * (1.0 / sqrt(dot(r1.yxw, r0.xyz)));
     r0.w = r1.x;
-    r2.y = dot(r1.yzw, IN.position.xyz);
     r2.x = dot(r0.wyz, IN.position.xyz);
+    r0.w = IN.position.w;
+    r2.y = dot(r1.yzw, IN.position.xyz);
     r2.z = IN.position.z;
     r0.xyz = ((r2.w * InstanceData[0 + offset.w].w) * r2.xyz) + InstanceData[0 + offset.w];
-    r0.w = IN.position.w;
     r2.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r2.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r2.z = dot(ModelViewProj[2].xyzw, r0.xyzw);

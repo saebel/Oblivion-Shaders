@@ -61,26 +61,20 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {0.5, 0, 1, 0};
 
     float4 offset;
     float4 r0;
-    float4 r1;
+    float3 r1;
     float3 r2;
     float3 r3;
 
     offset.w = IN.blendindices.y;
+    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
     r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
     r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
     r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
-    r0.x.zw = r0.xy - IN.position.xy;
-    r1.xyzw = IN.position.xyzw;
-    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
+    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + IN.position.xyzw;
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);

@@ -52,35 +52,22 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {0, 1, 0.5, 0};
 
     float4 r0;
     float4 r1;
     float3 r2;
     float3 r3;
-    float3 r4;
     float3 r5;
 
-    r0.xyz = (0 < r0 ? 1.0 : 0.0);
-    r2.xyz = MaxPos.xyz - MinPos.xyz;
-    r4.x = 1.0 / r2.x;
-    r4.y = 1.0 / r2.y;
-    r4.z = 1.0 / r2.z;
-    r3.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) * r4.xyz;
-    r4.xyz = (r3 >= -r3 ? 1.0 : 0.0);
-    r5.xyz = frac(abs(r3));
-    r3.xyz = r2.xyz * lerp(r5.xyz, -r5.xyz, r4);
-    r3.xyz = lerp(abs(r3) + MinPos, (MaxPos - abs(r3)), r0);
-    r0.xyz = r3.xyz + ((IN.position.z * CameraUp.xyz) + ((IN.position.x * normalize((CameraUp.yzx * r0.zxy) - (r0.yzx * CameraUp.zxy))) + (normalize(EyePosition.xyz - r3.xyz) * IN.position.y)));
     r0.w = 1;
-    r2.x = 1.0 / abs(r2.x);
-    r2.y = 1.0 / abs(r2.y);
-    r2.z = 1.0 / abs(r2.z);
-    r1.w = 1 - length(r2.xyz * (((-0.5 * abs(r2)) + r1) - r3.xyz));
+    r2.xyz = MaxPos.xyz - MinPos.xyz;
+    r3.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / (r2.xyz);
+    r5.xyz = frac(abs(r3.xyz));
+    r3.xyz = r2.xyz * (r3.xyz == 0 ? r5.xyz : -r5.xyz);
+    r3.xyz = (0 < r0.xyz ? (abs(r3.xyz) + MinPos.xyz) : (MaxPos.xyz - abs(r3.xyz)));
+    r0.xyz = r3.xyz + ((IN.position.z * CameraUp.xyz) + ((IN.position.x * normalize((CameraUp.yzx * r0.zxy) - (r0.yzx * CameraUp.zxy))) + (normalize(EyePosition.xyz - r3.xyz) * IN.position.y)));
+    r1.w = 1 - length((1.0 / abs(r2.xyz)) * (((-0.5 * abs(r2.xyz)) + r1.xyz) - r3.xyz));
     OUT.position.x = dot(WorldViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);

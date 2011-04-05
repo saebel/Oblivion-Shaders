@@ -21,16 +21,12 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {-0.5, 0.5, 0, 0};
 
     float4 r0;
 
-    r0.xyz = (0.5 * normalize(2 * (IN.texcoord_0.xyz - 0.5))) + 0.5;			// partial precision	// [-1,+1] to [0,1]
     r0.w = IN.texcoord_1.x;			// partial precision
+    r0.xyz = (0.5 * normalize(2 * (IN.texcoord_0.xyz - 0.5))) + 0.5;			// partial precision	// [0,1] to [-1,+1]
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

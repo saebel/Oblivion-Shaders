@@ -10,50 +10,50 @@ float4 BlurOffsets[16];
 float2 BlurScale;
 sampler2D Src0;
 
-	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
-		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000
-	SetPixelShaderConstantF[1+]                             fUpperLUMClamp=1.4000
-		|1.225000|1.350000|0.500000|1.400000|           fGrassDimmer=1.3000
-	SetPixelShaderConstantF[2+]                             fTreeDimmer=1.2000
-		|0.003906|0.000000|0.000000|0.000000|           fEmissiveHDRMult=2.0000
-	SetPixelShaderConstantF[3+]                             fEyeAdaptSpeed=0.7000
-		|-7.000000|-7.000000|0.000000|0.000000|         fSunlightDimmer=1.3000
-		|-6.000000|-6.000000|0.000000|0.000000|         fSIEmmisiveMult=1.0000
-		|-5.000000|-5.000000|0.000000|0.000000|         fSISpecularMult=1.5000
-		|-4.000000|-4.000000|0.000000|0.000000|         fSkyBrightness=0.5000
-		|-3.000000|-3.000000|0.000000|0.000000|         fSunBrightness=0.0000
-		|-2.000000|-2.000000|0.000000|0.000000|         fBrightScale=1.5000
-		|-1.000000|-1.000000|0.106507|0.000000|         fBrightClamp=1.3500
-		|0.000000|0.000000|0.786986|0.000000|           fBlurRadius=1.0000
-		|1.000000|1.000000|0.106507|0.000000|           iNumBlurpasses=1
-		|2.000000|2.000000|0.000000|0.000000|           iBlendType=2
-		|3.000000|3.000000|0.000000|0.000000|           bDoHighDynamicRange=1
-		|4.000000|4.000000|0.000000|0.000000|
-		|5.000000|5.000000|0.000000|0.000000|
-		|6.000000|6.000000|0.000000|0.000000|
-		|7.000000|7.000000|0.000000|0.000000|
-		|0.000000|0.000000|0.000000|0.000000|
+//	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
+//		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000
+//	SetPixelShaderConstantF[1+]                             fUpperLUMClamp=1.4000
+//		|1.225000|1.350000|0.500000|1.400000|           fGrassDimmer=1.3000
+//	SetPixelShaderConstantF[2+]                             fTreeDimmer=1.2000
+//		|0.003906|0.000000|0.000000|0.000000|           fEmissiveHDRMult=2.0000
+//	SetPixelShaderConstantF[3+]                             fEyeAdaptSpeed=0.7000
+//		|-7.000000|-7.000000|0.000000|0.000000|         fSunlightDimmer=1.3000
+//		|-6.000000|-6.000000|0.000000|0.000000|         fSIEmmisiveMult=1.0000
+//		|-5.000000|-5.000000|0.000000|0.000000|         fSISpecularMult=1.5000
+//		|-4.000000|-4.000000|0.000000|0.000000|         fSkyBrightness=0.5000
+//		|-3.000000|-3.000000|0.000000|0.000000|         fSunBrightness=0.0000
+//		|-2.000000|-2.000000|0.000000|0.000000|         fBrightScale=1.5000
+//		|-1.000000|-1.000000|0.106507|0.000000|         fBrightClamp=1.3500
+//		|0.000000|0.000000|0.786986|0.000000|           fBlurRadius=1.0000
+//		|1.000000|1.000000|0.106507|0.000000|           iNumBlurpasses=1
+//		|2.000000|2.000000|0.000000|0.000000|           iBlendType=2
+//		|3.000000|3.000000|0.000000|0.000000|           bDoHighDynamicRange=1
+//		|4.000000|4.000000|0.000000|0.000000|
+//		|5.000000|5.000000|0.000000|0.000000|
+//		|6.000000|6.000000|0.000000|0.000000|
+//		|7.000000|7.000000|0.000000|0.000000|
+//		|0.000000|0.000000|0.000000|0.000000|
 
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   BlurScale    const_2       1		1/256 => 0.003906
-//   BlurOffsets  const_3      15
-//                const_4      .
-//                const_5      .
-//                const_6      .
-//                const_7      .
-//                const_8      .
-//                const_9      .
-//                const_10     .
-//                const_11     .
-//                const_12     .
-//                const_13     .
-//                const_14     .
-//                const_15     .
-//                const_16     .
-//                const_17     .
+//   BlurOffsets[0]  const_3       1
+//   BlurOffsets[1]  const_4       1
+//   BlurOffsets[2]  const_5       1
+//   BlurOffsets[3]  const_6       1
+//   BlurOffsets[4]  const_7       1
+//   BlurOffsets[5]  const_8       1
+//   BlurOffsets[6]  const_9       1
+//   BlurOffsets[7]  const_10      1
+//   BlurOffsets[8]  const_11      1
+//   BlurOffsets[9]  const_12      1
+//   BlurOffsets[10]  const_13      1
+//   BlurOffsets[11]  const_14      1
+//   BlurOffsets[12]  const_15      1
+//   BlurOffsets[13]  const_16      1
+//   BlurOffsets[14]  const_17      1
 //   Src0         texture_0       1
 //
 
@@ -74,10 +74,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_0 = {1, 0, 0, 0};
 
     float4 r0;
@@ -97,23 +93,23 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r9;
 
     r0.xy = BlurScale.xy;
-    r10.xyzw = tex2D(Src0, (r0.xy * const_7.xy) + IN.texcoord_0.xy);
-    r11.xyzw = tex2D(Src0, (r0.xy * const_6.xy) + IN.texcoord_0.xy);
-    r12.xyzw = tex2D(Src0, (r0.xy * const_5.xy) + IN.texcoord_0.xy);
-    r13.xyzw = tex2D(Src0, (r0.xy * BlurOffsets.xy) + IN.texcoord_0.xy);
-    r14.xyzw = tex2D(Src0, (r0.xy * const_4.xy) + IN.texcoord_0.xy);
-    r1.xyzw = tex2D(Src0, (r0.xy * const_16.xy) + IN.texcoord_0.xy);
-    r2.xyzw = tex2D(Src0, (r0.xy * const_15.xy) + IN.texcoord_0.xy);
-    r3.xyzw = tex2D(Src0, (r0.xy * const_14.xy) + IN.texcoord_0.xy);
-    r4.xyzw = tex2D(Src0, (r0.xy * const_13.xy) + IN.texcoord_0.xy);
-    r5.xyzw = tex2D(Src0, (r0.xy * const_12.xy) + IN.texcoord_0.xy);
-    r6.xyzw = tex2D(Src0, (r0.xy * const_11.xy) + IN.texcoord_0.xy);
-    r7.xyzw = tex2D(Src0, (r0.xy * const_10.xy) + IN.texcoord_0.xy);
-    r8.xyzw = tex2D(Src0, (r0.xy * const_9.xy) + IN.texcoord_0.xy);
-    r9.xyzw = tex2D(Src0, (r0.xy * const_8.xy) + IN.texcoord_0.xy);
-    r0.xyzw = tex2D(Src0, (r0.xy * const_17.xy) + IN.texcoord_0.xy);
-    r0.xyz = (const_17.z * r0.xyz) + ((const_16.z * r1.xyz) + ((const_15.z * r2.xyz) + ((const_14.z * r3.xyz) + ((const_13.z * r4.xyz) + ((const_12.z * r5.xyz) + ((const_11.z * r6.xyz) + ((const_10.z * r7.xyz) + ((const_9.z * r8.xyz) + ((const_8.z * r9.xyz) + ((const_7.z * r10.xyz) + ((const_6.z * r11.xyz) + ((const_5.z * r12.xyz) + ((BlurOffsets.z * r13.xyz) + (r14.xyz * const_4.z))))))))))))));
+    r10.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[4].xy) + IN.texcoord_0.xy);
+    r11.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[3].xy) + IN.texcoord_0.xy);
+    r12.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[2].xy) + IN.texcoord_0.xy);
+    r13.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[0].xy) + IN.texcoord_0.xy);
+    r14.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[1].xy) + IN.texcoord_0.xy);
+    r1.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[13].xy) + IN.texcoord_0.xy);
+    r2.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[12].xy) + IN.texcoord_0.xy);
+    r3.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[11].xy) + IN.texcoord_0.xy);
+    r4.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[10].xy) + IN.texcoord_0.xy);
+    r5.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[9].xy) + IN.texcoord_0.xy);
+    r6.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[8].xy) + IN.texcoord_0.xy);
+    r7.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[7].xy) + IN.texcoord_0.xy);
+    r8.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[6].xy) + IN.texcoord_0.xy);
+    r9.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[5].xy) + IN.texcoord_0.xy);
+    r0.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[14].xy) + IN.texcoord_0.xy);
     r0.w = 1;
+    r0.xyz = (BlurOffsets[14].z * r0.xyz) + ((BlurOffsets[13].z * r1.xyz) + ((BlurOffsets[12].z * r2.xyz) + ((BlurOffsets[11].z * r3.xyz) + ((BlurOffsets[10].z * r4.xyz) + ((BlurOffsets[9].z * r5.xyz) + ((BlurOffsets[8].z * r6.xyz) + ((BlurOffsets[7].z * r7.xyz) + ((BlurOffsets[6].z * r8.xyz) + ((BlurOffsets[5].z * r9.xyz) + ((BlurOffsets[4].z * r10.xyz) + ((BlurOffsets[3].z * r11.xyz) + ((BlurOffsets[2].z * r12.xyz) + ((BlurOffsets[0].z * r13.xyz) + (r14.xyz * BlurOffsets[1].z))))))))))))));
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

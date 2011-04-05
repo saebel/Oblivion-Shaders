@@ -49,10 +49,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_4 = {-2, 3, 0, 0};
     const float4 const_5 = {0.5, -0.8, 6.66666651, 1};
 
@@ -64,12 +60,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
     r1.xyz = normalize(r0.xyz - BoundWorldCenter.xyz);
     r0.xyz = EyePosition.xyz - r0.xyz;
+    r1.w = saturate(((dot(r1.xyz, normalize(r0.xyz)) * (1.0 / length(r1.xyz))) - 0.8) * 6.66666651);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_1.xyz = (0.5 * r1.xyz) + 0.5;	// [-1,+1] to [0,1]
-    r1.w = saturate(((dot(r1.xyz, normalize(r0.xyz)) / length(r1.xyz)) - 0.8) * 6.66666651);
     OUT.texcoord_2.xyz = r0.xyz;
     OUT.texcoord_1.w = ((r1.w * -2) + 3) * (r1.w * r1.w);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

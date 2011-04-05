@@ -16,7 +16,7 @@
 //   DiffuseMap   texture_0       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(DiffuseMap, texcoord_0.xy);
+    IN.texcoord_0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
     r0.xyz = IN.texcoord_0.xyz * IN.input_0.xyz;
   + r0.w = IN.texcoord_0.w;
 

@@ -21,7 +21,10 @@
 //   ModelViewProj[1]  const_1        1
 //   ModelViewProj[2]  const_2        1
 //   ModelViewProj[3]  const_3        1
-//   ObjToCubeSpace const_8       4
+//   ObjToCubeSpace[0] const_8        1
+//   ObjToCubeSpace[1] const_9        1
+//   ObjToCubeSpace[2] const_10        1
+//   ObjToCubeSpace[3] const_11        1
 //   LightPosition[0]  const_16       1
 //   FogParam       const_23      1
 //   WindMatrices[0]   const_38      4
@@ -41,22 +44,22 @@
     r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
     r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
     r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
-    r0.x.zw = r0.xy - IN.position.xy;
+    r0.xyzw = r0.xyzw - IN.position.xyzw;
     r1.xyzw = IN.position.xyzw;
     r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.texcoord_1.x = dot(ObjToCubeSpace.xyzw, r0.xyzw);
+    OUT.texcoord_1.x = dot(ObjToCubeSpace[0].xyzw, r0.xyzw);
     r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    OUT.texcoord_1.y = dot(const_9.xyzw, r0.xyzw);
+    OUT.texcoord_1.y = dot(ObjToCubeSpace[1].xyzw, r0.xyzw);
     r1.w = 1.0 / sqrt(r2.x);
-    OUT.texcoord_1.z = dot(const_10.xyzw, r0.xyzw);
+    OUT.texcoord_1.z = dot(ObjToCubeSpace[2].xyzw, r0.xyzw);
     r1.w = 1.0 / r1.w;
     r1.w = FogParam.x - r1.w;
     r2.w = 1.0 / FogParam.y;
-    OUT.texcoord_1.w = dot(const_11.xyzw, r0.xyzw);
+    OUT.texcoord_1.w = dot(ObjToCubeSpace[3].xyzw, r0.xyzw);
     r0.w = r1.w * r2.w;
     OUT.texcoord_6.xyz = r0.xyz;
     r0.w = max(r0.w, 0);

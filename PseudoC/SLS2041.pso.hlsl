@@ -54,7 +54,7 @@
     r0.w = saturate(r0.w - r0.x);			// partial precision
     r1.xyz = r1.xyz * r0.w;			// partial precision
     r0.xyz = saturate(r1.xyz);			// partial precision
-    r0.w = dot(r1.xyz, const_0.xyz);.y			// partial precision
+    r0.w = dot(r1.xyz, 1);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 34 instruction slots used (3 texture, 31 arithmetic)

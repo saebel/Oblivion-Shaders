@@ -55,8 +55,6 @@ VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
 #define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
     const float4 const_4 = {0.025, 0.0208350997, -0.0851330012, 0.180141002};
     const float4 const_5 = {-0.330299497, 0.999866009, -2, PI / 2};
@@ -69,12 +67,11 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.w = (1.0 / max(abs(IN.position.y), abs(IN.position.x))) * min(abs(IN.position.y), abs(IN.position.x));
     r0.z = r0.w * r0.w;
     r0.y = r0.w * ((r0.z * ((r0.z * ((r0.z * ((r0.z * 0.0208350997) - 0.0851330012)) + 0.180141002)) - 0.330299497)) + 0.999866009);
-    r0.x = ((IN.position.y < -IN.position.y ? 1.0 : 0.0) * -PI) + ((((r0.y * -2) + PI / 2) * ((abs(IN.position.y) < abs(IN.position.x) ? 1.0 : 0.0))) + r0.y);
     r0.w = min(IN.position.y, IN.position.x);
-    r0.z = max(IN.position.y, IN.position.x);
+    r0.x = ((IN.position.y < -IN.position.y ? 1.0 : 0.0) * -PI) + ((((r0.y * -2) + PI / 2) * ((abs(IN.position.y) < abs(IN.position.x) ? 1.0 : 0.0))) + r0.y);
     r2.yw = const_6.yw;
     OUT.texcoord_1.y = (IN.position.z * 0.025) + UOffset.x;
-    OUT.texcoord_1.x = (((((r0.w < -r0.w ? 1.0 : 0.0) * (r0.z >= -r0.z ? 1.0 : 0.0)) * -(2 * r0.x)) + r0.x) * r2.y) + VOffset.x;
+    OUT.texcoord_1.x = (((((r0.w < -r0.w ? 1.0 : 0.0) * ((max(IN.position.y, IN.position.x) == 0 ? 1.0 : 0.0))) * -(2 * r0.x)) + r0.x) * r2.y) + VOffset.x;
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
@@ -84,7 +81,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.y = dot(IN.binormal.xyz, r2.xyz);
     r1.z = dot(IN.normal.xyz, r2.xyz);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_3.xyz = normalize(r1.xyz);
+    OUT.texcoord_3.xyz = r1.xyz * (1.0 / length(r1.xyz));
     OUT.position.xyz = r0.xyz;
     OUT.color_1.a = (1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y)) * (r2.w < FogParam.z ? 1.0 : 0.0);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

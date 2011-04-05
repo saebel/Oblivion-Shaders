@@ -37,7 +37,7 @@
     r2.xyz = 2 * r2.xyz;
     r2.x = saturate(dot(r1.xyz, r2.xyz));
     r1.xyz = AmbientColor.rgb;
-    r1.xyz = saturate((r2.x * PSLightColor[0]) + r1);
+    r1.xyz = saturate((r2.x * PSLightColor[0])) + r1.xyz);
     r0.xyz = r0.xyz * IN.color_0.rgb;
     r0.w = r0.w * AmbientColor.a;
     r0.xyz = r1.xyz * r0.xyz;

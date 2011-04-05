@@ -63,10 +63,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {1, 765.01001, 0, 0};
 
     float4 offset;
@@ -79,7 +75,6 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     offset.xyzw = (IN.blendindices.zyxw * 765.01001) - frac(IN.blendindices.zyxw * 765.01001);
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1.w = 1 - dot(IN.blendweight.xyz, const_0.xyz);
     r1.x = dot(Bones[0 + offset.y], r0.xyzw);
     r1.y = dot(Bones[1 + offset.y], r0.xyzw);
     r1.z = dot(Bones[2 + offset.y], r0.xyzw);
@@ -95,12 +90,9 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], r0.xyzw);
     r1.y = dot(Bones[1 + offset.w], r0.xyzw);
     r1.z = dot(Bones[2 + offset.w], r0.xyzw);
-    r0.xyz = (r1.w * r1.xyz) + r2.xyz;
     r0.w = 1;
-    OUT.position.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
-    OUT.position.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
-    OUT.position.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
+    r1.w = 1 - dot(IN.blendweight.xyz, 1);
+    r0.xyz = (r1.w * r1.xyz) + r2.xyz;
     r1.x = dot(Bones[0 + offset.y], IN.tangent.xyz);
     r1.y = dot(Bones[1 + offset.y], IN.tangent.xyz);
     r1.z = dot(Bones[2 + offset.y], IN.tangent.xyz);
@@ -149,22 +141,25 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], IN.normal.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.normal.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.normal.xyz);
-    r5.x = dot(r4.xyz, LightDirection[0].xyz);
     r1.xyz = normalize((r1.w * r1.xyz) + r2.xyz);
+    r2.xyz = normalize(normalize(EyePosition.xyz - r0.xyz) + LightDirection[0].xyz);
+    r5.x = dot(r4.xyz, LightDirection[0].xyz);
     r5.y = dot(r3.xyz, LightDirection[0].xyz);
     r5.z = dot(r1.xyz, LightDirection[0].xyz);
+    OUT.position.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
+    OUT.position.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
+    OUT.position.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
+    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
     OUT.texcoord_1.xyz = normalize(r5.xyz);
-    r2.xyz = EyePosition.xyz - r0.xyz;
-    r2.xyz = normalize(((1.0 / length(r2.xyz)) * r2.xyz) + LightDirection[0].xyz);
     OUT.texcoord_3.x = dot(r4.xyz, r2.xyz);
     OUT.texcoord_3.y = dot(r3.xyz, r2.xyz);
-    OUT.texcoord_3.z = dot(r1.xyz, r2.xyz);
     r3.x = dot(ShadowProj[0].xyzw, r0.xyzw);
     r3.y = dot(ShadowProj[1].xyzw, r0.xyzw);
     r0.w = dot(ShadowProj[3].xyzw, r0.xyzw);
-    r0.xy = r3.xy - ShadowProjData.xy;
-    OUT.texcoord_6.xy = ((r0.w * ShadowProjTransform.xy) + r3.xy) / (r0.w * ShadowProjTransform.w);
+    OUT.texcoord_3.z = dot(r1.xyz, r2.xyz);
+    OUT.texcoord_6.xy = ((r0.w * ShadowProjTransform.xy) + r3.xy) / ((r0.w * ShadowProjTransform.w));
     r0.w = 1.0 / ShadowProjData.w;
+    r0.xy = r3.xy - ShadowProjData.xy;
     OUT.texcoord_6.z = r0.x * r0.w;
     OUT.texcoord_6.w = (r0.y * -r0.w) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

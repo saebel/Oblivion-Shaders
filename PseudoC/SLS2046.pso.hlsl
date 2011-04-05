@@ -16,7 +16,14 @@
 //   Name           Reg   Size
 //   -------------- ----- ----
 //   PSNumDecals    const_14      1
-//   PSDecalOffsets const_15      8
+//   PSDecalOffsets[0] const_15       1
+//   PSDecalOffsets[1] const_16       1
+//   PSDecalOffsets[2] const_17       1
+//   PSDecalOffsets[3] const_18       1
+//   PSDecalOffsets[4] const_19       1
+//   PSDecalOffsets[5] const_20       1
+//   PSDecalOffsets[6] const_21       1
+//   PSDecalOffsets[7] const_22       1
 //   DecalMap       texture_1       1
 //
 
@@ -33,29 +40,29 @@
     float3 texcoord_7 : TEXCOORD7;
     sampler2D DecalMap;
     r0.xy = saturate(IN.texcoord_1.xy);			// partial precision
-    r7.x = (const_16.y * r0.x) + const_16.x;			// partial precision
-    r7.y = (const_16.w * r0.y) + const_16.z;			// partial precision
+    r7.x = (PSDecalOffsets[1].y * r0.x) + PSDecalOffsets[1].x;			// partial precision
+    r7.y = (PSDecalOffsets[1].w * r0.y) + PSDecalOffsets[1].z;			// partial precision
     r0.xy = saturate(IN.texcoord_0.xy);			// partial precision
-    r0.x = (const_15.y * r0.x) + const_15.x;			// partial precision
-    r0.y = (const_15.w * r0.y) + const_15.z;			// partial precision
+    r0.x = (PSDecalOffsets[0].y * r0.x) + PSDecalOffsets[0].x;			// partial precision
+    r0.y = (PSDecalOffsets[0].w * r0.y) + PSDecalOffsets[0].z;			// partial precision
     r1.xy = saturate(IN.texcoord_2.xy);			// partial precision
-    r6.x = (const_17.y * r1.x) + const_17.x;			// partial precision
-    r6.y = (const_17.w * r1.y) + const_17.z;			// partial precision
+    r6.x = (PSDecalOffsets[2].y * r1.x) + PSDecalOffsets[2].x;			// partial precision
+    r6.y = (PSDecalOffsets[2].w * r1.y) + PSDecalOffsets[2].z;			// partial precision
     r1.xy = saturate(IN.texcoord_3.xy);			// partial precision
-    r5.x = (const_18.y * r1.x) + const_18.x;			// partial precision
-    r5.y = (const_18.w * r1.y) + const_18.z;			// partial precision
+    r5.x = (PSDecalOffsets[3].y * r1.x) + PSDecalOffsets[3].x;			// partial precision
+    r5.y = (PSDecalOffsets[3].w * r1.y) + PSDecalOffsets[3].z;			// partial precision
     r1.xy = saturate(IN.texcoord_4.xy);			// partial precision
-    r4.x = (const_19.y * r1.x) + const_19.x;			// partial precision
-    r4.y = (const_19.w * r1.y) + const_19.z;			// partial precision
+    r4.x = (PSDecalOffsets[4].y * r1.x) + PSDecalOffsets[4].x;			// partial precision
+    r4.y = (PSDecalOffsets[4].w * r1.y) + PSDecalOffsets[4].z;			// partial precision
     r1.xy = saturate(IN.texcoord_5.xy);			// partial precision
-    r3.x = (const_20.y * r1.x) + const_20.x;			// partial precision
-    r3.y = (const_20.w * r1.y) + const_20.z;			// partial precision
+    r3.x = (PSDecalOffsets[5].y * r1.x) + PSDecalOffsets[5].x;			// partial precision
+    r3.y = (PSDecalOffsets[5].w * r1.y) + PSDecalOffsets[5].z;			// partial precision
     r1.xy = saturate(IN.texcoord_6.xy);			// partial precision
-    r2.x = (const_21.y * r1.x) + const_21.x;			// partial precision
-    r2.y = (const_21.w * r1.y) + const_21.z;			// partial precision
+    r2.x = (PSDecalOffsets[6].y * r1.x) + PSDecalOffsets[6].x;			// partial precision
+    r2.y = (PSDecalOffsets[6].w * r1.y) + PSDecalOffsets[6].z;			// partial precision
     r1.xy = saturate(IN.texcoord_7.xy);			// partial precision
-    r1.x = (const_22.y * r1.x) + const_22.x;			// partial precision
-    r1.y = (const_22.w * r1.y) + const_22.z;			// partial precision
+    r1.x = (PSDecalOffsets[7].y * r1.x) + PSDecalOffsets[7].x;			// partial precision
+    r1.y = (PSDecalOffsets[7].w * r1.y) + PSDecalOffsets[7].z;			// partial precision
     r8.xyzw = tex2D(DecalMap, r7.xy);			// partial precision
     r0.xyzw = tex2D(DecalMap, r0.xy);			// partial precision
     r7.xyzw = tex2D(DecalMap, r6.xy);			// partial precision

@@ -35,7 +35,7 @@
     float3 IN.binormal : BINORMAL;
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
-    r2.x = dot(IN.blendweight.xyz, const_0.xyz);.x
+    r2.x = dot(IN.blendweight.xyz, 1);
     r1.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r0.xyzw = IN.blendindices.zyxw * 765.01001;
     r2.w = 1 - r2.x;

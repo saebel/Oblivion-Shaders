@@ -26,10 +26,10 @@
 //   AnisoMap     texture_3       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(DiffuseMap, texcoord_0.xy);
-    IN.texcoord_1.xyzw = tex2D(DiffuseMap, texcoord_0.xy);
+    IN.texcoord_0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    IN.texcoord_1.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
     texm3x2pad IN.texcoord_2, 2 * ((IN.texcoord_1) - 0.5)
-    texm3x2IN.texcoord_3 = tex2D(DiffuseMap, texcoord_0.xy);, 2 * ((IN.texcoord_1) - 0.5)
+    texm3x2IN.texcoord_3 = tex2D(DiffuseMap, IN.texcoord_0.xy);, 2 * ((IN.texcoord_1) - 0.5)
     r0.xyzw = IN.texcoord_3.xyzw * IN.input_0.w;
     r1.xyz = r0.w * PSLightColor[0].rgb;
     r0.xyz = saturate((PSLightColor[0].rgb * r0.xyz) + IN.input_0.xyz);

@@ -112,7 +112,23 @@ perl  <$1	\
   -p -e "s/(.*)LightData( *)c9( *)16/\$1LightData\$2c9\$3 8\n\$1LightData[8]\$2c17\$3 1\n\$1LightData[9]\$2c18\$3 1\n\$1LightData[10]\$2c19\$3 1\n\$1LightData[11]\$2c20\$3 1\n\$1LightData[12]\$2c21\$3 1\n\$1LightData[13]\$2c22\$3 1\n\$1LightData[14]\$2c23\$3 1\n\$1LightData[15]\$2c24\$3 1/"	\
  | perl	\
   -p -e "s/(.*)LightData( *)c9( *)8/\$1LightData[0]\$2c9\$3 1\n\$1LightData[1]\$2c10\$3 1\n\$1LightData[2]\$2c11\$3 1\n\$1LightData[3]\$2c12\$3 1\n\$1LightData[4]\$2c13\$3 1\n\$1LightData[5]\$2c14\$3 1\n\$1LightData[6]\$2c15\$3 1\n\$1LightData[7]\$2c16\$3 1/"	\
+ | perl	\
+  -p -e "s/(.*)DecalFade( *)c31( *)8/\$1DecalFade[0]\$2c31\$3 1\n\$1DecalFade[1]\$2c32\$3 1\n\$1DecalFade[2]\$2c33\$3 1\n\$1DecalFade[3]\$2c34\$3 1\n\$1DecalFade[4]\$2c35\$3 1\n\$1DecalFade[5]\$2c36\$3 1\n\$1DecalFade[6]\$2c37\$3 1\n\$1DecalFade[7]\$2c38\$3 1/"	\
+ | perl	\
+  -p -e "s/(.*)DecalProjection( *)c40( *)31/\$1DecalProjection\$2c40\$3 20\n\$1DecalProjection[20]\$2c60\$3 1\n\$1DecalProjection[21]\$2c61\$3 1\n\$1DecalProjection[22]\$2c62\$3 1\n\$1DecalProjection[23]\$2c63\$3 1\n\$1DecalProjection[24]\$2c64\$3 1\n\$1DecalProjection[25]\$2c65\$3 1\n\$1DecalProjection[26]\$2c66\$3 1\n\$1DecalProjection[27]\$2c67\$3 1\n\$1DecalProjection[28]\$2c68\$3 1\n\$1DecalProjection[29]\$2c69\$3 1\n\$1DecalProjection[30]\$2c70\$3 1/"	\
+ | perl	\
+  -p -e "s/(.*)DecalProjection( *)c40( *)20/\$1DecalProjection\$2c40\$3 16\n\$1DecalProjection[16]\$2c56\$3 1\n\$1DecalProjection[17]\$2c57\$3 1\n\$1DecalProjection[18]\$2c58\$3 1\n\$1DecalProjection[19]\$2c59\$3 1/"	\
+ | perl	\
+  -p -e "s/(.*)DecalProjection( *)c40( *)16/\$1DecalProjection\$2c40\$3 8\n\$1DecalProjection[8]\$2c48\$3 1\n\$1DecalProjection[9]\$2c49\$3 1\n\$1DecalProjection[10]\$2c50\$3 1\n\$1DecalProjection[11]\$2c51\$3 1\n\$1DecalProjection[12]\$2c52\$3 1\n\$1DecalProjection[13]\$2c53\$3 1\n\$1DecalProjection[14]\$2c54\$3 1\n\$1DecalProjection[15]\$2c55\$3 1/"	\
+ | perl	\
+  -p -e "s/(.*)DecalProjection( *)c40( *)8/\$1DecalProjection[0]\$2c40\$3 1\n\$1DecalProjection[1]\$2c41\$3 1\n\$1DecalProjection[2]\$2c42\$3 1\n\$1DecalProjection[3]\$2c43\$3 1\n\$1DecalProjection[4]\$2c44\$3 1\n\$1DecalProjection[5]\$2c45\$3 1\n\$1DecalProjection[6]\$2c46\$3 1\n\$1DecalProjection[7]\$2c47\$3 1/"	\
+ | perl	\
+  -p -e "s/(.*)PSDecalOffsets( *)c15( *)8/\$1PSDecalOffsets[0]\$2c15\$3 1\n\$1PSDecalOffsets[1]\$2c16\$3 1\n\$1PSDecalOffsets[2]\$2c17\$3 1\n\$1PSDecalOffsets[3]\$2c18\$3 1\n\$1PSDecalOffsets[4]\$2c19\$3 1\n\$1PSDecalOffsets[5]\$2c20\$3 1\n\$1PSDecalOffsets[6]\$2c21\$3 1\n\$1PSDecalOffsets[7]\$2c22\$3 1/"	\
  >$2
+
+#   PSDecalOffsets  c15      8
+#   DecalProjection c40     31
+#   DecalFade       c31     8
 #   LightData       c9      8
 #   LightData       c9      16
 #   LightData       c9      20

@@ -64,7 +64,7 @@
     r0.w = FogParam.x - r4.w;
     r0.xyz = r1.w * SunColor.rgb;
     r1.w = 1.0 / FogParam.y;
-    r1.xyz = saturate((r3.w * r0) + r1);
+    r1.xyz = saturate((r3.w * r0)) + r1.xyz);
     r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor.rgb - r1.xyz;
     r1.w = 1 - r0.w;

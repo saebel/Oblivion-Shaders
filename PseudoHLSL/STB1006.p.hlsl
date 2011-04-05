@@ -16,7 +16,7 @@ sampler2D DiffuseMap;
 //   DiffuseMap   texture_0       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(DiffuseMap, texcoord_0.xy);
+    IN.texcoord_0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
     r0.xyz = IN.texcoord_0.xyz * IN.input_0.xyz;
   + r0.w = IN.texcoord_0.w;
 
@@ -35,10 +35,6 @@ struct PS_OUTPUT {
 
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
-
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
 
 

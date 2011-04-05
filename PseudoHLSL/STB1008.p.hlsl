@@ -29,7 +29,6 @@ float4 PSLightColor[4];
 // Structures:
 
 struct VS_OUTPUT {
-    float4 texcoord_0 : TEXCOORD0;
     float4 texcoord_1 : TEXCOORD1;
     float4 texcoord_2 : TEXCOORD2;
     float4 texcoord_3 : TEXCOORD3;
@@ -43,26 +42,22 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_0 = {1, 0, 0, 0};
 
     float4 r0;
     float3 r1;
 
-    IN.texcoord_0.xyzw = tex2D(NormalMap, texcoord_0.xy);
-    IN.texcoord_1.xyzw = tex2D(NormalMap, texcoord_0.xy);
-    IN.texcoord_2.xyzw = tex2D(NormalMap, texcoord_0.xy);
-    IN.texcoord_3.xyzw = tex2D(NormalMap, texcoord_0.xy);
-    r0.xyzw = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));	// [0,1] to [-1,+1]
+    IN.texcoord_1.xyzw = tex2D(NormalMap, (    IN.texcoord_0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+).xy);
+    IN.texcoord_2.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    IN.texcoord_3.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    r0.xyzw = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
     r0.w = r0.w * r0.w;
     r0.xyz = IN.texcoord_0.w * ((r0.w * r0.w) * PSLightColor[0].rgb);
     r1.xyz = IN.texcoord_1.xyz * IN.texcoord_2.xyz;
     IN.texcoord_1.xyzw = dot(const_0.xyz, r0.xyz);
     r0.w = IN.texcoord_0.w * IN.texcoord_1.w;
-  + r0.xyz = r0.xyz * r1.xyz;
+    r0.xyz = r0.xyz * r1.xyz;
 
     return OUT;
 };

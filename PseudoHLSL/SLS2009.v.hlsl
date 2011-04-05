@@ -66,40 +66,36 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {0.5, 1, 0, 0};
 
     float4 r0;
     float4 r1;
 
+    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
     r0.xyz = LightPosition[1].xyz - IN.position.xyz;
     r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xyz = normalize(r1.xyz);
+    OUT.texcoord_1.xyz = r1.xyz * (1.0 / length(r1.xyz));
     r1.xyz = normalize(r0.xyz);
     r0.xyz = r0.xyz / LightPosition[1].w;
-    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r1.xyz);
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r1.xyz);
     OUT.texcoord_2.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.texcoord_4.xyz = (0.5 * r0.xyz) + 0.5;
+    OUT.texcoord_4.xyz = (0.5 * r0.xyz) + 0.5;	// [-1,+1] to [0,1]
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     r1.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
     r1.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
     OUT.texcoord_7.xy = (1.0 / (r0.w * ShadowProjTransform.w)) * ((r0.w * ShadowProjTransform.xy) + r1.xy);
-    r1.xy = r1.xy - ShadowProjData.xy;
     r1.w = 1.0 / ShadowProjData.w;
+    r1.xy = r1.xy - ShadowProjData.xy;
     OUT.texcoord_7.z = r1.x * r1.w;
     OUT.texcoord_7.w = (r1.y * -r1.w) + 1;
     OUT.position.xyz = r0.xyz;
-    OUT.color_1.a = 1 - saturate((FogParam.x - length(r0.xyz)) / (FogParam.y));
+    OUT.color_1.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.w = 0.5;
     OUT.color_0.rgba = IN.color_0.rgba;

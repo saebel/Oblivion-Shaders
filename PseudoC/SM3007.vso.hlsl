@@ -54,10 +54,10 @@
     float3 OUT.texcoord_6 : TEXCOORD6;
     float4 OUT.texcoord_1 : TEXCOORD1;
     float4 OUT.texcoord_7 : TEXCOORD7;
-    r1.x.zw = 765.01001 * IN.blendindices.zy;
+    r1.xyzw = 765.01001 * IN.blendindices.zyxw;
     r0.xyzw = frac(r1.xyzw);
-    r0.x.zw = r1.xy - r0.xy;
-    r1.w = dot(IN.blendweight.xyz, const_0.xyz);.x
+    r0.xyzw = r1.xyzw - r0.xyzw;
+    r1.w = dot(IN.blendweight.xyz, 1);
     offset.xyzw = r0.xyzw;
     r1.w = 1 - r1.w;
     r0.x = dot(Bones[0 + offset.y], IN.normal.xyz);

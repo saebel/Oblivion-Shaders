@@ -39,10 +39,10 @@
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   BlurScale    const_2       1		1/256 => 0.003906
-//   BlurOffsets  const_3       4		1/4   => 0.250000
-//                const_4       .
-//                const_5       .
-//                const_6       .
+//   BlurOffsets[0]  const_3       1		1/4   => 0.250000
+//   BlurOffsets[1]  const_4       1
+//   BlurOffsets[2]  const_5       1
+//   BlurOffsets[3]  const_6       1
 //   Src0         texture_0       1
 //
 
@@ -50,18 +50,18 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
     r0.xy = BlurScale.xy;
-    r3.xy = (r0.xy * const_4.xy) + IN.texcoord_0.xy;		// |3.000000|3.000000| + (in / 256)
-    r2.xy = (r0.xy * BlurOffsets.xy) + IN.texcoord_0.xy;		// |1.000000|3.000000| + (in / 256)
-    r1.xy = (r0.xy * const_5.xy) + IN.texcoord_0.xy;		// |1.000000|1.000000| + (in / 256)
-    r0.xy = (r0.xy * const_6.xy) + IN.texcoord_0.xy;		// |3.000000|1.000000| + (in / 256)
+    r3.xy = (r0.xy * BlurOffsets[1].xy) + IN.texcoord_0.xy;		// |3.000000|3.000000| + (in / 256)
+    r2.xy = (r0.xy * BlurOffsets[0].xy) + IN.texcoord_0.xy;		// |1.000000|3.000000| + (in / 256)
+    r1.xy = (r0.xy * BlurOffsets[2].xy) + IN.texcoord_0.xy;		// |1.000000|1.000000| + (in / 256)
+    r0.xy = (r0.xy * BlurOffsets[3].xy) + IN.texcoord_0.xy;		// |3.000000|1.000000| + (in / 256)
     r3.xyzw = tex2D(Src0, r3.xy);
     r2.xyzw = tex2D(Src0, r2.xy);
     r1.xyzw = tex2D(Src0, r1.xy);
     r0.xyzw = tex2D(Src0, r0.xy);
-    r3.xyz = r3.xyz * const_4.z;		// (in[0] / 4)
-    r2.xyz = (BlurOffsets.z * r2.xyz) + r3.xyz;            // (in[0] / 4) + (in[1] / 4)
-    r1.xyz = (const_5.z * r1.xyz) + r2.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4)
-    r0.xyz = (const_6.z * r0.xyz) + r1.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
+    r3.xyz = r3.xyz * BlurOffsets[1].z;		// (in[0] / 4)
+    r2.xyz = (BlurOffsets[0].z * r2.xyz) + r3.xyz;            // (in[0] / 4) + (in[1] / 4)
+    r1.xyz = (BlurOffsets[2].z * r1.xyz) + r2.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4)
+    r0.xyz = (BlurOffsets[3].z * r0.xyz) + r1.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 

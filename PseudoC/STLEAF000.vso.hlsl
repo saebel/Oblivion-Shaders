@@ -57,7 +57,7 @@
     r2.w = (r1.w * 0.499999553) + 0.25;
     r6.y = pow(2.0, r2.w);	// partial precision
     r1.w = r6.y;
-    r1.w = (r1.w * PI * 2) + -PI;
+    r1.w = (r1.w * PI * 2) - PI;
     r1.w = r1.w * r1.w;
     r2.w = (IN.blendindices.z * r0.w) + RustleParams.y;
     r0.w = (r1.w * -2.52398507e-007) + 2.47609005e-005;
@@ -66,7 +66,7 @@
     r6.y = pow(2.0, r3.w);	// partial precision
     r0.w = r6.y;
     r2.w = (r1.w * r2.w) + (1.0 / 24);
-    r0.w = (r0.w * PI * 2) + -PI;
+    r0.w = (r0.w * PI * 2) - PI;
     r2.w = (r1.w * r2.w) - 0.5;
     r0.w = r0.w * r0.w;
     r2.w = (r1.w * r2.w) + 1;
@@ -79,7 +79,7 @@
     r1.w = (r0.w * r1.w) - 0.5;
     r0.xy = frac(r1.xy);
     r0.w = (r0.w * r1.w) + 1;
-    r0.xy = (PI * 2 * r0.xy) + -PI;
+    r0.xy = (PI * 2 * r0.xy) - PI;
     r0.w = r0.w * RustleParams.z;
     r0.xy = r0.xy * r0.xy;
     r0.w = r0.w * RustleParams.x;
@@ -88,7 +88,7 @@
     r2.xy = (r1 * r0.xy) - 0.00138883968;
     r1.xy = frac(r3.xy);
     r2.xy = (r2 * r0.xy) + (1.0 / 24);
-    r1.xy = (PI * 2 * r1.xy) + -PI;
+    r1.xy = (PI * 2 * r1.xy) - PI;
     r2.xy = (r2 * r0.xy) - 0.5;
     r1.xy = r1.xy * r1.xy;
     r0.xw = (r0.yyzx * r2.yyzx) + 1;
@@ -110,11 +110,11 @@
     r1.y = dot(r3.wxz, BillboardRight.xyz);
     r0.y = dot(r3.wxz, BillboardUp.xyz);
     r1.zw = BillboardRight.zw;
-    r1.x.zw = r5.x * r1.xy;
+    r1.xyzw = r5.x * r1.xyzw;
     r0.zw = BillboardUp.zw;
     r0.xyzw = (r4.x * r0.xyzw) + r1.xyzw;
     r2.w = dot(r2.xyzw, r2.xyzw);	// normalize + length
-    r1.x.zw = r0.xy + IN.position.xy;
+    r1.xyzw = r0.xyzw + IN.position.xyzw;
     r0.w = 1.0 / sqrt(r2.w);
     offset.x = IN.blendindices.y;
     r0.x = dot(WindMatrices[0 + offset.x], r1.xyzw);
@@ -125,7 +125,7 @@
     r3.x = dot(r2.xyz, r2.xyz);	// normalize + length
     r0.w = dot(WindMatrices[3 + offset.x], r1.xyzw);
     r2.w = 1.0 / sqrt(r3.x);
-    r0.x.zw = r0.xy - r1.xy;
+    r0.xyzw = r0.xyzw - r1.xyzw;
     r2.xyz = r2.xyz * r2.w;
     r1.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
     r0.x = dot(r2.xyz, LightVector.xyz);
@@ -134,7 +134,7 @@
     OUT.position.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
     r0.w = min(r0.w, 1);
     OUT.position.z = dot(ModelViewProj[2].xyzw, r1.xyzw);
-    r0.x.zw = r0.w * DiffColor.xy;
+    r0.xyzw = r0.w * DiffColor.rgba;
     r2.w = SunDimmer.x;
     r0.xyzw = (r2.w * r0.xyzw) + AmbientColor.rgba;
     r6.y = pow(2.0, IN.blendindices.z);	// partial precision

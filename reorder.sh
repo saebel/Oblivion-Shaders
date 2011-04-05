@@ -3,7 +3,7 @@
 SED=sed
 SFLAGS=
 
-for hlsl in PseudoC/BOLT*.hlsl; do
+for hlsl in PseudoC/*.hlsl; do
   echo $hlsl
   fle=`basename ${hlsl}`
   fle=`stripext ${fle}`

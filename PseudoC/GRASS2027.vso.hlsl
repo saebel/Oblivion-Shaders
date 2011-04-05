@@ -59,7 +59,7 @@
     r2.xyzw = frac(InstanceData[0 + offset.w]);
     r2.xyz = r2.xyz - 0.5;
     r0.xyz = 2 * r2.xyz;
-    r1.xyz = abs(r0);
+    r1.xyz = abs(r0.xyz);
     r1.xyzw = (r1.yzxz >= r1.xxyy ? 1.0 : 0.0);
     r2.x = (2 * r2.y) - r0.z;
     r3.xy = r1.yw * r1.xz;
@@ -68,7 +68,7 @@
     r2.xy = (r3.y * r2.xy) + r0.wx;
     r2.z = r3.y * r2.z;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
-    r1.yz = (r0.xzyw * const_13.xzww) - r2.yz;
+    r1.yz = (r0.xz * const_13.xz) - r2.yz;
     r1.w = r0.w * (1.0 / 17);
     r1.x = -r2.x;
     r1.w = frac(r1.w);
@@ -104,7 +104,7 @@
     r3.x = dot(r1.xyz, r3.xyz);
     r1.w = frac(r1.w);
     r1.xyz = r5.xyz * r6.x;
-    r2.w = (r1.w * PI * 2) + -PI;
+    r2.w = (r1.w * PI * 2) - PI;
     r4.xyz = (r3.x * r4.xyz) + r1.xyz;
     r1.y = sin(r2.w);
     r2.w = r1.y * WindData.z;

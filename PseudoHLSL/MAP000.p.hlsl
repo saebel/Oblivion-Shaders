@@ -39,10 +39,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {0.2, 0.2, 0.15, 0.1};
     const float4 const_2 = {0.5, 0.25, 0.75, 0};
     const float4 const_3 = {0.458999991, 0.231000006, 0.128999993, 0};
@@ -60,36 +56,30 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r9;
 
     r4.xy = (const_4.xy * CameraPos.xy) + IN.texcoord_0.xy;
+    r7.xy = (-r0.xy * CameraPos.xy) + IN.texcoord_0.xy;
     r0.x = r4.x;
     r0.y = IN.texcoord_0.y;
+    r2.xyzw = tex2D(Src0, r0.xy);
+    r0.xyzw = tex2D(Src2, IN.texcoord_0.xy);
+    r0.w = 1;
     r5.xy = IN.texcoord_0.xy - CameraPos.xy;
     r1.x = r5.x;
     r1.y = IN.texcoord_0.y;
-    r3.x = IN.texcoord_0.x;
-    r7.xy = (-const_4.xy * CameraPos.xy) + IN.texcoord_0.xy;
-    r3.y = r7.y;
-    r6.x = IN.texcoord_0.x;
     r6.y = r5.y;
     r8.xyzw = tex2D(Src0, r5.xy);
     r5.xyzw = (2 * (tex2D(Src0, r1.xy))) + r8.xyzw;
-    r7.xyzw = tex2D(Src0, r7.xy);
-    r5.x.zw = r7.xy + r5.xy;
+    r1.xyzw = tex2D(Src1, IN.texcoord_0.xy);
+    r3.y = r7.y;
+    r6.x = IN.texcoord_0.x;
     r9.xyzw = (2 * (tex2D(Src0, r6.xy))) + r8.xyzw;
     r6.xyzw = tex2D(Src0, r4.xy);
-    r5.x.zw = r5.xy - r6.xy;
-    r2.xyzw = (2 * -(tex2D(Src0, r0.xy))) + r5.xyzw;
-    r0.xyzw = tex2D(Src2, IN.texcoord_0.xy);
-    r1.xyzw = tex2D(Src1, IN.texcoord_0.xy);
     r4.xyzw = tex2D(Src0, IN.texcoord_0.xy + CameraPos.xy);
-    r2.x.zw = r2.xy - r4.xy;
-    r9.x.zw = r6.xy + r9.xy;
-    r9.x.zw = r9.xy - r7.xy;
-    r3.xyzw = (2 * -(tex2D(Src0, r3.xy))) + r9.xyzw;
-    r3.x.zw = r3.xy - r4.xy;
-    r3.x.zw = r3.xy * r3.xy;
-    r2.xyzw = (r2.xyzw * r2.xyzw) + r3.xyzw;
+    r7.xyzw = tex2D(Src0, r7.xy);
+    r2.xyzw = ((2 * -r2.xyzw) + ((r7.xyzw + r5.xyzw) - r6.xyzw)) - r4.xyzw;
+    r3.x = IN.texcoord_0.x;
+    r3.xyzw = ((2 * -(tex2D(Src0, r3.xy))) + ((r6.xyzw + r9.xyzw) - r7.xyzw)) - r4.xyzw;
+    r2.xyzw = (r2.xyzw * r2.xyzw) + (r3.xyzw * r3.xyzw);
     r0.xyz = lerp(const_3.xyz, ((0.75 * r0.xyz) + (r1.xyz * 0.25)), min(dot(const_0.xyz, r2.xyz) + min(r2.w * 10, 0.1), 0.5));
-    r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

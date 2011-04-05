@@ -42,7 +42,7 @@
     float4 IN.texcoord_0 : TEXCOORD0;
     float3 IN.blendweight : BLENDWEIGHT;
     float4 IN.blendindices : BLENDINDICES;
-    r0.xy = abs(IN.position);
+    r0.xy = abs(IN.position.xy);
     r0.w = max(r0.y, r0.x);
     r1.w = 1.0 / r0.w;
     r0.w = min(r0.y, r0.x);
@@ -63,7 +63,7 @@
     r0.w = min(IN.position.y, IN.position.x);
     r1.w = max(IN.position.y, IN.position.x);
     r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
-    r3.w = (r1.w >= -r1.w ? 1.0 : 0.0);
+    r3.w = (r1.w == 0 ? 1.0 : 0.0);
     r1.w = 2 * r2.w;
     r0.w = r0.w * r3.w;
     r1.w = (r0.w * -r1.w) + r2.w;
@@ -71,7 +71,7 @@
     r1.z = 0.318471342;
     OUT.texcoord_1.x = (r1.w * r1.z) + VOffset.x;
     r0.xyzw = frac(r0.xyzw);
-    r2.x = dot(IN.blendweight.xyz, const_2.xyz);.z
+    r2.x = dot(IN.blendweight.xyz, 1);
     r1.xyzw = (IN.blendindices.zyxw * 765.01001) - r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_3.xxxy) + const_3.yyyx;
     offset.xyzw = r1.xyzw;

@@ -18,7 +18,7 @@
 //   DiffuseMap   texture_0       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(DiffuseMap, texcoord_0.xy);
+    IN.texcoord_0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
     r0.xyz = AmbientColor.rgb;
   + r0.w = IN.texcoord_0.w;
 

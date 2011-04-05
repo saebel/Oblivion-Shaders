@@ -44,10 +44,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_3 = {-0.5, 0, 1, 0};
 
     float4 r0;
@@ -58,8 +54,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyz = (r0.xyz + FillColor.rgb) * r0.w;
     r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
     r1.xyzw = (pow(abs(1 - max(dot(2 * (r1.xyz - 0.5), IN.texcoord_3.xyz), 0)), fVars.x) * RimColor.rgba) + r0.xyzw;	// [0,1] to [-1,+1]
-    r0.xyz = lerp(IN.color_1.rgb, r1.xyz, IN.color_1.a);
     r0.w = r1.w;
+    r0.xyz = lerp(IN.color_1.rgb, r1.xyz, IN.color_1.a);
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

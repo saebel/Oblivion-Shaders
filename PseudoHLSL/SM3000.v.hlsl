@@ -51,10 +51,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_4 = {1, 0, 0, 0};
 
     float3 r0;
@@ -64,7 +60,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.xyz = r0.xyz;
-    OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r0.xyz))) / FogParam.y))) * FogParam.z;
+    OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r0.xyz))) / FogParam.y)) * FogParam.z;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.rgba = 1;
     OUT.texcoord_3.xyz = IN.tangent.xyz;

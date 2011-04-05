@@ -44,10 +44,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {-0.5, 0.2, 0.5, 0};
 
     float4 r0;
@@ -56,9 +52,9 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
     r0.xyz = normalize(2 * (r0.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
     r2.w = r0.w * pow(abs(saturate(dot(r0.xyz, 2 * (IN.texcoord_3.xyz - 0.5)))), Toggles.z);			// partial precision	// [0,1] to [-1,+1]
+    r0.w = dot(PSLightColor[1].rgba, IN.color_0.rgba) + dot(PSLightColor[2].rgba, IN.color_1.rgba);			// partial precision
     r0.x = dot(r0.xyz, 2 * (IN.texcoord_2.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
     r0.xyz = ((((0.2 - r0.x) >= 0.0 ? r2.w : (r2.w * max(r0.x + 0.5, 0)))) * PSLightColor[0].rgb) * IN.texcoord_1.xyz;			// partial precision
-    r0.w = dot(PSLightColor[1].rgba, IN.color_0.rgba) + dot(PSLightColor[2].rgba, IN.color_1.rgba);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

@@ -40,4 +40,4 @@ s/tex2D(\([^,()]\+\), \([INOUT.]*[][a-z0-9_\-]\+\))/tex2D(\1, \2.xy)/
 s/tex2DProj(\([^,()]\+\), \([INOUT.]*[][a-z0-9_\-]\+\))/tex2D(\1, \2.xy)/
 s/texCUBE(\([^,()]\+\), \([INOUT.]*[][a-z0-9_\-]\+\))/texCUBE(\1, \2.xyz)/
 # r1.xyzw = tex2D(ShadowMask, IN.texcoord_1.zwzw);			// partial precision
-s/\([][a-zINOUT0-9_]\+\).xyzw = tex2D(\([^,]\+\), \([INOUT.]*[][a-z0-9_\-]\+\).\([xyzw][xyzw]\)\([xyzw]*\));/\1.xyzw = tex2D(\2, \3.\4);/g
+s/\([][a-zINOUT0-9_]\+\)\.xyzw = tex2D(\([^,]\+\), \([INOUT.]*[][a-z0-9_\-]\+\)\.\([xyzw][xyzw]\)\([xyzw]*\));/\1.xyzw = tex2D(\2, \3.\4);/g

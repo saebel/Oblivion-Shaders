@@ -35,10 +35,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {0.299, 0.587000012, 0.114, 0.14};
     const float4 const_2 = {0.11, -0.04, 1, 0};
     const float4 const_3 = {1, 0.955688059, 0.619858086, 0};
@@ -49,6 +45,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r1;
     float3 r2;
 
+    r0.w = 1;
     r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r0.x = dot(const_0.xyz, r1.xyz) + 0.14;
     r0.yz = const_2.zxyw;
@@ -56,7 +53,6 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r2.y = dot(const_4.xyz, r0.xyz);
     r2.z = dot(const_5.xyz, r0.xyz);
     r0.xyz = lerp(r2.xyz, r1.xyz, BlendValue.x);
-    r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

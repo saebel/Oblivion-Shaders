@@ -16,7 +16,15 @@
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   BlurScale    c2       1
-//   BlurOffsets  c3       9
+//   BlurOffsets[0]  c3       1
+//   BlurOffsets[1]  c4       1
+//   BlurOffsets[2]  c5       1
+//   BlurOffsets[3]  c6       1
+//   BlurOffsets[4]  c7       1
+//   BlurOffsets[5]  c8       1
+//   BlurOffsets[6]  c9       1
+//   BlurOffsets[7]  c10      1
+//   BlurOffsets[8]  c11      1
 //   Src0         s0       1
 //
 

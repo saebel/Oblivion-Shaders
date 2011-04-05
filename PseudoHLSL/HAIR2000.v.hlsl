@@ -51,26 +51,22 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_4 = {0, 1, 0, 0};
 
     float4 r0;
     float3 r1;
     float3 r2;
 
+    r1.xyz = EyePosition.xyz - IN.position.xyz;
+    r0.w = 1.0 / length(r1.xyz);
     r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r1.xyz = EyePosition.xyz - IN.position.xyz;
-    r0.w = 1.0 / length(r1.xyz);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = normalize(r0.xyz);
+    OUT.texcoord_2.xyz = r0.xyz * (1.0 / length(r0.xyz));
     r0.xyz = normalize((r0.w * r1.xyz) + LightDirection[0].xyz);
     r2.xyz = r1.xyz * r0.w;
     r1.x = dot(IN.tangent.xyz, r0.xyz);

@@ -82,7 +82,7 @@
     r1.xyz = (r3.w * ScaleMask.xyz) + r1.y;
     r1.w = frac(r1.w);
     r3.xyz = r1.xyz * IN.position.xyz;
-    r3.w = (r1.w * PI * 2) + -PI;
+    r3.w = (r1.w * PI * 2) - PI;
     r4.y = dot(r0.wxz, r3.xyz);
     r1.y = sin(r3.w);
     r1.w = r1.y * WindData.z;

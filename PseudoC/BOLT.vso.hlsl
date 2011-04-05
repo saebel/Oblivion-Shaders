@@ -76,7 +76,7 @@
     r0.xy = r0.xy * r2.w;
     r7.y = pow(2.0, r0.w);	// partial precision
     r5.w = r7.y;
-    r0.w = (r6.w >= -r6.w ? 1.0 : 0.0);
+    r0.w = (r6.w == 0 ? 1.0 : 0.0);
     r3.w = 2 * r5.w;
     r7.y = pow(2.0, r6.w);	// partial precision
     r2.w = r7.y;

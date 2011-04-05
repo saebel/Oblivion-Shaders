@@ -65,7 +65,7 @@
     r1.w = (r1.w * (1.0 / (PI * 2))) + 0.5;
     r0.w = r0.w * (1.0 / 17);
     r1.w = frac(r1.w);
-    r3.w = (r1.w * PI * 2) + -PI;
+    r3.w = (r1.w * PI * 2) - PI;
     r1.w = frac(r0.w);
     r0.y = sin(r3.w);
     r0.w = r1.w - 0.5;

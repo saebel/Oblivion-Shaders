@@ -48,23 +48,24 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     float4 r0;
     float4 r1;
-    float4 r2;
+    float2 r2;
     float4 r3;
 
-    r1.xyzw = tex2D(freqSamp, IN.texcoord_0.xy);
-    r3.w = (frac(((r1.x * Time.x) / (PI * 2)) + 0.5) * PI * 2) + -PI;
-    r2.x = cos(r3.w); r2.y = sin(r3.w);
-    r3.w = (frac(((-r1.x * Time.x) / (PI * 2)) + 0.5) * PI * 2) + -PI;
     r0.xyzw = tex2D(amplitudeSamp, IN.texcoord_0.xy);
+    r1.xyzw = tex2D(freqSamp, IN.texcoord_0.xy);
+    r3.w = (frac(((r1.x * Time.x) * (1.0 / (PI * 2))) + 0.5) * PI * 2) - PI;
+    r2.x = cos(r3.w); r2.y = sin(r3.w);
+    r3.w = r0.y * r2.y;
+    r2.y = (r0.x * r2.y) + (r0.y * r2.x);
+    r2.x = (r0.x * r2.x) - r3.w;
+    r3.w = (frac(((-r1.x * Time.x) * (1.0 / (PI * 2))) + 0.5) * PI * 2) - PI;
     r1.x = cos(r3.w); r1.y = sin(r3.w);
-    r2.w = r0.y * r2.x;
-    r2.x = (r0.x * r2.x) - (r0.y * r2.y);
-    r2.y = (r0.x * r2.y) + r2.w;
-    r0.x = (r0.z * r1.x) + (r0.w * r1.y);
     r0.y = (r0.z * r1.y) - (r0.w * r1.x);
+    r1.w = r0.w * r1.y;
+    r0.w = 1;
+    r0.x = (r0.z * r1.x) + r1.w;
     r0.xy = r2.xy + r0.xy;
     r0.z = 0;
-    r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

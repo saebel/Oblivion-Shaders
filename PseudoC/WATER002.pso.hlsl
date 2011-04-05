@@ -91,7 +91,7 @@
     r1.xyz = (r0.w * r1.xyz) + r2.xyz;
     r1.w = saturate(SunDir.w);
     r2.w = 1.0 / r2.w;
-    r3.xyz = saturate((r1.w * r0) + r1);
+    r3.xyz = saturate((r1.w * r0)) + r1.xyz);
     r3.w = max(VarAmounts.z, r0.w);
     r0.x = IN.texcoord_6.z;
     r0.y = IN.texcoord_6.w;

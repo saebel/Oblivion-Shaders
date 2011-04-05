@@ -60,10 +60,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_4 = {0, 1, 0, 0};
 
     float1 offset;
@@ -71,20 +67,19 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 r1;
 
     offset.x = IN.blendindices.y;
+    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
     r0.x = dot(WindMatrices[0 + offset.x], IN.position.xyzw);
     r0.y = dot(WindMatrices[1 + offset.x], IN.position.xyzw);
     r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
-    r0.x.zw = r0.xy - IN.position.xy;
     r1.xyzw = IN.position.xyzw;
-    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
+    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + r1.xyzw;
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     OUT.texcoord_1.xyz = ((SunDimmer.x * (saturate(dot(IN.normal.xyz, LightVector.xyz)) * DiffColor.rgb)) + AmbientColor.rgb) * IN.color_0.rgb;
     OUT.position.xyz = r1.xyz;
-    OUT.texcoord_2.w = 1 - saturate((FogParam.x - length(r1.xyz)) / (FogParam.y));
+    OUT.texcoord_2.w = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_2.xyz = FogColor.rgb;
 

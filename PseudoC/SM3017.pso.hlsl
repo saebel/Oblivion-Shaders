@@ -135,7 +135,7 @@
       r2.x = 2 * r2.w;
       r2.yz = r2.x + const_4.yz;
       r0.xyz = r2.x + const_4.wyz;
-      r9.xyz = (r0 >= 0.0 ? -r2.xyz : r0.xyz);
+      r9.xyz = (r0.xyz >= 0.0 ? -r2.xyz : r0.xyz);
       r0.xyzw = (r9.x <= 0.0 ? r11.y : LightData[1].xyzw);			// partial precision
       r0.xyzw = (r9.y <= 0.0 ? r0.xyzw : LightData[2].xyzw);			// partial precision
       r0.xyzw = (r9.z <= 0.0 ? r0.xyzw : LightData[3].xyzw);

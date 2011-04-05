@@ -122,7 +122,7 @@
       r8.x = 2 * r2.w;
       r8.yz = r8.x + const_4.yz;
       r0.xyz = r8.x + const_4.wyz;
-      r9.xyz = (r0 >= 0.0 ? -r8.xyz : r0.xyz);
+      r9.xyz = (r0.xyz >= 0.0 ? -r8.xyz : r0.xyz);
       r0.xyzw = (r9.x <= 0.0 ? r11.y : LightData[1].xyzw);
       r0.xyzw = (r9.y <= 0.0 ? r0.xyzw : LightData[2].xyzw);
       r0.xyzw = (r9.z <= 0.0 ? r0.xyzw : LightData[3].xyzw);

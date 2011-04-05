@@ -54,7 +54,7 @@
     r2.xy = const_3.xy;
     r0.xy = (r2.xy * r0.xy) + const_4.xy;
     r0.w = 1.0 / r0.w;			// partial precision
-    r0.xy = saturate((r0.w * 0.01) + r0);
+    r0.xy = saturate((r0.w * 0.01)) + r0.xy);
     r2.xyzw = tex2D(ShadowMap, r1.xy);
     r1.xyzw = tex2D(ShadowMap, r0.xy);
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision

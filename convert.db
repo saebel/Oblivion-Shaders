@@ -87,3 +87,33 @@ offset = r0.w;
 r0.w = IN.texcoord_1.x - floor(IN.texcoord_1.x);
 r0.w = IN.texcoord_1.x - r0.w;
 offset = r0.w;
+
+# hmmm
+      r1.xyzw =
+      (r7.z <= 0.0 ? (
+      (r7.y <= 0.0 ?
+      (r7.x <= 0.0 ? r2.y : LightData[1].xyzw) : LightData[2].xyzw)) : LightData[3].xyzw);
+
+      if (r7.z > 0.0)
+        r1.xyzw = LightData[3].xyzw;
+      else if (r7.y > 0.0)
+        r1.xyzw = LightData[2].xyzw;
+      else if (r7.x > 0.0)
+        r1.xyzw = LightData[1].xyzw;
+      else
+        r1.xyzw = 0;
+
+# hmmm
+      r1.xyzw =
+      (r7.z == 0.0 ? LightData[5].xyzw : (
+      (r7.y == 0.0 ? LightData[4].xyzw :
+      (r7.x == 0.0 ? LightData[3].xyzw : r2.y))));
+
+      if (r7.z > == 0.0)
+        r1.xyzw = LightData[5].xyzw;
+      else if (r7.y == 0.0)
+        r1.xyzw = LightData[4].xyzw;
+      else if (r7.x == 0.0)
+        r1.xyzw = LightData[3].xyzw;
+      else
+        r1.xyzw = 0;

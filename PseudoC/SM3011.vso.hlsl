@@ -44,10 +44,10 @@
     float4 OUT.texcoord_2 : TEXCOORD2;
     float4 OUT.texcoord_3 : TEXCOORD3;
     float3 OUT.color_0 : COLOR0;
-    r1.x.zw = 765.01001 * IN.blendindices.zy;
+    r1.xyzw = 765.01001 * IN.blendindices.zyxw;
     r0.xyzw = frac(r1.xyzw);
-    r2.w = dot(IN.blendweight.xyz, const_0.xyz);.x
-    r1.x.zw = r1.xy - r0.xy;
+    r2.w = dot(IN.blendweight.xyz, 1);
+    r1.xyzw = r1.xyzw - r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     offset.xyzw = r1.xyzw;
     r1.w = 1 - r2.w;

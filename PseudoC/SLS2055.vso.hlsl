@@ -36,7 +36,7 @@
     float4 IN.blendindices : BLENDINDICES;
     r0.xyzw = IN.blendindices.zyxw * 765.01001;
     r0.xyzw = frac(r0.xyzw);
-    r1.x = dot(IN.blendweight.xyz, const_0.xyz);.x
+    r1.x = dot(IN.blendweight.xyz, 1);
     r0.xyzw = (IN.blendindices.zyxw * 765.01001) - r0.xyzw;
     offset.xyzw = r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;

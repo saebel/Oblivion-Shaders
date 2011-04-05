@@ -20,7 +20,10 @@
 //   ModelViewProj[1]    const_1        1
 //   ModelViewProj[2]    const_2        1
 //   ModelViewProj[3]    const_3        1
-//   ObjToCubeSpace   const_8       4
+//   ObjToCubeSpace[0]   const_8        1
+//   ObjToCubeSpace[1]   const_9        1
+//   ObjToCubeSpace[2]   const_10        1
+//   ObjToCubeSpace[3]   const_11        1
 //   EyePosition      const_25      1
 //   BoundWorldCenter const_46      1
 //
@@ -30,11 +33,11 @@
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_0 : COLOR0;
-    r1.w = dot(const_11.xyzw, IN.position.xyzw);
-    r1.x = dot(ObjToCubeSpace.xyzw, IN.position.xyzw);
-    r1.y = dot(const_9.xyzw, IN.position.xyzw);
-    r1.z = dot(const_10.xyzw, IN.position.xyzw);
-    r0.x.zw = r1.xy - BoundWorldCenter.xy;
+    r1.w = dot(ObjToCubeSpace[3].xyzw, IN.position.xyzw);
+    r1.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
+    r1.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
+    r1.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
+    r0.xyzw = r1.xyzw - BoundWorldCenter.xyzw;
     r0.w = dot(r0.xyzw, r0.xyzw);	// normalize + length
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r0.w = 1.0 / sqrt(r0.w);

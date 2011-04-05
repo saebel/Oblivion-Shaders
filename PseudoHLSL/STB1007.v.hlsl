@@ -52,10 +52,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {0.5, 0, 0, 0};
 
     float1 offset;
@@ -63,15 +59,14 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 r1;
 
     offset.x = IN.blendindices.y;
+    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
     r0.x = dot(WindMatrices[0 + offset.x], IN.position.xyzw);
     r0.y = dot(WindMatrices[1 + offset.x], IN.position.xyzw);
     r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
-    r0.x.zw = r0.xy - IN.position.xy;
     r1.xyzw = IN.position.xyzw;
-    r0.xyzw = (IN.blendindices.x * r0.xyzw) + r1.xyzw;
-    r1.xyz = EyePosition.xyz - r0.xyz;
-    r1.xyz = normalize(((1.0 / length(r1.xyz)) * r1.xyz) + LightDirection[0].xyz);
+    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + r1.xyzw;
+    r1.xyz = normalize(EyePosition.xyz - r0.xyz) + LightDirection[0].xyz;
+    r1.xyz = r1.xyz * (1.0 / length(r1.xyz));
     OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);

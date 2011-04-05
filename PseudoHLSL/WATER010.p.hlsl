@@ -59,10 +59,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_2 = {-0.5, 0.1, 0, 0};
     const float4 const_3 = {2, -1, 0, -(1.0 / 8192)};
 
@@ -73,30 +69,32 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r4;
 
     r0.xyzw = tex2D(DisplacementMap, IN.texcoord_6.xy);
-    r1.w = sqrt(dot(IN.texcoord_6.xy - 0.5, r1.xy) + 0);
+    r1.xy = EyePos.xy - IN.texcoord_1.xy;
+    r0.w = dot(r1.xy, r1.xy) + 0;
     r1.xyz = (2 * r0.xyz) - 1;
+    r2.w = saturate((sqrt(r0.w) / -8192) + 1);
     r4.x = IN.texcoord_7.z + Scroll.x;
     r4.y = IN.texcoord_7.w + Scroll.y;
     r0.xyzw = tex2D(NormalMap, r4.xy);
-    r2.w = saturate(length(EyePos.xy - IN.texcoord_1.xy) / -8192) + 1;
+    r1.w = length(IN.texcoord_6.xy - 0.5);
     r2.xyz = (2 * r0.xyz) - 1;
     r2.xy = (r2.w * r2.w) * r2.xy;
-    r2.xyz = normalize(lerp(r1.xyz, r2.xyz, (-(saturate(max(0.1, (2 * r1.w) / BlendRadius.x)) - 1)) * BlendRadius.y));
-    r4.w = r2.w * VarAmounts.w;
+    r2.xyz = normalize(lerp(r1.xyz, r2.xyz, (1 - saturate(max(0.1, (2 * r1.w) / BlendRadius.x))) * BlendRadius.y));
     r0.xyzw = tex2D(DetailMap, (0.1 * r2.xy) + r4.xy);
     r1.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r0.w = 1.0 / length(r1.xyz);
-    r2.w = 1.0 / r0.w;
+    r4.w = r2.w * VarAmounts.w;
+    r2.w = FogParam.x - (1.0 / r0.w);
     r2.x = saturate(dot(r1.xyz * r0.w, r2.xyz));
     r0.w = 1 - r2.x;
-    r2.xyz = (r2.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
-    r3.xy = const_3.xy;
     r3.w = r0.w * r0.w;
+    r3.xy = const_3.xy;
     r3.w = ((FresnelRI.x - r3.y) * (r0.w * (r3.w * r3.w))) + FresnelRI.x;
-    r1.xyz = (((VarAmounts.y - r3.y) * (ReflectionColor.rgb - r2.xyz)) + r2.xyz) * VarAmounts.y;
-    r1.xyz = lerp(r0.xyz, saturate((r3.w * r1) + r2), r4.w);
-    r0.xyz = ((1 - saturate((FogParam.x - r2.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     r0.w = (((r3.x * -r1.w) + BlendRadius.x) >= 0.0 ? 0 : max(VarAmounts.z, r3.w));
+    r2.xyz = (r2.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
+    r1.xyz = (((VarAmounts.y - r3.y) * (ReflectionColor.rgb - r2.xyz)) + r2.xyz) * VarAmounts.y;
+    r1.xyz = lerp(r0.xyz, saturate(r3.w * r1) + r2.xyz), r4.w);
+    r0.xyz = ((1 - saturate(r2.w / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

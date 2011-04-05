@@ -48,10 +48,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_7 = {-1, 1, 0, -2};
 
     float1 offset;
@@ -67,30 +63,32 @@ VS_OUTPUT main(VS_INPUT IN) {
     offset.x = r2.w;
     r3.xyz = const_7.xyz;
     r0.xyzw = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
-    offset.x = r2.w - 1;
-    r1.xyzw = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
-    offset.x = r2.w;
-    r2.xyzw = (SegmentData[1 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
-    r4.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    r4.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    r6.x = dot(ModelViewProj[0].xyzw, r2.xyzw);
-    r6.y = dot(ModelViewProj[1].xyzw, r2.xyzw);
-    r2.xy = normalize(r6.xy - r4.xy);
-    r5.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
-    r5.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
-    r1.xy = normalize(r5.xy - r4.xy) + r2.xy;
-    OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r0.xy = (-2 * (r1.xy * ((determinant(float2x2(r1.xy, r2.xy)) < 0 ? 1.0 : 0.0)))) + r1.xy;
-    r1.xy = r0.xy * r0.xy;
     r4.w = fVars0.z - pow(2.0, fVars0.z);
     r6.w = (1.0 / r4.w) * IN.color_1.r;
     r5.w = pow(2.0, abs(r6.w));
-    r0.w = ((r6.w >= -r6.w ? 1.0 : 0.0) * (2 * r5.w)) - r5.w;
+    OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
+    offset.x = r2.w - 1;
+    r1.xyzw = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
+    offset.x = r2.w;
+    r4.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
+    r4.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
+    r0.w = ((r6.w == 0 ? 1.0 : 0.0) * (2 * r5.w)) - r5.w;
     r0.w = (r0.w * r4.w) - pow(2.0, r4.w * r0.w);
+    r2.xyzw = (SegmentData[1 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
+    r6.x = dot(ModelViewProj[0].xyzw, r2.xyzw);
+    r6.y = dot(ModelViewProj[1].xyzw, r2.xyzw);
+    r2.xy = r6.xy - r4.xy;
+    r6.xy = r2.xy * r2.xy;
+    r2.xy = r2.xy * (1.0 / sqrt(r6.y + r6.x));
+    r5.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
+    r5.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
+    r1.xy = normalize(r5.xy - r4.xy) + r2.xy;
+    r0.xy = (-2 * (r1.xy * ((determinant(float2x2(r1.xy, r2.xy)) < 0 ? 1.0 : 0.0)))) + r1.xy;
+    r1.xy = r0.xy * r0.xy;
     r3.w = r3.x + fVars1.y;
     r5.w = (r0.w < fVars1.x ? 1.0 : 0.0);
-    OUT.position.xy = ((((((IN.color_1.r / r4.w) - pow(2.0, r6.w)) * fVars1.w) + fVars1.z) * IN.position.x) * (r0.xy / sqrt(r1.y + r1.x))) + r4.xy;
+    OUT.position.xy = ((((((IN.color_1.r * r1.w) - pow(2.0, r6.w)) * fVars1.w) + fVars1.z) * IN.position.x) * (r0.xy * (1.0 / sqrt(r1.y + r1.x)))) + r4.xy;
     r6.w = ((r0.w >= r3.w ? 1.0 : 0.0) * -r5.w) + 1;
     r3.w = ((((r0.w * fVars2.x) >= r3.w ? 1.0 : 0.0)) * -r6.w) + r6.w;
     r2.w = ((r5.w * (r3.z < fVars2.x ? 1.0 : 0.0)) * -r3.w) + r3.w;

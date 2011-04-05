@@ -25,7 +25,7 @@
 //   ShadowProjData      const_24      1
 //
 
-    const float4 const_4 = {0.001953125, 0, 1, 0};
+    const float4 const_4 = {(1.0 / 512), 0, 1, 0};
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.texcoord_1 : TEXCOORD1;
@@ -45,7 +45,7 @@
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.w = min(r0.w, 1);
     OUT.texcoord_2.w = 1 - r0.w;
-    r0.w = 0.001953125;
+    r0.w = (1.0 / 512);
     r0.xy = (IN.texcoord_0 * r0.w) + ShadowProjTransform.xy;
     OUT.texcoord_0.xy = r0.xy;
     OUT.texcoord_1.xy = r0.xy;

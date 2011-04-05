@@ -21,7 +21,10 @@
 //   SkinModelViewProj[1] const_2        1
 //   SkinModelViewProj[2] const_3        1
 //   SkinModelViewProj[3] const_4        1
-//   ObjToCubeSpace    const_8       4
+//   ObjToCubeSpace[0]    const_8        1
+//   ObjToCubeSpace[1]    const_9        1
+//   ObjToCubeSpace[2]    const_10        1
+//   ObjToCubeSpace[3]    const_11        1
 //   LightPosition[0]     const_16       1
 //   FogParam          const_23      1
 //   Bones[0]             const_42      18
@@ -36,7 +39,7 @@
     float4 IN.blendindices : BLENDINDICES;
     r0.xyzw = IN.blendindices.zyxw * 765.01001;
     r0.xyzw = frac(r0.xyzw);
-    r1.x = dot(IN.blendweight.xyz, const_0.xyz);.x
+    r1.x = dot(IN.blendweight.xyz, 1);
     r0.xyzw = (IN.blendindices.zyxw * 765.01001) - r0.xyzw;
     offset.xyzw = r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
@@ -62,15 +65,15 @@
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
-    OUT.texcoord_1.x = dot(ObjToCubeSpace.xyzw, r0.xyzw);
+    OUT.texcoord_1.x = dot(ObjToCubeSpace[0].xyzw, r0.xyzw);
     r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
-    OUT.texcoord_1.y = dot(const_9.xyzw, r0.xyzw);
+    OUT.texcoord_1.y = dot(ObjToCubeSpace[1].xyzw, r0.xyzw);
     r1.w = 1.0 / sqrt(r2.x);
-    OUT.texcoord_1.z = dot(const_10.xyzw, r0.xyzw);
+    OUT.texcoord_1.z = dot(ObjToCubeSpace[2].xyzw, r0.xyzw);
     r1.w = 1.0 / r1.w;
     r1.w = FogParam.x - r1.w;
     r2.w = 1.0 / FogParam.y;
-    OUT.texcoord_1.w = dot(const_11.xyzw, r0.xyzw);
+    OUT.texcoord_1.w = dot(ObjToCubeSpace[3].xyzw, r0.xyzw);
     r0.w = r1.w * r2.w;
     OUT.texcoord_6.xyz = r0.xyz;
     r0.w = max(r0.w, 0);

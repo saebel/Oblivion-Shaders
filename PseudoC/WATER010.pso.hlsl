@@ -99,7 +99,7 @@
     r0.w = max(VarAmounts.z, r3.w);
     r1.xyz = r1.xyz * VarAmounts.y;
     r2.w = FogParam.x - r2.w;
-    r2.xyz = saturate((r3.w * r1) + r2);
+    r2.xyz = saturate((r3.w * r1)) + r2.xyz);
     r3.w = 1.0 / FogParam.y;
     r1.xyz = lerp(r0.xyz, r2.xyz, r4.w);
     r2.w = saturate(r2.w * r3.w);

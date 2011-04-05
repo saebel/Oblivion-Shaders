@@ -37,19 +37,15 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_0 = {1, 0, 0, 0};
 
     float4 r0;
     float4 r1;
 
     r0.xyzw = tex2D(GlowMap, IN.texcoord_1.xy);
+    r0.w = 1;
     r1.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
     r0.xyz = r0.xyz * (r1.xyz * IN.texcoord_2.xyz);
-    r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

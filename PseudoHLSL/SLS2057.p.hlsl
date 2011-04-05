@@ -49,10 +49,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {-0.5, 0.2, 0.5, 0};
     const int4 const_1 = {-1, 1, 0, 0};
 
@@ -69,9 +65,9 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.x = IN.texcoord_4.z;			// partial precision
     r0.y = IN.texcoord_4.w;			// partial precision
     r0.xyzw = tex2D(ShadowMaskMap, r0.xy);			// partial precision
+    r0.w = dot(PSLightColor[1].rgba, IN.color_0.rgba) + dot(PSLightColor[2].rgba, IN.color_1.rgba);			// partial precision
     r1.xyzw = tex2D(ShadowMap, IN.texcoord_4.xy);			// partial precision
     r0.xyz = r2.xyz * ((r0.x * (r1.xyz - 1)) + 1);			// partial precision
-    r0.w = dot(PSLightColor[1].rgba, IN.color_0.rgba) + dot(PSLightColor[2].rgba, IN.color_1.rgba);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

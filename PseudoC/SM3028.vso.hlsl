@@ -64,7 +64,7 @@
     r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
     r0.z = max(IN.position.y, IN.position.x);
     r1.xyz = EyePosition.xyz - IN.position.xyz;
-    r1.w = (r0.z >= -r0.z ? 1.0 : 0.0);
+    r1.w = (r0.z == 0 ? 1.0 : 0.0);
     r0.z = dot(IN.normal.xyz, r1.xyz);
     r0.w = r0.w * r1.w;
     r0.z = (r0.z < 1 ? 1.0 : 0.0);

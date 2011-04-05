@@ -84,7 +84,7 @@
     r2.xyz = ShallowColor.rgb - r2.xyz;
     r2.xyz = (r5.w * r2.xyz) + DeepColor.rgb;			// partial precision
     r0.w = FogParam.x - r4.w;
-    r2.xyz = saturate((r2.w * r1) + r2);
+    r2.xyz = saturate((r2.w * r1)) + r2.xyz);
     r1.w = 1.0 / FogParam.y;
     r1.xyz = lerp(r0.xyz, r2.xyz, r3.w);
     r0.w = saturate(r0.w * r1.w);

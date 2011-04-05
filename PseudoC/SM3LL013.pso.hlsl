@@ -131,7 +131,7 @@
     r13.x = 2 * r0.w;
     r13.yz = r13.x + const_20.xx;
     r2.xyz = r13.x + const_20.zxy;
-    r14.xyz = (r2 >= 0.0 ? -r13.xyz : r2.xyz);
+    r14.xyz = (r2.xyz >= 0.0 ? -r13.xyz : r2.xyz);
     r2.xyz = (r14.x <= 0.0 ? r6.y : LightData[1].xyz);			// partial precision
     r2.w = 4;			// partial precision
     r2.w = r2.w - ToggleNumLights.x;			// partial precision

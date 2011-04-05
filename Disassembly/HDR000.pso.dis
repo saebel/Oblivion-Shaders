@@ -39,10 +39,10 @@
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   BlurScale    c2       1		1/256 => 0.003906
-//   BlurOffsets  c3       4		1/4   => 0.250000
-//                c4       .
-//                c5       .
-//                c6       .
+//   BlurOffsets[0]  c3       1		1/4   => 0.250000
+//   BlurOffsets[1]  c4       1
+//   BlurOffsets[2]  c5       1
+//   BlurOffsets[3]  c6       1
 //   Src0         s0       1
 //
 

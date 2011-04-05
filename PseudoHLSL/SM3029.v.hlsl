@@ -59,8 +59,6 @@ VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
 #define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
     const float4 const_0 = {0.025, 0.0208350997, -0.0851330012, 0.180141002};
     const float4 const_1 = {-0.330299497, 0.999866009, -2, PI / 2};
@@ -70,24 +68,21 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 offset;
     float4 r0;
     float4 r1;
-    float4 r2;
+    float3 r2;
     float3 r3;
     float3 r4;
     float3 r5;
     float3 r6;
 
-    OUT.texcoord_1.y = (IN.position.z * 0.025) + UOffset.x;
+    r1.xyzw = r1.xyzw - frac(765.01001 * IN.blendindices.zyxw);
+    offset.xyzw = r1.xyzw;
     r0.w = (1.0 / max(abs(IN.position.y), abs(IN.position.x))) * min(abs(IN.position.y), abs(IN.position.x));
     r0.z = r0.w * r0.w;
     r0.y = r0.w * ((r0.z * ((r0.z * ((r0.z * ((r0.z * 0.0208350997) - 0.0851330012)) + 0.180141002)) - 0.330299497)) + 0.999866009);
-    r2.y = ((IN.position.y < -IN.position.y ? 1.0 : 0.0) * -PI) + ((((r0.y * -2) + PI / 2) * ((abs(IN.position.y) < abs(IN.position.x) ? 1.0 : 0.0))) + r0.y);
     r0.w = min(IN.position.y, IN.position.x);
-    r0.z = max(IN.position.y, IN.position.x);
-    r1.x.zw = 765.01001 * IN.blendindices.zy;
-    r2.w = (((r0.w < -r0.w ? 1.0 : 0.0) * (r0.z >= -r0.z ? 1.0 : 0.0)) * -(2 * r2.y)) + r2.y;
-    r0.xyzw = frac(r1.xyzw);
-    r1.x.zw = r1.xy - r0.xy;
-    offset.xyzw = r1.xyzw;
+    r2.y = ((IN.position.y < -IN.position.y ? 1.0 : 0.0) * -PI) + ((((r0.y * -2) + PI / 2) * ((abs(IN.position.y) < abs(IN.position.x) ? 1.0 : 0.0))) + r0.y);
+    OUT.texcoord_1.y = (IN.position.z * 0.025) + UOffset.x;
+    OUT.texcoord_1.x = (((((r0.w < -r0.w ? 1.0 : 0.0) * ((max(IN.position.y, IN.position.x) == 0 ? 1.0 : 0.0))) * -(2 * r2.y)) + r2.y) * 0.318471342) + VOffset.x;
     r0.xyzw = (IN.position.xyzx * const_3.xxxy) + const_3.yyyx;
     r1.x = dot(const_14[offset.y], r0.xyzw);
     r1.y = dot(const_15[offset.y], r0.xyzw);
@@ -103,10 +98,10 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.x = dot(const_14[offset.w], r0.xyzw);
     r3.y = dot(const_15[offset.w], r0.xyzw);
     r3.z = dot(const_16[offset.w], r0.xyzw);
+    r0.w = 1;
     r0.x = dot(const_14[offset.y], IN.normal.xyz);
     r0.y = dot(const_15[offset.y], IN.normal.xyz);
     r0.z = dot(const_16[offset.y], IN.normal.xyz);
-    r1.w = 1 - dot(IN.blendweight.xyz, const_2.xyz);
     r4.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
     r1.xyz = r0.xyz * IN.blendweight.y;
     r0.x = dot(const_14[offset.x], IN.normal.xyz);
@@ -116,20 +111,18 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(const_14[offset.z], IN.normal.xyz);
     r0.y = dot(const_15[offset.z], IN.normal.xyz);
     r0.z = dot(const_16[offset.z], IN.normal.xyz);
+    r1.w = 1 - dot(IN.blendweight.xyz, 1);
     r2.xyz = (IN.blendweight.z * r0.xyz) + r1.xyz;
+    r0.xyz = (r1.w * r3.xyz) + r4.xyz;
     r1.x = dot(const_14[offset.w], IN.normal.xyz);
     r1.y = dot(const_15[offset.w], IN.normal.xyz);
     r1.z = dot(const_16[offset.w], IN.normal.xyz);
-    r0.xyz = (r1.w * r3.xyz) + r4.xyz;
     r1.xyz = (r1.w * r1.xyz) + r2.xyz;
-    r2.xyz = EyePosition.xyz - r0.xyz;
-    OUT.texcoord_1.x = (r2.w * 0.318471342) + VOffset.x;
-    r0.w = 1;
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
     r3.xyz = normalize(r1.xyz);
     r1.x = dot(const_14[offset.y], IN.tangent.xyz);
     r1.y = dot(const_15[offset.y], IN.tangent.xyz);
     r1.z = dot(const_16[offset.y], IN.tangent.xyz);
+    r2.xyz = EyePosition.xyz - r0.xyz;
     r4.xyz = (-2 * (r2.xyz * ((dot(r3.xyz, r2.xyz) < 1 ? 1.0 : 0.0)))) + r2.xyz;
     r2.xyz = r1.xyz * IN.blendweight.y;
     r1.x = dot(const_14[offset.x], IN.tangent.xyz);
@@ -156,6 +149,9 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.y = dot(const_15[offset.z], IN.binormal.xyz);
     r1.z = dot(const_16[offset.z], IN.binormal.xyz);
     r5.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
+    r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
+    r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
+    r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
     r2.x = dot(const_14[offset.w], IN.binormal.xyz);
     r2.y = dot(const_15[offset.w], IN.binormal.xyz);
     r2.z = dot(const_16[offset.w], IN.binormal.xyz);
@@ -163,10 +159,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.x = dot(normalize(r6.xyz), r4.xyz);
     r2.y = dot(normalize(r5.xyz), r4.xyz);
     r2.z = dot(r3.xyz, r4.xyz);
-    OUT.texcoord_3.xyz = normalize(r2.xyz);
-    r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
-    r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
-    r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
+    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
+    OUT.texcoord_3.xyz = r2.xyz * (1.0 / length(r2.xyz));
     OUT.position.xyz = r1.xyz;
     OUT.color_1.a = (1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y)) * (0 < FogParam.z ? 1.0 : 0.0);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

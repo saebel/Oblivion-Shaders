@@ -37,7 +37,7 @@
     float3 IN.binormal : BINORMAL;
     float3 IN.normal : NORMAL;
     float4 IN.texcoord_0 : TEXCOORD0;
-    r0.xy = abs(IN.position);
+    r0.xy = abs(IN.position.xy);
     r0.w = max(r0.y, r0.x);
     r1.w = 1.0 / r0.w;
     r0.w = min(r0.y, r0.x);
@@ -59,7 +59,7 @@
     r0.w = min(IN.position.y, IN.position.x);
     r3.w = max(IN.position.y, IN.position.x);
     r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
-    r3.w = (r3.w >= -r3.w ? 1.0 : 0.0);
+    r3.w = (r3.w == 0 ? 1.0 : 0.0);
     r0.w = r0.w * r3.w;
     r1.xyz = EyePosition.xyz - IN.position.xyz;
     r1.w = (r0.w * -r1.w) + r2.w;

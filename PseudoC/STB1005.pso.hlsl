@@ -24,10 +24,10 @@
 //   NormalCubeMap texture_3       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(NormalMap, texcoord_0.xy);
-    IN.texcoord_1.xyzw = tex2D(NormalMap, texcoord_0.xy);
-    IN.texcoord_2.xyzw = tex2D(NormalMap, texcoord_0.xy);
-    IN.texcoord_3.xyzw = tex2D(NormalMap, texcoord_0.xy);
+    IN.texcoord_0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    IN.texcoord_1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    IN.texcoord_2.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    IN.texcoord_3.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
     r0.xyz = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
     r0.xyz = r0.xyz * PSLightColor[0].rgb;
     r1.xyz = IN.texcoord_1.xyz * IN.texcoord_2.xyz;

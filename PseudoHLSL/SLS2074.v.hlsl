@@ -21,7 +21,10 @@ row_major float4x4 SkinModelViewProj;
 //   SkinModelViewProj[1] const_2        1
 //   SkinModelViewProj[2] const_3        1
 //   SkinModelViewProj[3] const_4        1
-//   ObjToCubeSpace    const_8       4
+//   ObjToCubeSpace[0]    const_8        1
+//   ObjToCubeSpace[1]    const_9        1
+//   ObjToCubeSpace[2]    const_10        1
+//   ObjToCubeSpace[3]    const_11        1
 //   LightPosition[0]     const_16       1
 //   FogParam          const_23      1
 //   Bones[0]             const_42      18
@@ -54,10 +57,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {1, 765.01001, 0, 0};
 
     float4 offset;
@@ -82,17 +81,17 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], r0.xyzw);
     r1.y = dot(Bones[1 + offset.w], r0.xyzw);
     r1.z = dot(Bones[2 + offset.w], r0.xyzw);
-    r0.xyz = ((1 - dot(IN.blendweight.xyz, const_0.xyz)) * r1.xyz) + r2.xyz;
     r0.w = 1;
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_1.x = dot(ObjToCubeSpace.xyzw, r0.xyzw);
-    OUT.texcoord_1.y = dot(const_9.xyzw, r0.xyzw);
-    OUT.texcoord_1.z = dot(const_10.xyzw, r0.xyzw);
-    OUT.texcoord_1.w = dot(const_11.xyzw, r0.xyzw);
-    OUT.texcoord_6.xyz = r0.xyz;
+    r0.xyz = ((1 - dot(IN.blendweight.xyz, 1)) * r1.xyz) + r2.xyz;
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
+    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
+    OUT.texcoord_1.x = dot(ObjToCubeSpace[0].xyzw, r0.xyzw);
+    OUT.texcoord_1.y = dot(ObjToCubeSpace[1].xyzw, r0.xyzw);
+    OUT.texcoord_1.z = dot(ObjToCubeSpace[2].xyzw, r0.xyzw);
+    OUT.texcoord_1.w = dot(ObjToCubeSpace[3].xyzw, r0.xyzw);
+    OUT.texcoord_6.xyz = r0.xyz;
     OUT.position.xyz = r1.xyz;
     OUT.texcoord_3.w = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

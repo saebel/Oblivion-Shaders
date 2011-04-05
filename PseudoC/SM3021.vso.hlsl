@@ -36,10 +36,10 @@
     float4 OUT.position : POSITION;
     float3 OUT.texcoord_0 : TEXCOORD0;
     float2 OUT.texcoord_1 : TEXCOORD1;
-    r1.x.zw = 765.01001 * IN.blendindices.zy;
+    r1.xyzw = 765.01001 * IN.blendindices.zyxw;
     r0.xyzw = frac(r1.xyzw);
-    r2.w = dot(IN.blendweight.xyz, const_0.xyz);.x
-    r0.x.zw = r1.xy - r0.xy;
+    r2.w = dot(IN.blendweight.xyz, 1);
+    r0.xyzw = r1.xyzw - r0.xyzw;
     offset.xyzw = r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.w = 1 - r2.w;

@@ -50,10 +50,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {0, -1, 1, 0.5};
 
     float4 r0;
@@ -62,33 +58,27 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r3;
     float3 r4;
 
-    r0.xyz = (0 < r0 ? 1.0 : 0.0);
+    r0.xyz = (0 < r0.xyz ? 1.0 : 0.0);
     r2.xyz = MaxPos.xyz - MinPos.xyz;
-    r3.x = 1.0 / r2.x;
-    r3.y = 1.0 / r2.y;
-    r3.z = 1.0 / r2.z;
-    r1.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) * r3.xyz;
-    r3.xyz = (r1 >= -r1 ? 1.0 : 0.0);
-    r4.xyz = frac(abs(r1));
-    r3.xyz = r2.xyz * lerp(r4.xyz, -r4.xyz, r3);
-    r1.xyz = abs(r3) + MinPos;
-    r4.xyz = lerp(r1.xyz, (MaxPos - abs(r3)), r0);
+    r1.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / (r2.xyz);
+    r4.xyz = frac(abs(r1.xyz));
+    r3.xyz = r2.xyz * (r1.xyz == 0 ? r4.xyz : -r4.xyz);
+    r1.xyz = abs(r3.xyz) + MinPos.xyz;
+    r3.xyz = MaxPos.xyz - abs(r3.xyz);
+    r4.xyz = lerp(r1.xyz, r3.xyz, r0.xyz);
     r0.xy = r4.xy - EyePosition.xy;
     r1.xy = r0.xy * r0.xy;
-    r1.xz = -r0.xyyw / sqrt(r1.y + r1.x);
+    r1.xz = -r0.xy * (1.0 / sqrt(r1.y + r1.x));
     r1.yw = r1.z * const_4.xy;
     r0.xyz = r1.zxw * const_4.yzz;
-    r1.xy = r0.xy / sqrt(dot(r1.yxw, r0.xyz));
+    r1.xy = r0.xy * (1.0 / sqrt(dot(r1.yxw, r0.xyz)));
     r0.w = r1.x;
-    r3.y = dot(r1.yzw, IN.position.xyz);
     r3.x = dot(r0.wyz, IN.position.xyz);
+    r0.w = 1;
+    r3.y = dot(r1.yzw, IN.position.xyz);
     r3.z = IN.position.z;
     r0.xyz = r4.xyz + r3.xyz;
-    r0.w = 1;
-    r2.x = 1.0 / abs(r2.x);
-    r2.y = 1.0 / abs(r2.y);
-    r2.z = 1.0 / abs(r2.z);
-    r1.w = 1 - length(r2.xyz * (((-0.5 * abs(r2)) + r5) - r4.xyz));
+    r1.w = 1 - length((1.0 / abs(r2.xyz)) * (((-0.5 * abs(r2.xyz)) + r5.xyz) - r4.xyz));
     OUT.position.x = dot(WorldViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);

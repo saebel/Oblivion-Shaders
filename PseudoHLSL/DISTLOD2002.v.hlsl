@@ -60,10 +60,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_6 = {0.01, -0.5, 0, 1};
 
     float4 offset;
@@ -72,22 +68,22 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r2;
 
     offset.w = IN.texcoord_1.x;
-    r0.xyz = (IN.position * (0.01 * InstanceData[0 + offset.w].w)) + InstanceData[0 + offset.w];
     r0.w = IN.position.w;
-    r2.x = dot(ModelViewProj[0].xyzw, r0.xyzw);			//		(ModelViewProj[0].x * r0.x) + (ModelViewProj[0].y * r0.y) + (ModelViewProj[0].z * r0.z) + (ModelViewProj[0].w * r0.w)
-    r2.y = dot(ModelViewProj[1].xyzw, r0.xyzw);			//		(ModelViewProj[1].x * r0.x) + (ModelViewProj[1].y * r0.y) + (ModelViewProj[1].z * r0.z) + (ModelViewProj[1].w * r0.w)
-    r2.z = dot(ModelViewProj[2].xyzw, r0.xyzw);			//		(ModelViewProj[2].x * r0.x) + (ModelViewProj[2].y * r0.y) + (ModelViewProj[2].z * r0.z) + (ModelViewProj[2].w * r0.w)
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);			//		(ModelViewProj[3].x * r0.x) + (ModelViewProj[3].y * r0.y) + (ModelViewProj[3].z * r0.z) + (ModelViewProj[3].w * r0.w)
+    r0.xyz = (IN.position * (0.01 * InstanceData[0 + offset.w].w)) + InstanceData[0 + offset.w];
+    r2.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
+    r2.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
+    r2.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r0.w = length(EyePos.xyz - (InstanceData[0 + offset.w]));
     r1.xyzw = frac(InstanceData[0 + offset.w]);
     OUT.texcoord_4.xyz = (DiffuseColor.rgb * (r1.w * (dot(DiffuseDir.xyz, 2 * (r1.xyz - 0.5)) * IN.color_0.rgb))) + AmbientColor.rgb;	// [0,1] to [-1,+1]
     OUT.position.xyz = r2.xyz;
-    OUT.color_0.a = 1 - saturate((FogParam.x - length(r2.xyz))) / FogParam.y));		// exp fog	1.0 - min(max((off - r0) * (1 / div), 0.0), 1.0)
+    OUT.color_0.a = 1 - saturate((FogParam.x - length(r2.xyz)) / FogParam.y);
     OUT.texcoord_5.w = ((AlphaParam.x < r0.w ? 1.0 : 0.0) * (saturate(((r0.w - AlphaParam.x) / -AlphaParam.y) + 1) - 1)) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.w = 1;
     OUT.texcoord_5.xyz = 0;
-    OUT.color_0.rgb = FogColor.rgb;			// exp fog
+    OUT.color_0.rgb = FogColor.rgb;
 
     return OUT;
 };

@@ -96,7 +96,7 @@
       r6.x = 2 * r1.w;
       r6.yz = r6.x + const_2.yz;
       r0.xyz = r6.x + const_2.wyz;
-      r6.xyz = (r0 >= 0.0 ? -r6.xyz : r0.xyz);
+      r6.xyz = (r0.xyz >= 0.0 ? -r6.xyz : r0.xyz);
       r0.xyzw = (r6.x <= 0.0 ? r9.y : LightData[1].xyzw);
       r0.xyzw = (r6.y <= 0.0 ? r0.xyzw : LightData[2].xyzw);
       r0.xyzw = (r6.z <= 0.0 ? r0.xyzw : LightData[3].xyzw);

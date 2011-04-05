@@ -51,10 +51,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_0 = {1, 1, -1, 0};
 
     float4 r0;
@@ -67,13 +63,12 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyz = r0.xyz * r0.w;
     r4.w = 1.0 / r0.w;
     r0.w = saturate(r0.z);
-    r1.w = 1 - r0.w;
-    r2.w = r1.w * r1.w;
-    r2.w = ((1 - FresnelRI.x) * (r1.w * (r2.w * r2.w))) + FresnelRI.x;
-    r1.xyz = (r0.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
     r0.xyz = pow(abs(saturate(dot(r0.xyz * -const_0.xyz, SunDir.xyz))), VarAmounts.x) * SunColor.rgb;
-    r1.xyz = (r2.w * ((((1 - VarAmounts.y) * (ReflectionColor.rgb - r1.xyz)) + r1.xyz) * VarAmounts.y)) + r1.xyz;
-    r1.xyz = saturate((saturate(SunDir.w) * r0) + r1);
+    r1.w = 1 - r0.w;
+    r1.xyz = (r0.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
+    r2.w = r1.w * r1.w;
+    r2.w = ((r1.w - FresnelRI.x) * (r1.w * (r2.w * r2.w))) + FresnelRI.x;
+    r1.xyz = saturate(saturate(SunDir.w) * r0) + ((r2.w * ((((1 - VarAmounts.y) * (ReflectionColor.rgb - r1.xyz)) + r1.xyz) * VarAmounts.y)) + r1.xyz));
     r0.w = max(VarAmounts.z, r2.w);
     r0.xyz = ((1 - saturate((FogParam.x - r4.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;

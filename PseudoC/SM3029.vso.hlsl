@@ -68,15 +68,15 @@
     r0.w = min(IN.position.y, IN.position.x);
     r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
     r0.z = max(IN.position.y, IN.position.x);
-    r0.z = (r0.z >= -r0.z ? 1.0 : 0.0);
-    r1.x.zw = 765.01001 * IN.blendindices.zy;
+    r0.z = (r0.z == 0 ? 1.0 : 0.0);
+    r1.xyzw = 765.01001 * IN.blendindices.zyxw;
     r2.w = r0.w * r0.z;
     r0.xyzw = frac(r1.xyzw);
     r2.w = (r2.w * -r2.z) + r2.y;
-    r1.x.zw = r1.xy - r0.xy;
+    r1.xyzw = r1.xyzw - r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_3.xxxy) + const_3.yyyx;
     offset.xyzw = r1.xyzw;
-    r1.w = dot(IN.blendweight.xyz, const_2.xyz);.z
+    r1.w = dot(IN.blendweight.xyz, 1);
     r1.x = dot(const_14[offset.y], r0.xyzw);
     r1.y = dot(const_15[offset.y], r0.xyzw);
     r1.z = dot(const_16[offset.y], r0.xyzw);

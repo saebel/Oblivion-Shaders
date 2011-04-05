@@ -57,10 +57,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {1, 765.01001, 0, 0};
 
     float4 offset;
@@ -69,14 +65,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r2;
     float3 r3;
 
-    r1.x.zw = 765.01001 * IN.blendindices.zy;
-    r0.xyzw = frac(r1.xyzw);
-    r0.x.zw = r1.xy - r0.xy;
+    r1.xyzw = 765.01001 * IN.blendindices.zyxw;
+    r0.xyzw = r1.xyzw;
     offset.xyzw = r0.xyzw;
     r0.x = dot(Bones[0 + offset.y], IN.normal.xyz);
     r0.y = dot(Bones[1 + offset.y], IN.normal.xyz);
     r0.z = dot(Bones[2 + offset.y], IN.normal.xyz);
-    r1.w = 1 - dot(IN.blendweight.xyz, const_0.xyz);
     r1.xyz = r0.xyz * IN.blendweight.y;
     r0.x = dot(Bones[0 + offset.x], IN.normal.xyz);
     r0.y = dot(Bones[1 + offset.x], IN.normal.xyz);
@@ -89,7 +83,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(Bones[0 + offset.w], IN.normal.xyz);
     r0.y = dot(Bones[1 + offset.w], IN.normal.xyz);
     r0.z = dot(Bones[2 + offset.w], IN.normal.xyz);
+    r1.w = 1 - dot(IN.blendweight.xyz, 1);
     r0.xyz = (r1.w * r0.xyz) + r1.xyz;
+    OUT.texcoord_5.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    r0.x = dot(Bones[0 + offset.y], IN.binormal.xyz);
+    r0.y = dot(Bones[1 + offset.y], IN.binormal.xyz);
+    r0.z = dot(Bones[2 + offset.y], IN.binormal.xyz);
     r1.x = dot(Bones[0 + offset.y], IN.tangent.xyz);
     r1.y = dot(Bones[1 + offset.y], IN.tangent.xyz);
     r1.z = dot(Bones[2 + offset.y], IN.tangent.xyz);
@@ -104,12 +103,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
     r1.x = dot(Bones[0 + offset.w], IN.tangent.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.tangent.xyz);
-    OUT.texcoord_5.xyz = normalize(r0.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.tangent.xyz);
-    OUT.texcoord_3.xyz = normalize((r1.w * r1.xyz) + r2.xyz);
-    r0.x = dot(Bones[0 + offset.y], IN.binormal.xyz);
-    r0.y = dot(Bones[1 + offset.y], IN.binormal.xyz);
-    r0.z = dot(Bones[2 + offset.y], IN.binormal.xyz);
+    r2.xyz = (r1.w * r1.xyz) + r2.xyz;
     r1.xyz = r0.xyz * IN.blendweight.y;
     r0.x = dot(Bones[0 + offset.x], IN.binormal.xyz);
     r0.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
@@ -118,12 +113,13 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(Bones[0 + offset.z], IN.binormal.xyz);
     r0.y = dot(Bones[1 + offset.z], IN.binormal.xyz);
     r0.z = dot(Bones[2 + offset.z], IN.binormal.xyz);
+    OUT.texcoord_3.xyz = r2.xyz * (1.0 / length(r2.xyz));
     r2.xyz = (IN.blendweight.z * r0.xyz) + r1.xyz;
+    r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.x = dot(Bones[0 + offset.w], IN.binormal.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.binormal.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.binormal.xyz);
-    OUT.texcoord_4.xyz = normalize((r1.w * r1.xyz) + r2.xyz);
-    r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
+    r2.xyz = (r1.w * r1.xyz) + r2.xyz;
     r1.x = dot(Bones[0 + offset.y], r0.xyzw);
     r1.y = dot(Bones[1 + offset.y], r0.xyzw);
     r1.z = dot(Bones[2 + offset.y], r0.xyzw);
@@ -139,13 +135,14 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], r0.xyzw);
     r1.y = dot(Bones[1 + offset.w], r0.xyzw);
     r1.z = dot(Bones[2 + offset.w], r0.xyzw);
-    r0.xyz = (r1.w * r1.xyz) + r3.xyz;
     r0.w = 1;
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_6.xyz = r0.xyz;
+    r0.xyz = (r1.w * r1.xyz) + r3.xyz;
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
+    OUT.texcoord_4.xyz = r2.xyz * (1.0 / length(r2.xyz));
+    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
+    OUT.texcoord_6.xyz = r0.xyz;
     OUT.position.xyz = r1.xyz;
     OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y)) * FogParam.z;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

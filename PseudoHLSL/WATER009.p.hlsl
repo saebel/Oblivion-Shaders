@@ -61,10 +61,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_2 = {-0.5, 0.1, 0, 0};
     const float4 const_3 = {2, -1, 0, -(1.0 / 8192)};
 
@@ -77,36 +73,37 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r6;
 
     r0.xyzw = tex2D(DisplacementMap, IN.texcoord_6.xy);
-    r2.w = sqrt(dot(IN.texcoord_6.xy - 0.5, r1.xy) + 0);
+    r1.xy = EyePos.xy - IN.texcoord_1.xy;
+    r0.w = dot(r1.xy, r1.xy) + 0;
     r1.xyz = (2 * r0.xyz) - 1;
+    r3.w = saturate((sqrt(r0.w) / -8192) + 1);
     r4.x = IN.texcoord_7.z + Scroll.x;
     r4.y = IN.texcoord_7.w + Scroll.y;
     r0.xyzw = tex2D(NormalMap, r4.xy);
     r0.xyz = (2 * r0.xyz) - 1;
-    r3.w = saturate(length(EyePos.xy - IN.texcoord_1.xy) / -8192) + 1;
     r0.xy = (r3.w * r3.w) * r0.xy;
-    r2.xyz = lerp(r1.xyz, r0.xyz, (1 - saturate(max(0.1, (2 * r2.w) / BlendRadius.x))) * BlendRadius.y);
+    r2.w = length(IN.texcoord_6.xy - 0.5);
+    r2.xyz = lerp(r1.xyz, r0.xyz, (-(saturate(max(0.1, (2 * r2.w) / BlendRadius.x)) - 1)) * BlendRadius.y);
     r0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
-    r1.xyz = normalize(r2.xyz);
     r1.w = 1.0 / length(r0.xyz);
     r0.xyz = r0.xyz * r1.w;
+    r1.xyz = normalize(r2.xyz);
     r2.x = dot(r0.xyz, r1.xyz);
     r0.w = 2 * r2.x;
-    r3.xy = const_3.xy;
-    r4.w = r3.w * VarAmounts.w;
     r6.w = saturate(r2.x);
     r2.xy = (0.1 * r1.xy) + r4.xy;
     r5.w = 1.0 / r1.w;
     r1.xyzw = texCUBE(ReflectionMap, (-r0.w * r1.xyz) + r0.xyz);			// partial precision
     r0.xyzw = tex2D(DetailMap, r2.xy);
-    r0.w = 1 - r6.w;
+    r0.w = -(r6.w - 1);
     r1.w = r0.w * r0.w;
-    r1.xyz = ((r1.xyz * (ReflectionColor.rgb - r3.y)) * ReflectionColor.rgb) * VarAmounts.y;
-    r2.xyz = (r6.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
+    r3.xy = const_3.xy;
+    r4.w = r3.w * VarAmounts.w;
     r3.w = ((FresnelRI.x - r3.y) * (r0.w * (r1.w * r1.w))) + FresnelRI.x;
-    r1.xyz = lerp(r0.xyz, saturate((r3.w * r1) + r2), r4.w);
-    r0.xyz = ((1 - saturate((FogParam.x - r5.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     r0.w = (((r3.x * -r2.w) + BlendRadius.x) >= 0.0 ? 0 : max(VarAmounts.z, r3.w));
+    r1.xyz = ((r1.xyz * (ReflectionColor.rgb - r3.y)) * ReflectionColor.rgb) * VarAmounts.y;
+    r1.xyz = lerp(r0.xyz, saturate(r3.w * r1) + ((r6.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb)), r4.w);
+    r0.xyz = ((1 - saturate((FogParam.x - r5.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

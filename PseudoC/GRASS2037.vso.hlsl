@@ -66,7 +66,7 @@
     r0.w = (r0.w * (1.0 / (PI * 2))) + 0.5;
     r2.w = min(r1.w, 1);
     r0.w = frac(r0.w);
-    r1.w = (r0.w * PI * 2) + -PI;
+    r1.w = (r0.w * PI * 2) - PI;
     r1.xy = EyeVector.xy * EyeVector.xy;
     r0.y = sin(r1.w);
     r0.w = r1.y + r1.x;

@@ -20,7 +20,10 @@ row_major float4x4 ObjToCubeSpace;
 //   ModelViewProj[1]  const_1        1
 //   ModelViewProj[2]  const_2        1
 //   ModelViewProj[3]  const_3        1
-//   ObjToCubeSpace const_8       4
+//   ObjToCubeSpace[0] const_8        1
+//   ObjToCubeSpace[1] const_9        1
+//   ObjToCubeSpace[2] const_10        1
+//   ObjToCubeSpace[3] const_11        1
 //   LightPosition[0]  const_16       1
 //   FogParam       const_23      1
 //
@@ -48,10 +51,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_4 = {0, 1, 0, 0};
 
     float3 r0;
@@ -60,10 +59,10 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = dot(ObjToCubeSpace.xyzw, IN.position.xyzw);
-    OUT.texcoord_1.y = dot(const_9.xyzw, IN.position.xyzw);
-    OUT.texcoord_1.z = dot(const_10.xyzw, IN.position.xyzw);
-    OUT.texcoord_1.w = dot(const_11.xyzw, IN.position.xyzw);
+    OUT.texcoord_1.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
+    OUT.texcoord_1.w = dot(ObjToCubeSpace[3].xyzw, IN.position.xyzw);
     OUT.position.xyz = r0.xyz;
     OUT.texcoord_3.w = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

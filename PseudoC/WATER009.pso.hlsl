@@ -106,7 +106,7 @@
     r0.w = max(VarAmounts.z, r3.w);
     r2.xyz = (r6.w * r2.xyz) + DeepColor.rgb;			// partial precision
     r1.w = FogParam.x - r5.w;
-    r2.xyz = saturate((r3.w * r1) + r2);
+    r2.xyz = saturate((r3.w * r1)) + r2.xyz);
     r3.w = 1.0 / FogParam.y;
     r1.xyz = lerp(r0.xyz, r2.xyz, r4.w);
     r1.w = saturate(r1.w * r3.w);

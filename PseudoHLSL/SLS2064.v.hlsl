@@ -51,22 +51,16 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
-    const float4 const_4 = {0.001953125, 0, 1, 0};
+    const float4 const_4 = {(1.0 / 512), 0, 1, 0};
 
     float2 r0;
 
-    r0.xy = ShadowProjTransform.zw - IN.position.xy;
-    r0.xy = r0.xy * r0.xy;
+    r0.xy = (IN.texcoord_0 / 512) + ShadowProjTransform.xy;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.w = 1 - saturate((ShadowProjData.x - sqrt(r0.y + r0.x)) / ShadowProjData.y);
-    r0.xy = (IN.texcoord_0 * 0.001953125) + ShadowProjTransform.xy;
+    OUT.texcoord_2.w = 1 - saturate((ShadowProjData.x - length(ShadowProjTransform.zw - IN.position.xy)) / ShadowProjData.y);
     OUT.texcoord_0.xy = r0.xy;
     OUT.texcoord_1.xy = r0.xy;
     OUT.texcoord_2.xyz = 1;

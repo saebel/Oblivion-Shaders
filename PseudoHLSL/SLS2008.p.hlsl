@@ -53,10 +53,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {-0.5, 0.5, -1, 1};
     const int4 const_3 = {0, 0, 0, 0};
 
@@ -73,13 +69,13 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.y = IN.texcoord_7.w;			// partial precision
     r2.xyzw = tex2D(ShadowMaskMap, r0.xy);			// partial precision
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
+    r0.w = r0.w * AmbientColor.a;			// partial precision
     r1.xyzw = tex2D(GlowMap, IN.texcoord_0.xy);			// partial precision
     r0.xyz = (2 * ((IN.color_0.g * (EmittanceColor.rgb - 0.5)) + 0.5)) * lerp(r1.xyz, r0.xyz, r1.w);			// partial precision	// [0,1] to [-1,+1]
     r3.xyzw = tex2D(ShadowMap, IN.texcoord_7.xy);			// partial precision
     r2.xyz = max((((r2.x * (r3.xyz - 1)) + 1) * r4.xyz) + AmbientColor.rgb, 0);			// partial precision
     r1.xyz = (-r0.xyz * r2.xyz) + IN.color_1.rgb;			// partial precision
     r0.xyz = r2.xyz * r0.xyz;			// partial precision
-    r0.w = r0.w * AmbientColor.a;			// partial precision
     r0.xyz = (Toggles.y <= 0.0 ? ((IN.color_1.a * r1.xyz) + r0.xyz) : r0.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 

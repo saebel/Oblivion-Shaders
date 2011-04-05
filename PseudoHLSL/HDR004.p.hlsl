@@ -11,29 +11,29 @@ sampler2D DestBlend;
 float4 HDRParam;
 sampler2D Src0;
 
-	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
-		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000
-	SetPixelShaderConstantF[1+]                             fUpperLUMClamp=1.4000
-		|1.200000|1.350000|0.500000|1.400000|           fGrassDimmer=1.3000
-	SetPixelShaderConstantF[2+]                             fTreeDimmer=1.2000
-		|0.000000|0.003906|0.000000|0.000000|           fEmissiveHDRMult=2.0000
-	SetPixelShaderConstantF[3+]                             fEyeAdaptSpeed=0.7000
-		|-7.000000|-7.000000|0.000000|0.000000|         fSunlightDimmer=1.3000
-		|-6.000000|-6.000000|0.000000|0.000000|         fSIEmmisiveMult=1.0000
-		|-5.000000|-5.000000|0.000000|0.000000|         fSISpecularMult=1.5000
-		|-4.000000|-4.000000|0.000000|0.000000|         fSkyBrightness=0.5000
-		|-3.000000|-3.000000|0.000000|0.000000|         fSunBrightness=0.0000
-		|-2.000000|-2.000000|0.000000|0.000000|         fBrightScale=1.5000
-		|-1.000000|-1.000000|0.106507|0.000000|         fBrightClamp=1.3500
-		|0.000000|0.000000|0.786986|0.000000|           fBlurRadius=1.0000
-		|1.000000|1.000000|0.106507|0.000000|           iNumBlurpasses=1
-		|2.000000|2.000000|0.000000|0.000000|           iBlendType=2
-		|3.000000|3.000000|0.000000|0.000000|           bDoHighDynamicRange=1
-		|4.000000|4.000000|0.000000|0.000000|
-		|5.000000|5.000000|0.000000|0.000000|
-		|6.000000|6.000000|0.000000|0.000000|
-		|7.000000|7.000000|0.000000|0.000000|
-		|0.000000|0.000000|0.000000|0.000000|
+//	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
+//		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000
+//	SetPixelShaderConstantF[1+]                             fUpperLUMClamp=1.4000
+//		|1.200000|1.350000|0.500000|1.400000|           fGrassDimmer=1.3000
+//	SetPixelShaderConstantF[2+]                             fTreeDimmer=1.2000
+//		|0.000000|0.003906|0.000000|0.000000|           fEmissiveHDRMult=2.0000
+//	SetPixelShaderConstantF[3+]                             fEyeAdaptSpeed=0.7000
+//		|-7.000000|-7.000000|0.000000|0.000000|         fSunlightDimmer=1.3000
+//		|-6.000000|-6.000000|0.000000|0.000000|         fSIEmmisiveMult=1.0000
+//		|-5.000000|-5.000000|0.000000|0.000000|         fSISpecularMult=1.5000
+//		|-4.000000|-4.000000|0.000000|0.000000|         fSkyBrightness=0.5000
+//		|-3.000000|-3.000000|0.000000|0.000000|         fSunBrightness=0.0000
+//		|-2.000000|-2.000000|0.000000|0.000000|         fBrightScale=1.5000
+//		|-1.000000|-1.000000|0.106507|0.000000|         fBrightClamp=1.3500
+//		|0.000000|0.000000|0.786986|0.000000|           fBlurRadius=1.0000
+//		|1.000000|1.000000|0.106507|0.000000|           iNumBlurpasses=1
+//		|2.000000|2.000000|0.000000|0.000000|           iBlendType=2
+//		|3.000000|3.000000|0.000000|0.000000|           bDoHighDynamicRange=1
+//		|4.000000|4.000000|0.000000|0.000000|
+//		|5.000000|5.000000|0.000000|0.000000|
+//		|6.000000|6.000000|0.000000|0.000000|
+//		|7.000000|7.000000|0.000000|0.000000|
+//		|0.000000|0.000000|0.000000|0.000000|
 
 // Registers:
 //
@@ -63,10 +63,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {1, 0.5, 0, 0};
 
     float4 r0;
@@ -75,7 +71,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     r0.xyzw = tex2D(DestBlend, IN.texcoord_1.xy);		// original-surface
     r2.xyzw = tex2D(AvgLum, IN.texcoord_0.xy);		// range-surface
-    r0.w = 1.0 / max(dot(r2.xyz, const_0.xyz), HDRParam.x);		//        1.0 / max(range, fTargetLUM)
+    r0.w = 1.0 / max(dot(r2.xyz, 1), HDRParam.x);		//        1.0 / max(range, fTargetLUM)
     r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);		// blur-surface
     r0.xyz = ((r0.w * HDRParam.x) * r0.xyz) + max(r1.xyz * (r0.w * 0.5), 0);	// fTargetLUM / max(range, fTargetLUM) * (max(blur * 0.5 / max(range, fTargetLUM), 0) + original)
     r0.w = 1;

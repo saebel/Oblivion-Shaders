@@ -52,7 +52,7 @@
     r1.xyzw = (IN.blendindices.zyxw * 765.01001) - r0.xyzw;
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     offset.xyzw = r1.xyzw;
-    r3.x = dot(IN.blendweight.xyz, const_0.xyz);.x
+    r3.x = dot(IN.blendweight.xyz, 1);
     r1.x = dot(Bones[0 + offset.y], r0.xyzw);
     r1.y = dot(Bones[1 + offset.y], r0.xyzw);
     r1.z = dot(Bones[2 + offset.y], r0.xyzw);

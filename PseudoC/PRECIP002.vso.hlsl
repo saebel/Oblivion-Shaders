@@ -46,19 +46,19 @@
     r2.y = 1.0 / r5.y;
     r2.z = 1.0 / r5.z;
     r1.xyz = r1.xyz * r2.xyz;
-    r3.xyz = frac(abs(r1));
-    r2.xyz = (r1 >= -r1 ? 1.0 : 0.0);
-    r1.xyz = lerp(r3.xyz, -r3.xyz, r2);
+    r3.xyz = frac(abs(r1.xyz));
+    r2.xyz = (r1.xyz == 0 ? 1.0 : 0.0);
+    r1.xyz = lerp(r3.xyz, -r3.xyz, r2.xyz);
     r2.xyz = r5.xyz * r1.xyz;
-    r1.xyz = abs(r2) + MinPos;
-    r2.xyz = MaxPos - abs(r2);
-    r0.xyz = (0 < r0 ? 1.0 : 0.0);
-    r4.xyz = lerp(r1.xyz, r2.xyz, r0);
+    r1.xyz = abs(r2.xyz) + MinPos.xyz;
+    r2.xyz = MaxPos.xyz - abs(r2.xyz);
+    r0.xyz = (0 < r0.xyz ? 1.0 : 0.0);
+    r4.xyz = lerp(r1.xyz, r2.xyz, r0.xyz);
     r0.xy = r4.xy - EyePosition.xy;
     r1.xy = r0.xy * r0.xy;
     r0.w = r1.y + r1.x;
     r0.w = 1.0 / sqrt(r0.w);
-    r1.xz = -r0.xyyw * r0.w;
+    r1.xz = -r0.xy * r0.w;
     r1.yw = r1.z * const_4.xy;
     r0.xyz = r1.zxw * const_4.yzz;
     r0.w = (Params.z * Params.x) + IN.texcoord_1.x;
@@ -66,7 +66,7 @@
     r0.w = (r0.w * (1.0 / (PI * 2))) + 0.5;
     r0.w = frac(r0.w);
     r1.y = 1.0 / sqrt(r1.y);
-    r0.w = (r0.w * PI * 2) + -PI;
+    r0.w = (r0.w * PI * 2) - PI;
     r1.xy = r0.xy * r1.y;
     r2.x = cos(r0.w); r2.y = sin(r0.w);
     r3.xyz = r2.xxy * const_4.zxz;
@@ -75,9 +75,9 @@
     r3.z = dot(r2.xyz, IN.position.xyz);
     r3.w = IN.position.y;
     r0.w = r1.x;
-    r3.y = dot(r1.ywz, r3.xyz);.xzww
-    r3.x = dot(r0.wzy, r3.xyz);.xzww
-    r0.xyz = (-0.5 * abs(r5)) + r6;
+    r3.y = dot(r1.ywzw, r3.xzww);
+    r3.x = dot(r0.wzyw, r3.xzww);
+    r0.xyz = (-0.5 * abs(r5.xyz)) + r6.xyz;
     r2.x = 1.0 / abs(r5.x);
     r2.y = 1.0 / abs(r5.y);
     r2.z = 1.0 / abs(r5.z);

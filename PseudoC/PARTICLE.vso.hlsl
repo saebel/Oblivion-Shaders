@@ -76,7 +76,7 @@
     r2.w = r1.w - r1.z;
     r1.w = (r3.w * r5.w) - r1.z;
     r2.w = 1.0 / r2.w;
-    r3.xyz = (fVars1 < r6.w ? 1.0 : 0.0);
+    r3.xyz = (fVars1.xyz < r6.w ? 1.0 : 0.0);
     r1.w = r1.w * r2.w;
     r2.w = lerp(r1.y, r1.x, r1.w);
     r1.w = fVars1.x;
@@ -92,9 +92,9 @@
     r2.w = 1.0 / r2.w;
     r5.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
     r5.w = r1.w * r2.w;
-    r0.x.zw = Color1.xy - r4.zz;
+    r0.xyzw = Color1.rgba - r4.zzzw;
     r1.xyzw = Color1.rgba;
-    r1.x.zw = Color2.xy - r1.xy;
+    r1.xyzw = Color2.rgba - r1.xyzw;
     r0.xyzw = (r3.x * r0.xyzw) + const_13.zzzw;
     r2.xyzw = (r3.x * r1.xyzw) + Color1.rgba;
     r1.xyzw = lerp(Color2.rgba, r0.xyzw, r3.y);

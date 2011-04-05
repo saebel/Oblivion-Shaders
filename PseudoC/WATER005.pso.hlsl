@@ -75,7 +75,7 @@
     r2.w = (r1.w * r2.w) + FresnelRI.x;
     r0.xyz = r0.xyz * VarAmounts.y;
     r1.w = 1.0 / r0.w;
-    r2.xyz = saturate((r2.w * r0) + r1);
+    r2.xyz = saturate((r2.w * r0)) + r1.xyz);
     r0.xyzw = tex2D(DetailMap, r3.xy);
     r0.w = FogParam.x - r1.w;
     r1.w = 1.0 / FogParam.y;

@@ -57,10 +57,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const int4 const_4 = {0, 1, 0, 0};
 
     float4 r0;
@@ -75,18 +71,18 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.z = dot(IN.normal.xyz, r2.xyz);
     r2.xyz = normalize(EyePosition.xyz - IN.position.xyz);
     r0.xyz = normalize((r0.w * r0.xyz) + r2.xyz);
+    r0.w = 1 - saturate((1.0 / r0.w) / LightPosition[0].w);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = normalize(r1.xyz);
+    OUT.texcoord_2.xyz = r1.xyz * (1.0 / length(r1.xyz));
     r1.x = dot(IN.tangent.xyz, r0.xyz);
     r1.y = dot(IN.binormal.xyz, r0.xyz);
     r1.z = dot(IN.normal.xyz, r0.xyz);
     r0.x = dot(IN.tangent.xyz, r2.xyz);
     r0.y = dot(IN.binormal.xyz, r2.xyz);
     r0.z = dot(IN.normal.xyz, r2.xyz);
-    r0.w = 1 - saturate((1.0 / r0.w) / (LightPosition[0].w));
     OUT.texcoord_3.xyz = normalize(r1.xyz);
     OUT.texcoord_1.xyz = normalize(r0.xyz);
     OUT.color_0.a = r0.w * r0.w;

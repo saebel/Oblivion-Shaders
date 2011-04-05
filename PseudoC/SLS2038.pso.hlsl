@@ -55,7 +55,7 @@
     r0.w = (r0.w >= 0.0 ? r2.w : r1.w);			// partial precision
     r1.xyz = r0.w * PSLightColor[0].rgb;			// partial precision
     r0.xyz = saturate(r1.xyz);			// partial precision
-    r0.w = dot(r1.xyz, const_0.xyz);.z			// partial precision
+    r0.w = dot(r1.xyz, 1);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 40 instruction slots used (1 texture, 39 arithmetic)

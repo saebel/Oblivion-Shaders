@@ -22,7 +22,7 @@
     const float4 const_2 = {1, 1, 1, 0.5};
     const float4 const_3 = {0.21, 0.5, 0.78, 0};
     const int4 const_4 = {0, 0, 0, 1};
-    IN.texcoord_0.xyzw = tex2D(Src0, texcoord_0.xy);
+    IN.texcoord_0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r1.xyzw = dot(const_0.xyz, SpellInput.xyz);
     IN.texcoord_0.w = -1 + r1.w;
     IN.texcoord_0.w = IN.texcoord_0.w * IN.texcoord_0.w;

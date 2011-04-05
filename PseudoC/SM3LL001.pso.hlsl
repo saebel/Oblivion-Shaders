@@ -95,7 +95,7 @@
       r5.x = 2 * r2.w;
       r5.yz = r5.x + const_8.xx;
       r1.xyz = r5.x + const_8.zxy;
-      r10.xyz = (r1 >= 0.0 ? -r5.xyz : r1.xyz);
+      r10.xyz = (r1.xyz >= 0.0 ? -r5.xyz : r1.xyz);
       r1.xyzw = (r10.x <= 0.0 ? r3.y : LightData[1].xyzw);
       r1.xyzw = (r10.y <= 0.0 ? r1.xyzw : LightData[2].xyzw);
       r1.xyzw = (r10.z <= 0.0 ? r1.xyzw : LightData[3].xyzw);

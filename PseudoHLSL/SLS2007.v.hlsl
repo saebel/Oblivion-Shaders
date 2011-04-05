@@ -56,10 +56,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {0.5, 0, 1, 0};
 
     float3 r0;
@@ -81,7 +77,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.texcoord_2.z = dot(IN.normal.xyz, r2.xyz);
     OUT.texcoord_4.xyz = (0.5 * (r1.xyz / LightPosition[1].w)) + 0.5;	// [-1,+1] to [0,1]
     OUT.position.xyz = r0.xyz;
-    OUT.color_1.a = 1 - saturate((FogParam.x - length(r0.xyz)) / (FogParam.y));
+    OUT.color_1.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.w = 0.5;
     OUT.color_0.rgba = IN.color_0.rgba;

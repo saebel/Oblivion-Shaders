@@ -87,7 +87,7 @@
     r1.xyz = (r2.w * r1.xyz) + r2.xyz;
     r0.w = saturate(SunDir.w);
     r1.w = 1.0 / r1.w;
-    r2.xyz = saturate((r0.w * r0) + r1);
+    r2.xyz = saturate((r0.w * r0)) + r1.xyz);
     r0.xyzw = tex2D(DetailMap, r3.xy);
     r0.w = FogParam.x - r1.w;
     r1.w = 1.0 / FogParam.y;

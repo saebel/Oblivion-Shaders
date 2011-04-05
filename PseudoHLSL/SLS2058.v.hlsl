@@ -49,21 +49,16 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {1, 765.01001, 0, 0.1};
     const float4 const_7 = {(1.0 / 750), 0.8, 0, 0};
 
     float4 offset;
     float4 r0;
-    float4 r1;
+    float3 r1;
     float3 r2;
 
     offset.xyzw = (IN.blendindices.zyxw * 765.01001) - frac(IN.blendindices.zyxw * 765.01001);
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1.w = 1 - dot(IN.blendweight.xyz, const_0.xyz);
     r1.x = dot(Bones[0 + offset.y], r0.xyzw);
     r1.y = dot(Bones[1 + offset.y], r0.xyzw);
     r1.z = dot(Bones[2 + offset.y], r0.xyzw);
@@ -79,7 +74,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], r0.xyzw);
     r1.y = dot(Bones[1 + offset.w], r0.xyzw);
     r1.z = dot(Bones[2 + offset.w], r0.xyzw);
-    r0.xyz = (r1.w * r1.xyz) + r2.xyz;
+    r0.w = 1;
+    r0.xyz = ((1 - dot(IN.blendweight.xyz, 1)) * r1.xyz) + r2.xyz;
+    OUT.position.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
+    OUT.position.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
+    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
+    r0.y = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
     r1.x = dot(Bones[0 + offset.y], IN.normal.xyz);
     r1.y = dot(Bones[1 + offset.y], IN.normal.xyz);
     r1.z = dot(Bones[2 + offset.y], IN.normal.xyz);
@@ -95,16 +95,11 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], IN.normal.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.normal.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.normal.xyz);
-    r0.w = 1;
     r2.xyz = (r1.w * r1.xyz) + r2.xyz;
-    OUT.position.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.xyz = normalize(r2.xyz);
-    OUT.position.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     r2.x = dot(SkinWorldViewTranspose[0].xyz, r1.xyz);
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
     r2.y = dot(SkinWorldViewTranspose[1].xyz, r1.xyz);
     OUT.texcoord_1.xy = max(min(r2.xy, 0.1), -0.1);
-    r0.y = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
     OUT.position.z = r0.y;
     OUT.texcoord_0.z = max((r0.y / 750) + 0.8, 1);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

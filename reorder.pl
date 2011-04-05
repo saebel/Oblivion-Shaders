@@ -13,8 +13,14 @@ my $body = 0;
 my $step = 0;
 my $type = 0;
 my $parm = 0;
+my $hasPI = 0;
+my $hasSIN = 0;
+my $convPI = 0;		# [0,1] -> [-PI,+PI]
+my $convWV = 0;		# [0,1] -> [-1,+1]
+my $convRN = 0;		# [-1,+1] -> [0,1]
 my $debug_usage = 0;
 my $debug_subst = 0;
+my $debug_sorts = 0;
 
 # first pass (reordering) --------------------------------------------------------
 foreach $line (<STDIN>) {
@@ -39,6 +45,13 @@ foreach $line (<STDIN>) {
 	# this file came from a pixel shader binary
 	if ($line =~ /.pso.dis/) {
 		$type = 1;
+	}
+
+	if ($line =~ /PI/) {
+		$hasPI = 1;
+	}
+	if ($line =~ /SINCOSCONST/) {
+		$hasSIN = 1;
 	}
 
 	# new HLSL -------------------------------------------------------------
@@ -99,7 +112,7 @@ foreach $line (<STDIN>) {
 				$parm = 0;
 			}
 
-			if ($parm) {
+			if ($parm && (($line =~ /;/) || ($line =~ /^\/\/$/))) {
 				$line =~ s/^\/\/ *//s;
 			}
 
@@ -131,6 +144,9 @@ foreach $line (<STDIN>) {
 		if ($line =~ /sampler/) {
 			next;
 		}
+
+		# ps1.0 artifact
+		$line =~ s/^  \+ /    /;
 
 		# loop through all lines preceding the current one and
 		# look if we can move the line somewhere more up
@@ -164,23 +180,23 @@ foreach $line (<STDIN>) {
 				if ($pras =~ m/([a-zINOUT0-9_]+).([a-z]+)/) {
 					# r0.x -> r0|r0.xyzw|r0.yzx|...
 					$pras = "$1.([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
-					$pran = "$1([^.]*)";
+					$pran = "$1([^.])";
 				}
 				else {
 					# r0 -> r0|r0.xyzw
 					$pras = "$pras.([a-z]*)([^a-zINOUT0-9_.]*)";
-					$pran = "$pras([^.]*)";
+					$pran = "$pras([^.])";
 				}
 
 				if ($lias =~ m/([a-zINOUT0-9_]+).([a-z]+)/) {
 					# r0.x -> r0|r0.xyzw|r0.yzx|...
 					$lias = "($1).([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
-					$lian = "$1([^.]*)";
+					$lian = "$1([^.])";
 				}
 				else {
 					# r0 -> r0|r0.xyzw
 					$lias = "$lias.([a-z]*)([^a-zINOUT0-9_.]*)";
-					$lian = "$pras([^.]*)";
+					$lian = "$pras([^.])";
 				}
 
 			#	print "------------------------------------------------------------\n";
@@ -276,7 +292,7 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 	$line = $shader[$lnb];
 
 	if ($debug_subst) {
-		print "-----------------------------------------------------------------\n";
+		print "- pass $pass ----------------------------------------------------------------\n";
 		if (1) {
 			print @shader;
 		}
@@ -301,6 +317,8 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 	@lw = ();
 	@pw = ();
 
+	$up = 0;
+	$uu = 0;
 	$fp = 0;
 	$fu = 0;
 	$i = 0;
@@ -336,11 +354,16 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 			last;
 		}
 
-		# we can look for substituable fragments over conditions
-		# if it occurs once, it occurs once :)
-		if (($prev =~ /if_/)) { $e = 1; }
-		if (($prev =~ /else/)) { $e = 2; }
-		if (($prev =~ /endif/)) { $e = 0; }
+		if (($prev =~ /if_/)) {
+			if ($e == -1) {
+				if ($debug_usage) {
+					print "  bail out for leaving+entering conditional $p ($e $b)\n";
+				}
+
+				$u = 0;
+				last;
+			}
+		}
 
 		if (($prev =~ /else/)) {
 			if ($e == 0) {
@@ -357,16 +380,17 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 
 		if (($prev =~ /endif/)) {
 			if ($e == 0) {
-				if ($debug_usage) {
-					print "  bail out for leaving conditional $p ($e $b)\n";
-				}
-
-				$u = 0;
-				last;
+				$e = -1;
 			}
 
 			$i = $b;
 		}
+
+		# we can look for substituable fragments over conditions
+		# if it occurs once, it occurs once :)
+		if (($prev =~ /if_/)) { $e = 1; }
+		if (($prev =~ /else/)) { $e = 2; }
+		if (($prev =~ /endif/)) { if ($e >= 0) { $e = 0; }}
 
 		if (($prev =~ /endif/) ||
 		    ($prev =~ /else/) ||
@@ -409,7 +433,7 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 			$pras = "$1.([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
 			$pra1 = "($1).([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
 			$pra2 = "($1).([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
-			$pran = "$1([^.]*)";
+			$pran = "$1([^.])";
 		}
 		else {
 			# r0 -> r0|r0.xyzw
@@ -417,7 +441,7 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 			$pras = "$pras.([a-z]*)([^a-zINOUT0-9_.]*)";
 			$pra1 = "$pras.([a-z]*)([^a-zINOUT0-9_.]*)";
 			$pra2 = "$pras.([a-z]*)([^a-zINOUT0-9_.]*)";
-			$pran = "$pras([^.]*)";
+			$pran = "$pras([^.])";
 		}
 
 		if ($lias =~ m/([a-zINOUT0-9_]+).([a-z]+)/) {
@@ -431,7 +455,7 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 			$lias = "($1).([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
 			$lia1 = "($1).([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
 			$lia2 = "($1).([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
-			$lian = "$1([^.]*)";
+			$lian = "$1([^.])";
 		}
 		else {
 			$liax = "$lias";
@@ -439,7 +463,7 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 			$lias = "$lias.([a-z]*)([^a-zINOUT0-9_.]*)";
 			$lia1 = "$lias.([a-z]*)([^a-zINOUT0-9_.]*)";
 			$lia2 = "$lias.([a-z]*)([^a-zINOUT0-9_.]*)";
-			$lian = "$lias([^.]*)";
+			$lian = "$lias([^.])";
 
 #			print "fault: ";
 #			print $lias;
@@ -489,6 +513,9 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 			}
 
 			$u = $u + $us;
+
+			$up = $p;
+			$uu = $u;
 
 			# count just 1e per line
 		#	$u++;
@@ -574,19 +601,35 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 			}
 
 			if ($debug_usage) {
-				print "  bail out for read invalidation $p ($e $b)\n";
+				print "  note barrier for read invalidation $p ($e $b)\n";
 			}
 
 			if (!$fp) {
 				$fp = $p;
-			#	$fu = $u;
+				$fu = $u;
 			}
 		}
+	}
+
+	if ($up) {
+		$p = $up;
+	#	$u = $uu;
 	}
 
 	if ($fp) {
 		$p = $fp;
 	#	$u = $fu;
+
+		# we got a reorder-barrier, if there are no additional utilization after it
+		# we can substitute (uses-before barrier == overall-uses)
+		# otherwise not
+		if ($fu != $uu) {
+			if ($debug_usage) {
+				print "  barrier passed $fu uses in $fp != $uu uses in $up\n";
+			}
+
+			next;
+		}
 	}
 
 # print "check: ";
@@ -685,9 +728,19 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 					}
 				}
 				elsif ($us == 1) {
-					if ($debug_subst) {
-						print " == modified by constant [$us regs]";
-						print "\n";
+					if ($u <= 2) {
+						if ($debug_subst) {
+							print " == modified by constant [$us regs]";
+							print "\n";
+						}
+					}
+					else {
+						if ($debug_subst) {
+							print " == modified by constant [$us regs]";
+							print "\n";
+						}
+
+						$dos = 0;
 					}
 				}
 				else {
@@ -748,117 +801,76 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 					$prevb = $2;
 					$prevc = $3;
 
-					# case "...(r0.w)..."
-					if ($sbst =~ /^([a-z]+)\((.*)\)$/) {
-						$prevb =~ s/$reg.$msk([^a-zINOUT0-9_]+)/$sbst$1/g;
-						$prevb =~ s/$reg.$msk$/$sbst/g;
-					}
-					# case "... = 1.0;"
-					elsif ($sbst =~ /^[e0-9.\-]+$/) {
-						$prevb =~ s/$reg.$msk([^a-zINOUT0-9_]+)/$sbst$1/g;
-						$prevb =~ s/$reg.$msk$/$sbst/g;
-					}
-					# case "... = r0.w;"
-					elsif ($sbst =~ /^[^ ,()]+$/) {
-						$prevb =~ s/$reg.$msk([^a-zINOUT0-9_]+)/$sbst$1/g;
-						$prevb =~ s/$reg.$msk$/$sbst/g;
-					}
-					# case "... = r0.w;"
-					elsif ($prevb =~ /^$reg.$msk$/) {
-						$prevb = $sbst;
-					}
-					# case "offset.w = ...(r0.w)"
-					elsif ($prevb =~ /\($reg.$msk\)/) {
-						$prevb =~ s/\($reg.$msk\)/($sbst)/g;
-					}
-					# case "offset.w = ...(r0.w, ...)"
-					elsif ($prevb =~ /\($reg.$msk,/) {
-						$prevb =~ s/\($reg.$msk,/($sbst,/g;
-					}
-					# case "offset.w = ...(..., r0.w)"
-					elsif ($prevb =~ /, $reg.$msk\)/) {
-						$prevb =~ s/, $reg.$msk\)/, $sbst)/g;
-					}
-			#		# case "offset.w = (... ? ... : r0.w)"
-			#		elsif ($prevb =~ /: $reg.$msk\)/) {
-			#			$prevb =~ s/: $reg.$msk\)/: $sbst)/g;
-			#		}
-			#		# case "offset.w = (... ? r0.w : ...)"
-			#		elsif ($prevb =~ /\? $reg.$msk :/) {
-			#			$prevb =~ s/\? $reg.$msk :/? $sbst :/g;
-			#		}
-					else {
-						$prevb =~ s/$reg.$msk([^a-zINOUT0-9_]+)/($sbst)$1/g;
-						$prevb =~ s/$reg.$msk$/($sbst)/g;
-	#					$prevb =~ s/$reg.$msk/ = $1s$reg.$msk/;
+					# may contain multiple forms multiple times
+					while (--$u >= 0) {
+						# case "...(r0.w)..."
+						if ($sbst =~ /^([a-z]+)\((.*)\)$/) {
+							$prevb =~ s/$reg.$msk([^a-zINOUT0-9_]+)/$sbst$1/g;
+							$prevb =~ s/$reg.$msk$/$sbst/g;
+						}
+						# case "... = 1.0;"
+						elsif ($sbst =~ /^[e0-9.\-]+$/) {
+							$prevb =~ s/$reg.$msk([^a-zINOUT0-9_]+)/$sbst$1/g;
+							$prevb =~ s/$reg.$msk$/$sbst/g;
+						}
+						# case "... = r0.w;"
+						elsif ($sbst =~ /^[^ ,()]+$/) {
+							$prevb =~ s/$reg.$msk([^a-zINOUT0-9_]+)/$sbst$1/g;
+							$prevb =~ s/$reg.$msk$/$sbst/g;
+						}
+						# case "... = r0.w;"
+						elsif ($prevb =~ /^$reg.$msk$/) {
+							$prevb = $sbst;
+						}
+						# case "offset.w = ...(r0.w)"
+						elsif ($prevb =~ /\($reg.$msk\)/) {
+							$prevb =~ s/\($reg.$msk\)/($sbst)/g;
+						}
+						# case "offset.w = ...(r0.w, ...)"
+						elsif ($prevb =~ /\($reg.$msk,/) {
+							$prevb =~ s/\($reg.$msk,/($sbst,/g;
+						}
+						# case "offset.w = ...(..., r0.w)"
+						elsif ($prevb =~ /, $reg.$msk\)/) {
+							$prevb =~ s/, $reg.$msk\)/, $sbst)/g;
+						}
+			#			# case "offset.w = (... ? ... : r0.w)"
+			#			elsif ($prevb =~ /: $reg.$msk\)/g) {
+			#				$prevb =~ s/: $reg.$msk\)/: $sbst)/g;
+			#			}
+			#			# case "offset.w = (... ? r0.w : ...)"
+			#			elsif ($prevb =~ /\? $reg.$msk :/g) {
+			#				$prevb =~ s/\? $reg.$msk :/? $sbst :/g;
+			#			}
+						else {
+							$prevb =~ s/$reg.$msk([^a-zINOUT0-9_]+)/($sbst)$1/g;
+							$prevb =~ s/$reg.$msk$/($sbst)/g;
+	#						$prevb =~ s/$reg.$msk/ = $1s$reg.$msk/;
+						}
 					}
 
 					$prev = $preva . " = " . $prevb . ";" . $prevc;
 					# reunite the fragments
 			   	}
 
+				# simplifications --------------------------------------------------
 				# case "(a + b) * (1 / c)" -> "(a + b) / (c)"
 				$prev =~ s/ = \((.*)\) \* \(1.0 \/ (.*)\);/ = ($1) \/ ($2);/s;
-				# case "r1.w * (1.0 / (PI * 2))" -> "r1.w / (PI * 2)"
-				$prev =~ s/ = (.*) \* \(1.0 \/ (.*)\)/ = $1 \/ $2/s;
-				# case "r1.w * -(1.0 / 8192)" -> "r1.w / -8192"
-				$prev =~ s/ = (.*) \* [-]\(1.0 \/ (.*)\)/ = $1 \/ -$2/s;
 				# case "((r0.w / 17) / 128)" -> "(r0.w / (17 * 128))"
 	#			$prev =~ s/ = (.*) \* \(1.0 \/ (.*)\)/ = $1 \/ $2/s;
 				# case "(1.0 / sqrt(r5.y + r5.x)) * r1.xy"
 				$prev =~ s/ = \(\(1.0 \/ sqrt\((.*)\)\) \* (.*)\) \+ (.*);/ = ($2 \/ sqrt($1)) + $3;/s;
+				# case "(1.0 / length(r5....)) * r1.xy"
+				$prev =~ s/ = \(\(1.0 \/ length\((.*)\)\) \* (.*)\) \+ (.*);/ = ($2 \/ length($1)) + $3;/s;
 
-				# case "1.0 / sqrt(dot(r0.xyzw, r0.xyzw))"
-				$prev =~ s/1.0 \/ sqrt\(dot\((.*), \1\)\)/1.0 \/ length(\1)/s;
-				# case "sqrt(dot(r0.xyzw, r0.xyzw))"
-				$prev =~ s/sqrt\(dot\((.*), \1\)\)/length(\1)/s;
-				# case "sqrt(dot(r0.xy, r0.xy) + 0)" -> "length(r0.xy)"
-				$prev =~ s/sqrt\(dot\((.*), \1\) [+] 0\)/length(\1)/s;
-				# case "r0 / length(r0.xyzw)" -> "normalize(r0)"
-				# case "r2.xyz = r1.xyz / length(r1.xyz);"
-				$prev =~ s/ = (.*) \/ length\(\1\);/ = normalize(\1);/s;
-				# case "(r1.x * r2.y) - (r2.x * r1.y)"
-				$prev =~ s/\((.*)\.x [*] (.*)\.y\) [-] \(\2\.x [*] \1\.y\)/determinant(float2x2(\1.xy, \2.xy))/s;
-
-				# case "min(max(..., 0), 1)" -> "saturations(r0)"
-				$prev =~ s/min\(max\((.*), 0\), 1\)/saturate(\1)/s;
-				$prev =~ s/saturate\(\(([^()]*)\)\)/saturate(\1)/s;
-
-				# case "r0.w = max(-r6.w, r6.w);"
-				$prev =~ s/max\(-([^-]*), \1\)/abs(\1)/s;
-
-				# dot2
-				# r6.xy = r2.xy * r2.xy;
-				# r2.xy = r2.xy / sqrt(r6.y + r6.x);
+				# case "r1.w * (1.0 / (PI * 2))" -> "r1.w / (PI * 2)"
+				$prev =~ s/([^()]*) \* \(1.0 \/ ([^()]*)\)([^()]*)/$1 \/ $2$3/s;
+				# case "r1.w * -(1.0 / 8192)" -> "r1.w / -8192"
+				$prev =~ s/([^()]*) \* [-]\(1.0 \/ ([^()]*)\)([^()]*)/$1 \/ -$2$3/s;
 
 				# case "1.0 / (1.0 / ...)" -> "..."
 				$prev =~ s/\(1.0 \/ \(1.0 \/ (.*)\)\)/\1/s;
 				$prev =~ s/1.0 \/ \(1.0 \/ (.*)\)/\1/s;
-
-				# case "offset.w = IN.texcoord_1.x - frac(IN.texcoord_1.x);"
-				$prev =~ s/ = (.*) - frac\(\1\);/ = \1;/s;
-
-				# case "r1.w * (r1.w * r1.w) * (r1.w * r1.w)"
-				$prev =~ s/(.*) \* \(\(\1 \* \1\) \* \(\1 \* \1\)\)/pow\(\1, 5\)/;
-
-				# case "2 * (r0.xyz - 0.5)"
-				if ($prev =~ /2 [*] \(.* [-] 0.5\)/) {
-					if (!($prev =~ / to /)) {
-						$prev =~ s/$/\t\/\/ [0,1] to [-1,+1]/s;
-					}
-				}
-				# case "(0.5 * r0.xyz) + 0.5"
-				if ($prev =~ /\(0.5 [*] .*\) [+] 0.5/) {
-					if (!($prev =~ / to /)) {
-						$prev =~ s/$/\t\/\/ [-1,+1] to [0,1]/s;
-					}
-				}
-				# case "(r0.xyz * 0.5) + 0.5"
-				if ($prev =~ /\(.* [*] 0.5\) [+] 0.5/) {
-					if (!($prev =~ / to /)) {
-						$prev =~ s/$/\t\/\/ [-1,+1] to [0,1]/s;
-					}
-				}
 
 				# case "- -0.5"
 				$prev =~ s/- -(.*)/+ $1/g;
@@ -870,17 +882,71 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 				# case "-(r3.y + FresnelRI.x)"
 				$prev =~ s/-\(([a-zA-Z0-9_\.]+) [+] ([a-zA-Z0-9_\.]+)\)/$2 - $1/g;
 
-	#			$prev =~ s/ = dot\((.*), $1\)/ = $1/;
-	#			$prev =~ s/ = sqrt..dot.([a-zINOUT0-9_\.]+),$1.../length($1)/s;
+				# intrinsics -------------------------------------------------------
+				# case "1.0 / sqrt(dot(r0.xyzw, r0.xyzw))"
+				$prev =~ s/1.0 \/ sqrt\(dot\((.*), \1\)\)/1.0 \/ length(\1)/s;
+				# case "sqrt(dot(r0.xyzw, r0.xyzw))"
+				$prev =~ s/sqrt\(dot\((.*), \1\)\)/length(\1)/s;
+				# case "sqrt(dot(r0.xy, r0.xy) + 0)" -> "length(r0.xy)"
+				$prev =~ s/sqrt\(dot\((.*), \1\) [+] 0\)/length(\1)/s;
+				# case "r0 / length(r0.xyzw)" -> "normalize(r0)"
+				# case "r2.xyz = r1.xyz / length(r1.xyz);"
+				# case "r0.xyz / length(r0.xyz)"
+				$prev =~ s/\((.*) \/ length\(\1\)\)/normalize(\1)/s;
+				$prev =~ s/(.*) \/ length\(\1\)/normalize(\1)/s;
+				# case "(r1.x * r2.y) - (r2.x * r1.y)"
+				$prev =~ s/\((.*)\.x [*] (.*)\.y\) [-] \(\2\.x [*] \1\.y\)/determinant(float2x2(\1.xy, \2.xy))/s;
 
-				# ----------------------------------------------
-				if ($debug_subst) {
-					if ($tt) {
-						print "$reg.$msk";
-						print " == $prev";
-						print "\n";
+				# -- two-op saturation
+				# case "min(max(..., 0), 1)" -> "saturations(r0)"
+				$prev =~ s/min\(max\((.*), 0\), 1\)/saturate(\1)/s;
+				$prev =~ s/saturate\(\(([^()]*)\)\)/saturate(\1)/s;
+
+				# case "r0.w = max(-r6.w, r6.w);"
+				$prev =~ s/max\(-([^-]*), \1\)/abs(\1)/s;
+				# -- conditional move
+				# case "lerp(r4.xyz, -r4.xyz, r1.xyz == 0 ? 1.0 : 0.0)"
+				$prev =~ s/lerp\((.*), (.*), (.*) 1\.0 : 0\.0\)/(\3 \1 : \2)/s;
+				$prev =~ s/lerp\((.*), (.*), (.*) 0\.0 : 1\.0\)/(\3 \2 : \3)/s;
+
+				# dot2
+				# r6.xy = r2.xy * r2.xy;
+				# r2.xy = r2.xy / sqrt(r6.y + r6.x);
+
+				# case "offset.w = IN.texcoord_1.x - frac(IN.texcoord_1.x);"
+				$prev =~ s/ = (.*) - frac\(\1\);/ = \1;/s;
+
+				# case "r1.w * (r1.w * r1.w) * (r1.w * r1.w)"
+				$prev =~ s/(.*) \* \(\(\1 \* \1\) \* \(\1 \* \1\)\)/pow\(\1, 5\)/;
+
+				# notes ------------------------------------------------------------
+				# case "2 * (r0.xyz - 0.5)"
+				if ($prev =~ /2 [*] \(.* [-] 0\.5\)/) {
+					if (!($prev =~ / to /)) {
+						$prev =~ s/$/\1\t\/\/ [0,1] to [-1,+1]/;
 					}
 				}
+				# case "(0.5 * r0.xyz) + 0.5"
+				if ($prev =~ /\((0\.5) \* (.*)\) [+] \1/) {
+					if (!($prev =~ / to /)) {
+						$prev =~ s/$/\1\t\/\/ [-1,+1] to [0,1]/;
+					}
+				}
+				# case "(r0.xyz * 0.5) + 0.5"
+				if ($prev =~ /\((.*) \* (0\.5)\) [+] \2/) {
+					if (!($prev =~ / to /)) {
+						$prev =~ s/$/\1\t\/\/ [-1,+1] to [0,1]/;
+					}
+				}
+				# case "sqrt(1.0 - (r1.x * r1.x))"
+				if ($prev =~ /sqrt\(1.0 - \((.*) \* \1\)\)/) {
+					if (!($prev =~ /arc/)) {
+						$prev =~ s/$/\t\/\/ arcsin = 1 \/ sqrt(1 - x²)/;
+					}
+				}
+
+	#			$prev =~ s/ = dot\((.*), $1\)/ = $1/;
+	#			$prev =~ s/ = sqrt..dot.([a-zINOUT0-9_\.]+),$1.../length($1)/s;
 
 	#			$shader[$p] = $prev . $cmnt;
 				$shader[$p] = $prev;
@@ -920,7 +986,6 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 	$x = 0;
 
 	while ($p < $s) {
-
 #foreach (@sorted) {
 # up	$line = $_;
 # up
@@ -936,16 +1001,33 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 				$lias = $1;
 				$lhit = $1;
 
+				if ($debug_sorts) {
+					print "compare\n";
+					print "   ";
+					print $line;
+					print "   ";
+					print $prev;
+					print " = ";
+				}
+
 				# we can not trace dependencies across if/else-bocks
 				if (($prev =~ /endif/) ||
 				    ($prev =~ /else/) ||
 				    ($prev =~ /if_/)) {
+					if ($debug_sorts) {
+						print "stopped\n";
+					}
+
 					last;
 				}
 
 				if (($line =~ /endif/) ||
 				    ($line =~ /else/) ||
 				    ($line =~ /if_/)) {
+					if ($debug_sorts) {
+						print "stopped\n";
+					}
+
 					last;
 				}
 
@@ -953,23 +1035,23 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 				if ($pras =~ m/([a-zINOUT0-9_]+).([a-z]+)/) {
 					# r0.x -> r0|r0.xyzw|r0.yzx|...
 					$pras = "$1.([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
-					$pran = "$1([^.]*)";
+					$pran = "$1([^.])";
 				}
 				else {
 					# r0 -> r0|r0.xyzw
 					$pras = "$pras.([a-z]*)([^a-zINOUT0-9_.]*)";
-					$pran = "$pras([^.]*)";
+					$pran = "$pras([^.])";
 				}
 
 				if ($lias =~ m/([a-zINOUT0-9_]+).([a-z]+)/) {
 					# r0.x -> r0|r0.xyzw|r0.yzx|...
 					$lias = "($1).([a-z]*[$2]+[a-z]*)([^a-zINOUT0-9_.]*)";
-					$lian = "$1([^.]*)";
+					$lian = "$1([^.])";
 				}
 				else {
 					# r0 -> r0|r0.xyzw
 					$lias = "$lias.([a-z]*)([^a-zINOUT0-9_.]*)";
-					$lian = "$pras([^.]*)";
+					$lian = "$pras([^.])";
 				}
 
 				# writes to the output-structure can always move around
@@ -977,6 +1059,10 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 					# check for reassignment or dependency (barrier)
 					if (($line =~ /(.*)$pras(.*) = /) || ($line =~ /(.*)$pran(.*) = /) ||
 					    ($line =~ / = (.*)$pras(.*)/) || ($line =~ / = (.*)$pran(.*)/)) {
+						if ($debug_sorts) {
+							print "ended l\n";
+						}
+
 					    	last;
 					}
 				}
@@ -986,6 +1072,11 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 					# check for reassignment or dependency (barrier)
 					if (($prev =~ /(.*)$lias(.*) = /) || ($prev =~ /(.*)$lian(.*) = /) ||
 					    ($prev =~ / = (.*)$lias(.*)/) || ($prev =~ / = (.*)$lian(.*)/)) {
+						if ($debug_sorts) {
+							print $lias . "p\n";
+							print "ended p\n";
+						}
+
 					    	last;
 					}
 				}
@@ -994,24 +1085,48 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 				# that is because the sorting may block substitution, and we shuffle the
 				# code-block a little to get that chance to
 			#	if ($phit gt $lhit) {
-				if ($pass & 1) {
-					# special sort OUT > r0
-					# special sort IN < r0
-					if ((!($prev =~ /^ *OUT/)) && ($line =~ /^ *OUT/)) {
-						$x = $p + 1;
+				# special sort OUT > r0
+				# special sort IN < r0
+				if ((!($prev =~ /^ *OUT/)) && ($line =~ /^ *OUT/)) {
+					if ($debug_sorts) {
+						print "greater\n";
+					}
+
+					$x = $p + 1;
+				#	next;
+				}
+
+				elsif (($pass & 2) || !$pass) {
+					# shuffle
+					if ($line gt $prev) {
+						if ($debug_sorts) {
+							print "less\n";
+						}
+
+						$x = $p;
+						last;
 					#	next;
 					}
-					# sort
-					if ($line gt $prev) {
-						$x = $p + 1;
-					#	next;
+					else {
+						if ($debug_sorts) {
+							print "greater\n";
+						}
 					}
 				}
-				if (($pass & 2) || !$pass) {
-					# shuffle
-					if ($line lt $prev) {
-						$x = $p;
+				else {
+					# sort
+					if ($line gt $prev) {
+						if ($debug_sorts) {
+							print "greater\n";
+						}
+
+						$x = $p + 1;
 					#	next;
+					}
+					else {
+						if ($debug_sorts) {
+							print "less\n";
+						}
 					}
 				}
 
@@ -1091,6 +1206,37 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 #		}}}
 #	}
 
+	# r2.x = 1.0 / abs(r2.x);
+	# r2.y = 1.0 / abs(r2.y);
+	# r2.z = 1.0 / abs(r2.z);
+	#
+	# =>
+	#
+	# r2.xyz = 1.0 / abs(r2.xyz);
+
+	$s = scalar(@shader);
+	while (--$s >= 2) {
+		$line0 = $shader[$s - 0];
+		$line1 = $shader[$s - 1];
+		$line2 = $shader[$s - 2];
+
+		if ($line2 =~ /([][a-zINOUT0-9_]+)\.x = 1\.0 \/ ([a-z]+)\(([][a-zINOUT0-9_]+)\.x\);/) {
+		if ($line1 =~ /($1)\.y = 1\.0 \/ ($2)\(($3)\.y\);/) {
+		if ($line0 =~ /($1)\.z = 1\.0 \/ ($2)\(($3)\.z\);/) {
+			$shader[$s - 0] = "";
+			$shader[$s - 1] = "";
+			$shader[$s - 2] = "    $1.xyz = 1.0 / $2($3.xyz);\n";
+		}}}
+
+		if ($line2 =~ /([][a-zINOUT0-9_]+)\.x = 1\.0 \/ ([][a-zINOUT0-9_]+)\.x;/) {
+		if ($line1 =~ /($1)\.y = 1\.0 \/ ($2)\.y;/) {
+		if ($line0 =~ /($1)\.z = 1\.0 \/ ($2)\.z;/) {
+			$shader[$s - 0] = "";
+			$shader[$s - 1] = "";
+			$shader[$s - 2] = "    $1.xyz = 1.0 / $2.xyz;\n";
+		}}}
+	}
+
 	# r2.x = 1.0 / AlphaParam.y;
 	# r2.y = 1.0 / AlphaParam.w;
 	#
@@ -1113,6 +1259,13 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 	# r6.xy = r2.xy * r2.xy;
 	# r2.xy = r2.xy / sqrt(r6.y + r6.x);
 	#
+	# r1.xy = r0.xy * r0.xy;
+	# r1.xz = -r0.xy / sqrt(r1.y + r1.x);
+	#
+	# r0.xy = r0.xy * r0.xy;
+	# r0.w = r0.y + r0.x;
+	# r0.w = 1.0 / sqrt(r0.w);
+	#
 	# =>
 	#
 	# r2.xy = normalize(r2.xy);
@@ -1124,6 +1277,7 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 
 		if ($line1 =~ /([][a-zINOUT0-9_]+)\.xy = ([][a-zINOUT0-9_]+)\.xy [*] \2\.xy;/) {
 			$a = $1; $b = $2;
+			# simple ones ------------------------------------
 			if ($line0 =~ /($b)\.xy = ($b)\.xy \/ sqrt\(($a)\.y [+] ($a)\.x\);/) {
 				$shader[$s - 0] = "";
 				$shader[$s - 1] = "    $b.xy = normalize($b.xy);\n";
@@ -1131,6 +1285,15 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 			elsif ($line0 =~ /($b)\.xy = \(($b)\.xy \/ sqrt\(($a)\.y [+] ($a)\.x\)\) [+] (.*);/) {
 				$shader[$s - 0] = "";
 				$shader[$s - 1] = "    $b.xy = normalize($b.xy) + $5;\n";
+			}
+			elsif ($line0 =~ /($a)\.xz = -($b)\.xy \/ sqrt\(($a)\.y [+] ($a)\.x\);/) {
+				$shader[$s - 0] = "    $a.xz = normalize($b.xy);\n";
+			#	$shader[$s - 1] = "";
+			}
+			# more complex ones ------------------------------------
+			elsif ($line0 =~ /ShadowProjData\.x - sqrt\(($a)\.y [+] ($a)\.x\)/) {
+				$shader[$s - 1] = "";
+				$shader[$s - 0] =~ s/ShadowProjData\.x - sqrt\(($a)\.y [+] ($a)\.x\)/ShadowProjData\.x - length\($a\.xy\)/;
 			}
 		}
 	}
@@ -1150,6 +1313,20 @@ for ($lnb = $snb - 1; $lnb >= 0; $lnb--) {
 
 # print "$proc -----------------------------------------------------------------\n";
 # print @shader;
+}
+
+$snb = scalar(@shader);
+$lnb = 0;
+for ($lnb = 0; $lnb < $snb; $lnb++) {
+	$line = $shader[$lnb];
+
+	# conds ------------------------------------------------------------
+	$line =~ s/( +)if_ne (.*), (.*)/\n\1if (\2 != \3) {/;
+	$line =~ s/( +)if_lt (.*), (.*)/\n\1if (\2 != \3) {/;
+	$line =~ s/( +)else/\1}\n\1else {/;
+	$line =~ s/endif/}\n/;
+
+	$shader[$lnb] = $line;
 }
 
 # last pass (OUT and r0-9) --------------------------------------------------------
@@ -1205,36 +1382,52 @@ foreach $key (sort keys %_regs) {
 
 $i = 0;
 foreach $key (sort keys %_ins) {
+	$grd = $_ins{$key};
 	$nam = $key;
 	$nam =~ s/IN.//;
 	$nam =~ s/position/position : POSITION/;
 	$nam =~ s/color_([0-9]+)/color_\1 : COLOR\1/;
 	$nam =~ s/texcoord_([0-9]+)/texcoord_\1 : TEXCOORD\1/;
-	$in = "    float" . $_ins{$key} . " " . $nam . ";\n";
 
 	# check against shader-debug info structure (no doubles)
+	$in = "    float" . $grd . " " . $nam . ";\n";
 	if (grep {$_ eq $in} @instrc) {
+		next;
 	}
-	else {
-		$ins[$r++] = $in;
+
+	if ($grd == 1) {
+		$out = "    float " . $nam . ";\n";
+		if (grep {$_ eq $out} @oustrc) {
+			next;
+		}
 	}
+
+	$ins[$r++] = $in;
 }
 
 $o = 0;
 foreach $key (sort keys %_outs) {
+	$grd = $_outs{$key};
 	$nam = $key;
 	$nam =~ s/OUT.//;
 	$nam =~ s/position/position : POSITION/;
 	$nam =~ s/color_([0-9]+)/color_\1 : COLOR\1/;
 	$nam =~ s/texcoord_([0-9]+)/texcoord_\1 : TEXCOORD\1/;
-	$out = "    float" . $_outs{$key} . " " . $nam . ";\n";
 
 	# check against shader-debug info structure (no doubles)
+	$out = "    float" . $grd . " " . $nam . ";\n";
 	if (grep {$_ eq $out} @oustrc) {
+		next;
 	}
-	else {
-		$outs[$r++] = $out;
+
+	if ($grd == 1) {
+		$out = "    float " . $nam . ";\n";
+		if (grep {$_ eq $out} @oustrc) {
+			next;
+		}
 	}
+
+	$outs[$r++] = $out;
 }
 
 # output --------------------------------------------------------
@@ -1283,10 +1476,19 @@ if ($type == 1) {
 	print "\n";
 }
 
-print "#define	PI	3.14159274\n";
-print "#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668\n";
-print "#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5\n";
-print "\n";
+# defs
+if ($hasPI || $hasSIN) {
+	if ($hasPI) {
+		print "#define	PI	3.14159274\n";
+	}
+
+	if ($hasSIN) {
+		print "#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668\n";
+		print "#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5\n";
+	}
+
+	print "\n";
+}
 
 print @consts;
 print "\n";

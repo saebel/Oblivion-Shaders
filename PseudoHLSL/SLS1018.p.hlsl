@@ -48,10 +48,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {-0.5, 2, 0, 0};
 
     float4 r0;
@@ -68,7 +64,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r4.xyz = 2 * (IN.color_1.rgb - 0.5);	// [0,1] to [-1,+1]
     r4.x = saturate(dot(2 * (r3.xyz - 0.5), r4.xyz));	// [0,1] to [-1,+1]
     r3.xyz = PSLightColor[0].rgb;
-    r3.xyz = saturate((r4.x * r3) + AmbientColor);
+    r3.xyz = saturate((r4.x * r3)) + AmbientColor.rgb);
     r0.xyz = (r0.xyz * r3.xyz) + (((-r0.xyz * r3.xyz) + IN.color_0.rgb) * IN.color_0.a);
     OUT.color_0.rgba = r0.xyzw;
 

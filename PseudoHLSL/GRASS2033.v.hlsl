@@ -91,32 +91,31 @@ VS_OUTPUT main(VS_INPUT IN) {
     float2 r3;
 
     offset.w = IN.texcoord_1.x;
-    r0.xy = const_16.xy;
-    r0.w = r0.x * InstanceData[0 + offset.w].w;
     r1.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
-    r0.x = 2 * (frac(r1.w / 17) - 0.5);	// [0,1] to [-1,+1]
-    r1.xyz = ((r0.w * ScaleMask.xyz) + r0.y) * IN.position.xyz;
-    r0.w = sqrt(1.0 - (r0.x * r0.x));
-    r0.z = 0;
-    r3.y = dot(r0.wxz, r1.xyz);
+    r0.w = frac(r1.w / 17);
+    r0.w = sqrt(1.0 - ((2 * (r0.w - 0.5)) * (2 * (r0.w - 0.5))));	// arcsin = 1 / sqrt(1 - x²)	// [0,1] to [-1,+1]
+    r0.xy = const_16.xy;
+    r1.xyz = (((r0.x * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r0.y) * IN.position.xyz;
     r0.y = -r0.w;
-    r2.y = dot(r0.wxz, IN.normal.xyz);
+    r0.z = 0;
     r3.x = dot(r0.xyz, r1.xyz);
-    r1.xy = (((sin((frac((((r1.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) + -PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r3.xy;
-    r2.x = dot(r0.xyz, IN.normal.xyz);
+    r3.y = dot(r0.wxz, r1.xyz);
+    r1.xy = (((sin((frac((((r1.w / 128) + WindData.w) / ((PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r3.xy;
+    r1.w = IN.position.w;
     r1.xyz = r1.xyz + InstanceData[0 + offset.w];
-    r2.z = IN.normal.z;
-    OUT.texcoord_2.xy = (r1.xy + ShadowProjTransform.xy) / (ShadowProjTransform.w);
+    r2.y = dot(r0.wxz, IN.normal.xyz);
+    r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
+    r2.x = dot(r0.xyz, IN.normal.xyz);
     r0.xy = r1.xy - ShadowProjData.xy;
     r2.w = 1.0 / ShadowProjData.w;
+    OUT.texcoord_2.xy = (r1.xy + ShadowProjTransform.xy) / ShadowProjTransform.w;
     OUT.texcoord_3.x = r0.x * r2.w;
-    OUT.texcoord_3.y = (r0.y * -r2.w) + 1;
-    OUT.texcoord_5.xyz = saturate(dot(DiffuseDir.xyz, r2.xyz)) * ((frac(InstanceData[0 + offset.w].w) * IN.color_0.rgb) * DiffuseColor.rgb) * AddlParams.x;
-    r1.w = IN.position.w;
     r0.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
+    OUT.texcoord_3.y = (r0.y * -r2.w) + 1;
     r0.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, r1.xyzw);
-    r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
+    r2.z = IN.normal.z;
+    OUT.texcoord_5.xyz = saturate(dot(DiffuseDir.xyz, r2.xyz)) * ((frac(InstanceData[0 + offset.w].w) * IN.color_0.rgb) * DiffuseColor.rgb) * AddlParams.x;
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.position.xyzw = r0.xyzw;
     r0.xy = saturate((length(r0.xyzw) - AlphaParam.xz) / AlphaParam.yw);

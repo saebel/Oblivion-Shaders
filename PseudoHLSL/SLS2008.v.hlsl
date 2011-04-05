@@ -62,10 +62,6 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {1, 765.01001, 0, 0.5};
 
     float4 offset;
@@ -77,8 +73,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r5;
     float3 r6;
 
-    r1.xyzw = (IN.blendindices.zyxw * 765.01001) - frac(IN.blendindices.zyxw * 765.01001);
-    offset.xyzw = r1.xyzw;
+    offset.xyzw = (IN.blendindices.zyxw * 765.01001) - frac(IN.blendindices.zyxw * 765.01001);
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.x = dot(Bones[0 + offset.y], r0.xyzw);
     r1.y = dot(Bones[1 + offset.y], r0.xyzw);
@@ -94,10 +89,10 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.x = dot(Bones[0 + offset.w], r0.xyzw);
     r3.y = dot(Bones[1 + offset.w], r0.xyzw);
     r3.z = dot(Bones[2 + offset.w], r0.xyzw);
+    r0.w = 1;
     r0.x = dot(Bones[0 + offset.y], IN.tangent.xyz);
     r0.y = dot(Bones[1 + offset.y], IN.tangent.xyz);
     r0.z = dot(Bones[2 + offset.y], IN.tangent.xyz);
-    r1.w = 1 - dot(IN.blendweight.xyz, const_0.xyz);
     r4.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
     r1.xyz = r0.xyz * IN.blendweight.y;
     r0.x = dot(Bones[0 + offset.x], IN.tangent.xyz);
@@ -107,13 +102,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(Bones[0 + offset.z], IN.tangent.xyz);
     r0.y = dot(Bones[1 + offset.z], IN.tangent.xyz);
     r0.z = dot(Bones[2 + offset.z], IN.tangent.xyz);
+    r1.w = 1 - dot(IN.blendweight.xyz, 1);
     r2.xyz = (IN.blendweight.z * r0.xyz) + r1.xyz;
+    r0.xyz = (r1.w * r3.xyz) + r4.xyz;
     r1.x = dot(Bones[0 + offset.w], IN.tangent.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.tangent.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.tangent.xyz);
-    r0.xyz = (r1.w * r3.xyz) + r4.xyz;
-    r0.w = 1;
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
     r1.xyz = (r1.w * r1.xyz) + r2.xyz;
     r6.xyz = normalize(r1.xyz);
     r1.x = dot(Bones[0 + offset.y], IN.binormal.xyz);
@@ -151,16 +145,17 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.z = dot(Bones[2 + offset.w], IN.normal.xyz);
     r3.xyz = normalize((r1.w * r2.xyz) + r4.xyz);
     r1.z = dot(r3.xyz, LightDirection[0].xyz);
-    r2.xyz = LightPosition[1].xyz - r0.xyz;
+    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
     OUT.texcoord_1.xyz = normalize(r1.xyz);
+    r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
+    r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
+    r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
+    r2.xyz = LightPosition[1].xyz - r0.xyz;
     r4.xyz = normalize(r2.xyz);
     OUT.texcoord_2.x = dot(r6.xyz, r4.xyz);
     OUT.texcoord_2.y = dot(r5.xyz, r4.xyz);
     OUT.texcoord_2.z = dot(r3.xyz, r4.xyz);
     OUT.texcoord_4.xyz = (0.5 * (r2.xyz / LightPosition[1].w)) + 0.5;	// [-1,+1] to [0,1]
-    r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
-    r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
-    r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
     OUT.position.xyz = r1.xyz;
     OUT.color_1.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

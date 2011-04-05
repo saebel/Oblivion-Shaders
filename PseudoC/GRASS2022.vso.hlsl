@@ -60,7 +60,7 @@
     r3.x = (2 * r1.y) - r0.z;
     r1.x = dot(DiffuseDir.xyz, r0.xyz);
     r0.w = max(r1.x, 0);
-    r1.xyz = abs(r0);
+    r1.xyz = abs(r0.xyz);
     r2.w = min(r0.w, 1);
     r1.xyzw = (r1.yzxz >= r1.xxyy ? 1.0 : 0.0);
     r4.xy = r1.yw * r1.xz;
@@ -68,7 +68,7 @@
     r0.w = -r0.y;
     r3.z = r4.y * r3.z;
     r3.xy = (r4.y * r3.xy) + r0.wx;
-    r1.yz = (r0.xzyw * const_8.xzww) - r3.yz;
+    r1.yz = (r0.xz * const_8.xz) - r3.yz;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r1.x = -r3.x;
     r1.w = r0.w * (1.0 / 17);
@@ -95,7 +95,7 @@
     r3.x = dot(r1.xyz, r3.xyz);
     r0.w = frac(r0.w);
     r1.xyz = r5.xyz * r6.x;
-    r0.w = (r0.w * PI * 2) + -PI;
+    r0.w = (r0.w * PI * 2) - PI;
     r4.xyz = (r3.x * r4.xyz) + r1.xyz;
     r1.y = sin(r0.w);
     r1.w = r1.y * WindData.z;

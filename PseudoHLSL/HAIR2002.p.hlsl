@@ -52,10 +52,6 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_0 = {0.04, -0.02, -0.5, 0};
     const float4 const_3 = {1, 0.5, 0.15, 0};
 
@@ -71,17 +67,16 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyzw = tex2D(NormalMap, r1.xy);
     r4.xyz = normalize(2 * (r0.xyz - 0.5));	// [0,1] to [-1,+1]
     r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    r0.w = r0.w * AmbientColor.a;
     r1.xyzw = tex2D(LayerMap, r1.xy);
-    r5.x = dot(r4.xyz, IN.texcoord_2.xyz);
-    r5.y = dot(r4.xyz, IN.texcoord_3.xyz);
-    r2.xyzw = tex2D(AnisoMap, r5.xy);
-    r4.w = 1 - max(dot(r4.xyz, IN.texcoord_1.xyz), 0);
-    r5.w = r4.w * r4.w;
-    r2.xyz = saturate((saturate((r4.w * r5.w) + max(r5.x, 0)) * PSLightColor[0]) + IN.color_0);
     r3.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
     r3.xyz = (IN.color_1.g * (PSHairTint.rgb - 0.5)) + 0.5;
-    r0.xyz = lerp((((IN.color_0.a * (saturate((r4.w * r5.w) + r2) * PSLightColor[0].rgb)) + AmbientColor.rgb) + IN.color_0.rgb) * (r1.xyz * (2 * r3.xyz)), ((((IN.color_0.a * ((r4.w * r5.w) * PSLightColor[0].rgb)) + ((IN.color_0.a * (max(IN.texcoord_2.z, 0) * PSLightColor[0].rgb)) + IN.color_0.rgb)) + AmbientColor.rgb) * (r0.xyz * r4.xyz)), r1.w);
-    r0.w = r0.w * AmbientColor.a;
+    r4.w = 1 - max(dot(r4.xyz, IN.texcoord_1.xyz), 0);
+    r5.w = r4.w * r4.w;
+    r5.x = dot(r4.xyz, IN.texcoord_2.xyz);
+    r0.xyz = lerp((((IN.color_0.a * (saturate(r4.w * r5.w) + saturate(saturate((r4.w * r5.w) + max(r5.x, 0)) * PSLightColor[0]) + IN.color_0.rgb)) * PSLightColor[0].rgb)) + AmbientColor.rgb) + IN.color_0.rgb) * (r1.xyz * r4.xyz), ((((IN.color_0.a * ((r4.w * r5.w) * PSLightColor[0].rgb)) + ((IN.color_0.a * (max(IN.texcoord_2.z, 0) * PSLightColor[0].rgb)) + IN.color_0.rgb)) + AmbientColor.rgb) * (r0.xyz * (2 * r3.xyz))), r1.w);
+    r5.y = dot(r4.xyz, IN.texcoord_3.xyz);
+    r2.xyzw = tex2D(AnisoMap, r5.xy);
     r0.xyz = (((r1.z <= 0.0 ? 1 : 0) * ((r1.x <= 0.0 ? 1 : 0) * (r1.y <= 0.0 ? 1 : 0))) <= 0.0 ? (((r2.w * IN.color_0.a) * (((0.5 * r3.xyz) + 0.15) * (r3.w * PSLightColor[0].rgb))) + r0.xyz) : r0.xyz);
     OUT.color_0.rgba = r0.xyzw;
 

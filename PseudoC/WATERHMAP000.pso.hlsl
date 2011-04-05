@@ -33,14 +33,14 @@
     r1.w = -r1.x * Time.x;
     r2.w = (r2.w * (1.0 / (PI * 2))) + 0.5;
     r2.w = frac(r2.w);
-    r3.w = (r2.w * PI * 2) + -PI;
+    r3.w = (r2.w * PI * 2) - PI;
     r2.x = cos(r3.w); r2.y = sin(r3.w);
     r3.w = r0.y * r2.y;
     r2.w = r0.y * r2.x;
     r1.w = (r1.w * (1.0 / (PI * 2))) + 0.5;
     r1.w = frac(r1.w);
     r2.x = (r0.x * r2.x) - r3.w;
-    r3.w = (r1.w * PI * 2) + -PI;
+    r3.w = (r1.w * PI * 2) - PI;
     r1.x = cos(r3.w); r1.y = sin(r3.w);
     r2.y = (r0.x * r2.y) + r2.w;
     r1.w = r0.w * r1.y;

@@ -17,7 +17,7 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   PSLightColor[0] const_2        1
+//   PSLightColor const_2        1
 //   AlphaTestRef const_3       1
 //   LightData    const_4       1
 //   DiffuseMap   texture_0       1
@@ -119,7 +119,7 @@
     r3.w = (IN.texcoord_1.z >= 0.0 ? 0 : 1);			// partial precision
     r3.w = r2.w * r3.w;
     r2.yz = const_0.yz;
-    r0.xyz = (PSLightColor[0].a * r0.w) + r2.y;			// partial precision
+    r0.xyz = (PSLightColor.a * r0.w) + r2.y;			// partial precision
     r0.w = 1;			// partial precision
     r0.xyzw = (r3.w <= 0.0 ? r0.xyzw : const_13.xyzw);			// partial precision
     r4.w = min(r1.w, r0.w);			// partial precision
@@ -132,7 +132,7 @@
     r7.w = r2.z * LightData.w;			// partial precision
     r7.w = 1.0 / r7.w;			// partial precision
     r2.w = saturate(r2.w * r7.w);			// partial precision
-    r1.xyz = (r6.w * -PSLightColor[0].rgb) + r2.y;			// partial precision
+    r1.xyz = (r6.w * -PSLightColor.rgb) + r2.y;			// partial precision
     r6.w = r2.w * r2.w;			// partial precision
     r1.w = AlphaTestRef.x - r1.w;			// partial precision
     r2.xyz = lerp(1, r1.xyz, r6.w);			// partial precision

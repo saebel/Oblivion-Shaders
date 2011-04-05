@@ -59,7 +59,7 @@
     r0.w = (r0.w * (1.0 / 128)) + r0.x;
     r0.w = (r0.w * (1.0 / (PI * 2))) + 0.5;
     r0.w = frac(r0.w);
-    r1.w = (r0.w * PI * 2) + -PI;
+    r1.w = (r0.w * PI * 2) - PI;
     r0.y = sin(r1.w);
     r1.w = r0.y * WindData.z;
     r0.w = IN.color_0.a * IN.color_0.a;

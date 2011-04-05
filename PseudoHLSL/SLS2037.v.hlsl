@@ -52,29 +52,28 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
-
     const float4 const_4 = {0.1, 0, 0, 0};
 
     float3 r0;
+    float3 r1;
 
-    r0.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
-    r0.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
-    r0.xyz = normalize(EyePosition.xyz - r0.xyz);
+    r0.xyz = IN.binormal.xyz * 0.1;
+    r1.xyz = IN.tangent.xyz * 0.1;
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = dot(IN.tangent.xyz * 0.1, ObjToCubeSpace[0].xyz);
-    OUT.texcoord_1.y = dot(IN.binormal.xyz * 0.1, ObjToCubeSpace[0].xyz);
+    OUT.texcoord_1.x = dot(r1.xyz, ObjToCubeSpace[0].xyz);
+    OUT.texcoord_1.y = dot(r0.xyz, ObjToCubeSpace[0].xyz);
     OUT.texcoord_1.z = dot(IN.normal.xyz, ObjToCubeSpace[0].xyz);
-    OUT.texcoord_2.x = dot(IN.tangent.xyz * 0.1, ObjToCubeSpace[1].xyz);
-    OUT.texcoord_3.x = dot(IN.tangent.xyz * 0.1, ObjToCubeSpace[2].xyz);
-    OUT.texcoord_2.y = dot(IN.binormal.xyz * 0.1, ObjToCubeSpace[1].xyz);
-    OUT.texcoord_3.y = dot(IN.binormal.xyz * 0.1, ObjToCubeSpace[2].xyz);
+    OUT.texcoord_2.x = dot(r1.xyz, ObjToCubeSpace[1].xyz);
+    OUT.texcoord_3.x = dot(r1.xyz, ObjToCubeSpace[2].xyz);
+    OUT.texcoord_2.y = dot(r0.xyz, ObjToCubeSpace[1].xyz);
+    OUT.texcoord_3.y = dot(r0.xyz, ObjToCubeSpace[2].xyz);
+    r0.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
+    r0.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
+    r0.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
+    r0.xyz = normalize(EyePosition.xyz - r0.xyz);
     OUT.texcoord_2.z = dot(IN.normal.xyz, ObjToCubeSpace[1].xyz);
     OUT.texcoord_3.z = dot(IN.normal.xyz, ObjToCubeSpace[2].xyz);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

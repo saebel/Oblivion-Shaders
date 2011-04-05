@@ -86,36 +86,34 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 offset;
     float4 r0;
     float4 r1;
-    float4 r2;
+    float2 r2;
 
     offset.w = IN.texcoord_1.x;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
-    r1.w = (sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) + -PI) * WindData.z) * (IN.color_0.a * IN.color_0.a);
     r0.x = 2 * (frac(r0.w / 17) - 0.5);	// [0,1] to [-1,+1]
-    r0.w = sqrt(1.0 - (r0.x * r0.x));
+    r1.w = (sin((frac((((r0.w / 128) + WindData.w) / ((PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a);
+    r0.w = sqrt(1.0 - (r0.x * r0.x));	// arcsin = 1 / sqrt(1 - x²)
     r0.yz = const_16.yz;
-    r2.w = r0.y * InstanceData[0 + offset.w].w;
+    r1.xyz = (((r0.y * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r0.z) * IN.position.xyz;
     r0.y = -r0.w;
-    r1.xyz = (r2.w * ScaleMask.xyz) + r0.z;
     r0.z = 0;
-    r1.xyz = r1.xyz * IN.position.xyz;
     r2.x = dot(r0.xyz, r1.xyz);
     r2.y = dot(r0.wxz, r1.xyz);
-    r0.z = r1.z;
     r0.xy = (r1.w * WindData.xy) + r2.xy;
+    r0.z = r1.z;
     r1.xyz = r0.xyz + InstanceData[0 + offset.w];
-    OUT.texcoord_2.xy = (r1.xy + ShadowProjTransform.xy) / (ShadowProjTransform.w);
-    r2.xy = r1.xy - ShadowProjData.xy;
+    r0.xyzw = frac(InstanceData[0 + offset.w]);
     r1.w = 1.0 / ShadowProjData.w;
+    r2.xy = r1.xy - ShadowProjData.xy;
+    OUT.texcoord_2.xy = (r1.xy + ShadowProjTransform.xy) / ShadowProjTransform.w;
     OUT.texcoord_3.x = r2.x * r1.w;
     OUT.texcoord_3.y = (r2.y * -r1.w) + 1;
-    r0.xyzw = frac(InstanceData[0 + offset.w]);
-    OUT.texcoord_5.xyz = (((r0.w * IN.color_0.rgb) * saturate(dot(DiffuseDir.xyz, 2 * (r0.xyz - 0.5)))) * DiffuseColor.rgb) * AddlParams.x;	// [0,1] to [-1,+1]
     r1.w = IN.position.w;
+    OUT.texcoord_5.xyz = (((r0.w * IN.color_0.rgb) * saturate(dot(DiffuseDir.xyz, 2 * (r0.xyz - 0.5)))) * DiffuseColor.rgb) * AddlParams.x;	// [0,1] to [-1,+1]
+    r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
     r0.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
     r0.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, r1.xyzw);
-    r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.position.xyzw = r0.xyzw;
     r0.xy = saturate((length(r0.xyzw) - AlphaParam.xz) / AlphaParam.yw);

@@ -44,17 +44,12 @@ struct VS_OUTPUT {
     float2 texcoord_0 : TEXCOORD0;
     float texcoord_2 : TEXCOORD2;
     float4 color_0 : COLOR0;
-    float1 texcoord_2 : TEXCOORD2;
 };
 
 // Code:
 
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
-
-#define	PI	3.14159274
-#define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
-#define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
 
     const float4 ModelViewProj[2] = {(1.0 / 7), 0, 0, 0};
 

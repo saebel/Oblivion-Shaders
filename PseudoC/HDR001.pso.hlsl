@@ -16,7 +16,15 @@
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   BlurScale    const_2       1
-//   BlurOffsets  const_3       9
+//   BlurOffsets[0]  const_3       1
+//   BlurOffsets[1]  const_4       1
+//   BlurOffsets[2]  const_5       1
+//   BlurOffsets[3]  const_6       1
+//   BlurOffsets[4]  const_7       1
+//   BlurOffsets[5]  const_8       1
+//   BlurOffsets[6]  const_9       1
+//   BlurOffsets[7]  const_10      1
+//   BlurOffsets[8]  const_11      1
 //   Src0         texture_0       1
 //
 
@@ -24,54 +32,54 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D Src0;
     r0.z = 2.5;
-    r3.w = r0.z - const_4.x;
+    r3.w = r0.z - BlurOffsets[1].x;
     r0.w = IN.texcoord_0.x * 128;
     r1.w = frac(r0.w);
-    r2.w = r0.z - const_4.y;
+    r2.w = r0.z - BlurOffsets[1].y;
     r0.w = IN.texcoord_0.y * 128;
-    r0.x = (r1.w <= 0.0 ? const_4.x : r3.w);
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[1].x : r3.w);
     r0.w = frac(r0.w);
-    r0.y = (r0.w <= 0.0 ? const_4.y : r2.w);
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[1].y : r2.w);
     r8.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r2.w = r0.z - const_3.x;
-    r0.x = (r1.w <= 0.0 ? const_3.x : r2.w);
-    r2.w = r0.z - const_3.y;
-    r0.y = (r0.w <= 0.0 ? const_3.y : r2.w);
+    r2.w = r0.z - BlurOffsets[0].x;
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[0].x : r2.w);
+    r2.w = r0.z - BlurOffsets[0].y;
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[0].y : r2.w);
     r7.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r2.w = r0.z - const_5.x;
-    r0.x = (r1.w <= 0.0 ? const_5.x : r2.w);
-    r2.w = r0.z - const_5.y;
-    r0.y = (r0.w <= 0.0 ? const_5.y : r2.w);
+    r2.w = r0.z - BlurOffsets[2].x;
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[2].x : r2.w);
+    r2.w = r0.z - BlurOffsets[2].y;
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[2].y : r2.w);
     r6.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r2.w = r0.z - const_6.x;
-    r0.x = (r1.w <= 0.0 ? const_6.x : r2.w);
-    r2.w = r0.z - const_6.y;
-    r0.y = (r0.w <= 0.0 ? const_6.y : r2.w);
+    r2.w = r0.z - BlurOffsets[3].x;
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[3].x : r2.w);
+    r2.w = r0.z - BlurOffsets[3].y;
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[3].y : r2.w);
     r5.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r2.w = r0.z - const_7.x;
-    r0.x = (r1.w <= 0.0 ? const_7.x : r2.w);
-    r2.w = r0.z - const_7.y;
-    r0.y = (r0.w <= 0.0 ? const_7.y : r2.w);
+    r2.w = r0.z - BlurOffsets[4].x;
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[4].x : r2.w);
+    r2.w = r0.z - BlurOffsets[4].y;
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[4].y : r2.w);
     r4.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r2.w = r0.z - const_8.x;
-    r0.x = (r1.w <= 0.0 ? const_8.x : r2.w);
-    r2.w = r0.z - const_8.y;
-    r0.y = (r0.w <= 0.0 ? const_8.y : r2.w);
+    r2.w = r0.z - BlurOffsets[5].x;
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[5].x : r2.w);
+    r2.w = r0.z - BlurOffsets[5].y;
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[5].y : r2.w);
     r3.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r2.w = r0.z - const_9.x;
-    r0.x = (r1.w <= 0.0 ? const_9.x : r2.w);
-    r2.w = r0.z - const_9.y;
-    r0.y = (r0.w <= 0.0 ? const_9.y : r2.w);
+    r2.w = r0.z - BlurOffsets[6].x;
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[6].x : r2.w);
+    r2.w = r0.z - BlurOffsets[6].y;
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[6].y : r2.w);
     r2.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r2.w = r0.z - const_10.x;
-    r0.x = (r1.w <= 0.0 ? const_10.x : r2.w);
-    r2.w = r0.z - const_10.y;
-    r0.y = (r0.w <= 0.0 ? const_10.y : r2.w);
+    r2.w = r0.z - BlurOffsets[7].x;
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[7].x : r2.w);
+    r2.w = r0.z - BlurOffsets[7].y;
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[7].y : r2.w);
     r1.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r2.w = r0.z - const_11.x;
-    r0.x = (r1.w <= 0.0 ? const_11.x : r2.w);
-    r1.w = r0.z - const_11.y;
-    r0.y = (r0.w <= 0.0 ? const_11.y : r1.w);
+    r2.w = r0.z - BlurOffsets[8].x;
+    r0.x = (r1.w <= 0.0 ? BlurOffsets[8].x : r2.w);
+    r1.w = r0.z - BlurOffsets[8].y;
+    r0.y = (r0.w <= 0.0 ? BlurOffsets[8].y : r1.w);
     r0.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
     r8.xyzw = tex2D(Src0, r8.xy);
     r7.xyzw = tex2D(Src0, r7.xy);
@@ -82,15 +90,15 @@
     r2.xyzw = tex2D(Src0, r2.xy);
     r1.xyzw = tex2D(Src0, r1.xy);
     r0.xyzw = tex2D(Src0, r0.xy);
-    r8.xyz = r8.xyz * const_4.z;
-    r7.xyz = (const_3.z * r7.xyz) + r8.xyz;
-    r6.xyz = (const_5.z * r6.xyz) + r7.xyz;
-    r5.xyz = (const_6.z * r5.xyz) + r6.xyz;
-    r4.xyz = (const_7.z * r4.xyz) + r5.xyz;
-    r3.xyz = (const_8.z * r3.xyz) + r4.xyz;
-    r2.xyz = (const_9.z * r2.xyz) + r3.xyz;
-    r1.xyz = (const_10.z * r1.xyz) + r2.xyz;
-    r0.xyz = (const_11.z * r0.xyz) + r1.xyz;
+    r8.xyz = r8.xyz * BlurOffsets[1].z;
+    r7.xyz = (BlurOffsets[0].z * r7.xyz) + r8.xyz;
+    r6.xyz = (BlurOffsets[2].z * r6.xyz) + r7.xyz;
+    r5.xyz = (BlurOffsets[3].z * r5.xyz) + r6.xyz;
+    r4.xyz = (BlurOffsets[4].z * r4.xyz) + r5.xyz;
+    r3.xyz = (BlurOffsets[5].z * r3.xyz) + r4.xyz;
+    r2.xyz = (BlurOffsets[6].z * r2.xyz) + r3.xyz;
+    r1.xyz = (BlurOffsets[7].z * r1.xyz) + r2.xyz;
+    r0.xyz = (BlurOffsets[8].z * r0.xyz) + r1.xyz;
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 
