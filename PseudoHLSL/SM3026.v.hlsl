@@ -57,7 +57,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r1;
     float3 r2;
 
-    offset.xyzw = r1.xyzw - frac(765.01001 * IN.blendindices.zyxw);
+    offset.xyzw = (765.01001 * IN.blendindices.zyxw) - frac(765.01001 * IN.blendindices.zyxw);
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.x = dot(Bones[0 + offset.y], r0.xyzw);
     r1.y = dot(Bones[1 + offset.y], r0.xyzw);
@@ -95,7 +95,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], IN.normal.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.normal.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.normal.xyz);
-    r1.xyz = (r1.w * r1.xyz) + r2.xyz;
+    r1.xyz = ((1 - dot(IN.blendweight.xyz, 1)) * r1.xyz) + r2.xyz;
     r2.xyz = normalize(r1.xyz);
     r1.x = dot(SkinWorldViewTranspose[0].xyz, r2.xyz);
     r1.y = dot(SkinWorldViewTranspose[1].xyz, r2.xyz);

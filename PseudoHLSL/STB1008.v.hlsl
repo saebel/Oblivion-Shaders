@@ -69,14 +69,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
     r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + IN.position.xyzw;
     r1.xyz = LightPosition[0].xyz - r0.xyz;
-    r2.xyz = EyePosition.xyz - r0.xyz;
-    r2.xyz = normalize(r1.xyz) + (r2.xyz * (1.0 / length(r2.xyz)));
-    r2.xyz = r2.xyz * (1.0 / length(r2.xyz));
+    r2.xyz = normalize(normalize(r1.xyz) + normalize(EyePosition.xyz - r0.xyz));
     OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r0.x = dot(IN.tangent.xyz, r2.xyz);
+    r0.x = dot(IN.tangent.xyz, IN.normal.xyz);
     r0.y = dot(IN.binormal.xyz, IN.normal.xyz);
     r0.z = dot(IN.normal.xyz, IN.normal.xyz);
     OUT.texcoord_3.x = dot(IN.tangent.xyz, r2.xyz);

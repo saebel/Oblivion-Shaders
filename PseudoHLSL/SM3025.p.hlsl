@@ -65,7 +65,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
       r0.xyz = r1.xyz * r2.w;			// partial precision
     }
     else {
-      r0.xyz = r1.w;			// partial precision
+      r0.xyz = 0;			// partial precision
       r2.w = 0;			// partial precision
     }
 

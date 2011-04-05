@@ -50,13 +50,13 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.x = IN.texcoord_0.x;
     r3.xy = (fResolution.x * const_1.xy) + IN.texcoord_0.xy;
     r0.y = r3.y;
-    r6.xy = (r0.w * -const_1.xy) + IN.texcoord_0.xy;
     r0.xyzw = tex2D(amplitudeSamp, r0.xy);
     r4.xy = IN.texcoord_0.xy - fResolution.x;
     r1.y = r4.y;
     r2.xyzw = tex2D(amplitudeSamp, IN.texcoord_0.xy + fResolution.x);
     r3.xyzw = tex2D(amplitudeSamp, r3.xy);
     r2.w = abs(r3.x);
+    r6.xy = (fResolution.x * -const_1.xy) + IN.texcoord_0.xy;
     r7.x = r6.x;
     r6.xyzw = tex2D(amplitudeSamp, r6.xy);
     r3.w = abs(r6.x);

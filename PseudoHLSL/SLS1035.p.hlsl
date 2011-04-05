@@ -42,9 +42,11 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
 
     float4 r0;
+    float3 r1;
 
     r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    r0.xyz = r0.xyz * ((IN.color_1.rgb * PSLightColor[1].rgb) + ((IN.color_0.rgb * PSLightColor[0].rgb) + AmbientColor.rgb));
+    r1.xyz = (IN.color_1.rgb * PSLightColor[1].rgb) + ((IN.color_0.rgb * PSLightColor[0].rgb) + AmbientColor.rgb);
+    r0.xyz = r0.xyz * r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

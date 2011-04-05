@@ -58,7 +58,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r3;
     float3 r4;
 
-    r0.xyz = (0 < r0.xyz ? 1.0 : 0.0);
+    r0.xyz = (0 < Velocity.xyz ? 1.0 : 0.0);
     r2.xyz = MaxPos.xyz - MinPos.xyz;
     r1.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / (r2.xyz);
     r4.xyz = frac(abs(r1.xyz));
@@ -68,7 +68,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r4.xyz = lerp(r1.xyz, r3.xyz, r0.xyz);
     r0.xy = r4.xy - EyePosition.xy;
     r1.xy = r0.xy * r0.xy;
-    r1.xz = -r0.xy * (1.0 / sqrt(r1.y + r1.x));
+    r1.xz = normalize(r0.xy);
     r1.yw = r1.z * const_4.xy;
     r0.xyz = r1.zxw * const_4.yzz;
     r1.xy = r0.xy * (1.0 / sqrt(dot(r1.yxw, r0.xyz)));
@@ -78,7 +78,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.y = dot(r1.yzw, IN.position.xyz);
     r3.z = IN.position.z;
     r0.xyz = r4.xyz + r3.xyz;
-    r1.w = 1 - length((1.0 / abs(r2.xyz)) * (((-0.5 * abs(r2.xyz)) + r5.xyz) - r4.xyz));
+    r1.w = 1 - length((((-0.5 * abs(r2.xyz)) + MaxPos.xyz) - r4.xyz) / abs(r2.xyz));
     OUT.position.x = dot(WorldViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);

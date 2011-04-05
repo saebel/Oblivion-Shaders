@@ -63,7 +63,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.xy = IN.texcoord_6.xy + Scroll.xy;
     r0.xyzw = tex2D(NormalMap, r1.xy);
     r0.xyz = (2 * r0.xyz) - 1;
-    r1.w = saturate((length(EyePos.xy - IN.texcoord_1.xy) / -8192) + 1);
+    r1.w = saturate((length(EyePos.xy - IN.texcoord_1.xy) * -(1.0 / 8192)) + 1);
     r0.xy = (r1.w * r1.w) * r0.xy;
     r2.xyz = normalize(r0.xyz);
     r0.xyzw = tex2D(DetailMap, (0.1 * r2.xy) + r1.xy);

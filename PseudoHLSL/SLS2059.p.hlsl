@@ -37,7 +37,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     float3 r0;
 
-    r0.xyz = saturate((1.0 / IN.texcoord_1.w) * IN.texcoord_1.z);			// partial precision
+    r0.xyz = saturate(IN.texcoord_1.z / IN.texcoord_1.w);			// partial precision
     OUT.color_0.rgba = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
 
     return OUT;

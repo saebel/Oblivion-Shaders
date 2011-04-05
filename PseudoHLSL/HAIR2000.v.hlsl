@@ -66,7 +66,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    OUT.texcoord_2.xyz = normalize(r0.xyz);
     r0.xyz = normalize((r0.w * r1.xyz) + LightDirection[0].xyz);
     r2.xyz = r1.xyz * r0.w;
     r1.x = dot(IN.tangent.xyz, r0.xyz);

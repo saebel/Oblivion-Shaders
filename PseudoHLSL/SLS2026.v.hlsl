@@ -157,7 +157,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
     OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_1.xyz = r3.xyz * (1.0 / length(r3.xyz));
+    OUT.texcoord_1.xyz = normalize(r3.xyz);
     r3.xyz = normalize(r1.xyz);
     OUT.texcoord_2.x = dot(r5.xyz, r3.xyz);
     OUT.texcoord_2.y = dot(r4.xyz, r3.xyz);

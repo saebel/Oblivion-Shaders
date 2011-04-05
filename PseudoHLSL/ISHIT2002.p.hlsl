@@ -55,8 +55,9 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r2.xyzw = tex2D(Src0, r1.xy);
     r1.xyzw = tex2D(Src0, r0.xy);
     r0.xyzw = tex2D(Src1, IN.texcoord_1.xy);
-    r0.w = 2 * (((1.0 / doubleVisParams.w) * doubleVisParams.z) * (IN.texcoord_1.x - 0.5));	// [0,1] to [-1,+1]
-    r0.w = min(sqrt((r0.w * r0.w) + ((2 * (IN.texcoord_1.y - 0.5)) * (2 * (IN.texcoord_1.y - 0.5)))) * blurParams.z, 1);	// [0,1] to [-1,+1]
+    r0.w = 2 * ((doubleVisParams.z / doubleVisParams.w) * (IN.texcoord_1.x - 0.5));	// [0,1] to [-1,+1]
+    r0.w = 1.0 / sqrt((r0.w * r0.w) + ((2 * (IN.texcoord_1.y - 0.5)) * (2 * (IN.texcoord_1.y - 0.5))));	// [0,1] to [-1,+1]
+    r0.w = min(blurParams.z / r0.w, 1);
     r0.xyz = r0.xyz * r0.w;
     r1.w = 1 - r0.w;
     r0.w = 1;

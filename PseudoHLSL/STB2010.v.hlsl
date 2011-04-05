@@ -93,7 +93,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     OUT.texcoord_1.xyz = normalize(r3.xyz);
     r3.xyz = LightPosition[1].xyz - r0.xyz;
-    OUT.texcoord_3.xyz = r2.xyz * (1.0 / length(r2.xyz));
+    OUT.texcoord_3.xyz = normalize(r2.xyz);
     r2.xyz = normalize(r3.xyz);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r2.xyz);
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r2.xyz);

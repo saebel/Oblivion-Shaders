@@ -37,7 +37,7 @@
     r0.w = IN.texcoord_7.x - 0.1;			// partial precision
     r0.xyzw = -r0.w;
     r1.xy = IN.texcoord_0.xy * 20;
-    texkill r0
+    clip(r0.xyzw);
     r2.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r1.xyzw = tex2D(ShadowMap, r1.xy);

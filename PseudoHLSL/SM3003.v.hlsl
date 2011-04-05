@@ -86,7 +86,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = dot(Bones[2 + offset.w], IN.normal.xyz);
     r1.w = 1 - dot(IN.blendweight.xyz, 1);
     r0.xyz = (r1.w * r0.xyz) + r1.xyz;
-    OUT.texcoord_5.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    OUT.texcoord_5.xyz = normalize(r0.xyz);
     r0.x = dot(Bones[0 + offset.y], IN.binormal.xyz);
     r0.y = dot(Bones[1 + offset.y], IN.binormal.xyz);
     r0.z = dot(Bones[2 + offset.y], IN.binormal.xyz);
@@ -105,7 +105,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], IN.tangent.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.tangent.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.tangent.xyz);
-    r2.xyz = (r1.w * r1.xyz) + r2.xyz;
+    OUT.texcoord_3.xyz = normalize((r1.w * r1.xyz) + r2.xyz);
     r1.xyz = r0.xyz * IN.blendweight.y;
     r0.x = dot(Bones[0 + offset.x], IN.binormal.xyz);
     r0.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
@@ -114,13 +114,12 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(Bones[0 + offset.z], IN.binormal.xyz);
     r0.y = dot(Bones[1 + offset.z], IN.binormal.xyz);
     r0.z = dot(Bones[2 + offset.z], IN.binormal.xyz);
-    OUT.texcoord_3.xyz = r2.xyz * (1.0 / length(r2.xyz));
     r2.xyz = (IN.blendweight.z * r0.xyz) + r1.xyz;
     r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
     r1.x = dot(Bones[0 + offset.w], IN.binormal.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.binormal.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.binormal.xyz);
-    r2.xyz = (r1.w * r1.xyz) + r2.xyz;
+    OUT.texcoord_4.xyz = normalize((r1.w * r1.xyz) + r2.xyz);
     r1.x = dot(Bones[0 + offset.y], r0.xyzw);
     r1.y = dot(Bones[1 + offset.y], r0.xyzw);
     r1.z = dot(Bones[2 + offset.y], r0.xyzw);
@@ -141,7 +140,6 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
-    OUT.texcoord_4.xyz = r2.xyz * (1.0 / length(r2.xyz));
     OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
     OUT.texcoord_6.xyz = r0.xyz;
     OUT.position.xyz = r1.xyz;

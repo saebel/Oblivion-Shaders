@@ -62,19 +62,22 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 r1;
     float3 r2;
     float3 r3;
+    float3 r4;
     float3 r5;
 
     r0.w = 1;
-    r0.xyz = (0 < r0.xyz ? 1.0 : 0.0);
-    r1.w = (frac((((Params.z * Params.x) + IN.texcoord_1.x) * (1.0 / (PI * 2))) + 0.5) * PI * 2) - PI;
+    r0.xyz = (0 < Velocity.xyz ? 1.0 : 0.0);
+    r1.w = (frac((((Params.z * Params.x) + IN.texcoord_1.x) / (PI * 2)) + 0.5) * PI * 2) - PI;
     r2.xyz = MaxPos.xyz - MinPos.xyz;
     r3.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / (r2.xyz);
     r5.xyz = frac(abs(r3.xyz));
     r3.xyz = r2.xyz * (r3.xyz == 0 ? r5.xyz : -r5.xyz);
     r3.xyz = lerp(abs(r3.xyz) + MinPos.xyz, (MaxPos.xyz - abs(r3.xyz)), r0.xyz);
     r0.x = cos(r1.w); r0.y = sin(r1.w);
-    r0.xyz = r3.xyz + ((dot(r0.yxx * const_6.xyz, IN.position.xyz) * CameraUp.xyz) + ((dot(r0.xxy * const_5.wxw, IN.position.xyz) * normalize((CameraUp.yzx * r5.zxy) - (r5.yzx * CameraUp.zxy))) + (normalize(EyePosition.xyz - r3.xyz) * IN.position.y)));
-    r1.w = 1 - length((1.0 / abs(r2.xyz)) * (((-0.5 * abs(r2.xyz)) + r1.xyz) - r3.xyz));
+    r4.xyz = r0.yxx * const_6.xyz;
+    r0.xyz = (dot(r0.xxy * const_5.wxw, IN.position.xyz) * normalize((CameraUp.yzx * r5.zxy) - (r5.yzx * CameraUp.zxy))) + (normalize(EyePosition.xyz - r3.xyz) * IN.position.y);
+    r0.xyz = r3.xyz + ((dot(r4.xyz, IN.position.xyz) * CameraUp.xyz) + r0.xyz);
+    r1.w = 1 - length((((-0.5 * abs(r2.xyz)) + MaxPos.xyz) - r3.xyz) / abs(r2.xyz));
     OUT.position.x = dot(WorldViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);

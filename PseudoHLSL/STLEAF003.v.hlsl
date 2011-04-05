@@ -91,18 +91,22 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 r5;
 
     offset.x = IN.blendindices.z;
-    r0.w = pow(2.0, (((IN.blendindices.z * r0.w) + RustleParams.y) * 0.499999553) + 0.25);
-    r0.w = ((((r0.w * PI * 2) - PI) * PI * 2) - PI) * ((((r0.w * PI * 2) - PI) * PI * 2) - PI);
+    r0.w = (pow(2.0, (((IN.blendindices.z / 48) + RustleParams.y) * 0.499999553) + 0.25) * PI * 2) - PI;
+    r0.w = r0.w * r0.w;
     r1.w = (pow(2.0, (((IN.blendindices.z / 48) + RockParams.y) * 0.499999553) + 0.25) * PI * 2) - PI;
     r1.w = r1.w * r1.w;
-    r0.xy = (PI * 2 * frac((((((r1.w * ((r1.w * ((r1.w * ((r1.w * ((r1.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24))) - 0.5)) + 1) * RockParams.z) * RockParams.x) * (1.0 / (PI * 2))) + const_82.yz)) - PI;
+    r2.w = (r1.w * ((r1.w * ((r1.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24);
+    r1.xy = (((((r1.w * ((r1.w * r2.w) - 0.5)) + 1) * RockParams.z) * RockParams.x) / (PI * 2)) + const_82.yz;
+    r1.w = (r0.w * ((r0.w * ((r0.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24);
+    r0.w = (r0.w * ((r0.w * r1.w) - 0.5)) + 1;
+    r0.xy = (PI * 2 * frac(r1.xy)) - PI;
     r0.xy = r0.xy * r0.xy;
     r1.xy = (-2.52398507e-007 * r0.xy) + 2.47609005e-005;
     r1.xy = (r1 * r0.xy) - 0.00138883968;
     r1.xy = (r1 * r0.xy) + (1.0 / 24);
     r1.xy = (r1 * r0.xy) - 0.5;
     r1.xw = (r0.yyzx * r1.yyzx) + 1;
-    r2.xy = (PI * 2 * frac((((((r0.w * ((r0.w * ((r0.w * ((r0.w * ((r0.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24))) - 0.5)) + 1) * RustleParams.z) * RustleParams.x) * (1.0 / (PI * 2))) + const_82.yz)) - PI;
+    r2.xy = (PI * 2 * frac((((r0.w * RustleParams.z) * RustleParams.x) / (PI * 2)) + const_82.yz)) - PI;
     r2.xy = r2.xy * r2.xy;
     r0.xy = (-2.52398507e-007 * r2.xy) + 2.47609005e-005;
     r0.xy = (r0 * r2.xy) - 0.00138883968;
@@ -113,7 +117,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.z = 0;
     r4.x = dot(r1.zwx, r0.xyz);
     r5.x = dot(r1.zxy, r0.xyz);
-    r0.xyz = (LeafLighting.y * (r0.xyz * (1.0 / length(r0.xyzw)))) + IN.normal.xyz;
+    r0.xyz = normalize((LeafLighting.y * (r0.xyz / length(r0.xyzw))) + IN.normal.xyz);
     r3.xy = (r3 * r2.xy) - 0.5;
     r3.xw = (r2.yyzx * r3.yyzx) + 1;
     r3.y = -r3.w;
@@ -134,7 +138,6 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.xyzw = (IN.blendindices.x * r1.xyzw) + r2.xyzw;
     r1.xyz = LightPos.xyz - r2.xyz;
     r0.w = 1.0 / length(r1.xyz);
-    r0.xyz = r0.xyz * (1.0 / length(r0.xyz));
     r5.w = saturate(dot(r0.xyz, r1.xyz * r0.w));
     r1.xyzw = (SunDimmer.x * (saturate(dot(r0.xyz, LightVector.xyz)) * DiffColor.rgba)) + AmbientColor.rgba;
     r1.xyz = r1.xyz * pow(2.0, IN.blendindices.z);

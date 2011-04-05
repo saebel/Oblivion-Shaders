@@ -85,6 +85,8 @@ perl  <$1	\
  | perl	\
   -p -e "s/(.*)ShadowProj( *)c28( *)4/\$1ShadowProj[0]\$2c28\$3 1\n\$1ShadowProj[1]\$2c29\$3 1\n\$1ShadowProj[2]\$2c30\$3 1\n\$1ShadowProj[3]\$2c31\$3 1/"	\
  | perl	\
+  -p -e "s/(.*)Bones( *)c14( *)54/\$1Bones[0]\$2c14\$3 18\n\$1Bones[1]\$2c15\$3 18\n\$1Bones[2]\$2c16\$3 18/" 	\
+ | perl	\
   -p -e "s/(.*)Bones( *)c42( *)54/\$1Bones[0]\$2c42\$3 18\n\$1Bones[1]\$2c43\$3 18\n\$1Bones[2]\$2c44\$3 18/" 	\
  | perl	\
   -p -e "s/(.*)Bones( *)c31( *)54/\$1Bones[0]\$2c31\$3 18\n\$1Bones[1]\$2c32\$3 18\n\$1Bones[2]\$2c33\$3 18/" 	\
@@ -175,6 +177,7 @@ perl  <$1	\
 #   ShadowProj          c28      4
 #   Bones               c31     54
 #   Bones               c42     54
+#   Bones               c14     54
 
 # ...
 #   LightData       c4      1

@@ -55,10 +55,10 @@
     r1.xy = const_3.xy;
     r0.xy = (r1.xy * r0.xy) + const_5.xy;
     r0.w = 1.0 / r0.w;			// partial precision
-    r3.xy = saturate((r0.w * 0.01)) + r0.xy);
-    r2.xy = saturate((r0.w * const_4)) + r0.xy);
-    r1.xy = saturate((r0.w * -const_4)) + r0.xy);
-    r0.xy = saturate((r0.w * -0.01)) + r0.xy);
+    r3.xy = saturate((r0.w * 0.01) + r0.xy);
+    r2.xy = saturate((r0.w * const_4) + r0.xy);
+    r1.xy = saturate((r0.w * -const_4) + r0.xy);
+    r0.xy = saturate((r0.w * -0.01) + r0.xy);
     r5.xyzw = tex2D(ShadowMap, r4.xy);
     r4.xyzw = tex2D(ShadowMap, r3.xy);
     r3.xyzw = tex2D(ShadowMap, r2.xy);

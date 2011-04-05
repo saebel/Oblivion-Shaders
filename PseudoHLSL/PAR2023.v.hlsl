@@ -164,7 +164,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.x = dot(r5.xyz, r6.xyz);
     r3.y = dot(r4.xyz, r6.xyz);
     r3.z = dot(r2.xyz, r6.xyz);
-    OUT.texcoord_7.xyz = r3.xyz * (1.0 / length(r3.xyz));
+    OUT.texcoord_7.xyz = normalize(r3.xyz);
     r3.xyz = normalize(r1.xyz);
     OUT.texcoord_2.x = dot(r5.xyz, r3.xyz);
     OUT.texcoord_2.y = dot(r4.xyz, r3.xyz);

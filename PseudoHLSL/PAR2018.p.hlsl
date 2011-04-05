@@ -67,11 +67,12 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r0.x = IN.texcoord_5.z;
     r0.y = IN.texcoord_5.w;
-    r6.xyzw = tex2D(NormalMap, (((r0.w * 0.04) - 0.02) * ((1.0 / length(IN.texcoord_7.xyz)) * IN.texcoord_7.xy)) + IN.texcoord_0.xy);			// partial precision
+    r2.xy = (((r0.w * 0.04) - 0.02) * (IN.texcoord_7.xy / length(IN.texcoord_7.xyz))) + IN.texcoord_0.xy;
     r0.xyzw = tex2D(AttenuationMap, r0.xy);			// partial precision
     r0.w = 1;
     r1.x = IN.texcoord_6.z;
     r1.y = IN.texcoord_6.w;
+    r6.xyzw = tex2D(NormalMap, r2.xy);			// partial precision
     r2.xyzw = tex2D(ShadowMaskMap, r1.xy);			// partial precision
     r1.xyzw = tex2D(AttenuationMap, IN.texcoord_5.xy);			// partial precision
     r3.x = IN.texcoord_4.z;
@@ -80,7 +81,10 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r3.xyzw = tex2D(ShadowMap, IN.texcoord_6.xy);			// partial precision
     r5.xyzw = tex2D(AttenuationMap, IN.texcoord_4.xy);			// partial precision
     r6.xyz = normalize(2 * (r6.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
-    r0.xyz = ((saturate((1 - r1.x) - r0.x) * (saturate(dot(r6.xyz, normalize(IN.texcoord_3.xyz))) * PSLightColor[2].rgb)) + ((((r2.x * (r3.xyz - 1)) + 1) * (saturate(dot(r6.xyz, IN.texcoord_1.xyz)) * PSLightColor[0].rgb)) + saturate((1 - r5.x) - r4.x) * (saturate(dot(r6.xyz, normalize(IN.texcoord_2.xyz))) * PSLightColor[1].rgb))) + AmbientColor.rgb;			// partial precision
+    r4.xyz = saturate((1 - r5.x) - r4.x) * (saturate(dot(r6.xyz, normalize(IN.texcoord_2.xyz))) * PSLightColor[1].rgb);			// partial precision
+    r2.xyz = (((r2.x * (r3.xyz - 1)) + 1) * (saturate(dot(r6.xyz, IN.texcoord_1.xyz)) * PSLightColor[0].rgb)) + r4.xyz;			// partial precision
+    r0.xyz = (saturate((1 - r1.x) - r0.x) * (saturate(dot(r6.xyz, normalize(IN.texcoord_3.xyz))) * PSLightColor[2].rgb)) + r2.xyz;			// partial precision
+    r0.xyz = r0.xyz + AmbientColor.rgb;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

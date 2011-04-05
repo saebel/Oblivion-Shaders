@@ -112,6 +112,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.xyz = (r4.x * r1.xyz) + r2.xyz;
     r5.xyz = normalize(r1.xyz);
     r1.x = 2 * (frac(r0.w / 17) - 0.5);	// [0,1] to [-1,+1]
+    r0.w = (sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a);
     r3.xyz = r1.w * IN.color_0.rgb;
     r1.w = sqrt(1.0 - (r1.x * r1.x));	// arcsin = 1 / sqrt(1 - x²)
     r1.yz = const_16.yz;
@@ -120,7 +121,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.z = 0;
     r4.xyz = (r5.yzx * r0.zxy) - (r0.yzx * r5.zxy);
     r2.xyz = (r6.z * r0.xyz) + ((dot(r1.xyz, r6.xyz) * r4.xyz) + (r5.xyz * dot(r1.wxz, r6.xyz)));
-    r2.xy = (((sin((frac((((r0.w / 128) + WindData.w) / ((PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r2.xy;
+    r2.xy = (r0.w * WindData.xy) + r2.xy;
     r0.w = 1.0 / ShadowProjData.w;
     r0.xyz = (IN.normal.z * r0.xyz) + ((dot(r1.xyz, IN.normal.xyz) * r4.xyz) + (r5.xyz * dot(r1.wxz, IN.normal.xyz)));
     r1.w = IN.position.w;

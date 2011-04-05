@@ -98,9 +98,10 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.xyz = (((r0.x * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r0.y) * IN.position.xyz;
     r0.y = -r0.w;
     r0.z = 0;
+    r1.w = (sin((frac((((r1.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a);
     r3.x = dot(r0.xyz, r1.xyz);
     r3.y = dot(r0.wxz, r1.xyz);
-    r1.xy = (((sin((frac((((r1.w / 128) + WindData.w) / ((PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r3.xy;
+    r1.xy = (r1.w * WindData.xy) + r3.xy;
     r1.w = IN.position.w;
     r1.xyz = r1.xyz + InstanceData[0 + offset.w];
     r2.y = dot(r0.wxz, IN.normal.xyz);
@@ -115,7 +116,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, r1.xyzw);
     r2.z = IN.normal.z;
-    OUT.texcoord_5.xyz = saturate(dot(DiffuseDir.xyz, r2.xyz)) * ((frac(InstanceData[0 + offset.w].w) * IN.color_0.rgb) * DiffuseColor.rgb) * AddlParams.x;
+    r2.xyz = saturate(dot(DiffuseDir.xyz, r2.xyz)) * ((frac(InstanceData[0 + offset.w].w) * IN.color_0.rgb) * DiffuseColor.rgb);
+    OUT.texcoord_5.xyz = r2.xyz * AddlParams.x;
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.position.xyzw = r0.xyzw;
     r0.xy = saturate((length(r0.xyzw) - AlphaParam.xz) / AlphaParam.yw);

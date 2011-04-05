@@ -80,8 +80,10 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.w = 1 - r0.w;
     r2.w = r1.w * r1.w;
     r2.w = r1.w * (r2.w * r2.w);
-    r1.xyz = (saturate(SunDir.w) * (pow(abs(saturate(dot(r1.xyz * -const_0.xyz, SunDir.xyz))), VarAmounts.x) * SunColor.rgb)) + lerp((VarAmounts.y * (r0.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r0.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), ((1 - FresnelRI.x) * (((1 - FresnelRI.x) * r2.w) + FresnelRI.x)) + FresnelRI.x);
-    r0.w = max(VarAmounts.z, r2.w);
+    r1.w = pow(abs(saturate(dot(r1.xyz * -const_0.xyz, SunDir.xyz))), VarAmounts.x);
+    r1.xyz = lerp((VarAmounts.y * (r0.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r0.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), ((1 - FresnelRI.x) * r2.w) + FresnelRI.x);
+    r0.w = max(VarAmounts.z, ((1 - FresnelRI.x) * r2.w) + FresnelRI.x);
+    r1.xyz = (saturate(SunDir.w) * (r1.w * SunColor.rgb)) + r1.xyz;
     r0.xyz = ((1 - saturate((FogParam.x - r4.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 

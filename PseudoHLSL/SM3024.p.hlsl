@@ -64,7 +64,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     }
     else {
       r1.w = 0;			// partial precision
-      r1.xyz = r0.w;			// partial precision
+      r1.xyz = 0;			// partial precision
     }
 
     r0.xyzw = tex2D(DecalMap, (const_10.yw * saturate(IN.texcoord_1.xy)) + const_10.xz);			// partial precision

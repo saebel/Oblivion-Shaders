@@ -56,7 +56,6 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r9;
 
     r4.xy = (const_4.xy * CameraPos.xy) + IN.texcoord_0.xy;
-    r7.xy = (-r0.xy * CameraPos.xy) + IN.texcoord_0.xy;
     r0.x = r4.x;
     r0.y = IN.texcoord_0.y;
     r2.xyzw = tex2D(Src0, r0.xy);
@@ -69,6 +68,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r8.xyzw = tex2D(Src0, r5.xy);
     r5.xyzw = (2 * (tex2D(Src0, r1.xy))) + r8.xyzw;
     r1.xyzw = tex2D(Src1, IN.texcoord_0.xy);
+    r7.xy = (-const_4.xy * CameraPos.xy) + IN.texcoord_0.xy;
     r3.y = r7.y;
     r6.x = IN.texcoord_0.x;
     r9.xyzw = (2 * (tex2D(Src0, r6.xy))) + r8.xyzw;

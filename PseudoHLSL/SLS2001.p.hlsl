@@ -51,13 +51,15 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r0;
     float4 r1;
     float4 r2;
+    float3 r3;
 
     r0.xyzw = 0.1 - IN.texcoord_7.x;
-    texkill r0
+    clip(r0.xyzw);
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r0.w = r0.w * AmbientColor.a;			// partial precision
     r2.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
-    r0.xyz = r0.xyz * max((saturate(dot(normalize(2 * (r2.xyz - 0.5)), IN.texcoord_1.xyz)) * PSLightColor[0].rgb) + AmbientColor.rgb, 0);			// partial precision	// [0,1] to [-1,+1]
+    r3.xyz = (saturate(dot(normalize(2 * (r2.xyz - 0.5)), IN.texcoord_1.xyz)) * PSLightColor[0].rgb) + AmbientColor.rgb;			// partial precision	// [0,1] to [-1,+1]
+    r0.xyz = r0.xyz * max(r3.xyz, 0);			// partial precision
     r1.xyzw = tex2D(ShadowMap, IN.texcoord_0.xy * 20);
     r1.w = (r1.x * 0.5) - -0.5;
     r1.xyz = (-r1.w * r0.xyz) + IN.color_1.rgb;			// partial precision

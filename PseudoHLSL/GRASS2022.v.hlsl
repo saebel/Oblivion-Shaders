@@ -78,6 +78,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 offset;
     float4 r0;
     float4 r1;
+    float3 r2;
     float4 r3;
     float2 r4;
     float3 r5;
@@ -86,7 +87,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.xyzw = frac(InstanceData[0 + offset.w]);
     r1.xyz = r0.xyz - 0.5;
     r0.xyz = 2 * r1.xyz;
-    OUT.texcoord_5.xyz = (((r0.w * IN.color_0.rgb) * saturate(dot(DiffuseDir.xyz, r0.xyz))) * DiffuseColor.rgb) * AddlParams.x;
+    r2.xyz = ((r0.w * IN.color_0.rgb) * saturate(dot(DiffuseDir.xyz, r0.xyz))) * DiffuseColor.rgb;
     r0.w = -r0.y;
     r3.x = (2 * r1.y) - r0.z;
     r1.xyz = abs(r0.xyz);
@@ -109,7 +110,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.z = 0;
     r3.xyz = r3.xyz * IN.position.xyz;
     r0.xyz = (r3.z * r0.xyz) + ((dot(r1.xyz, r3.xyz) * ((r5.yzx * r0.zxy) - (r0.yzx * r5.zxy))) + (r5.xyz * dot(r1.wxz, r3.xyz)));
-    r0.xy = (((sin((frac((((r0.w / 128) + WindData.w) * (1.0 / (PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
+    r0.xy = (((sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
     r1.w = IN.position.w;
     r1.xyz = r0.xyz + InstanceData[0 + offset.w];
     r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
@@ -117,6 +118,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, r1.xyzw);
     r1.xy = saturate((length(r0.xyzw) - AlphaParam.xz) / AlphaParam.yw);
+    OUT.texcoord_5.xyz = r2.xyz * AddlParams.x;
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.position.xyzw = r0.xyzw;
     OUT.texcoord_5.w = r1.x * (1 - r1.y);

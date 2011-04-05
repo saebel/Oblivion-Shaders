@@ -66,7 +66,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_3.xyz = (0.5 * (r0.xyz * (1.0 / length(r0.xyz)))) + 0.5;	// [-1,+1] to [0,1]
+    OUT.texcoord_3.xyz = (0.5 * normalize(r0.xyz)) + 0.5;	// [-1,+1] to [0,1]
     OUT.texcoord_2.xyz = saturate(((1.0 / r0.w) / -LightPosition[0].w) + 1) * IN.color_0.rgb;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xy = IN.texcoord_0.xy;

@@ -131,7 +131,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
     offset.x = r1.y;
     r3.xyz = (r3.w * r3.xyz) + r4.xyz;
-    r4.xyz = r3.xyz * (1.0 / length(r3.xyz));
+    r4.xyz = normalize(r3.xyz);
     r3.x = dot(Bones[0 + offset.x], IN.normal.xyz);
     r3.y = dot(Bones[1 + offset.x], IN.normal.xyz);
     r3.z = dot(Bones[2 + offset.x], IN.normal.xyz);
@@ -146,7 +146,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.z = dot(Bones[2 + offset.x], IN.normal.xyz);
     offset.x = r1.w;
     r0.w = 1;
-    r2.xyz = r2.xyz * (1.0 / length(r2.xyz));
+    r2.xyz = normalize(r2.xyz);
     r2.x = dot(r2.xyz, LightDirection[0].xyz);
     r2.y = dot(r4.xyz, LightDirection[0].xyz);
     r3.xyz = (IN.blendweight.x * r3.xyz) + r5.xyz;
@@ -157,9 +157,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.x = dot(Bones[0 + offset.x], IN.normal.xyz);
     r3.y = dot(Bones[1 + offset.x], IN.normal.xyz);
     r3.z = dot(Bones[2 + offset.x], IN.normal.xyz);
+    r2.z = dot(normalize((r3.w * r3.xyz) + r4.xyz), LightDirection[0].xyz);
     OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
-    r0.xyz = (r3.w * r3.xyz) + r4.xyz;
-    r2.z = dot(r0.xyz * (1.0 / length(r0.xyz)), LightDirection[0].xyz);
     OUT.texcoord_3.xyz = (0.5 * r2.xyz) + 0.5;	// [-1,+1] to [0,1]
     OUT.position.xyz = r1.xyz;
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);

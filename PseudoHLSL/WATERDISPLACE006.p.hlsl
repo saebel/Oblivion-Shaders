@@ -46,7 +46,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r1;
 
     r0.xyzw = tex2D(HeightMap01, IN.texcoord_0.xy);
-    r0.w = (1.0 / fDamp.x) * 0.8;
+    r0.w = 0.8 / fDamp.x;
     r1.xyzw = tex2D(HeightMap02, IN.texcoord_0.xy);
     r1.w = abs(r0.x);
     r0.xyz = (r0.w * r1.w) + (((r0.w * -r1.w) + abs(r1.x)) * BlendAmount.x);

@@ -42,7 +42,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r0;
 
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
-    r0.xyzw = tex2D(BaseMap, (((r0.w * 0.04) - 0.02) * ((1.0 / length(IN.texcoord_6.xyz)) * IN.texcoord_6.xy)) + IN.texcoord_0.xy);			// partial precision
+    r0.xy = (((r0.w * 0.04) - 0.02) * (IN.texcoord_6.xy / length(IN.texcoord_6.xyz))) + IN.texcoord_0.xy;
+    r0.xyzw = tex2D(BaseMap, r0.xy);			// partial precision
     r0.w = 1;
     r0.xyz = (Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision

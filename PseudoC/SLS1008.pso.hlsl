@@ -14,7 +14,7 @@
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   LightColor   const_0       1
+//   LightColor[0]   const_0       1
 //   NormalMap    texture_0       1
 //
 
@@ -31,7 +31,7 @@
     r0.w = r0.x * r0.x;
     r0.w = r0.w * r0.w;
     r2.w = r0.w * r0.w;
-    r2.w = r2.w * LightColor.r;
+    r2.w = r2.w * LightColor[0].r;
     r0.w = r1.w * r0.w;
     r0.xyz = r1.w * r2.w;
     OUT.color_0.rgba = r0.xyzw;

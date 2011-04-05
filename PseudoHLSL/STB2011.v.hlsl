@@ -102,9 +102,9 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r3.z = dot(IN.normal.xyz, LightDirection[0].xyz);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_1.xyz = r3.xyz * (1.0 / length(r3.xyz));
+    OUT.texcoord_1.xyz = normalize(r3.xyz);
     r3.xyz = normalize(r1.xyz);
-    OUT.texcoord_3.xyz = r4.xyz * (1.0 / length(r4.xyz));
+    OUT.texcoord_3.xyz = normalize(r4.xyz);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r3.xyz);
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r3.xyz);
     OUT.texcoord_2.z = dot(IN.normal.xyz, r3.xyz);
@@ -118,7 +118,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.texcoord_4.x = dot(IN.tangent.xyz, r1.xyz);
     OUT.texcoord_4.y = dot(IN.binormal.xyz, r1.xyz);
     OUT.texcoord_4.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.texcoord_7.xy = ((r1.w * ShadowProjTransform.xy) + r2.xy) / ((r1.w * ShadowProjTransform.w));
+    OUT.texcoord_7.xy = ((r1.w * ShadowProjTransform.xy) + r2.xy) / (r1.w * ShadowProjTransform.w);
     r1.w = 1.0 / ShadowProjData.w;
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);

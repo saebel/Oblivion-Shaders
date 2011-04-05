@@ -76,7 +76,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.xyzw = tex2D(GlowMap, IN.texcoord_0.xy);
     r3.xyzw = tex2D(ShadowMap, IN.texcoord_6.xy);			// partial precision
     r5.xyzw = tex2D(AttenuationMap, IN.texcoord_4.xy);			// partial precision
-    r0.xyz = ((((r2.x * (r3.xyz - 1)) + 1) * (saturate(dot(r0.xyz, IN.texcoord_1.xyz)) * PSLightColor[0].rgb)) + (saturate((1 - r5.x) - r4.x) * (saturate(dot(r0.xyz, normalize(IN.texcoord_2.xyz))) * PSLightColor[1].rgb))) + ((r1.xyz * EmittanceColor.rgb) + AmbientColor.rgb);			// partial precision
+    r4.xyz = saturate((1 - r5.x) - r4.x) * (saturate(dot(r0.xyz, normalize(IN.texcoord_2.xyz))) * PSLightColor[1].rgb);			// partial precision
+    r0.xyz = ((((r2.x * (r3.xyz - 1)) + 1) * (saturate(dot(r0.xyz, IN.texcoord_1.xyz)) * PSLightColor[0].rgb)) + r4.xyz) + ((r1.xyz * EmittanceColor.rgb) + AmbientColor.rgb);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

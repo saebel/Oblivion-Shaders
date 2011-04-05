@@ -59,7 +59,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.xyzw = tex2D(FaceGenMap, IN.texcoord_2.xy);
     r2.xyzw = tex2D(FaceGenMap2, IN.texcoord_3.xy);
     r3.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
-    r0.xyz = saturate(saturate(dot(2 * (r3.xyz - 0.5), 2 * (IN.color_0.rgb - 0.5))) * PSLightColor[0]) + AmbientColor.rgb) * (2 * ((2 * r2.xyz) * ((2 * (r1.xyz - 0.5)) + r0.xyz)));	// [0,1] to [-1,+1]
+    r0.xyz = saturate((saturate(dot(2 * (r3.xyz - 0.5), 2 * (IN.color_0.rgb - 0.5))) * PSLightColor[0]) + AmbientColor.rgb) * (2 * ((2 * r2.xyz) * ((2 * (r1.xyz - 0.5)) + r0.xyz)));	// [0,1] to [-1,+1]
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

@@ -113,7 +113,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.z = 0;
     r3.xyz = r3.xyz * IN.position.xyz;
     r0.xyz = (r3.z * r0.xyz) + ((dot(r1.xyz, r3.xyz) * ((r5.yzx * r0.zxy) - (r0.yzx * r5.zxy))) + (r5.xyz * dot(r1.wxz, r3.xyz)));
-    r0.xy = (((sin((frac((((r0.w / 128) + WindData.w) * (1.0 / (PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
+    r0.xy = (((sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
     r1.w = IN.position.w;
     r1.xyz = r0.xyz + InstanceData[0 + offset.w];
     r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);

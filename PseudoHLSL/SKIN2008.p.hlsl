@@ -51,7 +51,6 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r3;
     float4 r4;
     float3 r5;
-    float3 r6;
 
     r0.x = IN.texcoord_4.z;
     r0.y = IN.texcoord_4.w;
@@ -60,15 +59,15 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r5.xyz = normalize(2 * (r4.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
     r0.w = 1 - max(dot(r5.xyz, normalize(IN.texcoord_7.xyz)), 0);			// partial precision
     r0.w = r0.w * (r0.w * r0.w);			// partial precision
-    r4.xyz = r0.w * PSLightColor[0].rgb;			// partial precision
-    r6.xyz = r0.w * PSLightColor[1].rgb;			// partial precision
-    r0.w = 1;			// partial precision
     r1.x = IN.texcoord_5.z;
     r1.y = IN.texcoord_5.w;
     r2.xyzw = tex2D(AttenuationMap, r1.xy);			// partial precision
-    r1.xyzw = tex2D(AttenuationMap, IN.texcoord_4.xy);			// partial precision
     r3.xyzw = tex2D(AttenuationMap, IN.texcoord_5.xy);			// partial precision
-    r0.xyz = (saturate((1 - r1.x) - r0.x) * ((max(dot(r5.xyz, normalize(IN.texcoord_1.xyz)), 0) * PSLightColor[0].rgb) + (r4.xyz * 0.5))) + saturate((1 - r3.x) - r2.x) * ((max(dot(r5.xyz, normalize(IN.texcoord_2.xyz)), 0) * PSLightColor[1].rgb) + (r6.xyz * 0.5));			// partial precision
+    r2.xyz = saturate((1 - r3.x) - r2.x) * ((max(dot(r5.xyz, normalize(IN.texcoord_2.xyz)), 0) * PSLightColor[1].rgb) + ((r0.w * PSLightColor[1].rgb) * 0.5));			// partial precision
+    r4.xyz = r0.w * PSLightColor[0].rgb;			// partial precision
+    r0.w = 1;			// partial precision
+    r1.xyzw = tex2D(AttenuationMap, IN.texcoord_4.xy);			// partial precision
+    r0.xyz = (saturate((1 - r1.x) - r0.x) * ((max(dot(r5.xyz, normalize(IN.texcoord_1.xyz)), 0) * PSLightColor[0].rgb) + (r4.xyz * 0.5))) + r2.xyz;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

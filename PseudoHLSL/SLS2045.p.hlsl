@@ -55,7 +55,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.w = 1;
     r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
     r0.xyz = (r0.xyz * r1.w) * AmbientColor.a;			// partial precision
-    r0.xyz = ((((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz)) * PSLightColor[0].rgb) * IN.texcoord_1.w) * 3;			// partial precision
+    r0.xyz = ((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz) * PSLightColor[0].rgb) * IN.texcoord_1.w;			// partial precision
+    r0.xyz = r0.xyz * 3;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

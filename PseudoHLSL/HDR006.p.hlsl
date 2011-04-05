@@ -72,7 +72,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.w = 1;			// [x,y,z,1]
     r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r2.xyz = lerp(r0.xyz, r1.xyz, 1 - pow(abs(HDRParam.z), TimingData.z));		// lerp(Src0, AvgLum, 1.0 - pow(something))
-    r1.w = max(0.01, length(r2.xyz)));		// max(normalized, 0.01)
+    r1.w = max(0.01, length(r2.xyz));		// max(normalized, 0.01)
     r0.xyz = r2.xyz * (min(r1.w, HDRParam.w) / r1.w);		// (min() / max()) * lerp()
     OUT.color_0.rgba = r0.xyzw;
 

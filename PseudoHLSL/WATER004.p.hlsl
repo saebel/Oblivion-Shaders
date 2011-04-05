@@ -72,7 +72,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r1.w = 1.0 / length(r0.xyz);
     r0.xyz = r0.xyz * r1.w;
-    r2.w = saturate((length(EyePos.xy - IN.texcoord_1.xy) / -8192) + 1);
+    r2.w = saturate(1 - (length(EyePos.xy - IN.texcoord_1.xy) / 8192));
     r2.xy = (r2.w * r2.w) * r2.xy;
     r1.xyz = normalize(r2.xyz);
     r2.x = dot(r0.xyz, r1.xyz);
@@ -85,10 +85,11 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.w = 1 - r5.w;
     r1.w = r0.w * r0.w;
     r3.w = r2.w * VarAmounts.w;
-    r2.w = ((FresnelRI.x - r3.z) * (r0.w * (r1.w * r1.w))) + FresnelRI.x;
+    r2.w = ((1 - FresnelRI.x) * (r0.w * (r1.w * r1.w))) + FresnelRI.x;
     r0.w = max(VarAmounts.z, r2.w);
     r1.xyz = ((r1.xyz * (ReflectionColor.rgb + 1)) * ReflectionColor.rgb) * VarAmounts.y;
-    r1.xyz = lerp(r0.xyz, saturate(r2.w * r1) + ((r5.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb)), r3.w);
+    r2.xyz = saturate(r2.w * r1) + ((r5.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb));
+    r1.xyz = lerp(r0.xyz, r2.xyz, r3.w);
     r0.xyz = ((1 - saturate((FogParam.x - r4.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 

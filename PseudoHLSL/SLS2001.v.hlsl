@@ -66,7 +66,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.w = r0.w * r0.w;
     r2.w = abs(dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw) - HighDetailRange.x);
     r3.w = abs(dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw) - HighDetailRange.y);
-    r0.z = ((((r2.w < HighDetailRange.z ? 1.0 : 0.0) * (r3.w < HighDetailRange.w ? 1.0 : 0.0)) * (-r0.w >= r0.w ? 1.0 : 0.0)) * -2048) + IN.position.z;
+    r0.w = ((r2.w < HighDetailRange.z ? 1.0 : 0.0) * (r3.w < HighDetailRange.w ? 1.0 : 0.0)) * (-r0.w >= r0.w ? 1.0 : 0.0);
+    r0.z = (r0.w * -2048) + IN.position.z;
     r0.xyw = IN.position.xyw;
     r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);

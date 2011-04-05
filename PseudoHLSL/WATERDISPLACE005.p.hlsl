@@ -50,6 +50,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r7;
 
     r0.xyzw = tex2D(DisplaceMap, IN.texcoord_0.xy - const_2.xy);
+    r1.xyzw = tex2D(DisplaceMap, IN.texcoord_0.xy + const_2.xy);
     r2.xyzw = tex2D(DisplaceMap, IN.texcoord_0.xy + (1.0 / 256));
     r4.xyzw = tex2D(DisplaceMap, IN.texcoord_0.xy + const_1.xy);
     r2.w = abs(r4.x);
@@ -58,9 +59,9 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r5.xyzw = tex2D(DisplaceMap, IN.texcoord_0.xy + -(1.0 / 256));
     r4.w = abs(r5.x);
     r6.xyzw = tex2D(DisplaceMap, IN.texcoord_0.xy + const_0.xy);
+    r1.w = (fDamp.x * r3.w) + ((fDamp.x * -r2.w) + ((fDamp.x * -r4.w) - (2 * (abs(r6.x) * fDamp.x))));
     r7.xyzw = tex2D(DisplaceMap, IN.texcoord_0.xy - const_0.xy);
-    r0.w = (2 * (abs(r7.x) * fDamp.x)) + ((fDamp.x * r3.w) + ((fDamp.x * -r2.w) + ((fDamp.x * -r4.w) - (2 * (abs(r6.x) * fDamp.x)))));
-    r1.xyzw = tex2D(DisplaceMap, IN.texcoord_0.xy + const_2.xy);
+    r0.w = (2 * (abs(r7.x) * fDamp.x)) + r1.w;
     r1.w = abs(r2.x);
     r3.w = (fDamp.x * r2.w) + ((fDamp.x * -r3.w) + ((fDamp.x * -r4.w) - (2 * (abs(r1.x) * fDamp.x))));
     r2.w = abs(r0.x) * fDamp.x;

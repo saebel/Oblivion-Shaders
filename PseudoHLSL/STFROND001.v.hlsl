@@ -77,7 +77,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_1.xyz = ((SunDimmer.x * (saturate(dot(IN.normal.xyz, LightVector.xyz)) * DiffColor.rgb)) + AmbientColor.rgb) * IN.color_0.rgb;
+    r0.xyz = (SunDimmer.x * (saturate(dot(IN.normal.xyz, LightVector.xyz)) * DiffColor.rgb)) + AmbientColor.rgb;
+    OUT.texcoord_1.xyz = r0.xyz * IN.color_0.rgb;
     OUT.position.xyz = r1.xyz;
     OUT.texcoord_2.w = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

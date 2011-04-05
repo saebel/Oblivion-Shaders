@@ -60,7 +60,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
     r1.xyz = normalize(r0.xyz - BoundWorldCenter.xyz);
     r0.xyz = EyePosition.xyz - r0.xyz;
-    r1.w = saturate(((dot(r1.xyz, normalize(r0.xyz)) * (1.0 / length(r1.xyz))) - 0.8) * 6.66666651);
+    r1.w = saturate(((dot(r1.xyz, normalize(r0.xyz)) / length(r1.xyz)) - 0.8) * 6.66666651);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);

@@ -78,13 +78,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r3;
     float3 r4;
     float4 r5;
+    float4 r7;
 
     r2.xy = IN.texcoord_6.xy + Scroll.xy;
     r0.xyzw = tex2D(NormalMap, r2.xy);
     r1.w = length(EyePos.xy - IN.texcoord_1.xy);
     r0.w = (saturate(r1.w * 0.0002) * 2496) + 4;
     r0.xyz = (2 * r0.xyz) - 1;
-    r2.w = saturate((r1.w / -8192) + 1);
+    r2.w = saturate(1 - (r1.w / 8192));
     r0.xy = (r2.w * r2.w) * r0.xy;
     r1.w = 1;
     r3.xyz = normalize(r0.xyz);
@@ -106,11 +107,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r5.x = saturate(dot(r4.xyz, r3.xyz));
     r1.w = 1 - r5.x;
     r2.w = r1.w * r1.w;
-    r2.xyz = lerp(r1.xyz, ((saturate(SunDir.w) * (pow(abs(saturate(dot((-(2 * dot(-r4.xyz, r3.xyz)) * r3.xyz) - r4.xyz, SunDir.xyz))), VarAmounts.x) * SunColor.rgb)) + lerp((VarAmounts.y * (r2.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r5.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), ((FresnelRI.x + 1) * (r1.w * (r2.w * r2.w))) + FresnelRI.x)), r5.w);
-    r1.w = max(VarAmounts.z, r6.w);
+    r3.w = r1.w * (r2.w * r2.w);
+    r1.w = max(VarAmounts.z, ((FresnelRI.x + 1) * r3.w) + FresnelRI.x);
+    r7.w = pow(abs(saturate(dot((-(2 * dot(-r4.xyz, r3.xyz)) * r3.xyz) - r4.xyz, SunDir.xyz))), VarAmounts.x);
+    r3.xyz = lerp((VarAmounts.y * (r2.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r5.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), ((FresnelRI.x + 1) * r3.w) + FresnelRI.x);
     r3.w = ((r0.x - 1) >= 0.0 ? (((1 - r0.x) * (0.25 - r1.w)) + r1.w) : r1.w);
-    r1.w = ((r0.x - 0.2) / -0.35) + 1;
-    r1.w = (r0.w >= 0.0 ? 0 : (((r0.x - 0.55) >= 0.0 ? (r3.w * ((r1.w * -(r1.w * r1.w)) + 1)) : r3.w)));
+    r1.w = ((r0.x - 0.2) * -(1.0 / 0.35)) + 1;
+    r1.w = ((r0.x - 0.2) >= 0.0 ? 0 : ((r0.x - 0.55) >= 0.0 ? (r3.w * ((r1.w * -(r1.w * r1.w)) + 1)) : r3.w));
+    r2.xyz = lerp(r1.xyz, ((saturate(SunDir.w) * (r7.w * SunColor.rgb)) + r3.xyz), r5.w);
     r1.xyz = ((1 - saturate((FogParam.x - (1.0 / r0.w)) / FogParam.y)) * (FogColor.rgb - r2.xyz)) + r2.xyz;
     OUT.color_0.rgba = r0.x <= 0.0 ? r1.xyzw : 0;
 

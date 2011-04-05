@@ -44,7 +44,7 @@
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_1 : COLOR1;
-    r0.w = 2 * IN.color_1.r;
+    r0.w = 2.w * IN.color_1.r;
     r0.w = frac(r0.w);
     r0.w = (2 * IN.color_1.r) - r0.w;
     offset.w = r0.w;
@@ -63,11 +63,11 @@
     r0.w = 1;
     r6.w = r3.w * r5.w;
     r2.xz = fVars2.xz;
-    r3.xy = (fVars2.zwzw < r6.w ? 1.0 : 0.0);
+    r3.xy = (fVars2.zw < r6.w ? 1.0 : 0.0);
     r4.zw = const_13.zw;
-    r1.xzw = (fVars2.yywy * r4.zyzw) + r4.wywz;
+    r1.xzw = (fVars2.yyw * r4.zyz) + r4.wywz;
     r2.xz = r2.xz * r3.x;
-    r2.yw = lerp(fVars2.yw, fVars2.xxzz, r3.x);
+    r2.yw = lerp(fVars2.yw, fVars2.xx, r3.x);
     r1.xzw = r1.xzw - r2.xzw;
     r1.y = -r2.y;
     OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);
@@ -82,8 +82,8 @@
     r1.w = fVars1.x;
     r1.x = r3.x * r1.w;
     r1.z = lerp(fVars1.y, fVars1.x, r3.x);
-    r5.xy = lerp(fVars1.yzzw, r1.xzzw, r3.y);
-    r2.xy = (fVars1.z * r4.zwzw) + r4.wz;
+    r5.xy = lerp(fVars1.yz, r1.xz, r3.y);
+    r2.xy = (fVars1.z * r4.zw) + r4.wz;
     r4.xy = r2.w * IN.position.xy;
     r1.xy = lerp(r2.xy, r5.xy, r3.z);
     r5.x = dot(WorldViewProj[0].xyzw, r0.xyzw);

@@ -39,8 +39,10 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     const float4 const_0 = {-0.5, 0, -0.4, 10};
     const float4 const_1 = {0.5, 0.5, 0.5, 1};
 
+    float4 r0;
 
-    OUT.color_0.rgba = lerp(const_1.xyzw, (tex2D(DisplaySampler, IN.texcoord_0.xy + TextureOffset.xy)), saturate((length(IN.texcoord_0.xy - 0.5) - 0.4) * 10));
+    r0.xyzw = lerp(const_1.xyzw, (tex2D(DisplaySampler, IN.texcoord_0.xy + TextureOffset.xy)), saturate((sqrt(dot(IN.texcoord_0.xy - 0.5, r0.xy) + 0) - 0.4) * 10));
+    OUT.color_0.rgba = r0.xyzw;
 
     return OUT;
 };

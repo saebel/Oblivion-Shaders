@@ -76,10 +76,13 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r2.x = saturate(dot(r4.xyz, r3.xyz));			// partial precision
     r3.x = dot(r4.xyz, IN.texcoord_1.xyz);			// partial precision
     r4.w = r1.w * pow(abs(r2.x), Toggles.z);			// partial precision
-    r2.xyz = saturate((r0.w * PSLightColor[1].rgb) * r2.w) + saturate((((0.2 - r3.x) >= 0.0 ? r4.w : (r4.w * max(r3.x + 0.5, 0)))) * PSLightColor[0].rgb);			// partial precision
+    r1.xyz = saturate(((0.2 - r3.x) >= 0.0 ? r4.w : (r4.w * max(r3.x + 0.5, 0))) * PSLightColor[0].rgb);			// partial precision
+    r2.xyz = saturate((r0.w * PSLightColor[1].rgb) * r2.w) + r1.xyz;			// partial precision
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r0.w = r0.w * AmbientColor.a;			// partial precision
-    r0.xyz = (((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz)) * max(((saturate(r3.x) * PSLightColor[0].rgb) + (r2.w * (saturate(r5.x) * PSLightColor[1].rgb))) + AmbientColor.rgb, 0)) + r2.xyz;			// partial precision
+    r1.xyz = (Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz);			// partial precision
+    r0.xyz = (saturate(r3.x) * PSLightColor[0].rgb) + (r2.w * (saturate(r5.x) * PSLightColor[1].rgb));			// partial precision
+    r0.xyz = (r1.xyz * max(r0.xyz + AmbientColor.rgb, 0)) + r2.xyz;			// partial precision
     r0.xyz = (Toggles.y <= 0.0 ? lerp(IN.color_1.rgb, r0.xyz, IN.color_1.a) : r0.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 

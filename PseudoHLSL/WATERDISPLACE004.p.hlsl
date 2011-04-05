@@ -38,8 +38,12 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     const float4 const_1 = {0.125, 0.5, 0, 0};
     const float4 const_2 = {-(1.0 / 256), 0, -3, 0};
 
+    float4 r0;
+    float4 r2;
 
-    OUT.color_0.rgba = (0.125 * (((2 * (tex2D(HeightMap, IN.texcoord_0.xy - const_2.xy))) + ((2 * (tex2D(HeightMap, IN.texcoord_0.xy + const_2.xy))) + ((2 * (tex2D(HeightMap, IN.texcoord_0.xy - const_0.xy))) + ((2 * (tex2D(HeightMap, IN.texcoord_0.xy + const_0.xy))) - 1)))) - 3)) + 0.5;
+    r2.xyzw = (2 * (tex2D(HeightMap, IN.texcoord_0.xy - const_0.xy))) + ((2 * (tex2D(HeightMap, IN.texcoord_0.xy + const_0.xy))) - 1);
+    r0.xyzw = (2 * (tex2D(HeightMap, IN.texcoord_0.xy - const_2.xy))) + ((2 * (tex2D(HeightMap, IN.texcoord_0.xy + const_2.xy))) + r2.xyzw);
+    OUT.color_0.rgba = (0.125 * (r0.xyzw - 3)) + 0.5;
 
     return OUT;
 };

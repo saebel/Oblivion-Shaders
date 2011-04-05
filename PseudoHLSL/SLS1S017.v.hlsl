@@ -111,7 +111,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.y = dot(Bones[1 + offset.x], IN.tangent.xyz);
     r2.z = dot(Bones[2 + offset.x], IN.tangent.xyz);
     offset.x = r1.y;
-    r2.xyz = (r2.w * r2.xyz) + r3.xyz;
+    r2.xyz = normalize((r2.w * r2.xyz) + r3.xyz) * 0.1;
     r3.x = dot(Bones[0 + offset.x], IN.binormal.xyz);
     r3.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
     r3.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
@@ -131,7 +131,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r3.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
     r3.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
     offset.x = r1.y;
-    r3.xyz = (r2.w * r3.xyz) + r4.xyz;
+    r3.xyz = normalize((r2.w * r3.xyz) + r4.xyz) * 0.1;
     r4.x = dot(Bones[0 + offset.x], IN.normal.xyz);
     r4.y = dot(Bones[1 + offset.x], IN.normal.xyz);
     r4.z = dot(Bones[2 + offset.x], IN.normal.xyz);
@@ -150,10 +150,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.x], IN.normal.xyz);
     r1.y = dot(Bones[1 + offset.x], IN.normal.xyz);
     r1.z = dot(Bones[2 + offset.x], IN.normal.xyz);
-    r1.xyz = (r2.w * r1.xyz) + r4.xyz;
-    r1.xyz = r1.xyz * (1.0 / length(r1.xyz));
-    r2.xyz = (r2.xyz * (1.0 / length(r2.xyz))) * 0.1;
-    r3.xyz = (r3.xyz * (1.0 / length(r3.xyz))) * 0.1;
+    r1.xyz = normalize((r2.w * r1.xyz) + r4.xyz);
     OUT.position.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
@@ -166,8 +163,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.x = dot(SkinToCubeSpace[0].xyzw, r0.xyzw);
     r2.y = dot(SkinToCubeSpace[1].xyzw, r0.xyzw);
     r2.z = dot(SkinToCubeSpace[2].xyzw, r0.xyzw);
-    r0.xyz = EyePosition.xyz - r2.xyz;
-    r0.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    r0.xyz = normalize(EyePosition.xyz - r2.xyz);
     OUT.texcoord_2.y = dot(r3.xyz, SkinToCubeSpace[1].xyz);
     OUT.texcoord_3.y = dot(r3.xyz, SkinToCubeSpace[2].xyz);
     OUT.texcoord_2.z = dot(r1.xyz, SkinToCubeSpace[1].xyz);

@@ -73,16 +73,17 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r6;
 
     r0.xyzw = tex2D(DisplacementMap, IN.texcoord_6.xy);
+    r0.w = dot(IN.texcoord_6.xy - 0.5, r1.xy) + 0;
     r1.xy = EyePos.xy - IN.texcoord_1.xy;
+    r2.w = sqrt(r0.w);
     r0.w = dot(r1.xy, r1.xy) + 0;
     r1.xyz = (2 * r0.xyz) - 1;
-    r3.w = saturate((sqrt(r0.w) / -8192) + 1);
+    r3.w = saturate(1 - (sqrt(r0.w) / 8192));
     r4.x = IN.texcoord_7.z + Scroll.x;
     r4.y = IN.texcoord_7.w + Scroll.y;
     r0.xyzw = tex2D(NormalMap, r4.xy);
     r0.xyz = (2 * r0.xyz) - 1;
     r0.xy = (r3.w * r3.w) * r0.xy;
-    r2.w = length(IN.texcoord_6.xy - 0.5);
     r2.xyz = lerp(r1.xyz, r0.xyz, (-(saturate(max(0.1, (2 * r2.w) / BlendRadius.x)) - 1)) * BlendRadius.y);
     r0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r1.w = 1.0 / length(r0.xyz);
@@ -102,7 +103,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r3.w = ((FresnelRI.x - r3.y) * (r0.w * (r1.w * r1.w))) + FresnelRI.x;
     r0.w = (((r3.x * -r2.w) + BlendRadius.x) >= 0.0 ? 0 : max(VarAmounts.z, r3.w));
     r1.xyz = ((r1.xyz * (ReflectionColor.rgb - r3.y)) * ReflectionColor.rgb) * VarAmounts.y;
-    r1.xyz = lerp(r0.xyz, saturate(r3.w * r1) + ((r6.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb)), r4.w);
+    r2.xyz = saturate(r3.w * r1) + ((r6.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb));
+    r1.xyz = lerp(r0.xyz, r2.xyz, r4.w);
     r0.xyz = ((1 - saturate((FogParam.x - r5.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 

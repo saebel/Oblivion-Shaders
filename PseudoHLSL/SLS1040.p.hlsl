@@ -54,7 +54,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r2.xyz = 2 * (IN.texcoord_3.xyz - 0.5);	// [0,1] to [-1,+1]
     r2.x = saturate(dot(2 * (r1.xyz - 0.5), r2.xyz));	// [0,1] to [-1,+1]
     r1.xyz = PSLightColor[0].rgb;
-    r0.xyz = saturate(r2.x * r1) + AmbientColor.rgb) * (r0.xyz * IN.texcoord_2.xyz);
+    r0.xyz = saturate((r2.x * r1) + AmbientColor.rgb) * (r0.xyz * IN.texcoord_2.xyz);
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

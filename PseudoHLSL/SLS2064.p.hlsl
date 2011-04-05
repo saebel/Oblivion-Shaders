@@ -42,7 +42,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
     r0.w = (IN.texcoord_1.x * IN.texcoord_1.x) * 0.5;			// partial precision
-    r0.xy = (0.5 * (((2 * (r0.xy - 0.5)) * (1.0 / length(2 * ((2 * (r0.xy - 0.5)) - 0.5)))) / (IN.texcoord_0.w))) + 0.5;			// partial precision	// [-1,+1] to [0,1]
+    r0.xy = (0.5 * (normalize(2 * (r0.xy - 0.5)) / IN.texcoord_0.w)) + 0.5;			// partial precision	// [-1,+1] to [0,1]
     r0.z = PSRefractionPower.x;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 

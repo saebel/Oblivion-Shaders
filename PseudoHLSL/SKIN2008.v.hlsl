@@ -71,7 +71,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(IN.tangent.xyz, r2.xyz);
     r1.y = dot(IN.binormal.xyz, r2.xyz);
     r1.z = dot(IN.normal.xyz, r2.xyz);
-    OUT.texcoord_7.xyz = r1.xyz * (1.0 / length(r1.xyz));
+    OUT.texcoord_7.xyz = normalize(r1.xyz);
     r1.xyz = normalize(r0.xyz);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r1.xyz);
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r1.xyz);

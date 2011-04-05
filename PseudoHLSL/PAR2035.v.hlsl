@@ -158,7 +158,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.z = dot(r0.xyz, r4.xyz);
     OUT.texcoord_3.y = dot(r5.xyz, r3.xyz);
     OUT.texcoord_3.z = dot(r0.xyz, r3.xyz);
-    OUT.texcoord_7.xyz = r1.xyz * (1.0 / length(r1.xyz));
+    OUT.texcoord_7.xyz = normalize(r1.xyz);
     OUT.texcoord_5.xyz = (0.5 * (r2.xyz / LightPosition[0].w)) + 0.5;	// [-1,+1] to [0,1]
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_5.w = 0.5;

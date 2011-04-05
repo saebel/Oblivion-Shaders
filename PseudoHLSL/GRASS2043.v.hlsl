@@ -86,9 +86,11 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r4;
 
     offset.w = IN.texcoord_1.x;
+    r0.w = ((InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x) / 128) + WindData.w;
     r0.xy = EyeVector.xy * EyeVector.xy;
     r2.w = 1.0 / sqrt(r0.y + r0.x);
     r0.xyz = frac(InstanceData[0 + offset.w]);
+    r1.w = (frac((r0.w / (PI * 2)) + 0.5) * PI * 2) - PI;
     r2.xyz = 2 * (r0.xyz - 0.5);	// [0,1] to [-1,+1]
     r0.w = r2.y;
     r0.xy = r2.w * -EyeVector.xy;
@@ -104,7 +106,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = r1.x;
     r0.x = dot(r0.zxw, r3.xyz);
     r0.w = IN.position.w;
-    r0.xy = (((sin((frac(((((InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x) / 128) + WindData.w) / ((PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
+    r0.xy = (((sin(r1.w) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
     r2.xy = r1.z * const_7.zw;
     r0.z = dot(r2.xyz, r3.xyz);
     r0.xyz = r0.xyz + InstanceData[0 + offset.w];

@@ -65,8 +65,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
     r1.xyzw = IN.position.xyzw;
     r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + r1.xyzw;
-    r1.xyz = normalize(EyePosition.xyz - r0.xyz) + LightDirection[0].xyz;
-    r1.xyz = r1.xyz * (1.0 / length(r1.xyz));
+    r1.xyz = normalize(normalize(EyePosition.xyz - r0.xyz) + LightDirection[0].xyz);
     OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);

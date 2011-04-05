@@ -109,7 +109,11 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r9.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[5].xy) + IN.texcoord_0.xy);
     r0.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[14].xy) + IN.texcoord_0.xy);
     r0.w = 1;
-    r0.xyz = (BlurOffsets[14].z * r0.xyz) + ((BlurOffsets[13].z * r1.xyz) + ((BlurOffsets[12].z * r2.xyz) + ((BlurOffsets[11].z * r3.xyz) + ((BlurOffsets[10].z * r4.xyz) + ((BlurOffsets[9].z * r5.xyz) + ((BlurOffsets[8].z * r6.xyz) + ((BlurOffsets[7].z * r7.xyz) + ((BlurOffsets[6].z * r8.xyz) + ((BlurOffsets[5].z * r9.xyz) + ((BlurOffsets[4].z * r10.xyz) + ((BlurOffsets[3].z * r11.xyz) + ((BlurOffsets[2].z * r12.xyz) + ((BlurOffsets[0].z * r13.xyz) + (r14.xyz * BlurOffsets[1].z))))))))))))));
+    r12.xyz = (BlurOffsets[2].z * r12.xyz) + ((BlurOffsets[0].z * r13.xyz) + (r14.xyz * BlurOffsets[1].z));
+    r9.xyz = (BlurOffsets[5].z * r9.xyz) + ((BlurOffsets[4].z * r10.xyz) + ((BlurOffsets[3].z * r11.xyz) + r12.xyz));
+    r6.xyz = (BlurOffsets[8].z * r6.xyz) + ((BlurOffsets[7].z * r7.xyz) + ((BlurOffsets[6].z * r8.xyz) + r9.xyz));
+    r3.xyz = (BlurOffsets[11].z * r3.xyz) + ((BlurOffsets[10].z * r4.xyz) + ((BlurOffsets[9].z * r5.xyz) + r6.xyz));
+    r0.xyz = (BlurOffsets[14].z * r0.xyz) + ((BlurOffsets[13].z * r1.xyz) + ((BlurOffsets[12].z * r2.xyz) + r3.xyz));
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

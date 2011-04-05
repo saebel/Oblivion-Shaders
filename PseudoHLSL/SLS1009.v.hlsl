@@ -51,8 +51,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r0;
     float3 r1;
 
-    r0.xyz = normalize(EyePosition.xyz - IN.position.xyz) + LightDirection[0].xyz;
-    r1.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    r1.xyz = normalize(normalize(EyePosition.xyz - IN.position.xyz) + LightDirection[0].xyz);
     r0.x = dot(IN.tangent.xyz, r1.xyz);
     r0.y = dot(IN.binormal.xyz, r1.xyz);
     r0.z = dot(IN.normal.xyz, r1.xyz);

@@ -149,13 +149,11 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(Bones[0 + offset.x], IN.normal.xyz);
     r0.y = dot(Bones[1 + offset.x], IN.normal.xyz);
     r0.z = dot(Bones[2 + offset.x], IN.normal.xyz);
-    r0.xyz = (r2.w * r0.xyz) + r4.xyz;
-    r1.xyz = r1.xyz * (1.0 / length(r1.xyz));
-    r2.xyz = r2.xyz * (1.0 / length(r2.xyz));
+    r1.xyz = normalize(r1.xyz);
+    r2.xyz = normalize(r2.xyz);
     r1.x = dot(r1.xyz, r2.xyz);
-    r3.xyz = (r2.w * r3.xyz) + r5.xyz;
-    r1.y = dot(r3.xyz * (1.0 / length(r3.xyz)), r2.xyz);
-    r1.z = dot(r0.xyz * (1.0 / length(r0.xyz)), r2.xyz);
+    r1.y = dot(normalize((r2.w * r3.xyz) + r5.xyz), r2.xyz);
+    r1.z = dot(normalize((r2.w * r0.xyz) + r4.xyz), r2.xyz);
     OUT.texcoord_1.xyz = (0.5 * r1.xyz) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
 

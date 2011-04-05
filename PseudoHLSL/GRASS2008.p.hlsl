@@ -69,7 +69,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r8;
     float4 r9;
 
-    r10.xy = (1.0 / IN.texcoord_1.w) * IN.texcoord_1.xy;			// partial precision
+    r10.xy = IN.texcoord_1.xy / IN.texcoord_1.w;			// partial precision
     r9.xyzw = tex2D(ShadowMap, saturate((const_6.xy * r10.xy) + 0.5));			// partial precision
     r1.xy = const_6.xy;
     r0.xy = (r1.xy * r10.xy) + const_7.xy;			// partial precision
@@ -83,35 +83,35 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r8.xyzw = tex2D(ShadowMap, saturate(r0.xy + const_1.xy));			// partial precision
     r0.xyzw = tex2D(ShadowMap, saturate(r0.xy + const_12.xy));			// partial precision
     r0.w = ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r9.x)) >= 0.0 ? 1 : 0);			// partial precision
-    r0.w = r0.w + (((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r8.x)) >= 0.0 ? 1 : 0));			// partial precision
-    r0.w = r0.w + (((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r7.x)) >= 0.0 ? 1 : 0));			// partial precision
-    r0.w = r0.w + (((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r6.x)) >= 0.0 ? 1 : 0));			// partial precision
-    r0.w = r0.w + (((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r5.x)) >= 0.0 ? 1 : 0));			// partial precision
+    r0.w = r0.w + ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r8.x)) >= 0.0 ? 1 : 0);			// partial precision
+    r0.w = r0.w + ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r7.x)) >= 0.0 ? 1 : 0);			// partial precision
+    r0.w = r0.w + ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r6.x)) >= 0.0 ? 1 : 0);			// partial precision
+    r0.w = r0.w + ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r5.x)) >= 0.0 ? 1 : 0);			// partial precision
     r4.xyzw = tex2D(ShadowMap, r3.xy);			// partial precision
-    r0.w = r0.w + (((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r4.x)) >= 0.0 ? 1 : 0));			// partial precision
+    r0.w = r0.w + ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r4.x)) >= 0.0 ? 1 : 0);			// partial precision
     r3.xyzw = tex2D(ShadowMap, r2.xy);			// partial precision
-    r0.w = r0.w + (((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r3.x)) >= 0.0 ? 1 : 0));			// partial precision
+    r0.w = r0.w + ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r3.x)) >= 0.0 ? 1 : 0);			// partial precision
     r2.xyzw = tex2D(ShadowMap, r1.xy);			// partial precision
-    r0.w = r0.w + (((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r2.x)) >= 0.0 ? 1 : 0));			// partial precision
-    r0.w = r0.w + (((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r0.x)) >= 0.0 ? 1 : 0));			// partial precision
+    r0.w = r0.w + ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r2.x)) >= 0.0 ? 1 : 0);			// partial precision
+    r0.w = r0.w + ((-0.00136718748 - ((IN.texcoord_1.z * -0.001) + r0.x)) >= 0.0 ? 1 : 0);			// partial precision
     r2.yz = const_0.yz;
     r0.xyz = (PSLightColor.a * (saturate(r0.w * 0.125) - 1)) + r2.y;			// partial precision
     r0.w = 1;			// partial precision
-    r10.w = (IN.texcoord_1.y * -r1.w) + 1;			// partial precision
+    r10.w = 1 - (IN.texcoord_1.y / IN.texcoord_1.w);			// partial precision
     r1.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);			// partial precision
-    r2.w = (r2.w >= 0.0 ? 0 : 1);			// partial precision
-    r2.w = r2.w * (((1 - ((r10.x * 0.5) + 0.5)) >= 0.0 ? 0 : 1));	// [-1,+1] to [0,1]
+    r2.w = (((r10.x * 0.5) + 0.5) >= 0.0 ? 0 : 1);			// partial precision	// [-1,+1] to [0,1]
+    r2.w = r2.w * ((1 - ((r10.x * 0.5) + 0.5)) >= 0.0 ? 0 : 1);	// [-1,+1] to [0,1]
     r2.w = r2.w * (r10.w >= 0.0 ? 0 : 1);
     r1.xyz = IN.texcoord_2.xyz - LightData.xyz;			// partial precision
-    r2.w = r2.w * ((((r10.w * -0.5) + 1) >= 0.0 ? 0 : 1));
+    r2.w = r2.w * (((r10.w * -0.5) + 1) >= 0.0 ? 0 : 1);
     r3.w = r2.w * (IN.texcoord_1.z >= 0.0 ? 0 : 1);
     r0.xyzw = (r3.w <= 0.0 ? r0.xyzw : const_13.xyzw);			// partial precision
-    r2.w = saturate(length(r1.xyz) * (1.0 / (r2.z * LightData.w)));			// partial precision
+    r2.w = saturate(length(r1.xyz) / (r2.z * LightData.w));			// partial precision
     r5.w = 1 - r0.x;			// partial precision
-    r1.xyz = lerp(1, lerp(1, (((r5.w * 0.6) * -PSLightColor.rgb) + r2.y), r2.w * r2.w), IN.color_0.a) - 1;			// partial precision
-    r2.w = (((AlphaTestRef.x - r1.w) >= 0.0 ? 1 : 0)) * IN.texcoord_5.w;			// partial precision
+    r1.xyz = lerp(1, lerp(1, (((r5.w * 0.6) * -PSLightColor.rgb) + r2.y), r2.w * r2.w), IN.color_0.a);			// partial precision
+    r2.w = ((AlphaTestRef.x - r1.w) >= 0.0 ? 1 : 0) * IN.texcoord_5.w;			// partial precision
     r1.w = min(min(r1.w, r0.w), r5.w);			// partial precision
-    r1.xyz = (r2.w * r1.xyz) + 1;			// partial precision
+    r1.xyz = (r2.w * (r1.xyz - 1)) + 1;			// partial precision
     r1.xyzw = (r3.w <= 0.0 ? r1.xyzw : r0.xyzw);			// partial precision
     r0.w = min(r1.w, r2.w);			// partial precision
     r0.xyz = r1.xyz;			// partial precision

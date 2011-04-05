@@ -90,9 +90,10 @@ VS_OUTPUT main(VS_INPUT IN) {
     const float4 const_4 = {0.0125000002, 0.5, 0, 1};
     const float4 const_5 = {10, (1.0 / 256), 1, 0};
 
-    float3 r0;
+    float4 r0;
     float2 r1;
 
+    r0.w = pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[6].xyz), 0)), 10) * DecalFade[1].x;
     r0.x = DecalProjection[4].w;
     r0.y = DecalProjection[5].w;
     r0.z = DecalProjection[6].w;
@@ -104,7 +105,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_1.xy = (0.0125000002 * r1.xy) + 0.5;
-    OUT.texcoord_1.z = ((abs(dot(DecalProjection[6].xyz, r0.xyz)) / -256) + 1) * (pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[6].xyz), 0)), 10) * DecalFade[1].x);
+    OUT.texcoord_1.z = (1 - (abs(dot(DecalProjection[6].xyz, r0.xyz)) / 256)) * r0.w;
+    r0.w = pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[10].xyz), 0)), 10) * DecalFade[2].x;
     r0.x = DecalProjection[8].w;
     r0.y = DecalProjection[9].w;
     r0.z = DecalProjection[10].w;
@@ -112,7 +114,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(DecalProjection[8].xyz, r0.xyz);
     r1.y = dot(DecalProjection[9].xyz, r0.xyz);
     OUT.texcoord_2.xy = (0.0125000002 * r1.xy) + 0.5;
-    OUT.texcoord_2.z = ((abs(dot(DecalProjection[10].xyz, r0.xyz)) / -256) + 1) * (pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[10].xyz), 0)), 10) * DecalFade[2].x);
+    OUT.texcoord_2.z = (1 - (abs(dot(DecalProjection[10].xyz, r0.xyz)) / 256)) * r0.w;
+    r0.w = pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[14].xyz), 0)), 10) * DecalFade[3].x;
     r0.x = DecalProjection[12].w;
     r0.y = DecalProjection[13].w;
     r0.z = DecalProjection[14].w;
@@ -120,7 +123,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(DecalProjection[12].xyz, r0.xyz);
     r1.y = dot(DecalProjection[13].xyz, r0.xyz);
     OUT.texcoord_3.xy = (0.0125000002 * r1.xy) + 0.5;
-    OUT.texcoord_3.z = ((abs(dot(DecalProjection[14].xyz, r0.xyz)) / -256) + 1) * (pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[14].xyz), 0)), 10) * DecalFade[3].x);
+    OUT.texcoord_3.z = (1 - (abs(dot(DecalProjection[14].xyz, r0.xyz)) / 256)) * r0.w;
+    r0.w = pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[18].xyz), 0)), 10) * DecalFade[4].x;
     r0.x = DecalProjection[16].w;
     r0.y = DecalProjection[17].w;
     r0.z = DecalProjection[18].w;
@@ -128,7 +132,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(DecalProjection[16].xyz, r0.xyz);
     r1.y = dot(DecalProjection[17].xyz, r0.xyz);
     OUT.texcoord_4.xy = (0.0125000002 * r1.xy) + 0.5;
-    OUT.texcoord_4.z = ((abs(dot(DecalProjection[18].xyz, r0.xyz)) / -256) + 1) * (pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[18].xyz), 0)), 10) * DecalFade[4].x);
+    OUT.texcoord_4.z = (1 - (abs(dot(DecalProjection[18].xyz, r0.xyz)) / 256)) * r0.w;
+    r0.w = pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[22].xyz), 0)), 10) * DecalFade[5].x;
     r0.x = DecalProjection[20].w;
     r0.y = DecalProjection[21].w;
     r0.z = DecalProjection[22].w;
@@ -136,7 +141,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(DecalProjection[20].xyz, r0.xyz);
     r1.y = dot(DecalProjection[21].xyz, r0.xyz);
     OUT.texcoord_5.xy = (0.0125000002 * r1.xy) + 0.5;
-    OUT.texcoord_5.z = ((abs(dot(DecalProjection[22].xyz, r0.xyz)) / -256) + 1) * (pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[22].xyz), 0)), 10) * DecalFade[5].x);
+    OUT.texcoord_5.z = (1 - (abs(dot(DecalProjection[22].xyz, r0.xyz)) / 256)) * r0.w;
+    r0.w = pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[26].xyz), 0)), 10) * DecalFade[6].x;
     r0.x = DecalProjection[24].w;
     r0.y = DecalProjection[25].w;
     r0.z = DecalProjection[26].w;
@@ -144,7 +150,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(DecalProjection[24].xyz, r0.xyz);
     r1.y = dot(DecalProjection[25].xyz, r0.xyz);
     OUT.texcoord_6.xy = (0.0125000002 * r1.xy) + 0.5;
-    OUT.texcoord_6.z = ((abs(dot(DecalProjection[26].xyz, r0.xyz)) / -256) + 1) * (pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[26].xyz), 0)), 10) * DecalFade[6].x);
+    OUT.texcoord_6.z = (1 - (abs(dot(DecalProjection[26].xyz, r0.xyz)) / 256)) * r0.w;
+    r0.w = pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[30].xyz), 0)), 10) * DecalFade[7].x;
     r0.x = DecalProjection[28].w;
     r0.y = DecalProjection[29].w;
     r0.z = DecalProjection[30].w;
@@ -152,7 +159,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(DecalProjection[28].xyz, r0.xyz);
     r1.y = dot(DecalProjection[29].xyz, r0.xyz);
     OUT.texcoord_7.xy = (0.0125000002 * r1.xy) + 0.5;
-    OUT.texcoord_7.z = ((abs(dot(DecalProjection[30].xyz, r0.xyz)) / -256) + 1) * (pow(abs(1 - max(dot(IN.normal.xyz, DecalProjection[30].xyz), 0)), 10) * DecalFade[7].x);
+    OUT.texcoord_7.z = (1 - (abs(dot(DecalProjection[30].xyz, r0.xyz)) / 256)) * r0.w;
     OUT.texcoord_0.xyz = (IN.texcoord_0.xyx * const_4.wwz) + const_4.zzw;
 
     return OUT;

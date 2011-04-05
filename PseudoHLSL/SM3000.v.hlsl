@@ -60,7 +60,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.xyz = r0.xyz;
-    OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r0.xyz))) / FogParam.y)) * FogParam.z;
+    OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y)) * FogParam.z;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.rgba = 1;
     OUT.texcoord_3.xyz = IN.tangent.xyz;

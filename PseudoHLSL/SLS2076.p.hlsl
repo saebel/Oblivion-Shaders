@@ -47,18 +47,20 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r1;
     float4 r2;
 
-    r0.xy = (0.5 * ((1.0 / IN.texcoord_1.w) * IN.texcoord_1.xy)) + 0.5;	// [-1,+1] to [0,1]
+    r0.xy = (0.5 * (IN.texcoord_1.xy / IN.texcoord_1.w)) + 0.5;	// [-1,+1] to [0,1]
     r1.xyz = IN.texcoord_6.xyz - IN.texcoord_2.xyz;
-    r2.w = saturate(length(r1.xyz) * (1.0 / (IN.texcoord_2.w * 0.5)));
+    r2.w = saturate(length(r1.xyz) / (IN.texcoord_2.w * 0.5));
     r1.w = 1.0 / sqrt(r2.w);
     r1.x = saturate(r0.x >= 0.0 ? 0 : r0.x);
     r1.y = saturate((1 - r0.y) >= 0.0 ? 0 : (1 - r0.y));
-    r0.xyzw = tex2D(ShadowMap, saturate((1.0 / (((r1.w <= 0.0 ? (1 - r1.w) : 1)) * 15)) * 0.01) + ((const_3.xy * r0.xy) + const_4.xy)));
+    r0.xyzw = tex2D(ShadowMap, saturate((0.01 / (((1.0 / r1.w) <= 0.0 ? (1 - (1.0 / r1.w)) : 1) * 15)) + ((const_3.xy * r0.xy) + const_4.xy)));
     r1.xyzw = tex2D(ShadowMap, r1.xy);
-    r0.w = (PSLightColor[0].a * (saturate((((-0.000195312503 - ((IN.texcoord_1.z / -IN.texcoord_2.w) + r1.x)) >= 0.0 ? 1 : 0)) + (((-0.000195312503 - ((IN.texcoord_1.z * -r1.w) + r0.x)) >= 0.0 ? 1 : 0))) - 1)) + 1;			// partial precision
+    r0.w = ((-0.000195312503 - ((IN.texcoord_1.z / -IN.texcoord_2.w) + r1.x)) >= 0.0 ? 1 : 0);			// partial precision
+    r1.w = ((-0.000195312503 - ((IN.texcoord_1.z / -IN.texcoord_2.w) + r0.x)) >= 0.0 ? 1 : 0);			// partial precision
+    r0.w = (PSLightColor[0].a * (saturate(r0.w + r1.w) - 1)) + 1;			// partial precision
     r1.w = 1 - r0.w;			// partial precision
     r0.w = (r0.w <= 0.0 ? r1.w : 1);			// partial precision
-    r0.xyz = lerp(1, lerp(1, (((r1.w * 0.6) * -PSLightColor[0].rgb) + r0.z), r2.w * r2.w), IN.texcoord_3.w);			// partial precision
+    r0.xyz = lerp(1, lerp(1, (((r1.w * 0.6) * -PSLightColor[0].rgb) + 1), r2.w * r2.w), IN.texcoord_3.w);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

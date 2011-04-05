@@ -110,7 +110,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.y = dot(Bones[1 + offset.x], IN.tangent.xyz);
     r2.z = dot(Bones[2 + offset.x], IN.tangent.xyz);
     offset.x = r0.y;
-    r4.xyz = (r2.w * r2.xyz) + r3.xyz;
+    r4.xyz = normalize((r2.w * r2.xyz) + r3.xyz);
     r2.x = dot(Bones[0 + offset.x], IN.binormal.xyz);
     r2.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
     r2.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
@@ -130,7 +130,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
     r2.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
     offset.x = r0.y;
-    r3.xyz = (r2.w * r2.xyz) + r3.xyz;
+    r3.xyz = normalize((r2.w * r2.xyz) + r3.xyz);
     r2.x = dot(Bones[0 + offset.x], IN.normal.xyz);
     r2.y = dot(Bones[1 + offset.x], IN.normal.xyz);
     r2.z = dot(Bones[2 + offset.x], IN.normal.xyz);
@@ -148,17 +148,14 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(Bones[0 + offset.x], IN.normal.xyz);
     r0.y = dot(Bones[1 + offset.x], IN.normal.xyz);
     r0.z = dot(Bones[2 + offset.x], IN.normal.xyz);
-    r0.xyz = (r2.w * r0.xyz) + r2.xyz;
-    r0.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    r0.xyz = normalize((r2.w * r0.xyz) + r2.xyz);
     r1.w = 1;
     OUT.position.x = dot(SkinModelViewProj[0].xyzw, r1.xyzw);
     OUT.position.y = dot(SkinModelViewProj[1].xyzw, r1.xyzw);
     OUT.position.z = dot(SkinModelViewProj[2].xyzw, r1.xyzw);
     OUT.position.w = dot(SkinModelViewProj[3].xyzw, r1.xyzw);
     r1.xyz = LightPosition[1].xyz - r1.xyz;
-    r2.xyz = r1.xyz * (1.0 / length(r1.xyz));
-    r3.xyz = r3.xyz * (1.0 / length(r3.xyz));
-    r4.xyz = r4.xyz * (1.0 / length(r4.xyz));
+    r2.xyz = normalize(r1.xyz);
     r5.x = dot(r4.xyz, LightDirection[0].xyz);
     r5.y = dot(r3.xyz, LightDirection[0].xyz);
     r5.z = dot(r0.xyz, LightDirection[0].xyz);

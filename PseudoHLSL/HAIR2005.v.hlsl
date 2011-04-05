@@ -82,10 +82,10 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(IN.tangent.xyz, r2.xyz);
     r0.y = dot(IN.binormal.xyz, r2.xyz);
     r0.z = dot(IN.normal.xyz, r2.xyz);
-    OUT.texcoord_3.xyz = r1.xyz * (1.0 / length(r1.xyz));
+    OUT.texcoord_3.xyz = normalize(r1.xyz);
     OUT.texcoord_1.xyz = normalize(r0.xyz);
     r0.xyz = LightPosition[2].xyz - IN.position.xyz;
-    r1.w = 1 - saturate((1.0 / r0.w) / (LightPosition[0].w));
+    r1.w = 1 - saturate((1.0 / LightPosition[0].w) / r0.w);
     r0.w = 1.0 / length(r0.xyz);
     r2.w = max(dot(IN.normal.xyz, r0.xyz * r0.w), 0);
     r0.w = 1 - saturate((1.0 / r0.w) / LightPosition[2].w);

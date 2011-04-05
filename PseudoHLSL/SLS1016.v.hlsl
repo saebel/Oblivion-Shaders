@@ -57,7 +57,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r2;
 
     r0.xyz = LightPosition[1].xyz - IN.position.xyz;
-    r1.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    r1.xyz = normalize(r0.xyz);
     r0.xyz = r0.xyz / LightPosition[1].w;
     r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r2.y = dot(IN.binormal.xyz, LightDirection[0].xyz);

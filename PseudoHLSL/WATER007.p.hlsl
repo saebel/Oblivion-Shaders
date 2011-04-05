@@ -84,17 +84,19 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r4;
     float4 r5;
     float4 r6;
+    float4 r7;
     float4 r9;
 
+    r0.xy = EyePos.xy - IN.texcoord_1.xy;
+    r3.w = sqrt(dot(IN.texcoord_6.xy - 0.5, r0.xy) + 0);
+    r4.w = length(r0.xy);
     r0.xyzw = tex2D(DisplacementMap, IN.texcoord_6.xy);
     r4.x = IN.texcoord_7.z + Scroll.x;
     r4.y = IN.texcoord_7.w + Scroll.y;
     r1.xyzw = tex2D(NormalMap, r4.xy);
-    r4.w = length(EyePos.xy - IN.texcoord_1.xy);
-    r2.w = saturate((r4.w / -8192) + 1);
+    r2.w = saturate(1 - (r4.w / 8192));
     r2.xyz = (2 * r1.xyz) - 1;
     r2.xy = (r2.w * r2.w) * r2.xy;
-    r3.w = length(IN.texcoord_6.xy - 0.5);
     r0.xyz = lerp((2 * r0.xyz) - 1, r2.xyz, (-(saturate(max(0.1, (2 * r3.w) / BlendRadius.x)) - 1)) * BlendRadius.y);
     r1.w = 1;
     r3.xyz = normalize(r0.xyz);
@@ -118,13 +120,16 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r5.x = saturate(dot(r4.xyz, r3.xyz));
     r1.w = 1 - r5.x;
     r2.w = r1.w * r1.w;
+    r7.w = pow(abs(saturate(dot((-(2 * dot(-r4.xyz, r3.xyz)) * r3.xyz) - r4.xyz, SunDir.xyz))), VarAmounts.x);
     r9.w = ((FresnelRI.x - r5.y) * (r1.w * (r2.w * r2.w))) + FresnelRI.x;
+    r3.xyz = lerp((VarAmounts.y * (r2.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r5.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), r9.w);
+    r2.xyz = lerp(r1.xyz, ((saturate(SunDir.w) * (r7.w * SunColor.rgb)) + r3.xyz), r6.w);
+    r1.xyz = ((1 - saturate((FogParam.x - (1.0 / r0.w)) / FogParam.y)) * (FogColor.rgb - r2.xyz)) + r2.xyz;
     r4.w = max(VarAmounts.z, r9.w);
     r4.w = ((r0.x - 1) >= 0.0 ? (((1 - r0.x) * (0.25 - r4.w)) + r4.w) : r4.w);
-    r5.w = ((r0.x - 0.2) / -0.35) + 1;
-    r1.w = (r3.w >= 0.0 ? 0 : ((r0.w >= 0.0 ? 0 : (((r0.x - 0.55) >= 0.0 ? (r4.w * ((r5.w * -(r5.w * r5.w)) + 1)) : r4.w)))));
-    r2.xyz = lerp(r1.xyz, ((saturate(SunDir.w) * (pow(abs(saturate(dot((-(2 * dot(-r4.xyz, r3.xyz)) * r3.xyz) - r4.xyz, SunDir.xyz))), VarAmounts.x) * SunColor.rgb)) + lerp((VarAmounts.y * (r2.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r5.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), r9.w)), r6.w);
-    r1.xyz = ((1 - saturate((FogParam.x - (1.0 / r0.w)) / FogParam.y)) * (FogColor.rgb - r2.xyz)) + r2.xyz;
+    r5.w = 1 - ((r0.x - 0.2) / 0.35);
+    r0.w = ((r0.x - 0.2) >= 0.0 ? 0 : ((r0.x - 0.55) >= 0.0 ? (r4.w * ((r5.w * -(r5.w * r5.w)) + 1)) : r4.w));
+    r1.w = (r3.w >= 0.0 ? 0 : r0.w);
     OUT.color_0.rgba = r0.x <= 0.0 ? r1.xyzw : 0;
 
     return OUT;

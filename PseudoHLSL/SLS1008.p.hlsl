@@ -14,7 +14,7 @@ sampler2D NormalMap;
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   LightColor   const_0       1
+//   LightColor[0]   const_0       1
 //   NormalMap    texture_0       1
 //
 
@@ -49,7 +49,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.w = r0.w * r0.w;
     r2.w = r0.w * r0.w;
     r0.w = r1.w * r0.w;
-    r0.xyz = r1.w * (r2.w * LightColor.r);
+    r0.xyz = r1.w * (r2.w * LightColor[0].r);
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

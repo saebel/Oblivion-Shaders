@@ -72,7 +72,7 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     offset.w = IN.texcoord_1.x;
     r2.xyw = const_6.xyw;
-    r1.xz = (1.0 / length(r2.xxy * EyeDir.xyx)) * -EyeDir.xy;
+    r1.xz = -EyeDir.xy / length(r2.xxy * EyeDir.xyx);
     r1.yw = r1.z * const_6.xx;
     r0.xyz = r1.zxw * const_6.xzz;
     r1.xy = r0.xy * (1.0 / sqrt(dot(r1.yxw, r0.xyz)));
@@ -91,7 +91,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.texcoord_4.xyz = (DiffuseColor.rgb * (r1.w * (dot(DiffuseDir.xyz, 2 * (r1.xyz - 0.5)) * IN.color_0.rgb))) + AmbientColor.rgb;	// [0,1] to [-1,+1]
     OUT.position.xyz = r2.xyz;
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r2.xyz)) / FogParam.y);
-    OUT.texcoord_5.w = ((AlphaParam.x < r0.w ? 1.0 : 0.0) * (saturate(((r0.w - AlphaParam.x) / -AlphaParam.y) + 1) - 1)) + 1;
+    OUT.texcoord_5.w = ((AlphaParam.x < r0.w ? 1.0 : 0.0) * (saturate(1 - ((r0.w - AlphaParam.x) / AlphaParam.y)) - 1)) + 1;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.w = 1;
     OUT.texcoord_5.xyz = 0;

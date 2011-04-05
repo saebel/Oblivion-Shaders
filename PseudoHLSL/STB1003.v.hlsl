@@ -75,7 +75,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r0.xyz = LightPosition[1].xyz - r0.xyz;
-    r1.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    r1.xyz = normalize(r0.xyz);
     r0.xyz = r0.xyz / LightPosition[1].w;
     r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r2.y = dot(IN.binormal.xyz, LightDirection[0].xyz);

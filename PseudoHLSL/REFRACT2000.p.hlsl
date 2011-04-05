@@ -45,7 +45,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.x = (2 * -(r0.z * (r0.x - 0.5))) + IN.texcoord_0.x;
     r1.y = (2 * (r0.z * (r0.y - 0.5))) + IN.texcoord_0.y;	// [0,1] to [-1,+1]
     r0.xyzw = tex2D(Src1, r1.xy);
-    OUT.color_0.rgba = lerp(tex2D(Src0, r1.xy), (tex2D(Src0, IN.texcoord_0.xy)), ((r0.w * r0.w) <= 0.0 ? 1 : 0));
+    r0.xyzw = lerp(tex2D(Src0, r1.xy), (tex2D(Src0, IN.texcoord_0.xy)), ((r0.w * r0.w) <= 0.0 ? 1 : 0));
+    OUT.color_0.rgba = r0.xyzw;
 
     return OUT;
 };

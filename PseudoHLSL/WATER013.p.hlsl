@@ -67,8 +67,9 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.w = 1 - r0.w;
     r1.xyz = (r0.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
     r2.w = r1.w * r1.w;
-    r2.w = ((r1.w - FresnelRI.x) * (r1.w * (r2.w * r2.w))) + FresnelRI.x;
-    r1.xyz = saturate(saturate(SunDir.w) * r0) + ((r2.w * ((((1 - VarAmounts.y) * (ReflectionColor.rgb - r1.xyz)) + r1.xyz) * VarAmounts.y)) + r1.xyz));
+    r2.w = ((1 - FresnelRI.x) * (r1.w * (r2.w * r2.w))) + FresnelRI.x;
+    r1.xyz = (r2.w * ((((1 - VarAmounts.y) * (ReflectionColor.rgb - r1.xyz)) + r1.xyz) * VarAmounts.y)) + r1.xyz;
+    r1.xyz = saturate(saturate(SunDir.w) * r0) + r1.xyz);
     r0.w = max(VarAmounts.z, r2.w);
     r0.xyz = ((1 - saturate((FogParam.x - r4.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;

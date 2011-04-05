@@ -135,7 +135,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     }
     else {
       r2.w = 0;
-      r2.xyz = r0.w;			// partial precision
+      r2.xyz = 0;			// partial precision
     }
 
     r0.x = min(ToggleNumLights.y, 10 - ToggleNumLights.x);			// partial precision
@@ -148,14 +148,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
       r0.xyz = r1.x + const_4.wyz;
       r1.yz = r1.x + const_4.yz;
       r9.xyz = (r0.xyz >= 0.0 ? -r1.xyz : r0.xyz);
-      r0.xyzw = (r9.z <= 0.0 ? ((r9.y <= 0.0 ? (r9.x <= 0.0 ? r11.y : LightData[1].xyzw) : LightData[2].xyzw)) : LightData[3].xyzw);
+      r0.xyzw = (r9.z <= 0.0 ? (r9.y <= 0.0 ? (r9.x <= 0.0 ? r11.y : LightData[1].xyzw) : LightData[2].xyzw) : LightData[3].xyzw);
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z <= 0.0 ? ((r9.y <= 0.0 ? (r9.x <= 0.0 ? r11.y : LightData[0].xyz) : LightData[1].xyz)) : LightData[2].xyz);			// partial precision
+      r0.xyz = (r9.z <= 0.0 ? (r9.y <= 0.0 ? (r9.x <= 0.0 ? r11.y : LightData[0].xyz) : LightData[1].xyz) : LightData[2].xyz);			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -171,14 +171,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     if (1 != r1.w) {
       r9.xyz = (2 * r2.w) + const_33.yzw;
-      r0.xyzw = (r9.z == 0.0 ? LightData[5].xyzw : ((r9.y == 0.0 ? LightData[4].xyzw : (r9.x == 0.0 ? LightData[3].xyzw : r11.y))));
+      r0.xyzw = (r9.z == 0.0 ? LightData[5].xyzw : (r9.y == 0.0 ? LightData[4].xyzw : (r9.x == 0.0 ? LightData[3].xyzw : r11.y)));
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z == 0.0 ? LightData[4].xyz : ((r9.y == 0.0 ? LightData[3].xyz : (r9.x == 0.0 ? LightData[2].xyz : r11.y))));			// partial precision
+      r0.xyz = (r9.z == 0.0 ? LightData[4].xyz : (r9.y == 0.0 ? LightData[3].xyz : (r9.x == 0.0 ? LightData[2].xyz : r11.y)));			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -194,14 +194,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     if (2 != r1.w) {
       r9.xyz = (2 * r2.w) + const_34.yzw;
-      r0.xyzw = (r9.z == 0.0 ? LightData[7].xyzw : ((r9.y == 0.0 ? LightData[6].xyzw : (r9.x == 0.0 ? LightData[5].xyzw : r11.y))));
+      r0.xyzw = (r9.z == 0.0 ? LightData[7].xyzw : (r9.y == 0.0 ? LightData[6].xyzw : (r9.x == 0.0 ? LightData[5].xyzw : r11.y)));
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z == 0.0 ? LightData[6].xyz : ((r9.y == 0.0 ? LightData[5].xyz : (r9.x == 0.0 ? LightData[4].xyz : r11.y))));			// partial precision
+      r0.xyz = (r9.z == 0.0 ? LightData[6].xyz : (r9.y == 0.0 ? LightData[5].xyz : (r9.x == 0.0 ? LightData[4].xyz : r11.y)));			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -217,14 +217,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     if (3 != r1.w) {
       r9.xyz = (2 * r2.w) + const_7.yzw;
-      r0.xyzw = (r9.z == 0.0 ? LightData[9].xyzw : ((r9.y == 0.0 ? LightData[8].xyzw : (r9.x == 0.0 ? LightData[7].xyzw : r11.y))));
+      r0.xyzw = (r9.z == 0.0 ? LightData[9].xyzw : (r9.y == 0.0 ? LightData[8].xyzw : (r9.x == 0.0 ? LightData[7].xyzw : r11.y)));
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z == 0.0 ? LightData[8].xyz : ((r9.y == 0.0 ? LightData[7].xyz : (r9.x == 0.0 ? LightData[6].xyz : r11.y))));			// partial precision
+      r0.xyz = (r9.z == 0.0 ? LightData[8].xyz : (r9.y == 0.0 ? LightData[7].xyz : (r9.x == 0.0 ? LightData[6].xyz : r11.y)));			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -240,14 +240,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     if (4 != r1.w) {
       r9.xyz = (2 * r2.w) + const_8.yzw;
-      r0.xyzw = (r9.z == 0.0 ? LightData[11].xyzw : ((r9.y == 0.0 ? LightData[10].xyzw : (r9.x == 0.0 ? LightData[9].xyzw : r11.y))));
+      r0.xyzw = (r9.z == 0.0 ? LightData[11].xyzw : (r9.y == 0.0 ? LightData[10].xyzw : (r9.x == 0.0 ? LightData[9].xyzw : r11.y)));
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z == 0.0 ? LightData[10].xyz : ((r9.y == 0.0 ? LightData[9].xyz : (r9.x == 0.0 ? LightData[8].xyz : r11.y))));			// partial precision
+      r0.xyz = (r9.z == 0.0 ? LightData[10].xyz : (r9.y == 0.0 ? LightData[9].xyz : (r9.x == 0.0 ? LightData[8].xyz : r11.y)));			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -263,14 +263,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     if (5 != r1.w) {
       r9.xyz = (2 * r2.w) + const_29.yzw;
-      r0.xyzw = (r9.z == 0.0 ? LightData[13].xyzw : ((r9.y == 0.0 ? LightData[12].xyzw : (r9.x == 0.0 ? LightData[11].xyzw : r11.y))));
+      r0.xyzw = (r9.z == 0.0 ? LightData[13].xyzw : (r9.y == 0.0 ? LightData[12].xyzw : (r9.x == 0.0 ? LightData[11].xyzw : r11.y)));
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z == 0.0 ? LightData[12].xyz : ((r9.y == 0.0 ? LightData[11].xyz : (r9.x == 0.0 ? LightData[10].xyz : r11.y))));			// partial precision
+      r0.xyz = (r9.z == 0.0 ? LightData[12].xyz : (r9.y == 0.0 ? LightData[11].xyz : (r9.x == 0.0 ? LightData[10].xyz : r11.y)));			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -286,14 +286,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     if (6 != r1.w) {
       r9.xyz = (2 * r2.w) + const_35.yzw;
-      r0.xyzw = (r9.z == 0.0 ? LightData[15].xyzw : ((r9.y == 0.0 ? LightData[14].xyzw : (r9.x == 0.0 ? LightData[13].xyzw : r11.y))));
+      r0.xyzw = (r9.z == 0.0 ? LightData[15].xyzw : (r9.y == 0.0 ? LightData[14].xyzw : (r9.x == 0.0 ? LightData[13].xyzw : r11.y)));
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z == 0.0 ? LightData[14].xyz : ((r9.y == 0.0 ? LightData[13].xyz : (r9.x == 0.0 ? LightData[12].xyz : r11.y))));			// partial precision
+      r0.xyz = (r9.z == 0.0 ? LightData[14].xyz : (r9.y == 0.0 ? LightData[13].xyz : (r9.x == 0.0 ? LightData[12].xyz : r11.y)));			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -309,14 +309,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     if (7 != r1.w) {
       r9.xyz = (2 * r2.w) + const_30.yzw;
-      r0.xyzw = (r9.z == 0.0 ? LightData[17].xyzw : ((r9.y == 0.0 ? LightData[16].xyzw : (r9.x == 0.0 ? LightData[15].xyzw : r11.y))));
+      r0.xyzw = (r9.z == 0.0 ? LightData[17].xyzw : (r9.y == 0.0 ? LightData[16].xyzw : (r9.x == 0.0 ? LightData[15].xyzw : r11.y)));
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z == 0.0 ? LightData[16].xyz : ((r9.y == 0.0 ? LightData[15].xyz : (r9.x == 0.0 ? LightData[14].xyz : r11.y))));			// partial precision
+      r0.xyz = (r9.z == 0.0 ? LightData[16].xyz : (r9.y == 0.0 ? LightData[15].xyz : (r9.x == 0.0 ? LightData[14].xyz : r11.y)));			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -332,14 +332,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     if (8 != r1.w) {
       r9.xyz = (2 * r2.w) + const_32.yzw;
-      r0.xyzw = (r9.z == 0.0 ? LightData[19].xyzw : ((r9.y == 0.0 ? LightData[18].xyzw : (r9.x == 0.0 ? LightData[17].xyzw : r11.y))));
+      r0.xyzw = (r9.z == 0.0 ? LightData[19].xyzw : (r9.y == 0.0 ? LightData[18].xyzw : (r9.x == 0.0 ? LightData[17].xyzw : r11.y)));
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r5.w = r1.z * (r1.z * r1.z);			// partial precision
       r1.xyz = r0.xyz - IN.input_5.xyz;
       r4.w = length(r1.xyz);
       r0.w = saturate(r4.w / r0.w);
       r0.w = 1.0 - (r0.w * r0.w);			// partial precision
-      r0.xyz = (r9.z == 0.0 ? LightData[18].xyz : ((r9.y == 0.0 ? LightData[17].xyz : (r9.x == 0.0 ? LightData[16].xyz : r11.y))));			// partial precision
+      r0.xyz = (r9.z == 0.0 ? LightData[18].xyz : (r9.y == 0.0 ? LightData[17].xyz : (r9.x == 0.0 ? LightData[16].xyz : r11.y)));			// partial precision
       r10.x = dot(r4.xyz, r1.xyz);
       r10.y = dot(r7.xyz, r1.xyz);
       r10.z = dot(r6.xyz, r1.xyz);
@@ -362,7 +362,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
       r1.xy = (2 * r2.w) + const_31.yz;
       r1.z = 1 - max(dot(r3.xyz, r5.xyz), 0);			// partial precision
       r0.xyz = (r1.y == 0.0 ? LightData[19].xyz : (r1.x == 0.0 ? LightData[18].xyz : r11.y));			// partial precision
-      r2.xyz = r2.xyz + max(((max(dot(r3.xyz, normalize(r4.xyz)), 0) * r0.xyz) + (((r1.z * (r1.z * r1.z)) * r0.xyz) * 0.5)) * (1.0 - (r0.w * r0.w)), 0);			// partial precision
+      r1.xyz = ((max(dot(r3.xyz, normalize(r4.xyz)), 0) * r0.xyz) + (((r1.z * (r1.z * r1.z)) * r0.xyz) * 0.5)) * (1.0 - (r0.w * r0.w));			// partial precision
+      r2.xyz = r2.xyz + max(r1.xyz, 0);			// partial precision
     }
 
     r0.xyzw = tex2D(FaceGenMap0, IN.texcoord_0.xy);			// partial precision

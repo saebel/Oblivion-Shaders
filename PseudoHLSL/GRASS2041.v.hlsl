@@ -81,7 +81,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 r0;
     float4 r1;
     float4 r2;
-    float2 r3;
+    float3 r3;
     float3 r4;
 
     offset.w = IN.texcoord_1.x;
@@ -108,8 +108,9 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.xyz = (r2.w * ScaleMask.xyz) + r1.z;
     r1.z = 0;
     r2.xyz = r2.xyz * IN.position.xyz;
-    r0.xyz = (r2.z * r0.xyz) + ((dot(r1.xyz, r2.xyz) * ((r4.yzx * r0.zxy) - (r0.yzx * r4.zxy))) + (r4.xyz * dot(r1.wxz, r2.xyz)));
-    r0.xy = (((sin((frac((((r0.w / 128) + WindData.w) * (1.0 / (PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
+    r3.xyz = (dot(r1.xyz, r2.xyz) * ((r4.yzx * r0.zxy) - (r0.yzx * r4.zxy))) + (r4.xyz * dot(r1.wxz, r2.xyz));
+    r0.xyz = (r2.z * r0.xyz) + r3.xyz;
+    r0.xy = (((sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
     r0.w = IN.position.w;
     r0.xyz = r0.xyz + InstanceData[0 + offset.w];
     r1.w = dot(ModelViewProj[3].xyzw, r0.xyzw);

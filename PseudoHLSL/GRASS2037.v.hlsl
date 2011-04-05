@@ -88,9 +88,11 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.xyz = r0.xyz - 0.5;
     r2.xyz = 2 * r0.xyz;
     OUT.texcoord_5.xyz = (((r0.w * IN.color_0.rgb) * saturate(dot(DiffuseDir.xyz, r2.xyz))) * DiffuseColor.rgb) * AddlParams.x;
+    r0.w = ((InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x) / 128) + WindData.w;
+    r1.w = (frac((r0.w / (PI * 2)) + 0.5) * PI * 2) - PI;
     r0.w = r2.y;
     r1.xy = EyeVector.xy * EyeVector.xy;
-    r0.xy = (1.0 / sqrt(r1.y + r1.x)) * -EyeVector.xy;
+    r0.xy = -EyeVector.xy / sqrt(r1.y + r1.x);
     r1.yz = const_3.yz;
     r3.xyw = r2.zyzz * r0.yxzx;
     r3.xy = -r3.xy;
@@ -103,7 +105,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.w = r2.x;
     r0.z = r1.x;
     r0.x = dot(r0.zxw, r3.xyz);
-    r0.xy = (((sin((frac(((((InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x) / 128) + WindData.w) / ((PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
+    r0.xy = (((sin(r1.w) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
     r2.xy = r1.z * const_3.zw;
     r0.z = dot(r2.xyz, r3.xyz);
     r1.w = IN.position.w;

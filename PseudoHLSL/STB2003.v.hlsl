@@ -92,7 +92,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r2.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
     r2.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    OUT.texcoord_1.xyz = r2.xyz * (1.0 / length(r2.xyz));
+    OUT.texcoord_1.xyz = normalize(r2.xyz);
     r2.xyz = normalize(r1.xyz);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r2.xyz);
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r2.xyz);
@@ -106,7 +106,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.texcoord_5.xyz = (0.5 * r0.xyz) + 0.5;	// [-1,+1] to [0,1]
     r0.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
     r0.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_6.xy = (1.0 / (r0.w * ShadowProjTransform.w)) * ((r0.w * ShadowProjTransform.xy) + r0.xy);
+    OUT.texcoord_6.xy = ((r0.w * ShadowProjTransform.xy) + r0.xy) / (r0.w * ShadowProjTransform.w);
     r0.w = 1.0 / ShadowProjData.w;
     r0.xy = r0.xy - ShadowProjData.xy;
     OUT.texcoord_6.z = r0.x * r0.w;

@@ -64,7 +64,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r4.xyz = 2 * (IN.color_1.rgb - 0.5);	// [0,1] to [-1,+1]
     r4.x = saturate(dot(2 * (r3.xyz - 0.5), r4.xyz));	// [0,1] to [-1,+1]
     r3.xyz = PSLightColor[0].rgb;
-    r3.xyz = saturate((r4.x * r3)) + AmbientColor.rgb);
+    r3.xyz = saturate((r4.x * r3) + AmbientColor.rgb);
     r0.xyz = (r0.xyz * r3.xyz) + (((-r0.xyz * r3.xyz) + IN.color_0.rgb) * IN.color_0.a);
     OUT.color_0.rgba = r0.xyzw;
 

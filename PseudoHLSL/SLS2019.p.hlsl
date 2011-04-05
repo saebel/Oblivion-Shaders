@@ -80,7 +80,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r0.w = r0.w * AmbientColor.a;			// partial precision
     r1.xyzw = tex2D(GlowMap, IN.texcoord_0.xy);
-    r0.xyz = (((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz)) * max((r4.xyz * (r4.w * PSLightColor[0].rgb)) + ((r1.xyz * EmittanceColor.rgb) + AmbientColor.rgb), 0)) + r2.xyz;			// partial precision
+    r3.xyz = (r4.xyz * (r4.w * PSLightColor[0].rgb)) + ((r1.xyz * EmittanceColor.rgb) + AmbientColor.rgb);			// partial precision
+    r0.xyz = ((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz) * max(r3.xyz, 0)) + r2.xyz;			// partial precision
     r0.xyz = (Toggles.y <= 0.0 ? lerp(IN.color_1.rgb, r0.xyz, IN.color_1.a) : r0.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 

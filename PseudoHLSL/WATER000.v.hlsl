@@ -66,9 +66,9 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyzw = (r1.w * ModelViewProj[0].xyzw) + r0.xyzw;
-    OUT.texcoord_3.xyzw = (r1.w * ModelViewProj[1].xyzw) + r0.xyzw;
-    OUT.texcoord_4.xyzw = (r1.w * ModelViewProj[2].xyzw) + r0.xyzw;
+    OUT.texcoord_2.xyzw = (0.5 * ModelViewProj[0].xyzw) + r0.xyzw;
+    OUT.texcoord_3.xyzw = (0.5 * ModelViewProj[1].xyzw) + r0.xyzw;
+    OUT.texcoord_4.xyzw = (0.5 * ModelViewProj[2].xyzw) + r0.xyzw;
     r0.x = dot(WorldMat[0].xyzw, IN.position.xyzw);
     r0.y = dot(WorldMat[1].xyzw, IN.position.xyzw);
     OUT.texcoord_1.z = dot(WorldMat[2].xyzw, IN.position.xyzw);
@@ -78,8 +78,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.texcoord_0.xyzw = IN.position.xyzw;
     OUT.texcoord_5.xyzw = ModelViewProj[3].xyzw;
     OUT.texcoord_6.xy = IN.texcoord_0.xy;
-    OUT.texcoord_6.zw = (const_12.xyxy * (((IN.texcoord_0.xyxy * r1.w) + DepthOffset.xyyx) / 3)) + const_12.xyzx;
-    OUT.texcoord_7.xy = (1.0 / Tile.x) * IN.texcoord_0.xy;
+    OUT.texcoord_6.zw = (const_12.xyxy * (((IN.texcoord_0.xyxy / Tile.x) + DepthOffset.xyyx) / 3)) + const_12.xyzx;
+    OUT.texcoord_7.xy = IN.texcoord_0.xy / Tile.x;
 
     return OUT;
 };

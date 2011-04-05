@@ -55,10 +55,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r1;
 
     r0.xyz = LightPosition[0].xyz - IN.position.xyz;
-    r1.xyz = EyePosition.xyz - IN.position.xyz;
-    r1.xyz = normalize(r0.xyz) + (r1.xyz * (1.0 / length(r1.xyz)));
+    r1.xyz = normalize(normalize(r0.xyz) + normalize(EyePosition.xyz - IN.position.xyz));
     r0.xyz = r0.xyz / LightPosition[0].w;
-    r1.xyz = r1.xyz * (1.0 / length(r1.xyz));
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
@@ -66,7 +64,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.texcoord_3.x = dot(IN.tangent.xyz, r1.xyz);
     OUT.texcoord_3.y = dot(IN.binormal.xyz, r1.xyz);
     OUT.texcoord_3.z = dot(IN.normal.xyz, r1.xyz);
-    r1.x = dot(IN.tangent.xyz, r2.xyz);
+    r1.x = dot(IN.tangent.xyz, IN.normal.xyz);
     r1.y = dot(IN.binormal.xyz, IN.normal.xyz);
     r1.z = dot(IN.normal.xyz, IN.normal.xyz);
     OUT.color_0.rgb = (0.5 * r1.xyz) + 0.5;

@@ -35,6 +35,6 @@
     r0.xyz = saturate(r0.xyz + AmbientColor.rgb);
     r0.xyz = IN.texcoord_0.xyz * r0.xyz;
   + r0.w = IN.texcoord_0.w * AmbientColor.a;
-    mul_x2 r0.xyz, r0, const_7
+    2 * (mul) r0.xyz, r0, const_7
 
 // approximately 9 instruction slots used (4 texture, 5 arithmetic)

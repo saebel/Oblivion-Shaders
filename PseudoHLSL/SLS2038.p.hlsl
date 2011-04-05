@@ -53,7 +53,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.xyz = normalize(IN.texcoord_1.xyz);			// partial precision
     r0.x = dot(r0.xyz, r1.xyz);			// partial precision
     r2.w = (r0.w * 0.7) * pow(abs(1 - saturate(abs(dot(r2.xyz, r1.xyz) - dot(r2.xyz, normalize(IN.texcoord_3.xyz))))), 30);			// partial precision
-    r1.xyz = (((0.2 - r0.x) >= 0.0 ? r2.w : (r2.w * max(r0.x + 0.5, 0)))) * PSLightColor[0].rgb;			// partial precision
+    r1.xyz = ((0.2 - r0.x) >= 0.0 ? r2.w : (r2.w * max(r0.x + 0.5, 0))) * PSLightColor[0].rgb;			// partial precision
     r0.w = dot(r1.xyz, 1);			// partial precision
     r0.xyz = saturate(r1.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision

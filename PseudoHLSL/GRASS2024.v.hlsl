@@ -80,7 +80,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 offset;
     float4 r0;
     float4 r1;
-    float3 r2;
+    float4 r2;
     float2 r3;
 
     offset.w = IN.texcoord_1.x;
@@ -90,7 +90,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r2.xyz = (r0.xyz * saturate(dot(DiffuseDir.xyz, r1.xyz))) * DiffuseColor.rgb;
     r0.x = 2 * (frac(r0.w / 17) - 0.5);	// [0,1] to [-1,+1]
-    r1.w = (sin((frac((((r0.w / 128) + WindData.w) / ((PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a);
+    r2.w = sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) - PI) * WindData.z;
     r0.w = sqrt(1.0 - (r0.x * r0.x));	// arcsin = 1 / sqrt(1 - x²)
     r0.yz = const_8.yz;
     r1.xyz = (((r0.y * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r0.z) * IN.position.xyz;
@@ -98,7 +98,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.z = 0;
     r3.x = dot(r0.xyz, r1.xyz);
     r3.y = dot(r0.wxz, r1.xyz);
-    r0.xy = (r1.w * WindData.xy) + r3.xy;
+    r0.xy = ((r2.w * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r3.xy;
     r0.z = r1.z;
     r1.w = IN.position.w;
     r1.xyz = r0.xyz + InstanceData[0 + offset.w];

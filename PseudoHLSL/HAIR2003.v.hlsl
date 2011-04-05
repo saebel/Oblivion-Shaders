@@ -90,7 +90,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.w = max(dot(IN.normal.xyz, r0.xyz * r0.w), 0);
     r0.xyz = LightPosition[1].xyz - IN.position.xyz;
     r0.w = 1 - saturate((1.0 / r0.w) / LightPosition[2].w);
-    OUT.texcoord_1.xyz = r1.xyz * (1.0 / length(r1.xyz));
+    OUT.texcoord_1.xyz = normalize(r1.xyz);
     r1.xyz = r1.w * LightColor[2].rgb;
     r1.w = 1.0 / length(r0.xyz);
     r1.xyz = r1.xyz * (r0.w * r0.w);

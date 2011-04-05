@@ -71,8 +71,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
     r0.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
     r0.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
-    r0.xyz = EyePosition.xyz - r0.xyz;
-    r0.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    r0.xyz = normalize(EyePosition.xyz - r0.xyz);
     OUT.texcoord_2.y = dot(r1.xyz, ObjToCubeSpace[1].xyz);
     OUT.texcoord_3.y = dot(r1.xyz, ObjToCubeSpace[2].xyz);
     OUT.texcoord_2.z = dot(IN.normal.xyz, ObjToCubeSpace[1].xyz);

@@ -61,7 +61,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r3.xyzw = tex2D(AttenuationMap, IN.texcoord_5.xy);			// partial precision
     r4.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
     r4.xyz = normalize(2 * (r4.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
-    r0.xyz = (saturate((1 - r1.x) - r0.x) * (saturate(dot(r4.xyz, normalize(IN.texcoord_1.xyz))) * PSLightColor[0].rgb)) + saturate((1 - r3.x) - r2.x) * (saturate(dot(r4.xyz, normalize(IN.texcoord_2.xyz))) * PSLightColor[1].rgb);			// partial precision
+    r2.xyz = saturate((1 - r3.x) - r2.x) * (saturate(dot(r4.xyz, normalize(IN.texcoord_2.xyz))) * PSLightColor[1].rgb);			// partial precision
+    r0.xyz = (saturate((1 - r1.x) - r0.x) * (saturate(dot(r4.xyz, normalize(IN.texcoord_1.xyz))) * PSLightColor[0].rgb)) + r2.xyz;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

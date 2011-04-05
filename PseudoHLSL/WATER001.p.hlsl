@@ -72,7 +72,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r1;
     float4 r2;
     float4 r3;
-    float3 r4;
+    float4 r4;
     float1 r6;
 
     r2.xy = IN.texcoord_6.xy + Scroll.xy;
@@ -80,7 +80,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.w = length(EyePos.xy - IN.texcoord_1.xy);
     r0.w = (saturate(r1.w * 0.0002) * 2496) + 4;
     r0.xyz = (2 * r0.xyz) - 1;
-    r2.w = saturate((r1.w / -8192) + 1);
+    r2.w = saturate(1 - (r1.w / 8192));
     r0.xy = (r2.w * r2.w) * r0.xy;
     r1.w = 1;
     r3.xyz = normalize(r0.xyz);
@@ -99,9 +99,11 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.w = 1 - r6.x;
     r3.w = r1.w * r1.w;
     r3.w = r1.w * (r3.w * r3.w);
-    r1.xyz = lerp(r0.xyz, ((saturate(SunDir.w) * (pow(abs(saturate(dot((-(2 * dot(-r4.xyz, r3.xyz)) * r3.xyz) - r4.xyz, SunDir.xyz))), VarAmounts.x) * SunColor.rgb)) + lerp((VarAmounts.y * (r1.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r6.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), ((1 - FresnelRI.x) * (((1 - FresnelRI.x) * r3.w) + FresnelRI.x)) + FresnelRI.x)), r2.w * VarAmounts.w);
+    r2.xyz = lerp((VarAmounts.y * (r1.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r6.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), ((1 - FresnelRI.x) * r3.w) + FresnelRI.x);
+    r4.w = pow(abs(saturate(dot((-(2 * dot(-r4.xyz, r3.xyz)) * r3.xyz) - r4.xyz, SunDir.xyz))), VarAmounts.x);
+    r1.xyz = lerp(r0.xyz, ((saturate(SunDir.w) * (r4.w * SunColor.rgb)) + r2.xyz), r2.w * VarAmounts.w);
     r0.xyz = ((1 - saturate((FogParam.x - (1.0 / r0.w)) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
-    r0.w = max(VarAmounts.z, r3.w);
+    r0.w = max(VarAmounts.z, ((1 - FresnelRI.x) * r3.w) + FresnelRI.x);
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

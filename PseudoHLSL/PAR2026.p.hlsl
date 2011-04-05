@@ -62,7 +62,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float3 r4;
 
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
-    r0.xy = (((r0.w * 0.04) - 0.02) * ((1.0 / length(IN.texcoord_6.xyz)) * IN.texcoord_6.xy)) + IN.texcoord_0.xy;
+    r0.xy = (((r0.w * 0.04) - 0.02) * (IN.texcoord_6.xy / length(IN.texcoord_6.xyz))) + IN.texcoord_0.xy;
     r1.xyzw = tex2D(NormalMap, r0.xy);			// partial precision
     r0.xyzw = tex2D(BaseMap, r0.xy);			// partial precision
     r0.w = AmbientColor.a;			// partial precision
@@ -78,9 +78,15 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r3.x = dot(r1.xyz, IN.texcoord_1.xyz);			// partial precision
     r4.xyz = normalize(IN.texcoord_2.xyz);			// partial precision
     r4.x = dot(r1.xyz, r4.xyz);			// partial precision
-    r1.xyz = (((0.2 - r4.x) >= 0.0 ? r3.w : (r3.w * max(r4.x + 0.5, 0)))) * PSLightColor[1].rgb;			// partial precision
-    r3.w = r1.w * pow(abs(r2.x), Toggles.z);			// partial precision
-    r0.xyz = (((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz)) * max(((saturate(r3.x) * PSLightColor[0].rgb) + (r2.w * (saturate(r4.x) * PSLightColor[1].rgb))) + AmbientColor.rgb, 0)) + saturate(r2.w * r1.xyz) + saturate((((0.2 - r3.x) >= 0.0 ? r3.w : (r3.w * max(r3.x + 0.5, 0)))) * PSLightColor[0].rgb);			// partial precision
+    r1.xyz = ((0.2 - r4.x) >= 0.0 ? r3.w : (r3.w * max(r4.x + 0.5, 0))) * PSLightColor[1].rgb;			// partial precision
+    r3.w = pow(abs(r2.x), Toggles.z);			// partial precision
+    r2.xyz = saturate(r2.w * r1.xyz);			// partial precision
+    r3.w = r1.w * r3.w;			// partial precision
+    r1.xyz = saturate(((0.2 - r3.x) >= 0.0 ? r3.w : (r3.w * max(r3.x + 0.5, 0))) * PSLightColor[0].rgb);			// partial precision
+    r2.xyz = r2.xyz + r1.xyz;			// partial precision
+    r1.xyz = (Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz);			// partial precision
+    r0.xyz = (saturate(r3.x) * PSLightColor[0].rgb) + (r2.w * (saturate(r4.x) * PSLightColor[1].rgb));			// partial precision
+    r0.xyz = (r1.xyz * max(r0.xyz + AmbientColor.rgb, 0)) + r2.xyz;			// partial precision
     r0.xyz = (Toggles.y <= 0.0 ? lerp(IN.color_1.rgb, r0.xyz, IN.color_1.a) : r0.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 

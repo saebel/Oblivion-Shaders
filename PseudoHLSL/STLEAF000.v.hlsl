@@ -82,17 +82,20 @@ VS_OUTPUT main(VS_INPUT IN) {
     float1 r5;
 
     offset.x = IN.blendindices.z;
-    r0.w = pow(2.0, (((IN.blendindices.z * r0.w) + RustleParams.y) * 0.499999553) + 0.25);
-    r0.w = ((((r0.w * PI * 2) - PI) * PI * 2) - PI) * ((((r0.w * PI * 2) - PI) * PI * 2) - PI);
+    r0.w = (pow(2.0, (((IN.blendindices.z / 48) + RustleParams.y) * 0.499999553) + 0.25) * PI * 2) - PI;
+    r0.w = r0.w * r0.w;
     r1.w = (pow(2.0, (((IN.blendindices.z / 48) + RockParams.y) * 0.499999553) + 0.25) * PI * 2) - PI;
     r1.w = r1.w * r1.w;
-    r0.xy = (PI * 2 * frac((((((r1.w * ((r1.w * ((r1.w * ((r1.w * ((r1.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24))) - 0.5)) + 1) * RockParams.z) * RockParams.x) * (1.0 / (PI * 2))) + const_4.yz)) - PI;
+    r2.w = (r1.w * ((r1.w * ((r1.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24);
+    r1.xy = (((((r1.w * ((r1.w * r2.w) - 0.5)) + 1) * RockParams.z) * RockParams.x) / (PI * 2)) + const_4.yz;
+    r0.xy = (PI * 2 * frac(r1.xy)) - PI;
     r0.xy = r0.xy * r0.xy;
+    r1.w = (r0.w * ((r0.w * ((r0.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24);
     r1.xy = (-2.52398507e-007 * r0.xy) + 2.47609005e-005;
     r2.xy = (r1 * r0.xy) - 0.00138883968;
     r2.xy = (r2 * r0.xy) + (1.0 / 24);
     r2.xy = (r2 * r0.xy) - 0.5;
-    r3.xy = (((((r0.w * ((r0.w * ((r0.w * ((r0.w * ((r0.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24))) - 0.5)) + 1) * RustleParams.z) * RustleParams.x) * (1.0 / (PI * 2))) + const_4.yz;
+    r3.xy = (((((r0.w * ((r0.w * r1.w) - 0.5)) + 1) * RustleParams.z) * RustleParams.x) / (PI * 2)) + const_4.yz;
     r0.xw = (r0.yyzx * r2.yyzx) + 1;
     r1.xy = (PI * 2 * frac(r3.xy)) - PI;
     r1.xy = r1.xy * r1.xy;
@@ -122,8 +125,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.y = dot(WindMatrices[1 + offset.x], r1.xyzw);
     r0.z = dot(WindMatrices[2 + offset.x], r1.xyzw);
     r1.xyzw = (IN.blendindices.x * (r0.xyzw - r1.xyzw)) + r1.xyzw;
-    r2.xyz = (LeafLighting.y * (r2.xyz * (1.0 / length(r2.xyzw)))) + IN.normal.xyz;
-    r0.xyzw = (SunDimmer.x * (saturate(dot(r2.xyz * (1.0 / length(r2.xyz)), LightVector.xyz)) * DiffColor.rgba)) + AmbientColor.rgba;
+    r0.xyzw = (SunDimmer.x * (saturate(dot(normalize((LeafLighting.y * (r2.xyz / length(r2.xyzw))) + IN.normal.xyz), LightVector.xyz)) * DiffColor.rgba)) + AmbientColor.rgba;
     OUT.position.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, r1.xyzw);

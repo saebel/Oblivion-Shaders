@@ -178,7 +178,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r5.x = dot(r4.xyz, r6.xyz);
     r5.y = dot(r3.xyz, r6.xyz);
     r5.z = dot(r1.xyz, r6.xyz);
-    OUT.texcoord_6.xyz = r5.xyz * (1.0 / length(r5.xyz));
+    OUT.texcoord_6.xyz = normalize(r5.xyz);
     r5.xyz = r2.xyz * r1.w;
     OUT.texcoord_2.x = dot(r4.xyz, r5.xyz);
     OUT.texcoord_2.y = dot(r3.xyz, r5.xyz);
@@ -191,7 +191,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r4.y = dot(ShadowProj[1].xyzw, r0.xyzw);
     OUT.texcoord_4.y = dot(r3.xyz, r2.xyz);
     OUT.texcoord_4.z = dot(r1.xyz, r2.xyz);
-    OUT.texcoord_7.xy = ((r1.w * ShadowProjTransform.xy) + r4.xy) / ((r1.w * ShadowProjTransform.w));
+    OUT.texcoord_7.xy = ((r1.w * ShadowProjTransform.xy) + r4.xy) / (r1.w * ShadowProjTransform.w);
     r1.w = 1.0 / ShadowProjData.w;
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
     r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);

@@ -28,7 +28,9 @@
 //   VOffset           c10      1
 //   FogParam          c12      1
 //   FogColor          c13      1
-//   Bones             c14     54
+//   Bones[0]             c14      18
+//   Bones[1]             c15      18
+//   Bones[2]             c16      18
 //
 
     vs_2_0

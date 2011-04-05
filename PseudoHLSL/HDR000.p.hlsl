@@ -76,7 +76,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r3.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[1].xy) + IN.texcoord_0.xy);
     r0.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[3].xy) + IN.texcoord_0.xy);
     r0.w = 1;
-    r0.xyz = (BlurOffsets[3].z * r0.xyz) + ((BlurOffsets[2].z * r1.xyz) + ((BlurOffsets[0].z * r2.xyz) + (r3.xyz * BlurOffsets[1].z)));            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
+    r1.xyz = (BlurOffsets[2].z * r1.xyz) + ((BlurOffsets[0].z * r2.xyz) + (r3.xyz * BlurOffsets[1].z));            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4)
+    r0.xyz = (BlurOffsets[3].z * r0.xyz) + r1.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

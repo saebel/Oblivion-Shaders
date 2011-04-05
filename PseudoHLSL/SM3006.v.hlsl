@@ -77,7 +77,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.xyz = dot(ShadowProj[3].xyzw, IN.position.xyzw) * ShadowProjTransform.xyw;
     r2.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
     r2.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xy = (1.0 / r0.z) * (r0.xy + r2.xy);
+    OUT.texcoord_1.xy = (r0.xy + r2.xy) / r0.z;
     r0.xy = r2.xy - ShadowProjData.xy;
     OUT.texcoord_1.z = r0.x * r0.w;
     OUT.texcoord_1.w = (r0.y * -r0.w) + 1;

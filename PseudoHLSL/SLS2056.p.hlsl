@@ -56,7 +56,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyz = normalize(2 * (r0.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
     r2.w = r0.w * pow(abs(saturate(dot(r0.xyz, 2 * (IN.texcoord_3.xyz - 0.5)))), Toggles.z);			// partial precision	// [0,1] to [-1,+1]
     r0.x = dot(r0.xyz, 2 * (IN.texcoord_2.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
-    r0.xyz = (((0.2 - r0.x) >= 0.0 ? r2.w : (r2.w * max(r0.x + 0.5, 0)))) * PSLightColor[0].rgb;			// partial precision
+    r0.xyz = ((0.2 - r0.x) >= 0.0 ? r2.w : (r2.w * max(r0.x + 0.5, 0))) * PSLightColor[0].rgb;			// partial precision
     r2.xyz = r0.xyz * IN.texcoord_1.xyz;
     r0.x = IN.texcoord_4.z;			// partial precision
     r0.y = IN.texcoord_4.w;			// partial precision

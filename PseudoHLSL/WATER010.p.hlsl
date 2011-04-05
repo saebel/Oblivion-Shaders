@@ -69,14 +69,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r4;
 
     r0.xyzw = tex2D(DisplacementMap, IN.texcoord_6.xy);
+    r1.w = sqrt(dot(IN.texcoord_6.xy - 0.5, r1.xy) + 0);
     r1.xy = EyePos.xy - IN.texcoord_1.xy;
     r0.w = dot(r1.xy, r1.xy) + 0;
     r1.xyz = (2 * r0.xyz) - 1;
-    r2.w = saturate((sqrt(r0.w) / -8192) + 1);
+    r2.w = saturate((sqrt(r0.w) * -(1.0 / 8192)) + 1);
     r4.x = IN.texcoord_7.z + Scroll.x;
     r4.y = IN.texcoord_7.w + Scroll.y;
     r0.xyzw = tex2D(NormalMap, r4.xy);
-    r1.w = length(IN.texcoord_6.xy - 0.5);
     r2.xyz = (2 * r0.xyz) - 1;
     r2.xy = (r2.w * r2.w) * r2.xy;
     r2.xyz = normalize(lerp(r1.xyz, r2.xyz, (1 - saturate(max(0.1, (2 * r1.w) / BlendRadius.x))) * BlendRadius.y));

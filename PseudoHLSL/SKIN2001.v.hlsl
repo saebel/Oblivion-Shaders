@@ -145,7 +145,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r4.y = dot(r5.xyz, LightDirection[0].xyz);
     r4.z = dot(r3.xyz, LightDirection[0].xyz);
     OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_1.xyz = r4.xyz * (1.0 / length(r4.xyz));
+    OUT.texcoord_1.xyz = normalize(r4.xyz);
     r4.xyz = normalize(EyePosition.xyz - r0.xyz);
     r2.x = dot(r1.xyz, r4.xyz);
     r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);

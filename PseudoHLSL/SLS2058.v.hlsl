@@ -95,7 +95,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.x = dot(Bones[0 + offset.w], IN.normal.xyz);
     r1.y = dot(Bones[1 + offset.w], IN.normal.xyz);
     r1.z = dot(Bones[2 + offset.w], IN.normal.xyz);
-    r2.xyz = (r1.w * r1.xyz) + r2.xyz;
+    r2.xyz = ((1 - dot(IN.blendweight.xyz, 1)) * r1.xyz) + r2.xyz;
     r1.xyz = normalize(r2.xyz);
     r2.x = dot(SkinWorldViewTranspose[0].xyz, r1.xyz);
     r2.y = dot(SkinWorldViewTranspose[1].xyz, r1.xyz);

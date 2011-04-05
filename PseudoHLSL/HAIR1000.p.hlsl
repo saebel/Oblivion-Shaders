@@ -35,7 +35,7 @@ float4 Toggles;
     r0.xyz = saturate((PSLightColor[0].rgb * r0.xyz) + IN.input_0.xyz);
     r0.xyz = saturate(r0.xyz + AmbientColor.rgb);
     r0.xyz = IN.texcoord_0.xyz * r0.xyz;
-    mul_x2 r0.xyz, r0, const_7
+    2 * (mul) r0.xyz, r0, const_7
     r1.xyz = IN.texcoord_1.w * r1.xyz;
   + r0.w = IN.texcoord_0.w * AmbientColor.a;
     r0.xyz = (IN.texcoord_0.xyz * r1.xyz) + r0.xyz;

@@ -93,8 +93,9 @@ VS_OUTPUT main(VS_INPUT IN) {
     r1.w = 1 - saturate((1.0 / r0.w) / LightPosition[0].w);
     r2.w = 1.0 / length(r0.xyz);
     r0.w = 1 - saturate((1.0 / r2.w) / LightPosition[2].w);
+    r1.xyz = max(min(saturate(dot(IN.normal.xyz, LightDirection[1].xyz)) * LightColor[1].rgb, 1), 0);
     OUT.color_0.a = r1.w * r1.w;
-    OUT.color_0.rgb = ((r0.w * r0.w) * (max(dot(IN.normal.xyz, r0.xyz * r2.w), 0) * LightColor[2].rgb)) + max(min(saturate(dot(IN.normal.xyz, LightDirection[1].xyz)) * LightColor[1].rgb, 1), 0);
+    OUT.color_0.rgb = ((r0.w * r0.w) * (max(dot(IN.normal.xyz, r0.xyz * r2.w), 0) * LightColor[2].rgb)) + r1.xyz;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_1.rgba = IN.color_0.rgba;
 

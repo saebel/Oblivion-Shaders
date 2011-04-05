@@ -68,7 +68,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     r3.xy = IN.texcoord_6.xy + Scroll.xy;
     r0.xyzw = tex2D(NormalMap, r3.xy);
-    r2.w = saturate((length(EyePos.xy - IN.texcoord_1.xy) / -8192) + 1);
+    r2.w = saturate(1 - (length(EyePos.xy - IN.texcoord_1.xy) / 8192));
     r2.xyz = (2 * r0.xyz) - 1;
     r2.xy = (r2.w * r2.w) * r2.xy;
     r0.xyz = normalize(r2.xyz);
@@ -83,11 +83,13 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r3.xy = (0.1 * r0.xy) + r3.xy;
     r0.xyz = r2.w * SunColor.rgb;
     r2.w = r0.w * r0.w;
-    r2.w = ((FresnelRI.x - r3.z) * (r0.w * (r2.w * r2.w))) + FresnelRI.x;
-    r0.xyzw = tex2D(DetailMap, r3.xy);
+    r2.w = r0.w * (r2.w * r2.w);
     r2.xyz = (r2.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
-    r1.xyz = lerp(r0.xyz, saturate(saturate(SunDir.w) * r0) + ((r2.w * ((((1 - VarAmounts.y) * (ReflectionColor.rgb - r2.xyz)) + r2.xyz) * VarAmounts.y)) + r2.xyz)), r3.w);
-    r0.w = max(VarAmounts.z, r2.w);
+    r1.xyz = ((((1 - FresnelRI.x) * r2.w) + FresnelRI.x) * ((((1 - VarAmounts.y) * (ReflectionColor.rgb - r2.xyz)) + r2.xyz) * VarAmounts.y)) + r2.xyz;
+    r2.xyz = saturate(saturate(SunDir.w) * r0) + r1.xyz);
+    r0.xyzw = tex2D(DetailMap, r3.xy);
+    r0.w = max(VarAmounts.z, ((1 - FresnelRI.x) * r2.w) + FresnelRI.x);
+    r1.xyz = lerp(r0.xyz, r2.xyz, r3.w);
     r0.xyz = ((1 - saturate((FogParam.x - (1.0 / r1.w)) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
     OUT.color_0.rgba = r0.xyzw;
 

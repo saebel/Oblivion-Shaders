@@ -53,7 +53,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     float3 r2;
 
     r0.xyz = LightPosition[0].xyz - IN.position.xyz;
-    r2.xyz = r0.xyz * (1.0 / length(r0.xyz));
+    r2.xyz = normalize(r0.xyz);
     r0.xyz = r0.xyz / LightPosition[0].w;
     r1.x = dot(IN.tangent.xyz, r2.xyz);
     r1.y = dot(IN.binormal.xyz, r2.xyz);
@@ -62,7 +62,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_3.xyz = r1.xyz * (1.0 / length(r1.xyz));
+    OUT.texcoord_3.xyz = normalize(r1.xyz);
     OUT.texcoord_1.xy = (0.5 * r0.xy) + 0.5;
     OUT.texcoord_2.x = (r0.z * 0.5) + 0.5;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

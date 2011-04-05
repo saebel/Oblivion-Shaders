@@ -65,12 +65,13 @@ VS_OUTPUT main(VS_INPUT IN) {
     float4 r2;
 
     r0.xy = abs(IN.position.xy);
-    r0.w = (1.0 / max(r0.y, r0.x)) * min(r0.y, r0.x);
+    r0.w = min(r0.y, r0.x) / max(r0.y, r0.x);
     r1.w = r0.w * r0.w;
-    r2.w = r0.w * ((r1.w * ((r1.w * ((r1.w * ((r1.w * 0.0208350997) - 0.0851330012)) + 0.180141002)) - 0.330299497)) + 0.999866009);
+    r2.w = (r1.w * ((r1.w * ((r1.w * 0.0208350997) - 0.0851330012)) + 0.180141002)) - 0.330299497;
+    r2.w = r0.w * ((r1.w * r2.w) + 0.999866009);
     r0.w = min(IN.position.y, IN.position.x);
     r0.w = (r0.w < -r0.w ? 1.0 : 0.0);
-    r0.w = r0.w * ((max(IN.position.y, IN.position.x) == 0 ? 1.0 : 0.0));
+    r0.w = r0.w * (max(IN.position.y, IN.position.x) == 0 ? 1.0 : 0.0);
     r2.w = ((IN.position.y < -IN.position.y ? 1.0 : 0.0) * -PI) + ((((r2.w * -2) + PI / 2) * (r0.y < r0.x ? 1.0 : 0.0)) + r2.w);
     r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     r1.w = (r0.w * -(2 * r2.w)) + r2.w;
@@ -80,7 +81,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     r1.xyz = EyePosition.xyz - IN.position.xyz;
-    r2.xyz = (-2 * (r1.xyz * ((dot(IN.normal.xyz, r1.xyz) < 1 ? 1.0 : 0.0)))) + r1.xyz;
+    r2.xyz = (-2 * (r1.xyz * (dot(IN.normal.xyz, r1.xyz) < 1 ? 1.0 : 0.0))) + r1.xyz;
     r1.x = dot(IN.tangent.xyz, r2.xyz);
     r1.y = dot(IN.binormal.xyz, r2.xyz);
     r1.z = dot(IN.normal.xyz, r2.xyz);

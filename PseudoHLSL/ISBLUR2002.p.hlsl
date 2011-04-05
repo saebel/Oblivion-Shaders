@@ -69,7 +69,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r6.xyzw = tex2D(Src0, r6.xy);
     r7.xyzw = tex2D(Src0, r7.xy);
     r8.xyzw = tex2D(Src0, r8.xy);
-    r0.xyz = (0.025 * r0.xyz) + ((0.05 * r1.xyz) + ((0.075 * r2.xyz) + ((0.15 * r3.xyz) + ((0.3 * r4.xyz) + ((0.15 * r5.xyz) + ((0.075 * r6.xyz) + ((0.025 * r7.xyz) + (r8.xyz * 0.05))))))));
+    r4.xyz = (0.3 * r4.xyz) + ((0.15 * r5.xyz) + ((0.075 * r6.xyz) + ((0.025 * r7.xyz) + (r8.xyz * 0.05))));
+    r0.xyz = (0.025 * r0.xyz) + ((0.05 * r1.xyz) + ((0.075 * r2.xyz) + ((0.15 * r3.xyz) + r4.xyz)));
     OUT.color_0.rgba = r0.xyzw;
 
     return OUT;

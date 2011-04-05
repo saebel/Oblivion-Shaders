@@ -90,7 +90,9 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.w = r1.w * (r1.w * r1.w);			// partial precision
     r4.xyzw = tex2D(ShadowMap, IN.texcoord_7.xy);			// partial precision
     r6.xyzw = tex2D(AttenuationMap, IN.texcoord_4.xy);			// partial precision
-    r3.xyz = max(((((r3.x * (r4.xyz - 1)) + 1) * ((max(dot(r9.xyz, IN.texcoord_1.xyz), 0) * PSLightColor[0].rgb) + ((r1.w * PSLightColor[0].rgb) * 0.5))) + saturate((1 - r6.x) - r5.x) * ((max(dot(r9.xyz, normalize(IN.texcoord_2.xyz)), 0) * PSLightColor[1].rgb) + ((r1.w * PSLightColor[1].rgb) * 0.5))) + AmbientColor.rgb, 0);			// partial precision
+    r5.xyz = saturate((1 - r6.x) - r5.x) * ((max(dot(r9.xyz, normalize(IN.texcoord_2.xyz)), 0) * PSLightColor[1].rgb) + ((r1.w * PSLightColor[1].rgb) * 0.5));			// partial precision
+    r3.xyz = (((r3.x * (r4.xyz - 1)) + 1) * ((max(dot(r9.xyz, IN.texcoord_1.xyz), 0) * PSLightColor[0].rgb) + ((r1.w * PSLightColor[0].rgb) * 0.5))) + r5.xyz;			// partial precision
+    r3.xyz = max(r3.xyz + AmbientColor.rgb, 0);			// partial precision
     r1.xyz = (-r0.xyz * r3.xyz) + IN.color_1.rgb;			// partial precision
     r0.xyz = r3.xyz * r0.xyz;			// partial precision
     r0.xyz = (Toggles.y <= 0.0 ? ((IN.color_1.a * r1.xyz) + r0.xyz) : r0.xyz);			// partial precision

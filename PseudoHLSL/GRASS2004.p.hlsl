@@ -51,7 +51,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r2;
 
     r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);			// partial precision
-    r0.w = (((AlphaTestRef.x - r0.w) >= 0.0 ? 1 : 0)) * IN.texcoord_5.w;			// partial precision
+    r0.w = ((AlphaTestRef.x - r0.w) >= 0.0 ? 1 : 0) * IN.texcoord_5.w;			// partial precision
     r1.xyzw = tex2D(ShadowMaskMap, IN.texcoord_3.xy);			// partial precision
     r2.xyzw = tex2D(ShadowMap, IN.texcoord_2.xy);			// partial precision
     r1.xyz = (((IN.texcoord_3.z * (r1.x * (r2.xyz - 1))) + 1) * IN.texcoord_5.xyz) + IN.texcoord_4.xyz;			// partial precision

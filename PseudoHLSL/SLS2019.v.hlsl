@@ -62,7 +62,7 @@ VS_OUTPUT main(VS_INPUT IN) {
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xyz = r1.xyz * (1.0 / length(r1.xyz));
+    OUT.texcoord_1.xyz = normalize(r1.xyz);
     r1.xyz = normalize(r0.xyz);
     OUT.texcoord_2.x = dot(IN.tangent.xyz, r1.xyz);
     OUT.texcoord_2.y = dot(IN.binormal.xyz, r1.xyz);

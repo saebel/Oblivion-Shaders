@@ -25,7 +25,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r0;
 
     r0.w = 1;
-    r0.xyz = saturate((1.0 / IN.texcoord_1.w) * IN.texcoord_1.z);			// partial precision
+    r0.xyz = saturate(IN.texcoord_1.z / IN.texcoord_1.w);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
     return OUT;

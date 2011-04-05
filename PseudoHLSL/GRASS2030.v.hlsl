@@ -113,7 +113,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     r2.y = -r2.w;
     r2.z = 0;
     r1.xyz = (r1.z * r0.xyz) + ((dot(r2.xyz, r1.xyz) * r3.xyz) + (r4.xyz * dot(r2.wxz, r1.xyz)));
-    r1.xy = (((sin((frac((((r0.w / 128) + WindData.w) * (1.0 / (PI * 2))) + 0.5) * PI * 2) - PI) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r1.xy;
+    r2.w = sin((frac((((r0.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) - PI) * WindData.z;
+    r1.xy = ((r2.w * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r1.xy;
     r1.xyz = r1.xyz + InstanceData[0 + offset.w];
     r4.x = dot(DiffuseDir.xyz, r0.xyz);
     r0.xy = r1.xy - ShadowProjData.xy;

@@ -50,7 +50,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
     r0.w = r0.w * AmbientColor.a;
     r1.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
-    r1.xyz = saturate(saturate(dot(2 * (r1.xyz - 0.5), 2 * (IN.texcoord_3.xyz - 0.5))) * PSLightColor[0]) + AmbientColor.rgb);	// [0,1] to [-1,+1]
+    r1.xyz = saturate((saturate(dot(2 * (r1.xyz - 0.5), 2 * (IN.texcoord_3.xyz - 0.5))) * PSLightColor[0]) + AmbientColor.rgb);	// [0,1] to [-1,+1]
     r0.xyz = (r0.xyz * r1.xyz) + (((-r0.xyz * r1.xyz) + IN.color_0.rgb) * IN.color_0.a);
     OUT.color_0.rgba = r0.xyzw;
 

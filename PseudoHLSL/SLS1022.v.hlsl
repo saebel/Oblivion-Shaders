@@ -53,7 +53,7 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     r0.xyz = LightPosition[1].xyz - IN.position.xyz;
     r1.w = 1.0 / length(r0.xyz);
-    r0.w = saturate((1.0 / LightPosition[1].w) / (r1.w));
+    r0.w = saturate((1.0 / r1.w) / LightPosition[1].w);
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
