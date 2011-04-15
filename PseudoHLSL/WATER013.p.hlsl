@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 DeepColor;
 float4 EyePos;
 float4 FogColor;
@@ -16,8 +16,8 @@ float4 ShallowColor;
 float4 SunColor;
 float4 SunDir;
 float4 VarAmounts;
-
-
+//
+//
 // Registers:
 //
 //   Name            Reg   Size
@@ -35,7 +35,6 @@ float4 VarAmounts;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
@@ -51,28 +50,36 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const int4 const_0 = {1, 1, -1, 0};
 
-    float4 r0;
-    float4 r1;
-    float4 r2;
-    float4 r4;
+    float3 eye0;
+    float3 q15;
+    float1 q2;
+    float1 q4;
+    float3 q5;
+    float1 q6;
+    float3 q8;
+    float3 r0;
+    float3 r2;
+    float4 r3;
 
-    r0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
-    r0.w = 1.0 / length(r0.xyz);
-    r0.xyz = r0.xyz * r0.w;
-    r4.w = 1.0 / r0.w;
-    r0.w = saturate(r0.z);
-    r0.xyz = pow(abs(saturate(dot(r0.xyz * -const_0.xyz, SunDir.xyz))), VarAmounts.x) * SunColor.rgb;
-    r1.w = 1 - r0.w;
-    r1.xyz = (r0.w * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
-    r2.w = r1.w * r1.w;
-    r2.w = ((1 - FresnelRI.x) * (r1.w * (r2.w * r2.w))) + FresnelRI.x;
-    r1.xyz = (r2.w * ((((1 - VarAmounts.y) * (ReflectionColor.rgb - r1.xyz)) + r1.xyz) * VarAmounts.y)) + r1.xyz;
-    r1.xyz = saturate(saturate(SunDir.w) * r0) + r1.xyz);
-    r0.w = max(VarAmounts.z, r2.w);
-    r0.xyz = ((1 - saturate((FogParam.x - r4.w) / FogParam.y)) * (FogColor.rgb - r1.xyz)) + r1.xyz;
-    OUT.color_0.rgba = r0.xyzw;
+    r3.w = saturate(SunDir.w);
+    eye0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
+    r0.xyz = normalize(eye0.xyz);
+    r2.xyz = r0.xyz * -const_0.xyz;
+    q2.x = 1 - saturate(r0.z);
+    q6.x = 1 - saturate((FogParam.x - length(eye0.xyz)) / FogParam.y);
+    q15.xyz = (saturate(r0.z) * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
+    q4.x = ((1 - FresnelRI.x) * (q2.x * sqr(sqr(q2.x)))) + FresnelRI.x;
+    q5.xyz = (q4.x * ((((1 - VarAmounts.y) * (ReflectionColor.rgb - q15.xyz)) + q15.xyz) * VarAmounts.y)) + q15.xyz;
+    q8.xyz = saturate((r3.w * (pow(abs(shades(r2.xyz, SunDir.xyz)), VarAmounts.x) * SunColor.rgb)) + q5.xyz);
+    OUT.color_0.a = max(VarAmounts.z, q4.x);
+    OUT.color_0.rgb = (q6.x * (FogColor.rgb - q8.xyz)) + q8.xyz;
 
     return OUT;
 };

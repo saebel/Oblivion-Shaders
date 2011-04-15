@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 row_major float4x4 ModelViewProj;
 row_major float4x4 WorldView;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -22,7 +22,6 @@ row_major float4x4 WorldView;
 //   WorldView[1]     const_6        1
 //   WorldView[2]     const_7        1
 //
-
 
 
 // Structures:
@@ -43,18 +42,10 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {0, 0, 0, 0};
-
-
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = dot(WorldView[0].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.y = dot(WorldView[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.z = dot(WorldView[2].xyzw, IN.position.xyzw);
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.w = 0;
+    OUT.texcoord_1.xyz = mul(float3x4(WorldView[0].xyzw, WorldView[1].xyzw, WorldView[2].xyzw), IN.position.xyzw);
 
     return OUT;
 };

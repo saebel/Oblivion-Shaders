@@ -4,11 +4,12 @@
 //   vsa shaderdump19/HDR005.pso /Fcshaderdump19/HDR005.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
-
+//
 float4 HDRParam;
-sampler2D Src0;
-
+sampler2D ScreenSpace;
+//
 //	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
 //		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000
 //	SetPixelShaderConstantF[1+]                             fUpperLUMClamp=1.4000
@@ -32,21 +33,20 @@ sampler2D Src0;
 //		|6.000000|6.000000|0.000000|0.000000|
 //		|7.000000|7.000000|0.000000|0.000000|
 //		|0.000000|0.000000|0.000000|0.000000|
-
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   HDRParam     const_1       1
-//   Src0         texture_0       1
+//   ScreenSpace         texture_0       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -58,14 +58,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_0 = {0, 1, 0, 0};
+    float3 t0;
 
-    float4 r0;
-
-    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
-    r0.w = 1;
-    r0.xyz = max(r0.xyz - HDRParam.x, 0) * HDRParam.y;		// max(in - 1.225, 0) * fBrightClamp == 1.350000
-    OUT.color_0.rgba = r0.xyzw;
+    t0.xyz = tex2D(ScreenSpace, IN.ScreenOffset.xy);
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = max(t0.xyz - HDRParam.x, 0) * HDRParam.y;
 
     return OUT;
 };

@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -24,7 +24,6 @@ row_major float4x4 ObjToCubeSpace;
 //   ObjToCubeSpace[2] const_10        1
 //   EyePosition    const_25      1
 //
-
 
 
 // Structures:
@@ -52,35 +51,24 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0.1, 0, 0, 0};
-
+    float3 q0;
+    float3 q1;
+    float3 q7;
     float3 r0;
-    float3 r1;
 
-    r0.xyz = IN.tangent.xyz * 0.1;
-    r1.xyz = IN.binormal.xyz * 0.1;
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = dot(r0.xyz, ObjToCubeSpace[0].xyz);
-    OUT.texcoord_1.y = dot(r1.xyz, ObjToCubeSpace[0].xyz);
-    OUT.texcoord_1.z = dot(IN.normal.xyz, ObjToCubeSpace[0].xyz);
-    OUT.texcoord_2.x = dot(r0.xyz, ObjToCubeSpace[1].xyz);
-    OUT.texcoord_3.x = dot(r0.xyz, ObjToCubeSpace[2].xyz);
-    r0.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
-    r0.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
-    r0.xyz = normalize(EyePosition.xyz - r0.xyz);
-    OUT.texcoord_2.y = dot(r1.xyz, ObjToCubeSpace[1].xyz);
-    OUT.texcoord_3.y = dot(r1.xyz, ObjToCubeSpace[2].xyz);
-    OUT.texcoord_2.z = dot(IN.normal.xyz, ObjToCubeSpace[1].xyz);
-    OUT.texcoord_3.z = dot(IN.normal.xyz, ObjToCubeSpace[2].xyz);
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
-    OUT.texcoord_1.w = r0.x;
-    OUT.texcoord_2.w = r0.y;
-    OUT.texcoord_3.w = r0.z;
+    q7.xyz = mul(float3x4(ObjToCubeSpace[0].xyzw, ObjToCubeSpace[1].xyzw, ObjToCubeSpace[2].xyzw), IN.position.xyzw);
+    r0.xyz = normalize(EyePosition.xyz - q7.xyz);
+    q1.xyz = IN.tangent.xyz * 0.1;
     OUT.color_0.rgb = IN.color_0.rgb;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    q0.xyz = IN.binormal.xyz * 0.1;
+    OUT.texcoord_1.w = r0.x;
+    OUT.texcoord_1.xyz = mul(float3x3(q1.xyz, q0.xyz, IN.normal.xyz), ObjToCubeSpace[0].xyz);
+    OUT.texcoord_2.w = r0.y;
+    OUT.texcoord_2.xyz = mul(float3x3(q1.xyz, q0.xyz, IN.normal.xyz), ObjToCubeSpace[1].xyz);
+    OUT.texcoord_3.w = r0.z;
+    OUT.texcoord_3.xyz = mul(float3x3(q1.xyz, q0.xyz, IN.normal.xyz), ObjToCubeSpace[2].xyz);
 
     return OUT;
 };

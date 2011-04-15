@@ -54,10 +54,10 @@
     OUT.texcoord_5.xyzw = ModelViewProj[3].xyzw;
     r1.w = 1.0 / Tile.x;
     OUT.texcoord_6.xy = IN.texcoord_0.xy;
-    r0.zw = (IN.texcoord_0.xyxy * r1.w) + DepthOffset.xyyx;
+    r0.zw = (IN.texcoord_0.xy * r1.w) + DepthOffset.yx;
     r0.xy = r1.w * IN.texcoord_0.xy;
     r0.zw = r0.zw * (1.0 / 3);
-    OUT.texcoord_6.zw = (const_12.xyxy * r0.zw) + const_12.xyzx;
+    OUT.texcoord_6.zw = (const_12.xy * r0.zw) + const_12.zx;
     OUT.texcoord_7.xy = r0.xy;
 
 // approximately 25 instruction slots used

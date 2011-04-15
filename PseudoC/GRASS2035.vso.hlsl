@@ -67,12 +67,12 @@
     r1.x = (2 * r1.y) - r0.z;
     r2.xyzw = (r2.yzxz >= r2.xxyy ? 1.0 : 0.0);
     r4.xy = r2.yw * r2.xz;
-    r1.yz = r0.x * const_17.xz;
+    r1.yz = r0.x * const_17.zw;
     r0.w = -r0.y;
     r2.z = r4.y * r1.z;
     r2.xy = (r4.y * r1.xy) + r0.wx;
     r3.xyz = r1.w * IN.color_0.rgb;
-    r1.yz = (r0.xz * const_17.xz) - r2.yz;
+    r1.yz = (r0.zy * const_17.zw) - r2.yz;
     r1.x = -r2.x;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r1.xyz = (r4.x * r1.xyz) + r2.xyz;

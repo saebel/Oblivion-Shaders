@@ -75,13 +75,13 @@
     r0.w = IN.color_0.a * IN.color_0.a;
     r0.xy = r3.w * -EyeVector.xy;
     r1.w = r1.w * r0.w;
-    r3.xyw = r2.zyzz * r0.yxzx;
+    r3.xyw = r2.zyz * r0.yxx;
     r1.yz = const_3.yz;
     r0.w = r1.y * InstanceData[0 + offset.w].w;
     r3.xy = -r3.xy;
     r3.z = (r2.x * r0.y) + r3.y;
     r5.xyz = (r0.w * ScaleMask.xyz) + r1.z;
-    r1.xyz = normalize(r3.xwzw);
+    r1.xyz = normalize(r3.xwz);
     r3.xyz = r5.xyz * IN.position.xyz;
     r0.z = r1.y;
     r0.w = r2.y;

@@ -49,12 +49,12 @@
 //   WindMatrices[1]   const_19      4
 //   WindMatrices[2]   const_20      4
 //   WindMatrices[3]   const_21      4
-//   LeafBase       const_34     48
+//   LeafBase[0]       const_34     48
 //
 
     const float4 const_4 = {PI * 2, -PI, -2.52398507e-007, 2.47609005e-005};
     const float4 const_82 = {(1.0 / (PI * 2)), 0.25, 0.5, 0};
-    const float4 const_83 = {(1.0 / 48), 0.499999553, 0.25, -0.00138883968};
+    const float4 const_83 = {(1.0 / 48), 0.499999553, 0.25, -(1.0 / 72)};
     const float4 const_84 = {(1.0 / 24), -0.5, 1, 0};
     float4 IN.position : POSITION;
     float3 IN.normal : NORMAL;
@@ -63,15 +63,15 @@
     r0.w = (1.0 / 48);
     r1.w = (IN.blendindices.z * r0.w) + RockParams.y;
     r2.w = (r1.w * 0.499999553) + 0.25;
-    r6.y = pow(2.0, r2.w);	// partial precision
+    r6.y = pow(2.0, r2.w);	// partial precision
     r1.w = r6.y;
     r1.w = (r1.w * PI * 2) - PI;
     r1.w = r1.w * r1.w;
     r2.w = (IN.blendindices.z * r0.w) + RustleParams.y;
     r0.w = (r1.w * -2.52398507e-007) + 2.47609005e-005;
     r3.w = (r2.w * 0.499999553) + 0.25;
-    r2.w = (r1.w * r0.w) - 0.00138883968;
-    r6.y = pow(2.0, r3.w);	// partial precision
+    r2.w = (r1.w * r0.w) + -(1.0 / 72);
+    r6.y = pow(2.0, r3.w);	// partial precision
     r0.w = r6.y;
     r2.w = (r1.w * r2.w) + (1.0 / 24);
     r0.w = (r0.w * PI * 2) - PI;
@@ -80,7 +80,7 @@
     r2.w = (r1.w * r2.w) + 1;
     r1.w = (r0.w * -2.52398507e-007) + 2.47609005e-005;
     r2.w = r2.w * RockParams.z;
-    r1.w = (r0.w * r1.w) - 0.00138883968;
+    r1.w = (r0.w * r1.w) + -(1.0 / 72);
     r2.w = r2.w * RockParams.x;
     r1.w = (r0.w * r1.w) + (1.0 / 24);
     r1.xy = (r2.w * (1.0 / (PI * 2))) + const_82.yz;
@@ -93,23 +93,23 @@
     r0.w = r0.w * RustleParams.x;
     r1.xy = (-2.52398507e-007 * r0.xy) + 2.47609005e-005;
     r3.xy = (r0.w * (1.0 / (PI * 2))) + const_82.yz;
-    r1.xy = (r1 * r0.xy) - 0.00138883968;
+    r1.xy = (r1.xy * r0.xy) + -(1.0 / 72);
     r2.xy = frac(r3.xy);
-    r1.xy = (r1 * r0.xy) + (1.0 / 24);
+    r1.xy = (r1.xy * r0.xy) + (1.0 / 24);
     r2.xy = (PI * 2 * r2.xy) - PI;
-    r1.xy = (r1 * r0.xy) - 0.5;
+    r1.xy = (r1.xy * r0.xy) - 0.5;
     r2.xy = r2.xy * r2.xy;
-    r1.xw = (r0.yyzx * r1.yyzx) + 1;
+    r1.xw = (r0.yx * r1.yx) + 1;
     r0.xy = (-2.52398507e-007 * r2.xy) + 2.47609005e-005;
     r1.y = -r1.w;
-    r0.xy = (r0 * r2.xy) - 0.00138883968;
+    r0.xy = (r0.xy * r2.xy) + -(1.0 / 72);
     r1.z = 0;
-    r3.xy = (r0 * r2.xy) + (1.0 / 24);
+    r3.xy = (r0.xy * r2.xy) + (1.0 / 24);
     offset.x = IN.blendindices.z;
     r0.xyzw = IN.blendindices.w * LeafBase[offset.x];
-    r3.xy = (r3 * r2.xy) - 0.5;
+    r3.xy = (r3.xy * r2.xy) - 0.5;
     r5.x = dot(r1.zxy, r0.xyz);
-    r3.xw = (r2.yyzx * r3.yyzx) + 1;
+    r3.xw = (r2.yx * r3.yx) + 1;
     r3.y = -r3.w;
     r3.z = 0;
     r4.x = dot(r1.zwx, r0.xyz);
@@ -123,10 +123,10 @@
     r1.xyzw = (r4.x * r1.xyzw) + r2.xyzw;
     r2.xyzw = r1.xyzw + IN.position.xyzw;
     offset.x = IN.blendindices.y;
-    r1.x = dot(WindMatrices[0 + offset.x], r2.xyzw);
-    r1.y = dot(WindMatrices[1 + offset.x], r2.xyzw);
-    r1.z = dot(WindMatrices[2 + offset.x], r2.xyzw);
-    r1.w = dot(WindMatrices[3 + offset.x], r2.xyzw);
+    r1.x = dot(WindMatrices[0 + offset.x].xyzw, r2.xyzw);
+    r1.y = dot(WindMatrices[1 + offset.x].xyzw, r2.xyzw);
+    r1.z = dot(WindMatrices[2 + offset.x].xyzw, r2.xyzw);
+    r1.w = dot(WindMatrices[3 + offset.x].xyzw, r2.xyzw);
     r1.xyzw = r1.xyzw - r2.xyzw;
     r0.w = dot(r0.xyzw, r0.xyzw);	// normalize + length
     r2.xyzw = (IN.blendindices.x * r1.xyzw) + r2.xyzw;
@@ -151,7 +151,7 @@
     r0.xyzw = r0.w * DiffColor.rgba;
     r1.w = SunDimmer.x;
     r1.xyzw = (r1.w * r0.xyzw) + AmbientColor.rgba;
-    r6.y = pow(2.0, IN.blendindices.z);	// partial precision
+    r6.y = pow(2.0, IN.blendindices.z);	// partial precision
     r4.w = r6.y;
     r0.xyzw = r5.w * DiffColorPt.xyzw;
     r1.xyz = r1.xyz * r4.w;

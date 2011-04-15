@@ -4,12 +4,13 @@
 //   vsa shaderdump19/HDR000.pso /Fcshaderdump19/HDR000.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
-
+//
 float4 BlurOffsets[16];
 float2 BlurScale;
-sampler2D Src0;
-
+sampler2D ScreenSpace;
+//
 //	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
 //		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000
 //	SetPixelShaderConstantF[1+]                             fUpperLUMClamp=1.4000
@@ -33,7 +34,7 @@ sampler2D Src0;
 //		|6.000000|6.000000|0.000000|0.000000|
 //		|7.000000|7.000000|0.000000|0.000000|
 //		|0.000000|0.000000|0.000000|0.000000|
-
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -43,15 +44,14 @@ sampler2D Src0;
 //   BlurOffsets[1]  const_4       1
 //   BlurOffsets[2]  const_5       1
 //   BlurOffsets[3]  const_6       1
-//   Src0         texture_0       1
+//   ScreenSpace         texture_0       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -63,22 +63,19 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_0 = {1, 0, 0, 0};
+    float3 q3;
+    float3 t0;
+    float3 t1;
+    float3 t2;
+    float3 t4;
 
-    float4 r0;
-    float4 r1;
-    float4 r2;
-    float4 r3;
-
-    r0.xy = BlurScale.xy;
-    r1.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[2].xy) + IN.texcoord_0.xy);
-    r2.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[0].xy) + IN.texcoord_0.xy);
-    r3.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[1].xy) + IN.texcoord_0.xy);
-    r0.xyzw = tex2D(Src0, (r0.xy * BlurOffsets[3].xy) + IN.texcoord_0.xy);
-    r0.w = 1;
-    r1.xyz = (BlurOffsets[2].z * r1.xyz) + ((BlurOffsets[0].z * r2.xyz) + (r3.xyz * BlurOffsets[1].z));            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4)
-    r0.xyz = (BlurOffsets[3].z * r0.xyz) + r1.xyz;            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4) + (in[3] / 4)
-    OUT.color_0.rgba = r0.xyzw;
+    t4.xyz = tex2D(ScreenSpace, (BlurScale.xy * BlurOffsets[3].xy) + IN.ScreenOffset.xy);
+    t0.xyz = tex2D(ScreenSpace, (BlurScale.xy * BlurOffsets[2].xy) + IN.ScreenOffset.xy);
+    t2.xyz = tex2D(ScreenSpace, (BlurScale.xy * BlurOffsets[1].xy) + IN.ScreenOffset.xy);
+    t1.xyz = tex2D(ScreenSpace, (BlurScale.xy * BlurOffsets[0].xy) + IN.ScreenOffset.xy);
+    q3.xyz = (BlurOffsets[2].z * t0.xyz) + ((BlurOffsets[0].z * t1.xyz) + (t2.xyz * BlurOffsets[1].z));            // (in[0] / 4) + (in[1] / 4) + (in[2] / 4)
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = (BlurOffsets[3].z * t4.xyz) + q3.xyz;
 
     return OUT;
 };

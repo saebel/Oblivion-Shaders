@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D BaseMap;
 float4 LightData[30];
@@ -13,8 +13,8 @@ float3 MatAlpha;
 sampler2D NormalMap;
 float4 ToggleADTS;
 float4 ToggleNumLights;
-
-
+//
+//
 // Registers:
 //
 //   Name            Reg   Size
@@ -58,17 +58,16 @@ float4 ToggleNumLights;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float3 color_0 : COLOR0;			// partial precision
-    float3 input_2 : TEXCOORD3_centroid;			// partial precision
-    float3 input_3 : TEXCOORD4_centroid;			// partial precision
-    float3 input_4 : TEXCOORD5_centroid;			// partial precision
-    float3 input_5 : TEXCOORD6_centroid;			// partial precision
-    float4 input_6 : TEXCOORD7_centroid;			// partial precision
+    float2 BaseUV : TEXCOORD0;			// partial precision
+    float3 color_0 : COLOR0;			// partial precision
+    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
+    float3 texcoord_4 : TEXCOORD4_centroid;			// partial precision
+    float3 texcoord_5 : TEXCOORD5_centroid;			// partial precision
+    float3 texcoord_6 : TEXCOORD6_centroid;			// partial precision
+    float4 texcoord_7 : TEXCOORD7_centroid;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -80,12 +79,17 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const float4 const_1 = {-0.5, 0, 1, 15};
     const int4 const_2 = {-1, -2, 0, 2};
-    const int4 const_4 = {2, -2, -3, -4};
-    const int4 const_7 = {2, -4, -5, -6};
-    const int4 const_8 = {2, -8, -9, -10};
     const int4 const_39 = {2, -10, -11, -12};
+    const int4 const_4 = {2, -2, -3, -4};
     const int4 const_40 = {2, -12, -13, -14};
     const int4 const_41 = {2, -20, -21, -22};
     const int4 const_42 = {2, -22, -23, -24};
@@ -96,7 +100,71 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     const int4 const_47 = {2, -16, -17, -18};
     const int4 const_48 = {2, -18, -19, -20};
     const int4 const_49 = {2, -24, -25, -26};
+    const int4 const_7 = {2, -4, -5, -6};
+    const int4 const_8 = {2, -8, -9, -10};
 
+    float3 l11;
+    float3 l14;
+    float3 l17;
+    float3 l20;
+    float3 l23;
+    float3 l26;
+    float3 l265;
+    float3 l29;
+    float3 l32;
+    float3 l35;
+    float3 l38;
+    float3 l41;
+    float3 l44;
+    float3 l45;
+    float3 l5;
+    float3 l8;
+    float3 m148;
+    float3 m151;
+    float3 m155;
+    float3 m159;
+    float3 m163;
+    float3 m167;
+    float3 m171;
+    float3 m175;
+    float3 m179;
+    float3 m183;
+    float3 m187;
+    float3 m191;
+    float3 m195;
+    float3 m199;
+    float3 m202;
+    float1 q0;
+    float1 q10;
+    float3 q12;
+    float1 q13;
+    float3 q15;
+    float1 q16;
+    float3 q18;
+    float1 q19;
+    float3 q2;
+    float3 q21;
+    float1 q22;
+    float3 q24;
+    float1 q25;
+    float3 q27;
+    float1 q28;
+    float3 q3;
+    float3 q30;
+    float1 q31;
+    float3 q33;
+    float1 q34;
+    float3 q36;
+    float1 q37;
+    float3 q39;
+    float1 q4;
+    float1 q40;
+    float3 q42;
+    float1 q43;
+    float3 q6;
+    float1 q7;
+    float3 q9;
+    float3 q94;
     float4 r0;
     float4 r1;
     float4 r2;
@@ -105,288 +173,210 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float3 r5;
     float3 r6;
     float3 r7;
-    float3 r8;
-    float3 r9;
 
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
-    r0.w = 1;
-    r0.xyz = 2 * (r0.xyz - 0.5);			// partial precision	// [0,1] to [-1,+1]
-    r3.xyz = normalize(r0.xyz);			// partial precision
-    r4.xyz = normalize(IN.input_2.xyz);			// partial precision
-    r0.x = dot(r4.xyz, LightData[1].xyz);			// partial precision
-    r6.xyz = normalize(IN.input_3.xyz);			// partial precision
-    r0.y = dot(r6.xyz, LightData[1].xyz);			// partial precision
-    r5.xyz = normalize(IN.input_4.xyz);			// partial precision
-    r0.z = dot(r5.xyz, LightData[1].xyz);			// partial precision
-    r0.xyz = max(dot(r3.xyz, r0.xyz), 0) * LightData[0].xyz;			// partial precision
+#define	TanSpaceProj	float3x3(r4.xyz, r6.xyz, r5.xyz)
+
+    r0.xyzw = tex2D(NormalMap, IN.BaseUV.xy);			// partial precision
+    r3.xyz = normalize(expand(r0.xyz));			// partial precision
+    r5.xyz = normalize(IN.texcoord_5.xyz);			// partial precision
+    r6.xyz = normalize(IN.texcoord_4.xyz);			// partial precision
+    r4.xyz = normalize(IN.texcoord_3.xyz);			// partial precision
+    l265.xyz = mul(TanSpaceProj, LightData[1].xyz);
+    r0.xyz = shade(r3.xyz, l265.xyz) * LightData[0].xyz;			// partial precision
     r2.yzw = const_1.yzw;
-    r0.xyzw = (ToggleNumLights.x <= 0.0 ? r0.xyzw : r2.y);
-    r1.x = min(ToggleNumLights.y, r2.w - ToggleNumLights.x);			// partial precision
-    r1.w = frac(r1.x);			// partial precision
-    r2.w = ((r1.x >= 0.0 ? 1 : 0) * (r1.w <= 0.0 ? 1 : 0)) + (r1.x - r1.w);
-    r1.w = (r2.w <= 0.0 ? 1 : 0);
+    q0.x = min(ToggleNumLights.y, r2.w - ToggleNumLights.x);			// partial precision
+    r0.w = 1;
+    r2.w = (q0.x >= 0.0 ? 0 : (frac(q0.x) <= 0.0 ? 0 : 1)) + (q0.x - frac(q0.x));
+    r1.w = (r2.w <= 0.0 ? 0 : 1);
+    r0.xyzw = (ToggleNumLights.x <= 0.0 ? r2.y : r0.xyzw);
 
-    if (0 != r1.w) {
+    if (0 != r1.w) {
       r7.x = 2 * r0.w;
+      r7.yz = r7.x + const_2.xy;
+      q2.xyz = r7.x + const_2.zxy;
       r0.w = r0.w + 1;
-      r1.xyz = r7.x + const_2.zxy;
-      r7.yz = r7.x + const_2.xx;
-      r7.xyz = (r1.xyz >= 0.0 ? -r7.xyz : r1.xyz);
-      r1.xyzw = (r7.z <= 0.0 ? (r7.y <= 0.0 ? (r7.x <= 0.0 ? r2.y : LightData[1].xyzw) : LightData[2].xyzw) : LightData[3].xyzw);
-      r8.xyz = r1.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r1.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r1.w = max(r2.x, 0);			// partial precision
-      r1.xyz = (r7.z <= 0.0 ? (r7.y <= 0.0 ? (r7.x <= 0.0 ? r2.y : LightData[0].xyz) : LightData[1].xyz) : LightData[2].xyz);			// partial precision
-      r0.xyz = (r1.w * r1.xyz) + r0.xyz;			// partial precision
+      r7.xyz = (q2.xyz >= 0.0 ? q2.xyz : -r7.xyz);
+      r1.xyzw = (r7.z <= 0.0 ? LightData[3].xyzw : (r7.y <= 0.0 ? LightData[2].xyzw : (r7.x <= 0.0 ? LightData[1].xyzw : r2.y)));
+      q3.xyz = r1.xyz - IN.texcoord_6.xyz;
+      q4.x = saturate(length(q3.xyz) / r1.w);
+      m148.xyz = mul(TanSpaceProj, q3.xyz);
+      l5.xyz = (r7.z <= 0.0 ? LightData[2].xyz : (r7.y <= 0.0 ? LightData[1].xyz : (r7.x <= 0.0 ? LightData[0].xyz : r2.y)));			// partial precision
+      r0.xyz = (max(dot(r3.xyz, normalize(m148.xyz)) * (1.0 - sqr(q4.x)), 0) * l5.xyz) + r0.xyz;			// partial precision
     }
 
 
-    if (1 != r2.w) {
+    if (1 != r2.w) {
       r7.xyz = (2 * r0.w) + const_4.yzw;
       r1.xyzw = (r7.z == 0.0 ? LightData[5].xyzw : (r7.y == 0.0 ? LightData[4].xyzw : (r7.x == 0.0 ? LightData[3].xyzw : r2.y)));
-      r8.xyz = r1.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r1.w);
+      q6.xyz = r1.xyz - IN.texcoord_6.xyz;
+      q7.x = saturate(length(q6.xyz) / r1.w);
       r1.w = r0.w + 1;
-      r1.xyz = (r7.z == 0.0 ? LightData[4].xyz : (r7.y == 0.0 ? LightData[3].xyz : (r7.x == 0.0 ? LightData[2].xyz : r2.y)));			// partial precision
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r1.xyz = (max(r2.x, 0) * r1.xyz) + r0.xyz;			// partial precision
+      m151.xyz = mul(TanSpaceProj, q6.xyz);
+      l8.xyz = (r7.z == 0.0 ? LightData[4].xyz : (r7.y == 0.0 ? LightData[3].xyz : (r7.x == 0.0 ? LightData[2].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m151.xyz)) * (1.0 - sqr(q7.x)), 0) * l8.xyz) + r0.xyz;			// partial precision
     }
     else {
+      r1.xyz = r0.xyz;			// partial precision
       r1.w = r0.w;
-      r1.xyz = r0.xyz;			// partial precision
     }
 
 
-    if (2 != r2.w) {
+    if (2 != r2.w) {
       r7.xyz = (2 * r1.w) + const_7.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[7].xyzw : (r7.y == 0.0 ? LightData[6].xyzw : (r7.x == 0.0 ? LightData[5].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[6].xyz : (r7.y == 0.0 ? LightData[5].xyz : (r7.x == 0.0 ? LightData[4].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q9.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q10.x = saturate(length(q9.xyz) / r0.w);
+      m155.xyz = mul(TanSpaceProj, q9.xyz);
+      l11.xyz = (r7.z == 0.0 ? LightData[6].xyz : (r7.y == 0.0 ? LightData[5].xyz : (r7.x == 0.0 ? LightData[4].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m155.xyz)) * (1.0 - sqr(q10.x)), 0) * l11.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (3 != r2.w) {
+    if (3 != r2.w) {
       r7.xyz = (2 * r1.w) + const_45.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[9].xyzw : (r7.y == 0.0 ? LightData[8].xyzw : (r7.x == 0.0 ? LightData[7].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[8].xyz : (r7.y == 0.0 ? LightData[7].xyz : (r7.x == 0.0 ? LightData[6].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q12.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q13.x = saturate(length(q12.xyz) / r0.w);
+      m159.xyz = mul(TanSpaceProj, q12.xyz);
+      l14.xyz = (r7.z == 0.0 ? LightData[8].xyz : (r7.y == 0.0 ? LightData[7].xyz : (r7.x == 0.0 ? LightData[6].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m159.xyz)) * (1.0 - sqr(q13.x)), 0) * l14.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (4 != r2.w) {
+    if (4 != r2.w) {
       r7.xyz = (2 * r1.w) + const_8.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[11].xyzw : (r7.y == 0.0 ? LightData[10].xyzw : (r7.x == 0.0 ? LightData[9].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[10].xyz : (r7.y == 0.0 ? LightData[9].xyz : (r7.x == 0.0 ? LightData[8].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q15.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q16.x = saturate(length(q15.xyz) / r0.w);
+      m163.xyz = mul(TanSpaceProj, q15.xyz);
+      l17.xyz = (r7.z == 0.0 ? LightData[10].xyz : (r7.y == 0.0 ? LightData[9].xyz : (r7.x == 0.0 ? LightData[8].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m163.xyz)) * (1.0 - sqr(q16.x)), 0) * l17.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (5 != r2.w) {
+    if (5 != r2.w) {
       r7.xyz = (2 * r1.w) + const_39.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[13].xyzw : (r7.y == 0.0 ? LightData[12].xyzw : (r7.x == 0.0 ? LightData[11].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[12].xyz : (r7.y == 0.0 ? LightData[11].xyz : (r7.x == 0.0 ? LightData[10].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q18.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q19.x = saturate(length(q18.xyz) / r0.w);
+      m167.xyz = mul(TanSpaceProj, q18.xyz);
+      l20.xyz = (r7.z == 0.0 ? LightData[12].xyz : (r7.y == 0.0 ? LightData[11].xyz : (r7.x == 0.0 ? LightData[10].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m167.xyz)) * (1.0 - sqr(q19.x)), 0) * l20.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (6 != r2.w) {
+    if (6 != r2.w) {
       r7.xyz = (2 * r1.w) + const_40.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[15].xyzw : (r7.y == 0.0 ? LightData[14].xyzw : (r7.x == 0.0 ? LightData[13].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[14].xyz : (r7.y == 0.0 ? LightData[13].xyz : (r7.x == 0.0 ? LightData[12].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q21.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q22.x = saturate(length(q21.xyz) / r0.w);
+      m171.xyz = mul(TanSpaceProj, q21.xyz);
+      l23.xyz = (r7.z == 0.0 ? LightData[14].xyz : (r7.y == 0.0 ? LightData[13].xyz : (r7.x == 0.0 ? LightData[12].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m171.xyz)) * (1.0 - sqr(q22.x)), 0) * l23.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (7 != r2.w) {
+    if (7 != r2.w) {
       r7.xyz = (2 * r1.w) + const_46.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[17].xyzw : (r7.y == 0.0 ? LightData[16].xyzw : (r7.x == 0.0 ? LightData[15].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[16].xyz : (r7.y == 0.0 ? LightData[15].xyz : (r7.x == 0.0 ? LightData[14].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q24.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q25.x = saturate(length(q24.xyz) / r0.w);
+      m175.xyz = mul(TanSpaceProj, q24.xyz);
+      l26.xyz = (r7.z == 0.0 ? LightData[16].xyz : (r7.y == 0.0 ? LightData[15].xyz : (r7.x == 0.0 ? LightData[14].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m175.xyz)) * (1.0 - sqr(q25.x)), 0) * l26.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (8 != r2.w) {
+    if (8 != r2.w) {
       r7.xyz = (2 * r1.w) + const_47.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[19].xyzw : (r7.y == 0.0 ? LightData[18].xyzw : (r7.x == 0.0 ? LightData[17].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[18].xyz : (r7.y == 0.0 ? LightData[17].xyz : (r7.x == 0.0 ? LightData[16].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q27.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q28.x = saturate(length(q27.xyz) / r0.w);
+      m179.xyz = mul(TanSpaceProj, q27.xyz);
+      l29.xyz = (r7.z == 0.0 ? LightData[18].xyz : (r7.y == 0.0 ? LightData[17].xyz : (r7.x == 0.0 ? LightData[16].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m179.xyz)) * (1.0 - sqr(q28.x)), 0) * l29.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (9 != r2.w) {
+    if (9 != r2.w) {
       r7.xyz = (2 * r1.w) + const_48.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[21].xyzw : (r7.y == 0.0 ? LightData[20].xyzw : (r7.x == 0.0 ? LightData[19].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[20].xyz : (r7.y == 0.0 ? LightData[19].xyz : (r7.x == 0.0 ? LightData[18].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q30.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q31.x = saturate(length(q30.xyz) / r0.w);
+      m183.xyz = mul(TanSpaceProj, q30.xyz);
+      l32.xyz = (r7.z == 0.0 ? LightData[20].xyz : (r7.y == 0.0 ? LightData[19].xyz : (r7.x == 0.0 ? LightData[18].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m183.xyz)) * (1.0 - sqr(q31.x)), 0) * l32.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (10 != r2.w) {
+    if (10 != r2.w) {
       r7.xyz = (2 * r1.w) + const_41.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[23].xyzw : (r7.y == 0.0 ? LightData[22].xyzw : (r7.x == 0.0 ? LightData[21].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[22].xyz : (r7.y == 0.0 ? LightData[21].xyz : (r7.x == 0.0 ? LightData[20].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q33.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q34.x = saturate(length(q33.xyz) / r0.w);
+      m187.xyz = mul(TanSpaceProj, q33.xyz);
+      l35.xyz = (r7.z == 0.0 ? LightData[22].xyz : (r7.y == 0.0 ? LightData[21].xyz : (r7.x == 0.0 ? LightData[20].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m187.xyz)) * (1.0 - sqr(q34.x)), 0) * l35.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (11 != r2.w) {
+    if (11 != r2.w) {
       r7.xyz = (2 * r1.w) + const_42.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[25].xyzw : (r7.y == 0.0 ? LightData[24].xyzw : (r7.x == 0.0 ? LightData[23].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[24].xyz : (r7.y == 0.0 ? LightData[23].xyz : (r7.x == 0.0 ? LightData[22].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q36.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q37.x = saturate(length(q36.xyz) / r0.w);
+      m191.xyz = mul(TanSpaceProj, q36.xyz);
+      l38.xyz = (r7.z == 0.0 ? LightData[24].xyz : (r7.y == 0.0 ? LightData[23].xyz : (r7.x == 0.0 ? LightData[22].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m191.xyz)) * (1.0 - sqr(q37.x)), 0) * l38.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (12 != r2.w) {
+    if (12 != r2.w) {
       r7.xyz = (2 * r1.w) + const_49.yzw;
+      r1.w = r1.w + 1;
       r0.xyzw = (r7.z == 0.0 ? LightData[27].xyzw : (r7.y == 0.0 ? LightData[26].xyzw : (r7.x == 0.0 ? LightData[25].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[26].xyz : (r7.y == 0.0 ? LightData[25].xyz : (r7.x == 0.0 ? LightData[24].xyz : r2.y)));			// partial precision
-      r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      q39.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q40.x = saturate(length(q39.xyz) / r0.w);
+      m195.xyz = mul(TanSpaceProj, q39.xyz);
+      l41.xyz = (r7.z == 0.0 ? LightData[26].xyz : (r7.y == 0.0 ? LightData[25].xyz : (r7.x == 0.0 ? LightData[24].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m195.xyz)) * (1.0 - sqr(q40.x)), 0) * l41.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (13 != r2.w) {
+    if (13 != r2.w) {
       r7.xyz = (2 * r1.w) + const_43.yzw;
-      r0.xyzw = (r7.z == 0.0 ? LightData[29].xyzw : (r7.y == 0.0 ? LightData[28].xyzw : (r7.x == 0.0 ? LightData[27].xyzw : r2.y)));
-      r8.xyz = r0.xyz - IN.input_5.xyz;
-      r2.x = saturate(length(r8.xyz) / r0.w);
-      r9.x = dot(r4.xyz, r8.xyz);
-      r9.y = dot(r6.xyz, r8.xyz);
-      r9.z = dot(r5.xyz, r8.xyz);
-      r8.xyz = normalize(r9.xyz);			// partial precision
-      r2.x = dot(r3.xyz, r8.xyz) * (1.0 - (r2.x * r2.x));			// partial precision
-      r0.w = max(r2.x, 0);			// partial precision
-      r0.xyz = (r7.z == 0.0 ? LightData[28].xyz : (r7.y == 0.0 ? LightData[27].xyz : (r7.x == 0.0 ? LightData[26].xyz : r2.y)));			// partial precision
       r1.w = r1.w + 1;
-      r1.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+      r0.xyzw = (r7.z == 0.0 ? LightData[29].xyzw : (r7.y == 0.0 ? LightData[28].xyzw : (r7.x == 0.0 ? LightData[27].xyzw : r2.y)));
+      q42.xyz = r0.xyz - IN.texcoord_6.xyz;
+      q43.x = saturate(length(q42.xyz) / r0.w);
+      m199.xyz = mul(TanSpaceProj, q42.xyz);
+      l44.xyz = (r7.z == 0.0 ? LightData[28].xyz : (r7.y == 0.0 ? LightData[27].xyz : (r7.x == 0.0 ? LightData[26].xyz : r2.y)));			// partial precision
+      r1.xyz = (max(dot(r3.xyz, normalize(m199.xyz)) * (1.0 - sqr(q43.x)), 0) * l44.xyz) + r1.xyz;			// partial precision
     }
 
 
-    if (14 != r2.w) {
-      r0.xyz = LightData[29].xyz - IN.input_5.xyz;
-      r2.w = length(r0.xyz);
-      r4.x = dot(r4.xyz, r0.xyz);
-      r4.y = dot(r6.xyz, r0.xyz);
-      r4.z = dot(r5.xyz, r0.xyz);
-      r0.xyz = normalize(r4.xyz);			// partial precision
-      r0.w = dot(r3.xyz, r0.xyz);			// partial precision
-      r0.z = saturate(r2.w / LightData[29].w);
+    if (14 != r2.w) {
+      l45.xyz = LightData[29].xyz - IN.texcoord_6.xyz;
+      m202.xyz = mul(TanSpaceProj, l45.xyz);
+      r0.w = dot(r3.xyz, normalize(m202.xyz));			// partial precision
       r3.xy = (2 * r1.w) + const_44.yz;
-      r1.xyz = (max(r0.w * (1.0 - (r0.z * r0.z)), 0) * (r3.y == 0.0 ? LightData[29].xyz : (r3.x == 0.0 ? LightData[28].xyz : r2.y))) + r1.xyz;			// partial precision
+      r1.xyz = (max(r0.w * (1.0 - sqr(saturate(length(l45.xyz) / LightData[29].w))), 0) * (r3.y == 0.0 ? LightData[29].xyz : (r3.x == 0.0 ? LightData[28].xyz : r2.y))) + r1.xyz;			// partial precision
     }
 
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
-    r1.xyz = (r1.xyz + ((ToggleADTS.x * AmbientColor.rgb) + (r2.z - ToggleADTS.x))) * (r0.xyz * IN.color_0.rgb);			// partial precision
-    OUT.color_0.rgb = (IN.input_6.w * (IN.input_6.xyz - r1.xyz)) + r1.xyz;			// partial precision
-    OUT.color_0.a = r0.w * MatAlpha.x;			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
+    q94.xyz = (r1.xyz + ((ToggleADTS.x * AmbientColor.rgb) + (r2.z - ToggleADTS.x))) * (r0.xyz * IN.color_0.rgb);			// partial precision
+    OUT.color_0.a = r0.w * MatAlpha.x;			// partial precision
+    OUT.color_0.rgb = (IN.texcoord_7.w * (IN.texcoord_7.xyz - q94.xyz)) + q94.xyz;			// partial precision
 
     return OUT;
 };

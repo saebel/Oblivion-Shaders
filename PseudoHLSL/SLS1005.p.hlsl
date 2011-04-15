@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 sampler2D Decal2Map;
 sampler2D DecalMap;
 sampler2D DiffuseMap;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -21,13 +21,12 @@ sampler2D DiffuseMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
-    float2 texcoord_2 : TEXCOORD2;
+    float2 DiffuseUV : TEXCOORD0;
+    float2 DecalUV_1 : TEXCOORD1;
+    float2 Decal2UV_2 : TEXCOORD2;
 };
 
 struct PS_OUTPUT {
@@ -39,17 +38,18 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 2, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
     float4 r0;
     float4 r1;
     float4 r2;
 
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    r1.xyzw = tex2D(DecalMap, IN.texcoord_1.xy);
-    r2.xyzw = tex2D(Decal2Map, IN.texcoord_2.xy);
-    r0.xyz = 2 * ((2 * r2.xyz) * ((2 * (r1.xyz - 0.5)) + r0.xyz));	// [0,1] to [-1,+1]
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);
+    r1.xyzw = tex2D(DecalMap, IN.DecalUV_1.xy);
+    r2.xyzw = tex2D(Decal2Map, IN.Decal2UV_2.xy);
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = 2 * ((2 * r2.xyz) * (expand(r1.xyz) + r0.xyz));
 
     return OUT;
 };

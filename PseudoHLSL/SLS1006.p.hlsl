@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 sampler2D DiffuseMap;
 float4 EmittanceColor;
 sampler2D LayerMap;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -21,11 +21,10 @@ sampler2D LayerMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 LayerUV : TEXCOORD0;
     float2 color_0 : COLOR0;
 };
 
@@ -38,15 +37,18 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0.5, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
+    float3 q0;
     float4 r0;
     float4 r1;
 
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    r1.xyzw = tex2D(LayerMap, IN.texcoord_0.xy);
-    r0.xyz = (2 * ((IN.color_0.g * (EmittanceColor.rgb - 0.5)) + 0.5)) * lerp(r1.xyz, r0.xyz, r1.w);	// [0,1] to [-1,+1]
-    OUT.color_0.rgba = r0.xyzw;
+    r1.xyzw = tex2D(LayerMap, IN.LayerUV.xy);
+    r0.xyzw = tex2D(DiffuseMap, IN.LayerUV.xy);
+    q0.xyz = (2 * ((IN.color_0.g * (EmittanceColor.rgb - 0.5)) + 0.5)) * lerp(r1.xyz, r0.xyz, r1.w);	// [0,1] to [-1,+1]
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = q0.xyz;
 
     return OUT;
 };

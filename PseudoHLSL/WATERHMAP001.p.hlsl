@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float fPassNum;
 sampler2D sampButterfly;
 sampler2D sampSourceImage;
-
-
+//
+//
 // Registers:
 //
 //   Name            Reg   Size
@@ -19,7 +19,6 @@ sampler2D sampSourceImage;
 //   sampButterfly   texture_0       1
 //   sampSourceImage texture_2       1
 //
-
 
 
 // Structures:
@@ -37,27 +36,25 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
     float4 r0;
     float4 r1;
     float4 r2;
     float2 r3;
 
-    r0.x = IN.texcoord_0.x;
     r0.y = fPassNum.x;
+    r0.x = IN.texcoord_0.x;
     r1.xyzw = tex2D(sampButterfly, r0.xy);
     r0.x = r1.y;
+    r2.x = abs(r1.x);
     r0.y = IN.texcoord_0.y;
     r0.xyzw = tex2D(sampSourceImage, r0.xy);
-    r2.x = abs(r1.x);
     r2.y = IN.texcoord_0.y;
     r2.xyzw = tex2D(sampSourceImage, r2.xy);
     r3.x = (r1.z * r2.x) - (r1.w * r2.w);
     r3.y = (r1.w * r2.x) + (r1.z * r2.w);
-    r1.xy = (r1.x >= 0.0 ? -r3.xy : r3.xy);
-    r0.w = r0.w + r1.y;
-    r0.xyz = r0.x + r1.x;
-    OUT.color_0.rgba = r0.xyzw;
+    r1.xy = (r1.x >= 0.0 ? r3.xy : -r3.xy);
+    OUT.color_0.a = r0.w + r1.y;
+    OUT.color_0.rgb = r0.x + r1.x;
 
     return OUT;
 };

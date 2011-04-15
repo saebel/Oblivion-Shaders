@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float3 EyePosition;
 float3 MaxPos;
 float3 MinPos;
 float3 Params;
 float3 Velocity;
 row_major float4x4 WorldViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -28,7 +28,6 @@ row_major float4x4 WorldViewProj;
 //   MaxPos        const_11      1
 //   Params        const_12      1
 //
-
 
 
 // Structures:
@@ -50,50 +49,52 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
+#define	PI			3.14159274
+#define	anglei(v)		(((v) + PI) / (2 * PI))
+#define	angler(v)		(((v) * (2 * PI)) - PI)
+#define	fracr(v)		angler(frac(anglei(v)))	// signed modulo % PI
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
     const float4 const_4 = {0, -1, 1, 0.5};
-    const float4 const_5 = {(1.0 / (PI * 2)), 0.5, PI * 2, -PI};
 
+    float2 eye1;
+    float3 q16;
+    float1 q2;
+    float3 q5;
+    float3 q8;
     float4 r0;
     float4 r1;
-    float3 r2;
+    float2 r2;
     float4 r3;
     float3 r4;
-    float3 r5;
 
-    r0.w = (frac((((Params.z * Params.x) + IN.texcoord_1.x) / (PI * 2)) + 0.5) * PI * 2) - PI;
-    r0.xyz = (0 < Velocity.xyz ? 1.0 : 0.0);
-    r5.xyz = MaxPos.xyz - MinPos.xyz;
-    r1.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / (r5.xyz);
-    r3.xyz = frac(abs(r1.xyz));
-    r2.xyz = r5.xyz * (r1.xyz == 0 ? r3.xyz : -r3.xyz);
-    r1.xyz = abs(r2.xyz) + MinPos.xyz;
-    r2.xyz = MaxPos.xyz - abs(r2.xyz);
-    r4.xyz = lerp(r1.xyz, r2.xyz, r0.xyz);
-    r0.xy = r4.xy - EyePosition.xy;
-    r1.xy = r0.xy * r0.xy;
-    r1.xz = normalize(r0.xy);
-    r1.yw = r1.z * const_4.xy;
-    r0.xyz = r1.zxw * const_4.yzz;
-    r1.xy = r0.xy * (1.0 / sqrt(dot(r1.yxw, r0.xyz)));
-    r2.x = cos(r0.w); r2.y = sin(r0.w);
-    r0.w = r1.x;
-    r3.w = IN.position.y;
-    r3.xyz = r2.xxy * const_4.zxz;
-    r3.x = dot(r3.xyz, IN.position.xyz);
+    q2.x = fracr((Params.z * Params.x) + IN.texcoord_1.x);	// [0,1] to [-PI,PI]
+    r2.y = sin(q2.x);
+    r2.x = cos(q2.x);
+    r3.x = dot(r2.xxy * const_4.zxz, IN.position.xyz);
     r3.z = dot(r2.yxx * const_4.yxz, IN.position.xyz);
-    r3.y = dot(r1.ywzw, r3.xzww);
-    r3.x = dot(r0.wzyw, r3.xzww);
-    r0.w = 1;
+    q16.xyz = MaxPos.xyz - MinPos.xyz;
+    r3.w = IN.position.y;
+    q5.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / q16.xyz;
+    q8.xyz = q16.xyz * (q5.xyz == 0 ? -frac(abs(q5.xyz)) : frac(abs(q5.xyz)));
+    r4.xyz = (0 < Velocity.xyz ? (MaxPos.xyz - abs(q8.xyz)) : (abs(q8.xyz) + MinPos.xyz));
+    eye1.xy = r4.xy - EyePosition.xy;
+    r1.xy = sqr(eye1.xy);
+    r1.xz = normalize(eye1.xy);
+    r1.yw = r1.z * const_4.yx;
+    r0.xyz = r1.zxw * const_4.yzz;
+    r1.xy = r0.xy / sqrt(dot(r1.yxw, r0.xyz));
+    r0.w = r1.x;
+    r3.y = dot(r1.ywz, r3.xzw);
+    r3.x = dot(r0.wzy, r3.xzw);
     r0.xyz = r4.xyz + r3.xyz;
-    r1.w = 1 - length((((-0.5 * abs(r5.xyz)) + MaxPos.xyz) - r4.xyz) / abs(r5.xyz));
-    OUT.position.x = dot(WorldViewProj[0].xyzw, r0.xyzw);
-    OUT.position.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
-    OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(WorldViewProj[3].xyzw, r0.xyzw);
-    OUT.color_0.a = r1.w * r1.w;
+    OUT.color_0.a = sqr(1 - length((((-0.5 * abs(q16.xyz)) + MaxPos.xyz) - r4.xyz) / abs(q16.xyz)));
     OUT.color_0.rgb = 1;
+    r0.w = 1;
+    OUT.position.xyzw = mul(WorldViewProj, r0.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;

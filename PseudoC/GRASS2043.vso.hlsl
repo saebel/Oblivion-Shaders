@@ -71,12 +71,12 @@
     r0.xy = r2.w * -EyeVector.xy;
     r2.xyz = 2 * r1.xyz;
     r1.w = r1.w * r0.w;
-    r3.xyw = r0.yxzx * r2.zyzz;
+    r3.xyw = r0.yxx * r2.zyz;
     r3.xy = -r3.xy;
     r3.z = (r2.x * r0.y) + r3.y;
     r4.yz = const_7.yz;
     r0.w = r4.y * InstanceData[0 + offset.w].w;
-    r1.xyz = normalize(r3.xwzw);
+    r1.xyz = normalize(r3.xwz);
     r3.xyz = (r0.w * ScaleMask.xyz) + r4.z;
     r0.z = r1.y;
     r3.xyz = r3.xyz * IN.position.xyz;

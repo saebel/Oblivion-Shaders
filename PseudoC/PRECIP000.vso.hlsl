@@ -58,7 +58,7 @@
     r0.w = r1.y + r1.x;
     r0.w = 1.0 / sqrt(r0.w);
     r1.xz = -r0.xy * r0.w;
-    r1.yw = r1.z * const_4.xy;
+    r1.yw = r1.z * const_4.yx;
     r0.xyz = r1.zxw * const_4.yzz;
     r0.w = dot(r1.yxw, r0.xyz);
     r0.w = 1.0 / sqrt(r0.w);

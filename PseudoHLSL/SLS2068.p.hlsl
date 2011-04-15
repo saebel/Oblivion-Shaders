@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D BaseMap;
 sampler2D NormalMap;
 float4 PSLightColor[4];
 sampler2D ShadowMap;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -25,14 +25,13 @@ sampler2D ShadowMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;			// partial precision
-    float4 texcoord_2 : TEXCOORD2_centroid;			// partial precision
-    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
+    float2 BaseUV : TEXCOORD0;
+    float2 NormalUV : TEXCOORD1;			// partial precision
+    float4 texcoord_2 : TEXCOORD2_centroid;			// partial precision
+    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -44,19 +43,22 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 20, 0.5, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
+    float3 q0;
     float4 r0;
     float4 r1;
 
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
-    r1.xyz = (saturate(dot(normalize(2 * (r1.xyz - 0.5)), IN.texcoord_3.xyz)) * PSLightColor[0].rgb) + AmbientColor.rgb;			// partial precision	// [0,1] to [-1,+1]
-    r1.xyz = r1.xyz * (r0.xyz * IN.texcoord_2.xyz);			// partial precision
-    r0.xyzw = tex2D(ShadowMap, IN.texcoord_0.xy * 20);
-    r0.w = IN.texcoord_2.w;			// partial precision
-    r0.xyz = r1.xyz * ((r0.x * 0.5) + 0.5);			// partial precision	// [-1,+1] to [0,1]
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r1.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
+    q0.xyz = (shades(normalize(expand(r1.xyz)), IN.texcoord_3.xyz) * PSLightColor[0].rgb) + AmbientColor.rgb;			// partial precision
+    r1.xyz = q0.xyz * (r0.xyz * IN.texcoord_2.xyz);			// partial precision
+    r0.xyz = tex2D(ShadowMap, IN.BaseUV.xy * 20);
+    OUT.color_0.a = IN.texcoord_2.w;			// partial precision
+    OUT.color_0.rgb = r1.xyz * compress(r0.x);			// partial precision
 
     return OUT;
 };

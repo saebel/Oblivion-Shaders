@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 float4 FillColor;
 sampler2D NormalMap;
 float4 RimColor;
 sampler2D SourceTexture;
 float4 fVars;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -25,12 +25,11 @@ float4 fVars;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
+    float2 NormalUV : TEXCOORD0;
+    float2 SourceUV : TEXCOORD1;
     float3 texcoord_3 : TEXCOORD3_centroid;
     float4 color_1 : COLOR1;
 };
@@ -44,19 +43,21 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_3 = {-0.5, 0, 1, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
     float4 r0;
     float4 r1;
 
-    r0.xyzw = tex2D(SourceTexture, IN.texcoord_1.xy);
+    r0.xyzw = tex2D(SourceTexture, IN.SourceUV.xy);
+    r1.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
     r0.w = r0.w * FillColor.a;
     r0.xyz = (r0.xyz + FillColor.rgb) * r0.w;
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    r1.xyzw = (pow(abs(1 - max(dot(2 * (r1.xyz - 0.5), IN.texcoord_3.xyz), 0)), fVars.x) * RimColor.rgba) + r0.xyzw;	// [0,1] to [-1,+1]
-    r0.w = r1.w;
-    r0.xyz = lerp(IN.color_1.rgb, r1.xyz, IN.color_1.a);
-    OUT.color_0.rgba = r0.xyzw;
+    r1.xyzw = (pow(abs(1 - shade(expand(r1.xyz), IN.texcoord_3.xyz)), fVars.x) * RimColor.rgba) + r0.xyzw;
+    OUT.color_0.a = r1.w;
+    OUT.color_0.rgb = lerp(IN.color_1.rgb, r1.xyz, IN.color_1.a);
 
     return OUT;
 };

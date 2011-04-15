@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D DiffuseMap;
 float4 PSLightColor[4];
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -21,12 +21,11 @@ float4 PSLightColor[4];
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
     float3 color_0 : COLOR0;
-    float2 texcoord_0 : TEXCOORD0;
+    float2 DiffuseUV : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -38,12 +37,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
     float4 r0;
 
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    r0.xyz = r0.xyz * ((IN.color_0.rgb * PSLightColor[0].rgb) + AmbientColor.rgb);
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = r0.xyz * ((IN.color_0.rgb * PSLightColor[0].rgb) + AmbientColor.rgb);
 
     return OUT;
 };

@@ -5,10 +5,10 @@
 //
 //
 // Parameters:
-
+//
 sampler2D DiffuseMap;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -16,19 +16,16 @@ sampler2D DiffuseMap;
 //   DiffuseMap   texture_0       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    r0.xyz = IN.texcoord_0.xyz * IN.input_0.xyz;
-  + r0.w = IN.texcoord_0.w;
-
-// approximately 2 instruction slots used (1 texture, 1 arithmetic)
-
 
 // Structures:
 
 struct VS_OUTPUT {
+    float3 input_0 : COLOR0;
+    float4 DiffuseUV : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
+    float4 output_0 : COLOR0;
 };
 
 // Code:
@@ -36,9 +33,14 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+    float4 r0;
 
-
+    IN.DiffuseUV.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);
+    r0.xyz = IN.DiffuseUV.xyz * IN.input_0.xyz;
+    r0.w = IN.DiffuseUV.w;
+    OUT.output_0.xyzw = r0.xyzw;
 
     return OUT;
 };
 
+// approximately 2 instruction slots used (1 texture, 1 arithmetic)

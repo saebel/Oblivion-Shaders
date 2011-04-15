@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 float4 DepthOffset;
 row_major float4x4 ModelViewProj;
 float4 QPosAdjust;
 float Tile;
 row_major float4x4 WorldMat;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -29,7 +29,6 @@ row_major float4x4 WorldMat;
 //   QPosAdjust    const_9       1
 //   DepthOffset   const_10      1
 //
-
 
 
 // Structures:
@@ -56,30 +55,25 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_11 = {0.5, (1.0 / 3), (3.0 / 4096), 0};
     const int4 const_12 = {1, -1, 0, 0};
 
-    float4 r0;
+    float2 m5;
+    float4 mdl0;
 
-    r0.xyzw = 0.5 * ModelViewProj[3].xyzw;
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyzw = (0.5 * ModelViewProj[0].xyzw) + r0.xyzw;
-    OUT.texcoord_3.xyzw = (0.5 * ModelViewProj[1].xyzw) + r0.xyzw;
-    OUT.texcoord_4.xyzw = (0.5 * ModelViewProj[2].xyzw) + r0.xyzw;
-    r0.x = dot(WorldMat[0].xyzw, IN.position.xyzw);
-    r0.y = dot(WorldMat[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.z = dot(WorldMat[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.w = dot(WorldMat[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xy = r0.xy;
-    OUT.texcoord_7.zw = (r0.xy + QPosAdjust.xy) * (3.0 / 4096);
+    m5.xy = mul(float2x4(WorldMat[0].xyzw, WorldMat[1].xyzw), IN.position.xyzw);
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_0.xyzw = IN.position.xyzw;
+    OUT.texcoord_1.xy = m5.xy;
+    OUT.texcoord_1.zw = mul(float2x4(WorldMat[2].xyzw, WorldMat[3].xyzw), IN.position.xyzw);
+    mdl0.xyzw = 0.5 * ModelViewProj[3].xyzw;
+    OUT.texcoord_2.xyzw = (0.5 * ModelViewProj[0].xyzw) + mdl0.xyzw;
+    OUT.texcoord_3.xyzw = (0.5 * ModelViewProj[1].xyzw) + mdl0.xyzw;
+    OUT.texcoord_4.xyzw = (0.5 * ModelViewProj[2].xyzw) + mdl0.xyzw;
     OUT.texcoord_5.xyzw = ModelViewProj[3].xyzw;
     OUT.texcoord_6.xy = IN.texcoord_0.xy;
-    OUT.texcoord_6.zw = (const_12.xyxy * (((IN.texcoord_0.xyxy / Tile.x) + DepthOffset.xyyx) / 3)) + const_12.xyzx;
+    OUT.texcoord_6.zw = (const_12.xy * (((IN.texcoord_0.xy / Tile.x) + DepthOffset.yx) / 3)) + const_12.zx;
     OUT.texcoord_7.xy = IN.texcoord_0.xy / Tile.x;
+    OUT.texcoord_7.zw = (m5.xy + QPosAdjust.xy) * (3.0 / 4096);
 
     return OUT;
 };

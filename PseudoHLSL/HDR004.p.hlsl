@@ -4,13 +4,14 @@
 //   vsa shaderdump19/HDR004.pso /Fcshaderdump19/HDR004.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
-
+//
 sampler2D AvgLum;
 sampler2D DestBlend;
 float4 HDRParam;
-sampler2D Src0;
-
+sampler2D ScreenSpace;
+//
 //	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
 //		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000
 //	SetPixelShaderConstantF[1+]                             fUpperLUMClamp=1.4000
@@ -34,23 +35,22 @@ sampler2D Src0;
 //		|6.000000|6.000000|0.000000|0.000000|
 //		|7.000000|7.000000|0.000000|0.000000|
 //		|0.000000|0.000000|0.000000|0.000000|
-
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   HDRParam     const_1       1
-//   Src0         texture_0       1
+//   ScreenSpace         texture_0       1
 //   DestBlend    texture_1       1
 //   AvgLum       texture_2       1
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 ScreenOffset : TEXCOORD0;
     float2 texcoord_1 : TEXCOORD1;
 };
 
@@ -63,19 +63,20 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {1, 0.5, 0, 0};
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
+    float1 q1;
     float4 r0;
-    float4 r1;
     float4 r2;
+    float3 t0;
 
+    t0.xyz = tex2D(ScreenSpace, IN.ScreenOffset.xy);		// blur-surface
     r0.xyzw = tex2D(DestBlend, IN.texcoord_1.xy);		// original-surface
-    r2.xyzw = tex2D(AvgLum, IN.texcoord_0.xy);		// range-surface
-    r0.w = 1.0 / max(dot(r2.xyz, 1), HDRParam.x);		//        1.0 / max(range, fTargetLUM)
-    r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);		// blur-surface
-    r0.xyz = ((r0.w * HDRParam.x) * r0.xyz) + max(r1.xyz * (r0.w * 0.5), 0);	// fTargetLUM / max(range, fTargetLUM) * (max(blur * 0.5 / max(range, fTargetLUM), 0) + original)
-    r0.w = 1;
-    OUT.color_0.rgba = r0.xyzw;
+    r2.xyzw = tex2D(AvgLum, IN.ScreenOffset.xy);		// range-surface
+    q1.x = 1.0 / max(weight(r2.xyz), HDRParam.x);		//        1.0 / max(range, fTargetLUM)
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = ((q1.x * HDRParam.x) * r0.xyz) + max(t0.xyz * (q1.x * 0.5), 0);
 
     return OUT;
 };

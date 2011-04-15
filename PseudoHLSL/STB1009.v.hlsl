@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float3 FogColor;
 float4 FogParam;
 row_major float4x4 ModelViewProj;
 float4 WindMatrices[16];
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -27,7 +27,6 @@ float4 WindMatrices[16];
 //   WindMatrices[2]  const_40      4
 //   WindMatrices[3]  const_41      4
 //
-
 
 
 // Structures:
@@ -47,26 +46,19 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {0, 1, 0, 0};
+    float3 mdl10;
+    float1 q0;
+    float4 q2;
+    float4 q3;
 
-    float1 offset;
-    float4 r0;
-    float4 r1;
-
-    offset.x = IN.blendindices.y;
-    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.x], IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.x], IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
-    r1.xyzw = IN.position.xyzw;
-    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + r1.xyzw;
-    r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    OUT.position.xyz = r1.xyz;
-    OUT.color_0.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
+    q0.x = IN.blendindices.y;
+    q2.xyzw = mul(float4x4(WindMatrices[0 + q0.x].xyzw, WindMatrices[1 + q0.x].xyzw, WindMatrices[2 + q0.x].xyzw, WindMatrices[3 + q0.x].xyzw), IN.position.xyzw);
+    q3.xyzw = (IN.blendindices.x * (q2.xyzw - IN.position.xyzw)) + IN.position.xyzw;
+    mdl10.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), q3.xyzw);
     OUT.color_0.rgb = FogColor.rgb;
+    OUT.color_0.a = 1 - saturate((FogParam.x - length(mdl10.xyz)) / FogParam.y);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, q3.xyzw);
+    OUT.position.xyz = mdl10.xyz;
 
     return OUT;
 };

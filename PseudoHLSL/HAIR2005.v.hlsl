@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float3 LightColor[3];
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -30,7 +30,6 @@ row_major float4x4 ModelViewProj;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -40,6 +39,8 @@ struct VS_INPUT {
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
     float4 color_0 : COLOR0;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -57,46 +58,38 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {0, 1, 0, 0};
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
-    float4 r0;
-    float4 r1;
-    float4 r2;
+    float3 eye3;
+    float3 lit0;
+    float1 lit12;
+    float1 lit14;
+    float1 lit5;
+    float3 lit6;
+    float3 lit9;
+    float3 q8;
+    float3 r0;
 
-    r0.xyz = LightPosition[0].xyz - IN.position.xyz;
-    r0.w = 1.0 / length(r0.xyz);
-    r2.xyz = r0.xyz * r0.w;
-    r1.x = dot(IN.tangent.xyz, r2.xyz);
-    r1.y = dot(IN.binormal.xyz, r2.xyz);
-    r1.z = dot(IN.normal.xyz, r2.xyz);
-    r2.xyz = normalize(EyePosition.xyz - IN.position.xyz);
-    r0.xyz = normalize((r0.w * r0.xyz) + r2.xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = normalize(r1.xyz);
-    r1.x = dot(IN.tangent.xyz, r0.xyz);
-    r1.y = dot(IN.binormal.xyz, r0.xyz);
-    r1.z = dot(IN.normal.xyz, r0.xyz);
-    r0.x = dot(IN.tangent.xyz, r2.xyz);
-    r0.y = dot(IN.binormal.xyz, r2.xyz);
-    r0.z = dot(IN.normal.xyz, r2.xyz);
-    OUT.texcoord_3.xyz = normalize(r1.xyz);
-    OUT.texcoord_1.xyz = normalize(r0.xyz);
-    r0.xyz = LightPosition[2].xyz - IN.position.xyz;
-    r1.w = 1 - saturate((1.0 / LightPosition[0].w) / r0.w);
-    r0.w = 1.0 / length(r0.xyz);
-    r2.w = max(dot(IN.normal.xyz, r0.xyz * r0.w), 0);
-    r0.w = 1 - saturate((1.0 / r0.w) / LightPosition[2].w);
-    r0.xyz = LightPosition[1].xyz - IN.position.xyz;
-    r1.xyz = (r2.w * LightColor[2].rgb) * (r0.w * r0.w);
-    r2.w = 1.0 / length(r0.xyz);
-    r0.w = 1 - saturate((1.0 / r2.w) / LightPosition[1].w);
-    OUT.color_0.a = r1.w * r1.w;
-    OUT.color_0.rgb = ((r0.w * r0.w) * (max(dot(IN.normal.xyz, r0.xyz * r2.w), 0) * LightColor[1].rgb)) + r1.xyz;
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    eye3.xyz = normalize(EyePosition.xyz - IN.position.xyz);
+    lit6.xyz = LightPosition[2].xyz - IN.position.xyz;
+    q8.xyz = normalize(lit6.xyz);
+    lit9.xyz = LightPosition[1].xyz - IN.position.xyz;
+    r0.xyz = shade(IN.normal.xyz, normalize(lit9.xyz)) * LightColor[1].rgb;
+    lit0.xyz = LightPosition[0].xyz - IN.position.xyz;
+    lit14.x = 1 - saturate(length(lit9.xyz) / LightPosition[1].w);
+    lit12.x = 1 - saturate(length(lit6.xyz) / LightPosition[2].w);
+    lit5.x = 1 - saturate(length(lit0.xyz) / LightPosition[0].w);
+    OUT.color_0.a = sqr(lit5.x);
+    OUT.color_0.rgb = (sqr(lit14.x) * r0.xyz) + ((shade(IN.normal.xyz, q8.xyz) * LightColor[2].rgb) * sqr(lit12.x));
     OUT.color_1.rgba = IN.color_0.rgba;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = normalize(mul(TanSpaceProj, eye3.xyz));
+    OUT.texcoord_2.xyz = normalize(mul(TanSpaceProj, normalize(lit0.xyz)));
+    OUT.texcoord_3.xyz = normalize(mul(TanSpaceProj, normalize(normalize(lit0.xyz) + eye3.xyz)));
 
     return OUT;
 };

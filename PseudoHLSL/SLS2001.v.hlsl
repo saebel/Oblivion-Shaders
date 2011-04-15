@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float3 FogColor;
 float4 FogParam;
 float4 HighDetailRange;
@@ -13,8 +13,8 @@ float4 LODLandFlags;
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;
-
-
+//
+//
 // Registers:
 //
 //   Name            Reg   Size
@@ -31,7 +31,6 @@ row_major float4x4 ObjToCubeSpace;
 //   FogColor        const_24      1
 //   LODLandFlags    const_47      1
 //
-
 
 
 // Structures:
@@ -54,33 +53,37 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const float4 const_4 = {-1, -2048, 0.6, 0};
 
+    float3 mdl24;
+    float1 q0;
+    float1 q1;
+    float1 q2;
+    float1 q3;
     float4 r0;
     float4 r1;
-    float4 r2;
-    float4 r3;
+    float2 r2;
 
     r1.xzw = const_4.xzw;
-    r0.w = r1.x + LODLandFlags.y;
-    r0.w = r0.w * r0.w;
-    r2.w = abs(dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw) - HighDetailRange.x);
-    r3.w = abs(dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw) - HighDetailRange.y);
-    r0.w = ((r2.w < HighDetailRange.z ? 1.0 : 0.0) * (r3.w < HighDetailRange.w ? 1.0 : 0.0)) * (-r0.w >= r0.w ? 1.0 : 0.0);
-    r0.z = (r0.w * -2048) + IN.position.z;
-    r0.xyw = IN.position.xyw;
-    r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
+    q2.x = r1.x + LODLandFlags.y;
     r2.xy = r1.z * HighDetailRange.zw;
-    r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.texcoord_7.x = ((r2.w < r2.x ? 1.0 : 0.0) * (r3.w < r2.y ? 1.0 : 0.0)) * (r1.w < LODLandFlags.x ? 1.0 : 0.0);
+    q1.x = abs(dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw) - HighDetailRange.y);
+    q0.x = abs(dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw) - HighDetailRange.x);
+    r0.xyw = IN.position.xyw;
+    q3.x = (q0.x < HighDetailRange.z ? (q1.x < HighDetailRange.w ? 1.0 : 0.0) : 0) * (sqr(q2.x) == 0 ? 1.0 : 0.0);
+    r0.z = IN.position.z - (q3.x * 2048);
+    mdl24.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), r0.xyzw);
+    OUT.color_1.rgb = FogColor.rgb;
+    OUT.color_1.a = 1 - saturate((FogParam.x - length(mdl24.xyz)) / FogParam.y);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    OUT.position.xyz = r1.xyz;
-    OUT.color_1.a = -(saturate((FogParam.x - length(r1.xyz)) / FogParam.y) - 1);
+    OUT.position.xyz = mdl24.xyz;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xyz = LightDirection[0].xyz;
+    OUT.texcoord_7.x = (r1.w < LODLandFlags.x ? (q0.x < r2.x ? (q1.x < r2.y ? 1.0 : 0.0) : 0) : 0);
     OUT.texcoord_7.y = 0;
-    OUT.color_1.rgb = FogColor.rgb;
 
     return OUT;
 };

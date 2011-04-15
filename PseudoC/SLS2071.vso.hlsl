@@ -31,7 +31,7 @@
 
     const float4 const_4 = {0.025, 0.0208350997, -0.0851330012, 0.180141002};
     const float4 const_5 = {-0.330299497, 0.999866009, -2, PI / 2};
-    const float4 const_6 = {-PI, 0.318471342, 1, 0};
+    const float4 const_6 = {-PI, (1.0 / PI), 1, 0};
     float4 IN.position : POSITION;
     float3 IN.tangent : TANGENT;
     float3 IN.binormal : BINORMAL;

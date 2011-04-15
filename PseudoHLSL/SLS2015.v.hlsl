@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float3 FogColor;
 float4 FogParam;
 float3 LightDirection[3];
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -31,7 +31,6 @@ row_major float4x4 ModelViewProj;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -41,6 +40,8 @@ struct VS_INPUT {
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
     float4 color_0 : COLOR0;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -60,44 +61,28 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0.5, 0, 1, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    float4 r0;
-    float3 r1;
-    float3 r2;
-    float3 r3;
+    float3 eye0;
+    float3 lit3;
+    float3 mdl18;
 
-    r0.xyz = EyePosition.xyz - IN.position.xyz;
-    r0.w = 1.0 / length(r0.xyz);
-    r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xyz = normalize(r1.xyz);
-    r1.xyz = LightPosition[1].xyz - IN.position.xyz;
-    r3.xyz = normalize((r0.w * r0.xyz) + LightDirection[0].xyz);
-    r2.x = dot(IN.tangent.xyz, r3.xyz);
-    r2.y = dot(IN.binormal.xyz, r3.xyz);
-    r2.z = dot(IN.normal.xyz, r3.xyz);
-    OUT.texcoord_3.xyz = normalize(r2.xyz);
-    r2.xyz = normalize(r1.xyz);
-    OUT.texcoord_2.x = dot(IN.tangent.xyz, r2.xyz);
-    OUT.texcoord_2.y = dot(IN.binormal.xyz, r2.xyz);
-    OUT.texcoord_2.z = dot(IN.normal.xyz, r2.xyz);
-    OUT.texcoord_5.xyz = (0.5 * (r1.xyz / LightPosition[1].w)) + 0.5;	// [-1,+1] to [0,1]
-    r1.xyz = normalize((r0.w * r0.xyz) + r2.xyz);
-    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_4.x = dot(IN.tangent.xyz, r1.xyz);
-    OUT.texcoord_4.y = dot(IN.binormal.xyz, r1.xyz);
-    OUT.texcoord_4.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.position.xyz = r0.xyz;
-    OUT.color_1.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
-    OUT.texcoord_5.w = 0.5;
+    mdl18.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), IN.position.xyzw);
+    lit3.xyz = LightPosition[1].xyz - IN.position.xyz;
     OUT.color_0.rgba = IN.color_0.rgba;
+    eye0.xyz = EyePosition.xyz - IN.position.xyz;
+    OUT.color_1.a = 1 - saturate((FogParam.x - length(mdl18.xyz)) / FogParam.y);
     OUT.color_1.rgb = FogColor.rgb;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.position.xyz = mdl18.xyz;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = normalize(mul(TanSpaceProj, LightDirection[0].xyz));
+    OUT.texcoord_2.xyz = mul(TanSpaceProj, normalize(lit3.xyz));
+    OUT.texcoord_3.xyz = normalize(mul(TanSpaceProj, normalize(normalize(eye0.xyz) + LightDirection[0].xyz)));
+    OUT.texcoord_4.xyz = mul(TanSpaceProj, normalize(normalize(eye0.xyz) + normalize(lit3.xyz)));
+    OUT.texcoord_5.w = 0.5;
+    OUT.texcoord_5.xyz = compress(lit3.xyz / LightPosition[1].w);	// [-1,+1] to [0,1]
 
     return OUT;
 };

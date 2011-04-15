@@ -30,6 +30,7 @@ s/([\-]\([][a-zINOUT0-9_\.]\+\) [\*] \1) [\+] 1;/1.0 - (\1 * \1);/g
 # + -0.5
 # + -PI
 s/[\+] [\-]\([ePI0-9\.]\+\)/- \1/g
+s/ [\+] 0;/;/g
 
 # --3
 s/[\-][\-]\([e0-9.]\+\)/\1/g
@@ -37,7 +38,7 @@ s/[\-][\-]\([e0-9.]\+\)/\1/g
 # tex2D(,.xy)
 # texCUBE(,.xyz)
 s/tex2D(\([^,()]\+\), \([INOUT.]*[][a-z0-9_\-]\+\))/tex2D(\1, \2.xy)/
-s/tex2DProj(\([^,()]\+\), \([INOUT.]*[][a-z0-9_\-]\+\))/tex2D(\1, \2.xy)/
+s/tex2Dproj(\([^,()]\+\), \([INOUT.]*[][a-z0-9_\-]\+\))/tex2Dproj(\1, \2.xyzw)/
 s/texCUBE(\([^,()]\+\), \([INOUT.]*[][a-z0-9_\-]\+\))/texCUBE(\1, \2.xyz)/
 # r1.xyzw = tex2D(ShadowMask, IN.texcoord_1.zwzw);			// partial precision
 s/\([][a-zINOUT0-9_]\+\)\.xyzw = tex2D(\([^,]\+\), \([INOUT.]*[][a-z0-9_\-]\+\)\.\([xyzw][xyzw]\)\([xyzw]*\));/\1.xyzw = tex2D(\2, \3.\4);/g

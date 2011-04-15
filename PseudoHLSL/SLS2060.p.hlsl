@@ -4,11 +4,10 @@
 //   vsa shaderdump19/SLS2060.pso /Fcshaderdump19/SLS2060.pso.dis
 //
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float4 texcoord_1 : TEXCOORD1;			// partial precision
+    float4 texcoord_1 : TEXCOORD1;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -20,13 +19,8 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_0 = {1, 0, 0, 0};
-
-    float4 r0;
-
-    r0.w = 1;
-    r0.xyz = saturate(IN.texcoord_1.z / IN.texcoord_1.w);			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    OUT.color_0.a = 1;			// partial precision
+    OUT.color_0.rgb = saturate(IN.texcoord_1.z / IN.texcoord_1.w);			// partial precision
 
     return OUT;
 };

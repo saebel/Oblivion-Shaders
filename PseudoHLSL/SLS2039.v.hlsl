@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float4 BoundWorldCenter;
 float4 EyePosition;
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;
-
-
+//
+//
 // Registers:
 //
 //   Name             Reg   Size
@@ -27,7 +27,6 @@ row_major float4x4 ObjToCubeSpace;
 //   EyePosition      const_25      1
 //   BoundWorldCenter const_46      1
 //
-
 
 
 // Structures:
@@ -51,31 +50,29 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {1, -2, 3, 0};
-    const float4 const_5 = {0.5, -0.8, 6.66666651, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
+    float3 eye5;
+    float1 q1;
+    float3 q2;
     float4 r0;
     float4 r1;
-    float3 r2;
 
+    r1.xyz = mul(float3x4(ObjToCubeSpace[0].xyzw, ObjToCubeSpace[1].xyzw, ObjToCubeSpace[2].xyzw), IN.position.xyzw);
+    eye5.xyz = normalize(EyePosition.xyz - r1.xyz);
     r1.w = dot(ObjToCubeSpace[3].xyzw, IN.position.xyzw);
-    r1.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
-    r1.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
-    r1.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
     r0.xyzw = r1.xyzw - BoundWorldCenter.xyzw;
-    r2.xyz = EyePosition.xyz - r1.xyz;
-    r1.xyz = r0.xyz / length(r0.xyzw);
-    r0.xyz = normalize(r2.xyz);
-    r1.w = saturate(((dot(r1.xyz, r0.xyz) / length(r1.xyz)) - 0.8) * 6.66666651);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xyz = (0.5 * r1.xyz) + 0.5;	// [-1,+1] to [0,1]
-    OUT.texcoord_2.xyz = r0.xyz;
-    OUT.texcoord_1.w = ((r1.w * -2) + 3) * (r1.w * r1.w);
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    q2.xyz = r0.xyz / length(r0.xyzw);
+    q1.x = saturate(((dot(q2.xyz, eye5.xyz) / length(q2.xyz)) - 0.8) * 6.66666651);
     OUT.color_0.rgb = IN.color_0.rgb;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.w = (3 - (q1.x * 2)) * sqr(q1.x);
+    OUT.texcoord_1.xyz = compress(q2.xyz);	// [-1,+1] to [0,1]
+    OUT.texcoord_2.xyz = eye5.xyz;
 
     return OUT;
 };

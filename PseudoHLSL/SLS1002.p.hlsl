@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D NormalMap;
 float4 PSLightColor[4];
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -19,11 +19,10 @@ float4 PSLightColor[4];
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 NormalUV : TEXCOORD0;
     float3 texcoord_1 : TEXCOORD1;
 };
 
@@ -36,14 +35,16 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
     float4 r0;
 
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    r0.w = PSLightColor[0].a;
-    r0.xyz = saturate(dot(2 * (r0.xyz - 0.5), 2 * (IN.texcoord_1.xyz - 0.5))) * PSLightColor[0].rgb;	// [0,1] to [-1,+1]
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    OUT.color_0.a = PSLightColor[0].a;
+    OUT.color_0.rgb = shades(expand(r0.xyz), expand(IN.texcoord_1.xyz)) * PSLightColor[0].rgb;
 
     return OUT;
 };

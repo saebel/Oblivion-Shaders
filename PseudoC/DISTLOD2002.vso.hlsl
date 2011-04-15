@@ -47,7 +47,7 @@
     r0.w = 0.01;
     r0.w = r0.w * InstanceData[0 + offset.w].w;
     r1.xyzw = frac(InstanceData[0 + offset.w]);
-    r0.xyz = (IN.position * r0.w) + InstanceData[0 + offset.w];
+    r0.xyz = (IN.position.xyz * r0.w) + InstanceData[0 + offset.w];
     r1.xyz = r1.xyz - 0.5;
     r0.w = IN.position.w;
     r1.xyz = 2 * r1.xyz;

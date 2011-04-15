@@ -62,11 +62,11 @@
     r2.x = (2 * r2.y) - r0.z;
     r3.xy = r1.yw * r1.xz;
     r0.w = -r0.y;
-    r2.yz = r0.x * const_8.xz;
+    r2.yz = r0.x * const_8.zw;
     r2.xy = (r3.y * r2.xy) + r0.wx;
     r2.z = r3.y * r2.z;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
-    r1.yz = (r0.xz * const_8.xz) - r2.yz;
+    r1.yz = (r0.zy * const_8.zw) - r2.yz;
     r1.w = r0.w * (1.0 / 17);
     r1.x = -r2.x;
     r1.w = frac(r1.w);

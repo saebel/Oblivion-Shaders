@@ -59,7 +59,7 @@
     r0.w = r1.y + r1.x;
     r0.w = 1.0 / sqrt(r0.w);
     r1.xz = -r0.xy * r0.w;
-    r1.yw = r1.z * const_4.xy;
+    r1.yw = r1.z * const_4.yx;
     r0.xyz = r1.zxw * const_4.yzz;
     r0.w = (Params.z * Params.x) + IN.texcoord_1.x;
     r1.y = dot(r1.yxw, r0.xyz);
@@ -68,15 +68,16 @@
     r1.y = 1.0 / sqrt(r1.y);
     r0.w = (r0.w * PI * 2) - PI;
     r1.xy = r0.xy * r1.y;
-    r2.x = cos(r0.w); r2.y = sin(r0.w);
+    r2.x = cos(r0.w);
+    r2.y = sin(r0.w);
     r3.xyz = r2.xxy * const_4.zxz;
     r2.xyz = r2.yxx * const_4.yxz;
     r3.x = dot(r3.xyz, IN.position.xyz);
     r3.z = dot(r2.xyz, IN.position.xyz);
     r3.w = IN.position.y;
     r0.w = r1.x;
-    r3.y = dot(r1.ywzw, r3.xzww);
-    r3.x = dot(r0.wzyw, r3.xzww);
+    r3.y = dot(r1.ywz, r3.xzw);
+    r3.x = dot(r0.wzy, r3.xzw);
     r0.xyz = (-0.5 * abs(r5.xyz)) + r6.xyz;
     r2.x = 1.0 / abs(r5.x);
     r2.y = 1.0 / abs(r5.y);

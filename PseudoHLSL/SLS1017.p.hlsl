@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D BaseMap;
 sampler2D FaceGenMap;
 sampler2D FaceGenMap2;
 sampler2D NormalMap;
 float4 PSLightColor[4];
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -27,14 +27,13 @@ float4 PSLightColor[4];
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
-    float2 texcoord_2 : TEXCOORD2;
-    float2 texcoord_3 : TEXCOORD3;
+    float2 BaseUV : TEXCOORD0;
+    float2 NormalUV : TEXCOORD1;
+    float2 FaceUV : TEXCOORD2;
+    float2 Face2UV : TEXCOORD3;
     float3 color_0 : COLOR0;
 };
 
@@ -47,23 +46,24 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 2, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
+    float3 q1;
     float4 r0;
     float4 r1;
     float4 r2;
     float4 r3;
-    float3 r4;
 
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
-    r1.xyzw = tex2D(FaceGenMap, IN.texcoord_2.xy);
-    r2.xyzw = tex2D(FaceGenMap2, IN.texcoord_3.xy);
-    r3.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
-    r4.xyz = 2 * (IN.color_0.rgb - 0.5);	// [0,1] to [-1,+1]
-    r4.x = saturate(dot(2 * (r3.xyz - 0.5), r4.xyz));	// [0,1] to [-1,+1]
-    r3.xyz = PSLightColor[0].rgb;
-    r0.xyz = saturate((r4.x * r3) + AmbientColor.rgb) * (2 * ((2 * r2.xyz) * ((2 * (r1.xyz - 0.5)) + r0.xyz)));	// [0,1] to [-1,+1]
-    OUT.color_0.rgba = r0.xyzw;
+    r3.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    r2.xyzw = tex2D(FaceGenMap2, IN.Face2UV.xy);
+    r1.xyzw = tex2D(FaceGenMap, IN.FaceUV.xy);
+    r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);
+    q1.xyz = saturate((shades(expand(r3.xyz), expand(IN.color_0.rgb)) * PSLightColor[0].rgb) + AmbientColor.rgb);
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = q1.xyz * (2 * ((2 * r2.xyz) * (expand(r1.xyz) + r0.xyz)));
 
     return OUT;
 };

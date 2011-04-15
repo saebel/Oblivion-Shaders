@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
 row_major float4x4 ShadowProj;
 float4 ShadowProjData;
 float4 ShadowProjTransform;
-
-
+//
+//
 // Registers:
 //
 //   Name                Reg   Size
@@ -31,7 +31,6 @@ float4 ShadowProjTransform;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -41,6 +40,8 @@ struct VS_INPUT {
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
     float4 color_0 : COLOR0;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -57,29 +58,23 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+
     const float4 const_4 = {0.5, 1, 0, 0};
 
-    float4 r0;
+    float2 m9;
+    float1 q0;
 
-    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
-    r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_3.xyz = (0.5 * r0.xyz) + 0.5;	// [-1,+1] to [0,1]
-    r0.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_4.xy = ((r0.w * ShadowProjTransform.xy) + r0.xy) / (r0.w * ShadowProjTransform.w);
-    r0.w = 1.0 / ShadowProjData.w;
-    r0.xy = r0.xy - ShadowProjData.xy;
-    OUT.texcoord_4.z = r0.x * r0.w;
-    OUT.texcoord_4.w = (r0.y * -r0.w) + 1;
+    m9.xy = mul(float2x4(ShadowProj[0].xyzw, ShadowProj[1].xyzw), IN.position.xyzw);
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    q0.x = dot(ShadowProj[3].xyzw, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xy = IN.texcoord_0.xy;
     OUT.texcoord_2.xyzw = (IN.color_0.xyzx * const_4.yyyz) + const_4.zzzy;
+    OUT.texcoord_3.xyz = compress(mul(TanSpaceProj, LightDirection[0].xyz));	// [-1,+1] to [0,1]
+    OUT.texcoord_4.xy = ((q0.x * ShadowProjTransform.xy) + m9.xy) / (q0.x * ShadowProjTransform.w);
+    OUT.texcoord_4.zw = ((m9.xy - ShadowProjData.xy) / ShadowProjData.w) * float2(1, -1) + float2(0, 1);
 
     return OUT;
 };

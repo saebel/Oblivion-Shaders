@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float Time;
 sampler2D amplitudeSamp;
 sampler2D freqSamp;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -19,7 +19,6 @@ sampler2D freqSamp;
 //   amplitudeSamp texture_0       1
 //   freqSamp      texture_1       1
 //
-
 
 
 // Structures:
@@ -37,36 +36,33 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-#define	PI	3.14159274
 #define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
 #define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+#define	PI			3.14159274
+#define	anglei(v)		(((v) + PI) / (2 * PI))
+#define	angler(v)		(((v) * (2 * PI)) - PI)
+#define	fracr(v)		angler(frac(anglei(v)))	// signed modulo % PI
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    const float4 const_1 = {(1.0 / (PI * 2)), 0.5, PI * 2, -PI};
-    const int4 const_2 = {0, 1, 0, 0};
-    const float4 const_3 = {D3DSINCOSCONST1};
-    const float4 const_4 = {D3DSINCOSCONST2};
-
+    float1 q1;
+    float1 q4;
     float4 r0;
-    float4 r1;
     float2 r2;
-    float4 r3;
+    float1 t0;
 
+    t0.x = tex2D(freqSamp, IN.texcoord_0.xy);
     r0.xyzw = tex2D(amplitudeSamp, IN.texcoord_0.xy);
-    r1.xyzw = tex2D(freqSamp, IN.texcoord_0.xy);
-    r3.w = (frac(((r1.x * Time.x) / (PI * 2)) + 0.5) * PI * 2) - PI;
-    r2.x = cos(r3.w); r2.y = sin(r3.w);
-    r3.w = r0.y * r2.y;
-    r2.y = (r0.x * r2.y) + (r0.y * r2.x);
-    r2.x = (r0.x * r2.x) - r3.w;
-    r3.w = (frac(((-r1.x * Time.x) / (PI * 2)) + 0.5) * PI * 2) - PI;
-    r1.x = cos(r3.w); r1.y = sin(r3.w);
-    r0.y = (r0.z * r1.y) - (r0.w * r1.x);
-    r1.w = r0.w * r1.y;
-    r0.w = 1;
-    r0.x = (r0.z * r1.x) + r1.w;
+    q1.x = fracr(t0.x * Time.x);	// [0,1] to [-PI,PI]
+    q4.x = fracr(-t0.x * Time.x);	// [0,1] to [-PI,PI]
+    r2.y = (r0.x * sin(q1.x)) + (r0.y * cos(q1.x));
+    r2.x = (r0.x * cos(q1.x)) - (r0.y * sin(q1.x));
+    r0.y = (r0.z * sin(q4.x)) - (r0.w * cos(q4.x));
+    r0.x = (r0.z * cos(q4.x)) + (r0.w * sin(q4.x));
     r0.xy = r2.xy + r0.xy;
     r0.z = 0;
-    OUT.color_0.rgba = r0.xyzw;
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = r0.xyz;
 
     return OUT;
 };

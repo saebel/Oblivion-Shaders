@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 sampler2D DecalMap;
 float4 PSDecalOffsets[8];
 float4 PSNumDecals;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -26,7 +26,6 @@ float4 PSNumDecals;
 //   PSDecalOffsets[7] const_22       1
 //   DecalMap       texture_1       1
 //
-
 
 
 // Structures:
@@ -51,10 +50,8 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_0 = {8, 0, 1, 2};
-    const int4 const_1 = {7, 0, 0, 0};
-    const int4 const_2 = {3, 4, 5, 6};
-
+    float1 q0;
+    float1 q2;
     float4 r0;
     float4 r1;
     float4 r2;
@@ -64,69 +61,67 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r6;
     float4 r7;
     float4 r8;
-    float4 r9;
 
-    r0.xy = saturate(IN.texcoord_1.xy);			// partial precision
-    r7.x = (PSDecalOffsets[1].y * r0.x) + PSDecalOffsets[1].x;			// partial precision
-    r7.y = (PSDecalOffsets[1].w * r0.y) + PSDecalOffsets[1].z;			// partial precision
-    r0.xy = saturate(IN.texcoord_0.xy);			// partial precision
-    r0.x = (PSDecalOffsets[0].y * r0.x) + PSDecalOffsets[0].x;			// partial precision
-    r0.y = (PSDecalOffsets[0].w * r0.y) + PSDecalOffsets[0].z;			// partial precision
-    r0.xyzw = tex2D(DecalMap, r0.xy);			// partial precision
-    r0.w = r0.w * IN.texcoord_0.z;			// partial precision
-    r0.xyz = r0.xyz * r0.w;			// partial precision
-    r1.w = min(PSNumDecals.x, 8);
-    r9.w = frac(r1.w);
-    r9.w = ((r1.w >= 0.0 ? 1 : 0) * (r9.w <= 0.0 ? 1 : 0)) + (r1.w - r9.w);
-    r0.xyzw = (r9.w <= 0.0 ? r0.xyzw : 0);			// partial precision
-    r8.xyzw = tex2D(DecalMap, r7.xy);			// partial precision
-    r1.w = (r8.w * IN.texcoord_1.z) + r0.w;			// partial precision
-    r1.xy = saturate(IN.texcoord_2.xy);			// partial precision
-    r6.x = (PSDecalOffsets[2].y * r1.x) + PSDecalOffsets[2].x;			// partial precision
-    r6.y = (PSDecalOffsets[2].w * r1.y) + PSDecalOffsets[2].z;			// partial precision
-    r1.xy = saturate(IN.texcoord_3.xy);			// partial precision
-    r5.x = (PSDecalOffsets[3].y * r1.x) + PSDecalOffsets[3].x;			// partial precision
-    r5.y = (PSDecalOffsets[3].w * r1.y) + PSDecalOffsets[3].z;			// partial precision
-    r1.xy = saturate(IN.texcoord_4.xy);			// partial precision
-    r4.x = (PSDecalOffsets[4].y * r1.x) + PSDecalOffsets[4].x;			// partial precision
-    r4.y = (PSDecalOffsets[4].w * r1.y) + PSDecalOffsets[4].z;			// partial precision
-    r1.xy = saturate(IN.texcoord_5.xy);			// partial precision
-    r3.x = (PSDecalOffsets[5].y * r1.x) + PSDecalOffsets[5].x;			// partial precision
-    r3.y = (PSDecalOffsets[5].w * r1.y) + PSDecalOffsets[5].z;			// partial precision
-    r1.xy = saturate(IN.texcoord_6.xy);			// partial precision
-    r2.x = (PSDecalOffsets[6].y * r1.x) + PSDecalOffsets[6].x;			// partial precision
-    r2.y = (PSDecalOffsets[6].w * r1.y) + PSDecalOffsets[6].z;			// partial precision
-    r1.xy = saturate(IN.texcoord_7.xy);			// partial precision
-    r1.x = (PSDecalOffsets[7].y * r1.x) + PSDecalOffsets[7].x;			// partial precision
-    r1.y = (PSDecalOffsets[7].w * r1.y) + PSDecalOffsets[7].z;			// partial precision
-    r7.xyzw = tex2D(DecalMap, r6.xy);			// partial precision
-    r6.xyzw = tex2D(DecalMap, r5.xy);			// partial precision
-    r5.xyzw = tex2D(DecalMap, r4.xy);			// partial precision
-    r4.xyzw = tex2D(DecalMap, r3.xy);			// partial precision
-    r3.xyzw = tex2D(DecalMap, r2.xy);			// partial precision
-    r2.xyzw = tex2D(DecalMap, r1.xy);			// partial precision
-    r1.xyz = lerp(r8.xyz, r0.xyz, r8.w * IN.texcoord_1.z);			// partial precision
-    r0.xyzw = ((1 - r9.w) >= 0.0 ? r1.xyzw : r0.xyzw);			// partial precision
-    r1.w = (r7.w * IN.texcoord_2.z) + r0.w;			// partial precision
-    r1.xyz = lerp(r7.xyz, r0.xyz, r7.w * IN.texcoord_2.z);			// partial precision
-    r0.xyzw = ((2 - r9.w) >= 0.0 ? r1.xyzw : r0.xyzw);			// partial precision
-    r1.w = (r6.w * IN.texcoord_3.z) + r0.w;			// partial precision
-    r1.xyz = lerp(r6.xyz, r0.xyz, r6.w * IN.texcoord_3.z);			// partial precision
-    r0.xyzw = ((3 - r9.w) >= 0.0 ? r1.xyzw : r0.xyzw);			// partial precision
-    r1.w = (r5.w * IN.texcoord_4.z) + r0.w;			// partial precision
-    r1.xyz = lerp(r5.xyz, r0.xyz, r5.w * IN.texcoord_4.z);			// partial precision
-    r0.xyzw = ((4 - r9.w) >= 0.0 ? r1.xyzw : r0.xyzw);			// partial precision
-    r1.w = (r4.w * IN.texcoord_5.z) + r0.w;			// partial precision
-    r1.xyz = lerp(r4.xyz, r0.xyz, r4.w * IN.texcoord_5.z);			// partial precision
-    r0.xyzw = ((5 - r9.w) >= 0.0 ? r1.xyzw : r0.xyzw);			// partial precision
-    r1.w = (r3.w * IN.texcoord_6.z) + r0.w;			// partial precision
-    r1.xyz = lerp(r3.xyz, r0.xyz, r3.w * IN.texcoord_6.z);			// partial precision
-    r0.xyzw = ((6 - r9.w) >= 0.0 ? r1.xyzw : r0.xyzw);			// partial precision
-    r1.w = (r2.w * IN.texcoord_7.z) + r0.w;			// partial precision
-    r1.xyz = lerp(r2.xyz, r0.xyz, r2.w * IN.texcoord_7.z);			// partial precision
-    r0.xyzw = ((7 - r9.w) >= 0.0 ? r1.xyzw : r0.xyzw);			// partial precision
-    r0.w = saturate(r0.w);			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r1.xy = saturate(IN.texcoord_2.xy);			// partial precision
+    r0.xy = saturate(IN.texcoord_1.xy);			// partial precision
+    q0.x = min(PSNumDecals.x, 8);
+    q2.x = (q0.x >= 0.0 ? 0 : (frac(q0.x) <= 0.0 ? 0 : 1)) + (q0.x - frac(q0.x));
+    r6.y = (PSDecalOffsets[2].w * r1.y) + PSDecalOffsets[2].z;			// partial precision
+    r6.x = (PSDecalOffsets[2].y * r1.x) + PSDecalOffsets[2].x;			// partial precision
+    r1.xy = saturate(IN.texcoord_3.xy);			// partial precision
+    r5.y = (PSDecalOffsets[3].w * r1.y) + PSDecalOffsets[3].z;			// partial precision
+    r5.x = (PSDecalOffsets[3].y * r1.x) + PSDecalOffsets[3].x;			// partial precision
+    r1.xy = saturate(IN.texcoord_4.xy);			// partial precision
+    r4.y = (PSDecalOffsets[4].w * r1.y) + PSDecalOffsets[4].z;			// partial precision
+    r4.x = (PSDecalOffsets[4].y * r1.x) + PSDecalOffsets[4].x;			// partial precision
+    r1.xy = saturate(IN.texcoord_5.xy);			// partial precision
+    r3.y = (PSDecalOffsets[5].w * r1.y) + PSDecalOffsets[5].z;			// partial precision
+    r3.x = (PSDecalOffsets[5].y * r1.x) + PSDecalOffsets[5].x;			// partial precision
+    r1.xy = saturate(IN.texcoord_6.xy);			// partial precision
+    r2.y = (PSDecalOffsets[6].w * r1.y) + PSDecalOffsets[6].z;			// partial precision
+    r2.x = (PSDecalOffsets[6].y * r1.x) + PSDecalOffsets[6].x;			// partial precision
+    r1.xy = saturate(IN.texcoord_7.xy);			// partial precision
+    r1.y = (PSDecalOffsets[7].w * r1.y) + PSDecalOffsets[7].z;			// partial precision
+    r1.x = (PSDecalOffsets[7].y * r1.x) + PSDecalOffsets[7].x;			// partial precision
+    r7.y = (PSDecalOffsets[1].w * r0.y) + PSDecalOffsets[1].z;			// partial precision
+    r7.x = (PSDecalOffsets[1].y * r0.x) + PSDecalOffsets[1].x;			// partial precision
+    r8.xyzw = tex2D(DecalMap, r7.xy);			// partial precision
+    r7.xyzw = tex2D(DecalMap, r6.xy);			// partial precision
+    r6.xyzw = tex2D(DecalMap, r5.xy);			// partial precision
+    r5.xyzw = tex2D(DecalMap, r4.xy);			// partial precision
+    r4.xyzw = tex2D(DecalMap, r3.xy);			// partial precision
+    r3.xyzw = tex2D(DecalMap, r2.xy);			// partial precision
+    r2.xyzw = tex2D(DecalMap, r1.xy);			// partial precision
+    r0.xy = saturate(IN.texcoord_0.xy);			// partial precision
+    r0.y = (PSDecalOffsets[0].w * r0.y) + PSDecalOffsets[0].z;			// partial precision
+    r0.x = (PSDecalOffsets[0].y * r0.x) + PSDecalOffsets[0].x;			// partial precision
+    r0.xyzw = tex2D(DecalMap, r0.xy);			// partial precision
+    r0.w = r0.w * IN.texcoord_0.z;			// partial precision
+    r0.xyz = r0.xyz * r0.w;			// partial precision
+    r0.xyzw = (q2.x <= 0.0 ? 0 : r0.xyzw);			// partial precision
+    r1.xyz = lerp(r8.xyz, r0.xyz, r8.w * IN.texcoord_1.z);			// partial precision
+    r1.w = (r8.w * IN.texcoord_1.z) + r0.w;			// partial precision
+    r0.xyzw = (1 >= q2.x ? r0.xyzw : r1.xyzw);			// partial precision
+    r1.xyz = lerp(r7.xyz, r0.xyz, r7.w * IN.texcoord_2.z);			// partial precision
+    r1.w = (r7.w * IN.texcoord_2.z) + r0.w;			// partial precision
+    r0.xyzw = (2 >= q2.x ? r0.xyzw : r1.xyzw);			// partial precision
+    r1.xyz = lerp(r6.xyz, r0.xyz, r6.w * IN.texcoord_3.z);			// partial precision
+    r1.w = (r6.w * IN.texcoord_3.z) + r0.w;			// partial precision
+    r0.xyzw = (3 >= q2.x ? r0.xyzw : r1.xyzw);			// partial precision
+    r1.xyz = lerp(r5.xyz, r0.xyz, r5.w * IN.texcoord_4.z);			// partial precision
+    r1.w = (r5.w * IN.texcoord_4.z) + r0.w;			// partial precision
+    r0.xyzw = (4 >= q2.x ? r0.xyzw : r1.xyzw);			// partial precision
+    r1.xyz = lerp(r4.xyz, r0.xyz, r4.w * IN.texcoord_5.z);			// partial precision
+    r1.w = (r4.w * IN.texcoord_5.z) + r0.w;			// partial precision
+    r0.xyzw = (5 >= q2.x ? r0.xyzw : r1.xyzw);			// partial precision
+    r1.xyz = lerp(r3.xyz, r0.xyz, r3.w * IN.texcoord_6.z);			// partial precision
+    r1.w = (r3.w * IN.texcoord_6.z) + r0.w;			// partial precision
+    r0.xyzw = (6 >= q2.x ? r0.xyzw : r1.xyzw);			// partial precision
+    r1.xyz = lerp(r2.xyz, r0.xyz, r2.w * IN.texcoord_7.z);			// partial precision
+    r1.w = (r2.w * IN.texcoord_7.z) + r0.w;			// partial precision
+    r0.xyzw = (7 >= q2.x ? r0.xyzw : r1.xyzw);			// partial precision
+    OUT.color_0.a = saturate(r0.w);			// partial precision
+    OUT.color_0.rgb = r0.xyz;			// partial precision
 
     return OUT;
 };

@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 float4 CoreColor;
 float4 GlowColor;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -19,12 +19,11 @@ float4 GlowColor;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
     float4 color_0 : COLOR0;
-    float texcoord_0 : TEXCOORD0;			// partial precision
+    float texcoord_0 : TEXCOORD0;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -36,16 +35,14 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_2 = {1, 0, 0, 0};
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
-    float4 r0;
-    float4 r1;
+    float1 q0;
 
-    r1.w = (IN.texcoord_0.x <= 0.0 ? (1 - IN.texcoord_0.x) : (IN.texcoord_0.x + 1));			// partial precision
-    r0.w = r1.w * r1.w;			// partial precision
-    r0.xyz = ((r1.w * (r0.w * r0.w)) * CoreColor.rgb) + (r1.w * GlowColor.rgb);			// partial precision
-    r0.w = IN.color_0.a;			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    q0.x = (1 - abs(IN.texcoord_0.x));			// partial precision
+    OUT.color_0.a = IN.color_0.a;			// partial precision
+    OUT.color_0.rgb = ((q0.x * sqr(sqr(q0.x))) * CoreColor.rgb) + (q0.x * GlowColor.rgb);			// partial precision
 
     return OUT;
 };

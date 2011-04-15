@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 float4 DiffColor;
 float4 DiffColorPt;
@@ -14,8 +14,8 @@ float4 LightRadius;
 row_major float4x4 ModelViewProj;
 float SunDimmer;
 float4 WindMatrices[16];
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -35,7 +35,6 @@ float4 WindMatrices[16];
 //   WindMatrices[2]  const_20      4
 //   WindMatrices[3]  const_21      4
 //
-
 
 
 // Structures:
@@ -59,29 +58,28 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {0, 1, 0, 0};
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
-    float1 offset;
+    float1 q0;
+    float3 q1;
+    float1 q4;
+    float1 q5;
+    float4 q8;
     float4 r0;
-    float4 r1;
 
-    offset.x = IN.blendindices.y;
-    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.x], IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.x], IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
-    r1.xyzw = IN.position.xyzw;
-    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + r1.xyzw;
-    r1.xyz = LightPos.xyz - r0.xyz;
-    OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r0.w = 1.0 / length(r1.xyz);
-    r1.w = saturate(dot(IN.normal.xyz, r1.xyz * r0.w));
-    r0.w = saturate((1.0 / r0.w) / LightRadius.x);
-    OUT.texcoord_1.xyz = (IN.color_0.rgb * ((SunDimmer.x * (r1.w * DiffColor.rgb)) + AmbientColor.rgb)) + ((r1.w * DiffColorPt.xyz) * (1.0 - (r0.w * r0.w)));
+    q0.x = IN.blendindices.y;
+    q8.xyzw = mul(float4x4(WindMatrices[0 + q0.x].xyzw, WindMatrices[1 + q0.x].xyzw, WindMatrices[2 + q0.x].xyzw, WindMatrices[3 + q0.x].xyzw), IN.position.xyzw);
+    r0.xyzw = (IN.blendindices.x * (q8.xyzw - IN.position.xyzw)) + IN.position.xyzw;
+    OUT.position.xyzw = mul(ModelViewProj, r0.xyzw);
+    q1.xyz = LightPos.xyz - r0.xyz;
+    q4.x = shades(IN.normal.xyz, normalize(q1.xyz));
+    q5.x = saturate(length(q1.xyz) / LightRadius.x);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    r0.xyz = (SunDimmer.x * (q4.x * DiffColor.rgb)) + AmbientColor.rgb;
+    OUT.texcoord_1.xyz = (IN.color_0.rgb * r0.xyz) + ((q4.x * DiffColorPt.xyz) * (1.0 - sqr(q5.x)));
 
     return OUT;
 };

@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float4 FogColor;
 float4 FogParam;
 row_major float4x4 ModelViewProj;
 row_major float4x4 ShadowProj;
 float4 ShadowProjData;
 float4 ShadowProjTransform;
-
-
+//
+//
 // Registers:
 //
 //   Name                Reg   Size
@@ -31,7 +31,6 @@ float4 ShadowProjTransform;
 //   ShadowProjData      const_25      1
 //   ShadowProjTransform const_26      1
 //
-
 
 
 // Structures:
@@ -62,31 +61,26 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {1, 0, 0, 0};
+    float2 m9;
+    float3 mdl4;
+    float1 q0;
+    float3 r0;
 
-    float4 r0;
-    float2 r2;
-
-    r0.w = 1.0 / ShadowProjData.w;
-    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.position.xyz = r0.xyz;
-    OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y)) * FogParam.z;
+    mdl4.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), IN.position.xyzw);
+    m9.xy = mul(float2x4(ShadowProj[0].xyzw, ShadowProj[1].xyzw), IN.position.xyzw);
     r0.xyz = dot(ShadowProj[3].xyzw, IN.position.xyzw) * ShadowProjTransform.xyw;
-    r2.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
-    r2.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xy = (r0.xy + r2.xy) / r0.z;
-    r0.xy = r2.xy - ShadowProjData.xy;
-    OUT.texcoord_1.z = r0.x * r0.w;
-    OUT.texcoord_1.w = (r0.y * -r0.w) + 1;
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.color_0.rgba = IN.color_0.rgba;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.position.xyz = mdl4.xyz;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    q0.x = 1 - saturate((FogParam.x - length(mdl4.xyz)) / FogParam.y);
+    OUT.texcoord_1.xy = (r0.xy + m9.xy) / r0.z;
+    OUT.texcoord_1.zw = ((m9.xy - ShadowProjData.xy) / ShadowProjData.w) * float2(1, -1) + float2(0, 1);
     OUT.texcoord_3.xyz = IN.tangent.xyz;
     OUT.texcoord_4.xyz = IN.binormal.xyz;
     OUT.texcoord_5.xyz = IN.normal.xyz;
     OUT.texcoord_6.xyz = IN.position.xyz;
+    OUT.texcoord_7.w = q0.x * FogParam.z;
     OUT.texcoord_7.xyz = FogColor.rgb;
 
     return OUT;

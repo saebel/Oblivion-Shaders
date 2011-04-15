@@ -6,13 +6,13 @@
 //
 //
 // Parameters:
-
+//
 float BlendAmount;
 sampler2D HeightMap01;
 sampler2D HeightMap02;
 float fDamp;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -22,7 +22,6 @@ float fDamp;
 //   HeightMap01  texture_0       1
 //   HeightMap02  texture_1       1
 //
-
 
 
 // Structures:
@@ -40,18 +39,13 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {0.8, 1, 0, 0};
-
     float4 r0;
     float4 r1;
 
-    r0.xyzw = tex2D(HeightMap01, IN.texcoord_0.xy);
-    r0.w = 0.8 / fDamp.x;
     r1.xyzw = tex2D(HeightMap02, IN.texcoord_0.xy);
-    r1.w = abs(r0.x);
-    r0.xyz = (r0.w * r1.w) + (((r0.w * -r1.w) + abs(r1.x)) * BlendAmount.x);
-    r0.w = 1;
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyzw = tex2D(HeightMap01, IN.texcoord_0.xy);
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = ((0.8 / fDamp.x) * abs(r0.x)) + (abs(r1.x) - ((0.8 / fDamp.x) * abs(r0.x)) * BlendAmount.x);
 
     return OUT;
 };

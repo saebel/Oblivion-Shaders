@@ -5,10 +5,10 @@
 //
 //
 // Parameters:
-
+//
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -18,7 +18,6 @@ row_major float4x4 ModelViewProj;
 //   ModelViewProj[2] const_2        1
 //   ModelViewProj[3] const_3        1
 //
-
 
 
 // Structures:
@@ -36,11 +35,9 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-
     float3 r0;
 
-    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    r0.xy = mul(float2x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw), IN.position.xyzw);
     r0.z = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.xyzw = r0.xyzz;
 

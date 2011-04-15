@@ -5,10 +5,10 @@
 //
 //
 // Parameters:
-
+//
 sampler2D HeightMap;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -17,11 +17,10 @@ sampler2D HeightMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 HeightUV : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -33,14 +32,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_0 = {1, 0, 0, 0};
-
     float4 r0;
 
-    r0.xyzw = tex2D(HeightMap, IN.texcoord_0.xy);
-    r0.w = 1;
-    r0.xyz = abs(r0.x);
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyzw = tex2D(HeightMap, IN.HeightUV.xy);
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = abs(r0.x);
 
     return OUT;
 };

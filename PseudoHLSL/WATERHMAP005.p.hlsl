@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D amplitudeSamp;
 int fResolution;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -17,7 +17,6 @@ int fResolution;
 //   fResolution   const_2       1
 //   amplitudeSamp texture_0       1
 //
-
 
 
 // Structures:
@@ -35,9 +34,14 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {0.8, 1.6, 1, 0.5};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+
     const int4 const_1 = {-1, 1, 0, 0};
 
+    float1 q0;
+    float1 q1;
+    float1 q3;
     float4 r0;
     float4 r1;
     float4 r2;
@@ -47,40 +51,35 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 r6;
     float4 r7;
 
+    r2.xyzw = tex2D(amplitudeSamp, IN.texcoord_0.xy + fResolution.x);
+    r4.xy = IN.texcoord_0.xy - fResolution.x;
+    r5.x = r4.x;
+    r1.y = r4.y;
+    r4.xyzw = tex2D(amplitudeSamp, r4.xy);
+    q0.x = abs(r4.x) * 0.8;
+    r6.xy = IN.texcoord_0.xy - (fResolution.x * const_1.xy);
+    r7.x = r6.x;
+    r6.xyzw = tex2D(amplitudeSamp, r6.xy);
+    r7.y = IN.texcoord_0.y;
+    r7.xyzw = tex2D(amplitudeSamp, r7.xy);
+    r5.y = IN.texcoord_0.y;
+    r5.xyzw = tex2D(amplitudeSamp, r5.xy);
+    r1.x = IN.texcoord_0.x;
+    r1.xyzw = tex2D(amplitudeSamp, r1.xy);
     r0.x = IN.texcoord_0.x;
     r3.xy = (fResolution.x * const_1.xy) + IN.texcoord_0.xy;
     r0.y = r3.y;
-    r0.xyzw = tex2D(amplitudeSamp, r0.xy);
-    r4.xy = IN.texcoord_0.xy - fResolution.x;
-    r1.y = r4.y;
-    r2.xyzw = tex2D(amplitudeSamp, IN.texcoord_0.xy + fResolution.x);
     r3.xyzw = tex2D(amplitudeSamp, r3.xy);
-    r2.w = abs(r3.x);
-    r6.xy = (fResolution.x * -const_1.xy) + IN.texcoord_0.xy;
-    r7.x = r6.x;
-    r6.xyzw = tex2D(amplitudeSamp, r6.xy);
-    r3.w = abs(r6.x);
-    r5.x = r4.x;
-    r4.xyzw = tex2D(amplitudeSamp, r4.xy);
-    r5.y = IN.texcoord_0.y;
-    r5.xyzw = tex2D(amplitudeSamp, r5.xy);
-    r5.w = abs(r4.x) * 0.8;
-    r7.y = IN.texcoord_0.y;
-    r7.xyzw = tex2D(amplitudeSamp, r7.xy);
-    r0.w = (abs(r7.x) * 1.6) + ((r3.w * 0.8) + ((r2.w * -0.8) + ((abs(r5.x) * -1.6) - r5.w)));
-    r1.x = IN.texcoord_0.x;
-    r1.xyzw = tex2D(amplitudeSamp, r1.xy);
-    r1.w = abs(r2.x);
-    r3.w = (r2.w * 0.8) + ((r3.w * -0.8) + ((abs(r1.x) * -1.6) - r5.w));
-    r2.w = abs(r0.x);
-    r0.x = -((r1.w * 0.8) + r0.w);
-    r0.w = 1;
-    r0.y = (r1.w * 0.8) + ((r2.w * 1.6) + r3.w);
+    r0.xyzw = tex2D(amplitudeSamp, r0.xy);
+    q1.x = abs(r3.x);
     r0.z = 1;
+    q3.x = (abs(r7.x) * 1.6) + ((abs(r6.x) * 0.8) + (((abs(r5.x) * -1.6) - q0.x) - (q1.x * 0.8)));
+    r0.y = (abs(r2.x) * 0.8) + ((abs(r0.x) * 1.6) + ((q1.x * 0.8) + (((abs(r1.x) * -1.6) - q0.x) - (abs(r6.x) * 0.8))));
+    r0.x = -((abs(r2.x) * 0.8) + q3.x);
     r0.z = 1.0 / length(r0.xyz);
     r0.xy = r0.xy * r0.z;
-    r0.xyz = (0.5 * r0.xyz) + 0.5;
-    OUT.color_0.rgba = r0.xyzw;
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = compress(r0.xyz);
 
     return OUT;
 };

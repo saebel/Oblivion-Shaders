@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float2 Params;
 sampler2D TexMap;
 sampler2D TexMapBlend;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -21,12 +21,11 @@ sampler2D TexMapBlend;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
+    float2 TexUV : TEXCOORD0;
+    float2 TexBlendUV : TEXCOORD1;
     float4 color_0 : COLOR0;
 };
 
@@ -39,10 +38,13 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
     float4 r0;
+    float4 t0;
+    float4 t1;
 
-    r0.xyzw = lerp(tex2D(TexMapBlend, IN.texcoord_1.xy), (tex2D(TexMap, IN.texcoord_0.xy)), Params.x);
+    t0.xyzw = tex2D(TexMapBlend, IN.TexBlendUV.xy);
+    t1.xyzw = tex2D(TexMap, IN.TexUV.xy);
+    r0.xyzw = lerp(t0.xyzw, t1.xyzw, Params.x);
     OUT.color_0.a = r0.w * IN.color_0.a;
     OUT.color_0.rgb = (r0.xyz * IN.color_0.rgb) * Params.y;
 

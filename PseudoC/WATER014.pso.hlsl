@@ -41,7 +41,7 @@
     sampler2D NormalMap;
     sampler2D DetailMap;
     r0.xy = EyePos.xy - IN.texcoord_1.xy;
-    r0.w = dot(r0.xy, r0.xy) + 0;
+    r0.w = dot(r0.xy, r0.xy);
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r1.w = saturate((r0.w * -(1.0 / 8192)) - -1);
@@ -61,7 +61,7 @@
     r3.xyz = DeepColor.rgb;
     r3.xyz = ShallowColor.rgb - r3.xyz;
     r0.w = 1.0 / r2.w;
-    r4.xyz = (r3.w * r3.xyz) + DeepColor.rgb;			// partial precision
+    r4.xyz = (r3.w * r3.xyz) + DeepColor.rgb;			// partial precision
     r0.w = FogParam.x - r0.w;
     r3.xyz = lerp(r0.xyz, r4.xyz, r4.w);
     r3.w = 1.0 / FogParam.y;

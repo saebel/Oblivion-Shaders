@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 float4 texRatio0;
 float4 texRatio1;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -17,7 +17,6 @@ float4 texRatio1;
 //   texRatio0    const_6       1
 //   texRatio1    const_7       1
 //
-
 
 
 // Structures:
@@ -38,11 +37,9 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-
-
-    OUT.texcoord_0.xy = (IN.texcoord_0 * texRatio0.xy) + texRatio0.zw;
-    OUT.texcoord_1.xy = (IN.texcoord_0 * texRatio1.xy) + texRatio1.zw;
     OUT.position.xyzw = IN.position.xyzw;
+    OUT.texcoord_0.xy = (IN.texcoord_0.xy * texRatio0.xy) + texRatio0.zw;
+    OUT.texcoord_1.xy = (IN.texcoord_0.xy * texRatio1.xy) + texRatio1.zw;
 
     return OUT;
 };

@@ -6,17 +6,16 @@
 //
 //
 // Parameters:
-
+//
 float4 texRatio0;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   texRatio0    const_6       1
 //
-
 
 
 // Structures:
@@ -36,10 +35,8 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-
-
-    OUT.texcoord_0.xy = (IN.texcoord_0 * texRatio0.xy) + texRatio0.zw;
     OUT.position.xyzw = IN.position.xyzw;
+    OUT.texcoord_0.xy = (IN.texcoord_0.xy * texRatio0.xy) + texRatio0.zw;
 
     return OUT;
 };

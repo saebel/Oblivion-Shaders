@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 Acceleration;
 float4 Color1;
 float4 Color2;
@@ -17,8 +17,8 @@ float4 fVars0;
 float4 fVars1;
 float4 fVars2;
 float4 fVars3;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -41,7 +41,6 @@ float4 fVars3;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -61,46 +60,50 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const float4 const_13 = {2, 0.5, 1, 0};
 
-    float4 offset;
+    float1 q0;
+    float3 q1;
+    float1 q2;
+    float3 q3;
+    float4 q4;
+    float4 q5;
     float4 r0;
     float4 r1;
     float4 r2;
     float4 r3;
     float4 r4;
-    float4 r5;
-    float4 r6;
+    float2 wld35;
 
-    offset.w = (2 * IN.color_1.r) - frac(2.w * IN.color_1.r);
-    r0.w = 1;
-    r0.xyz = InstanceData[1 + offset.w];
     r1.xzw = fVars0.xzw;
-    r3.w = (r1.x - InstanceData[0 + offset.w].w) * InstanceData[1 + offset.w].w;
-    r0.xyz = (0.5 * (((r1.w * r0.xyz) + Acceleration.xyz) * (r3.w * r3.w))) + ((r3.w * ((r1.z * r0.xyz) + Velocity.xyz)) + InstanceData[0 + offset.w]);
-    r0.xyz = r0.xyz - fVars3.xyz;
-    r5.w = 1.0 / fVars0.y;
-    r6.w = r3.w * r5.w;
-    r3.xy = (fVars2.zw < r6.w ? 1.0 : 0.0);
-    r2.xz = fVars2.xz * r3.x;
-    r2.yw = lerp(fVars2.yw, fVars2.xx, r3.x);
     r4.zw = const_13.zw;
-    r1.xzw = ((fVars2.yyw * r4.zyz) + r4.wywz) - r2.xzw;
+    q1.xyz = InstanceData[1 + (2 * IN.color_1.r)];
+    q0.x = 1.0 / fVars0.y;
+    r0.w = 1;
+    r3.w = (r1.x - InstanceData[0 + (2 * IN.color_1.r)].w) * InstanceData[1 + (2 * IN.color_1.r)].w;
+    q2.x = r3.w * q0.x;
+    q3.xyz = (r3.w * ((r1.z * q1.xyz) + Velocity.xyz)) + InstanceData[0 + (2 * IN.color_1.r)];
+    r3.xy = (fVars2.zw < q2.x ? 1.0 : 0.0);
+    r2.yw = lerp(fVars2.yw, fVars2.xz, r3.x);
+    r2.xz = fVars2.xz * r3.x;
     r1.y = -r2.y;
+    r0.xyz = ((0.5 * (((r1.w * q1.xyz) + Acceleration.xyz) * sqr(r3.w))) + q3.xyz) - fVars3.xyz;
+    wld35.xy = mul(float2x4(WorldViewProj[0].xyzw, WorldViewProj[1].xyzw), r0.xyzw);
+    r1.xzw = ((fVars2.yywy * r4.zyzw) + r4.wywz) - r2.xzw;
     r1.xyzw = (r3.y * r1.xyzw) + r2.xyzw;
-    r3.xyz = (fVars1.xyz < r6.w ? 1.0 : 0.0);
-    r5.x = dot(WorldViewProj[0].xyzw, r0.xyzw);
-    r5.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
-    OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(WorldViewProj[3].xyzw, r0.xyzw);
-    OUT.position.xy = ((lerp(r1.y, r1.x, ((r3.w * r5.w) - r1.z) / (r1.w - r1.z)) * IN.position.xy) / fVars1.w) + r5.xy;
+    r2.w = 1.0 / (r1.w - r1.z);
+    OUT.position.zw = mul(float2x4(WorldViewProj[2].xyzw, WorldViewProj[3].xyzw), r0.xyzw);
+    r3.xyz = (fVars1.xyz < q2.x ? 1.0 : 0.0);
+    q5.xyzw = lerp(const_13.zzzw, lerp(Color3.rgba, (r3.x * (Color2.rgba - Color1.rgba)) + Color1.rgba, r3.y), r3.z);
+    q4.xyzw = lerp(Color3.rgba, lerp(Color2.rgba, (r3.x * (Color1.rgba - r4.zzzw)) + const_13.zzzw, r3.y), r3.z);
+    OUT.position.xy = ((1.0 / fVars1.w) * (lerp(r1.y, r1.x, ((r3.w * q0.x) - r1.z) * r2.w) * IN.position.xy)) + wld35.xy;
     r1.x = r3.x * fVars1.x;
     r1.z = lerp(fVars1.y, fVars1.x, r3.x);
     r1.xy = lerp((fVars1.z * r4.zw) + r4.wz, lerp(fVars1.yz, r1.xz, r3.y), r3.z);
-    r5.w = ((r3.w * r5.w) - r1.x) / (r1.y - r1.x);
-    r1.xyzw = lerp(const_13.zzzw, lerp(Color3.rgba, ((r3.x * (Color2.rgba - Color1.rgba)) + Color1.rgba), r3.y), r3.z);
-    r2.xyzw = lerp(Color3.rgba, lerp(Color2.rgba, ((r3.x * (Color1.rgba - r4.zzzw)) + const_13.zzzw), r3.y), r3.z);
-    r0.xyzw = lerp(r1.xyzw, r2.xyzw, r5.w);
+    r0.xyzw = lerp(q5.xyzw, q4.xyzw, ((r3.w * q0.x) - r1.x) / (r1.y - r1.x));
     OUT.color_0.a = r0.w * fVars3.w;
     OUT.color_0.rgb = r0.xyz;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 AddlParams;
 float4 AlphaParam;
 float4 AmbientColor;
@@ -17,8 +17,8 @@ float4 InstanceData[2];
 row_major float4x4 ModelViewProj;
 float3 ScaleMask;
 float4 WindData;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -39,7 +39,6 @@ float4 WindData;
 //   InstanceData[0]  const_20       1
 //   InstanceData[1]  const_21       1
 //
-
 
 
 // Structures:
@@ -65,54 +64,57 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
 #define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
 #define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+#define	PI			3.14159274
+#define	anglei(v)		(((v) + PI) / (2 * PI))
+#define	angler(v)		(((v) * (2 * PI)) - PI)
+#define	fracr(v)		angler(frac(anglei(v)))	// signed modulo % PI
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
     const float4 const_3 = {0.01, 1, (1.0 / 17), -0.5};
-    const float4 const_8 = {0, (1.0 / 128), (1.0 / (PI * 2)), 0.5};
-    const float4 const_13 = {PI * 2, -PI, 0, 0};
-    const float4 const_16 = {D3DSINCOSCONST1};
-    const float4 const_17 = {D3DSINCOSCONST2};
 
-    float4 offset;
+    float1 q0;
+    float3 q4;
     float4 r0;
     float4 r1;
-    float3 r2;
+    float4 r2;
     float3 r3;
     float2 r4;
 
-    offset.w = IN.texcoord_1.x;
-    r1.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
-    r0.x = 2 * (frac(r1.w / 17) - 0.5);	// [0,1] to [-1,+1]
-    r0.w = sqrt(1.0 - (r0.x * r0.x));	// arcsin = 1 / sqrt(1 - x²)
-    r0.y = -r0.w;
-    r0.z = 0;
-    r1.w = sin((frac((((r1.w / 128) + WindData.w) / (PI * 2)) + 0.5) * PI * 2) - PI) * WindData.z;
-    r1.x = dot(r0.xyz, IN.normal.xyz);
-    r1.y = dot(r0.wxz, IN.normal.xyz);
-    r1.z = IN.normal.z;
-    r2.xyz = saturate(dot(DiffuseDir.xyz, r1.xyz)) * ((frac(InstanceData[0 + offset.w].w) * IN.color_0.rgb) * DiffuseColor.rgb);
-    r1.xy = const_3.xy;
-    r3.xyz = (((r1.x * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r1.y) * IN.position.xyz;
-    r4.x = dot(r0.xyz, r3.xyz);
-    r4.y = dot(r0.wxz, r3.xyz);
-    r0.xy = ((r1.w * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r4.xy;
-    r0.z = r3.z;
+    q0.x = InstanceData[0 + IN.texcoord_1.x].y + InstanceData[0 + IN.texcoord_1.x].x;
+    r0.x = expand(frac(q0.x / 17));	// [0,1] to [-1,+1]
+    r0.w = sqrt(1.0 - sqr(r0.x));	// arcsin = 1 / sqrt(1 - x²)
     r1.w = IN.position.w;
-    r1.xyz = r0.xyz + InstanceData[0 + offset.w];
+    r1.z = IN.normal.z;
+    r0.z = 0;
+    r0.y = -r0.w;
+    r1.y = dot(r0.wxz, IN.normal.xyz);
+    r1.x = dot(r0.xyz, IN.normal.xyz);
+    r2.w = shade(DiffuseDir.xyz, r1.xyz);
+    q4.xyz = min(r2.w, 1) * ((frac(InstanceData[0 + IN.texcoord_1.x].w) * IN.color_0.rgb) * DiffuseColor.rgb);
+    r1.xy = const_3.xy;
+    r3.xyz = (((r1.x * InstanceData[0 + IN.texcoord_1.x].w) * ScaleMask.xyz) + r1.y) * IN.position.xyz;
+    r4.y = dot(r0.wxz, r3.xyz);
+    r4.x = dot(r0.xyz, r3.xyz);
+    r0.z = r3.z;
+    r0.xy = (((sin(fracr((q0.x / 128) + WindData.w)) * WindData.z) * sqr(IN.color_0.a)) * WindData.xy) + r4.xy;
+    r1.xyz = r0.xyz + InstanceData[0 + IN.texcoord_1.x];
+    r0.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), r1.xyzw);
     r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
-    r0.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
-    r0.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
-    r0.z = dot(ModelViewProj[2].xyzw, r1.xyzw);
     r1.xy = saturate((length(r0.xyzw) - AlphaParam.xz) / AlphaParam.yw);
-    OUT.texcoord_5.xyz = r2.xyz * AddlParams.x;
+    OUT.color_0.rgb = FogColor.rgb;
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.position.xyzw = r0.xyzw;
-    OUT.texcoord_5.w = r1.x * (1 - r1.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.xyzw = AmbientColor.rgba;
-    OUT.color_0.rgb = FogColor.rgb;
+    OUT.texcoord_5.w = r1.x * (1 - r1.y);
+    OUT.texcoord_5.xyz = q4.xyz * AddlParams.x;
 
     return OUT;
 };

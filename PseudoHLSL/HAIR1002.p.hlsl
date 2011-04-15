@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D AnisoMap;
 sampler2D DiffuseMap;
 sampler2D NormalMap;
 float4 PSLightColor[4];
 float4 Toggles;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -26,26 +26,19 @@ float4 Toggles;
 //   AnisoMap     texture_3       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    IN.texcoord_1.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    texm3x2pad IN.texcoord_2, 2 * ((IN.texcoord_1) - 0.5)
-    texm3x2IN.texcoord_3 = tex2D(DiffuseMap, IN.texcoord_0.xy);, 2 * ((IN.texcoord_1) - 0.5)
-    r0.xyz = IN.texcoord_3.xyz * IN.input_0.w;
-    r0.xyz = saturate((PSLightColor[0].rgb * r0.xyz) + IN.input_0.xyz);
-    r0.xyz = saturate(r0.xyz + AmbientColor.rgb);
-    r0.xyz = IN.texcoord_0.xyz * r0.xyz;
-  + r0.w = IN.texcoord_0.w * AmbientColor.a;
-    2 * (mul) r0.xyz, r0, const_7
-
-// approximately 9 instruction slots used (4 texture, 5 arithmetic)
-
 
 // Structures:
 
 struct VS_OUTPUT {
+    float4 input_0 : COLOR0;
+    float4 DiffuseUV : TEXCOORD0;
+    float4 NormalUV : TEXCOORD1;
+    float4 texcoord_2 : TEXCOORD2;
+    float4 AnisoUV : TEXCOORD3;
 };
 
 struct PS_OUTPUT {
+    float4 output_0 : COLOR0;
 };
 
 // Code:
@@ -53,9 +46,23 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
+    float3 q0;
+    float4 r0;
 
+    IN.NormalUV.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    IN.DiffuseUV.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);
+    texm3x2IN.AnisoUV = tex2D(AnisoMap, IN.AnisoUV.xy);, expand(IN.NormalUV)	// [0,1] to [-1,+1]
+    texm3x2pad IN.texcoord_2, expand(IN.NormalUV)	// [0,1] to [-1,+1]
+    q0.xyz = saturate((PSLightColor[0].rgb * (IN.AnisoUV.xyz * IN.input_0.w)) + IN.input_0.xyz);
+    r0.xyz = IN.DiffuseUV.xyz * saturate(q0.xyz + AmbientColor.rgb);
+    r0.w = IN.DiffuseUV.w * AmbientColor.a;
+    2 * (mul) r0.xyz, r0, Toggles
+    OUT.output_0.xyzw = r0.xyzw;
 
     return OUT;
 };
 
+// approximately 9 instruction slots used (4 texture, 5 arithmetic)

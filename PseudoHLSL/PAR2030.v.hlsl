@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -24,7 +24,6 @@ row_major float4x4 ModelViewProj;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -33,6 +32,8 @@ struct VS_INPUT {
     float3 binormal : BINORMAL;
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -48,31 +49,14 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+    float3 eye0;
 
-    float4 r0;
-    float3 r1;
-    float3 r2;
-
-    r1.xyz = EyePosition.xyz - IN.position.xyz;
-    r0.w = 1.0 / length(r1.xyz);
-    r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r2.xyz = r1.xyz * r0.w;
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xyz = normalize(r0.xyz);
-    r0.x = dot(IN.tangent.xyz, r2.xyz);
-    r0.y = dot(IN.binormal.xyz, r2.xyz);
-    r0.z = dot(IN.normal.xyz, r2.xyz);
-    r1.xyz = normalize((r0.w * r1.xyz) + LightDirection[0].xyz);
-    OUT.texcoord_3.x = dot(IN.tangent.xyz, r1.xyz);
-    OUT.texcoord_3.y = dot(IN.binormal.xyz, r1.xyz);
-    OUT.texcoord_3.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.texcoord_7.xyz = normalize(r0.xyz);
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = normalize(mul(TanSpaceProj, LightDirection[0].xyz));
+    eye0.xyz = EyePosition.xyz - IN.position.xyz;
+    OUT.texcoord_3.xyz = mul(TanSpaceProj, normalize(normalize(eye0.xyz) + LightDirection[0].xyz));
+    OUT.texcoord_7.xyz = normalize(mul(TanSpaceProj, normalize(eye0.xyz)));
 
     return OUT;
 };

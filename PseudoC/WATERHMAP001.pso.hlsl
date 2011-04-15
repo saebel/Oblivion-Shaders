@@ -36,7 +36,7 @@
     r3.x = (r1.z * r2.x) - r3.w;
     r2.w = r1.z * r2.w;
     r3.y = (r1.w * r2.x) + r2.w;
-    r1.xy = (r1.x >= 0.0 ? -r3.xy : r3.xy);
+    r1.xy = (r1.x >= 0.0 ? r3.xy : -r3.xy);
     r1.x = r0.x + r1.x;
     r1.y = r0.w + r1.y;
     r0.xyz = r1.x;

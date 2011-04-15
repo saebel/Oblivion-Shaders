@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
 row_major float4x4 ShadowProj;
 float4 ShadowProjData;
 float4 ShadowProjTransform;
-
-
+//
+//
 // Registers:
 //
 //   Name                Reg   Size
@@ -33,7 +33,6 @@ float4 ShadowProjTransform;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -45,6 +44,8 @@ struct VS_INPUT {
     float4 color_0 : COLOR0;
     float4 texcoord_1 : TEXCOORD1;
     float4 texcoord_2 : TEXCOORD2;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -63,40 +64,28 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0.5, 1, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    float4 r0;
-    float3 r1;
-    float3 r2;
-    float3 r3;
+    float3 eye14;
+    float3 lit0;
+    float2 m20;
+    float1 q2;
 
-    r0.w = dot(ShadowProj[3].xyzw, IN.position.xyzw);
-    r2.xyz = normalize(LightPosition[0].xyz - IN.position.xyz);
-    r1.xyz = normalize(normalize(EyePosition.xyz - IN.position.xyz) + r2.xyz);
-    r0.x = dot(IN.tangent.xyz, r1.xyz);
-    r0.y = dot(IN.binormal.xyz, r1.xyz);
-    r0.z = dot(IN.normal.xyz, r1.xyz);
-    r3.x = dot(IN.tangent.xyz, r2.xyz);
-    r3.y = dot(IN.binormal.xyz, r2.xyz);
-    r3.z = dot(IN.normal.xyz, r2.xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = (0.5 * normalize(r3.xyz)) + 0.5;	// [-1,+1] to [0,1]
-    OUT.texcoord_3.xyz = (0.5 * r0.xyz) + 0.5;	// [-1,+1] to [0,1]
-    r0.x = dot(ShadowProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ShadowProj[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_4.xy = ((r0.w * ShadowProjTransform.xy) + r0.xy) / (r0.w * ShadowProjTransform.w);
-    r0.w = 1.0 / ShadowProjData.w;
-    r0.xy = r0.xy - ShadowProjData.xy;
-    OUT.texcoord_4.z = r0.x * r0.w;
-    OUT.texcoord_4.w = (r0.y * -r0.w) + 1;
+    lit0.xyz = normalize(LightPosition[0].xyz - IN.position.xyz);
+    m20.xy = mul(float2x4(ShadowProj[0].xyzw, ShadowProj[1].xyzw), IN.position.xyzw);
+    eye14.xyz = mul(TanSpaceProj, normalize(normalize(EyePosition.xyz - IN.position.xyz) + lit0.xyz));
+    q2.x = dot(ShadowProj[3].xyzw, IN.position.xyzw);
+    OUT.color_0.rgba = IN.texcoord_1.xyzw;
+    OUT.color_1.rgba = IN.texcoord_2.xyzw;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xyz = IN.color_0.rgb;
     OUT.texcoord_2.w = 1;
-    OUT.color_0.rgba = IN.texcoord_1.xyzw;
-    OUT.color_1.rgba = IN.texcoord_2.xyzw;
+    OUT.texcoord_2.xyz = compress(normalize(mul(TanSpaceProj, lit0.xyz)));	// [-1,+1] to [0,1]
+    OUT.texcoord_3.xyz = compress(eye14.xyz);	// [-1,+1] to [0,1]
+    OUT.texcoord_4.xy = ((q2.x * ShadowProjTransform.xy) + m20.xy) / (q2.x * ShadowProjTransform.w);
+    OUT.texcoord_4.zw = ((m20.xy - ShadowProjData.xy) / ShadowProjData.w) * float2(1, -1) + float2(0, 1);
 
     return OUT;
 };

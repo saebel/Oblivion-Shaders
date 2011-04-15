@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D NormalMap;
 float PSRefractionPower;
-
-
+//
+//
 // Registers:
 //
 //   Name              Reg   Size
@@ -19,12 +19,11 @@ float PSRefractionPower;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float3 texcoord_0 : TEXCOORD0;			// partial precision
-    float2 texcoord_1 : TEXCOORD1;			// partial precision
+    float3 NormalUV : TEXCOORD0;			// partial precision
+    float2 texcoord_1 : TEXCOORD1;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -36,16 +35,19 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0.1, -0.1, 1.0 - 0.1};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+
     const int4 const_1 = {1, 0, 0, 0};
 
+    float2 q0;
     float4 r0;
 
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    r0.xy = ((1.0 - 0.1 * max(-0.1, min(2 * (r0.xy - 0.5), 0.1))) + IN.texcoord_1.xy) / IN.texcoord_0.z;			// partial precision	// [0,1] to [-1,+1]
-    OUT.color_0.xy = (0.5 * r0.xy) - -0.5;			// partial precision
+    r0.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    q0.xy = ((1.0 - 0.1 * max(-0.1, min(expand(r0.xy), 0.1))) + IN.texcoord_1.xy) / IN.NormalUV.z;			// partial precision
     r0.xy = const_1.xy;
-    OUT.color_0.zw = (PSRefractionPower.x * r0.xyxy) + r0.xyyx;			// partial precision
+    OUT.color_0.xy = compress(q0.xy);			// partial precision	// [-1,+1] to [0,1]
+    OUT.color_0.zw = (PSRefractionPower.x * r0.xy) + r0.yx;			// partial precision
 
     return OUT;
 };

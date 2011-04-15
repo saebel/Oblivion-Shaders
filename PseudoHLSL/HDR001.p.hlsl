@@ -4,13 +4,14 @@
 //   vsa shaderdump19/HDR001.pso /Fcshaderdump19/HDR001.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
-
+//
 float4 BlurOffsets[16];
 float2 BlurScale;
-sampler2D Src0;
-
-
+sampler2D ScreenSpace;
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -25,15 +26,14 @@ sampler2D Src0;
 //   BlurOffsets[6]  const_9       1
 //   BlurOffsets[7]  const_10      1
 //   BlurOffsets[8]  const_11      1
-//   Src0         texture_0       1
+//   ScreenSpace         texture_0       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -45,54 +45,56 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {128, 2.5, 1, 0};
+    float1 q0;
+    float1 q1;
+    float3 q13;
+    float3 q5;
+    float3 q9;
+    float2 r0;
+    float3 t10;
+    float3 t11;
+    float3 t12;
+    float3 t2;
+    float3 t3;
+    float3 t4;
+    float3 t6;
+    float3 t7;
+    float3 t8;
 
-    float4 r0;
-    float4 r1;
-    float4 r2;
-    float4 r3;
-    float4 r4;
-    float4 r5;
-    float4 r6;
-    float4 r7;
-    float4 r8;
-
-    r0.w = frac(IN.texcoord_0.y * 128);
-    r1.w = frac(IN.texcoord_0.x * 128);
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[1].x : (2.5 - BlurOffsets[1].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[1].y : (2.5 - BlurOffsets[1].y));
-    r8.xyzw = tex2D(Src0, (BlurScale.xy * r0.xy) + IN.texcoord_0.xy);
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[0].x : (2.5 - BlurOffsets[0].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[0].y : (2.5 - BlurOffsets[0].y));
-    r7.xyzw = tex2D(Src0, (BlurScale.xy * r0.xy) + IN.texcoord_0.xy);
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[2].x : (2.5 - BlurOffsets[2].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[2].y : (2.5 - BlurOffsets[2].y));
-    r6.xyzw = tex2D(Src0, (BlurScale.xy * r0.xy) + IN.texcoord_0.xy);
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[3].x : (2.5 - BlurOffsets[3].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[3].y : (2.5 - BlurOffsets[3].y));
-    r5.xyzw = tex2D(Src0, (BlurScale.xy * r0.xy) + IN.texcoord_0.xy);
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[4].x : (2.5 - BlurOffsets[4].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[4].y : (2.5 - BlurOffsets[4].y));
-    r4.xyzw = tex2D(Src0, (BlurScale.xy * r0.xy) + IN.texcoord_0.xy);
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[5].x : (2.5 - BlurOffsets[5].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[5].y : (2.5 - BlurOffsets[5].y));
-    r3.xyzw = tex2D(Src0, (BlurScale.xy * r0.xy) + IN.texcoord_0.xy);
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[6].x : (2.5 - BlurOffsets[6].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[6].y : (2.5 - BlurOffsets[6].y));
-    r2.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[7].x : (2.5 - BlurOffsets[7].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[7].y : (2.5 - BlurOffsets[7].y));
-    r1.xy = (BlurScale.xy * r0.xy) + IN.texcoord_0.xy;
-    r0.x = (r1.w <= 0.0 ? BlurOffsets[8].x : (2.5 - BlurOffsets[8].x));
-    r0.y = (r0.w <= 0.0 ? BlurOffsets[8].y : (2.5 - BlurOffsets[8].y));
-    r0.xyzw = tex2D(Src0, (BlurScale.xy * r0.xy) + IN.texcoord_0.xy);
-    r0.w = 1;
-    r1.xyzw = tex2D(Src0, r1.xy);
-    r2.xyzw = tex2D(Src0, r2.xy);
-    r6.xyz = (BlurOffsets[2].z * r6.xyz) + ((BlurOffsets[0].z * r7.xyz) + (r8.xyz * BlurOffsets[1].z));
-    r3.xyz = (BlurOffsets[5].z * r3.xyz) + ((BlurOffsets[4].z * r4.xyz) + ((BlurOffsets[3].z * r5.xyz) + r6.xyz));
-    r0.xyz = (BlurOffsets[8].z * r0.xyz) + ((BlurOffsets[7].z * r1.xyz) + ((BlurOffsets[6].z * r2.xyz) + r3.xyz));
-    OUT.color_0.rgba = r0.xyzw;
+    q1.x = frac(IN.ScreenOffset.y * 128);
+    q0.x = frac(IN.ScreenOffset.x * 128);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[1].y) : BlurOffsets[1].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[1].x) : BlurOffsets[1].x);
+    t2.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[0].y) : BlurOffsets[0].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[0].x) : BlurOffsets[0].x);
+    t3.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[2].y) : BlurOffsets[2].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[2].x) : BlurOffsets[2].x);
+    t4.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[3].y) : BlurOffsets[3].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[3].x) : BlurOffsets[3].x);
+    t6.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[4].y) : BlurOffsets[4].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[4].x) : BlurOffsets[4].x);
+    t7.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[5].y) : BlurOffsets[5].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[5].x) : BlurOffsets[5].x);
+    t8.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[6].y) : BlurOffsets[6].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[6].x) : BlurOffsets[6].x);
+    t10.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[7].y) : BlurOffsets[7].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[7].x) : BlurOffsets[7].x);
+    t11.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    r0.y = (q1.x <= 0.0 ? (2.5 - BlurOffsets[8].y) : BlurOffsets[8].y);
+    r0.x = (q0.x <= 0.0 ? (2.5 - BlurOffsets[8].x) : BlurOffsets[8].x);
+    t12.xyz = tex2D(ScreenSpace, (BlurScale.xy * r0.xy) + IN.ScreenOffset.xy);
+    q5.xyz = (BlurOffsets[2].z * t4.xyz) + ((BlurOffsets[0].z * t3.xyz) + (t2.xyz * BlurOffsets[1].z));
+    q9.xyz = (BlurOffsets[5].z * t8.xyz) + ((BlurOffsets[4].z * t7.xyz) + ((BlurOffsets[3].z * t6.xyz) + q5.xyz));
+    q13.xyz = (BlurOffsets[8].z * t12.xyz) + ((BlurOffsets[7].z * t11.xyz) + ((BlurOffsets[6].z * t10.xyz) + q9.xyz));
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = q13.xyz;
 
     return OUT;
 };

@@ -50,7 +50,7 @@
     r0.y = dot(IN.texcoord_3.xyzw, r1.xyzw);
     r0.z = dot(IN.texcoord_4.xyzw, r1.xyzw);
     r0.w = dot(IN.texcoord_5.xyzw, r1.xyzw);
-    r0.xyzw = tex2Dproj(ReflectionMap, r0);			// partial precision
+    r0.xyzw = tex2Dproj(ReflectionMap, r0.xyzw);			// partial precision
     r1.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r2.x = dot(r1.xyz, r1.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r2.x);
@@ -62,7 +62,7 @@
     r0.xyz = r0.xyz - ReflectionColor.rgb;
     r2.w = r2.w * r2.w;
     r2.xyz = ReflectionColor.rgb;
-    r0.xyz = (VarAmounts.y * r0.xyz) + r2.xyz;			// partial precision
+    r0.xyz = (VarAmounts.y * r0.xyz) + r2.xyz;			// partial precision
     r2.w = r1.w * r2.w;
     r1.xyz = r1.xyz * -const_0.xyz;
     r1.w = 1;
@@ -72,7 +72,7 @@
     r1.xyz = DeepColor.rgb;
     r1.xyz = ShallowColor.rgb - r1.xyz;
     r1.w = pow(abs(r2.x), VarAmounts.x);
-    r2.xyz = (r0.w * r1.xyz) + DeepColor.rgb;			// partial precision
+    r2.xyz = (r0.w * r1.xyz) + DeepColor.rgb;			// partial precision
     r3.w = saturate(SunDir.w);
     r1.xyz = lerp(r0.xyz, r2.xyz, r2.w);
     r0.w = FogParam.x - r4.w;

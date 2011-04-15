@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 FogColor;
 float4 FogParam;
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -22,7 +22,6 @@ row_major float4x4 ModelViewProj;
 //   FogParam      const_15      1
 //   FogColor      const_16      1
 //
-
 
 
 // Structures:
@@ -52,23 +51,21 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {1, 0, 0, 0};
+    float3 mdl3;
+    float1 q0;
 
-    float3 r0;
-
-    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.position.xyz = r0.xyz;
-    OUT.texcoord_7.w = (1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y)) * FogParam.z;
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    mdl3.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), IN.position.xyzw);
     OUT.color_0.rgba = IN.color_0.rgba;
+    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
+    OUT.position.xyz = mdl3.xyz;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_3.xyz = IN.tangent.xyz;
     OUT.texcoord_4.xyz = IN.binormal.xyz;
     OUT.texcoord_5.xyz = IN.normal.xyz;
     OUT.texcoord_6.xyz = IN.position.xyz;
+    q0.x = 1 - saturate((FogParam.x - length(mdl3.xyz)) / FogParam.y);
     OUT.texcoord_7.xyz = FogColor.rgb;
+    OUT.texcoord_7.w = q0.x * FogParam.z;
 
     return OUT;
 };

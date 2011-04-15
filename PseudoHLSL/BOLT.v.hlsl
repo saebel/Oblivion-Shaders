@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 row_major float4x4 ModelViewProj;
 float4 SegmentData[2];
 float4 fVars0;
 float4 fVars1;
 float4 fVars2;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -27,7 +27,6 @@ float4 fVars2;
 //   SegmentData[0]   const_14       1
 //   SegmentData[1]   const_15       1
 //
-
 
 
 // Structures:
@@ -48,51 +47,62 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const int4 const_7 = {-1, 1, 0, -2};
 
-    float1 offset;
-    float4 r0;
-    float4 r1;
-    float4 r2;
-    float4 r3;
-    float4 r4;
-    float4 r5;
-    float4 r6;
+    float1 m4;
+    float2 mdl100;
+    float2 mdl102;
+    float2 mdl104;
+    float1 q0;
+    float4 q1;
+    float1 q10;
+    float1 q11;
+    float1 q12;
+    float1 q13;
+    float1 q14;
+    float1 q15;
+    float1 q16;
+    float4 q2;
+    float4 q3;
+    float2 q32;
+    float2 q33;
+    float2 q36;
+    float1 q5;
+    float1 q7;
+    float1 q9;
+    float2 r1;
+    float3 r3;
 
-    r2.w = ((IN.color_1.r >= fVars0.y ? 1.0 : 0.0) * -fVars0.y) + IN.color_1.r;
-    offset.x = r2.w;
+    q5.x = fVars0.z - exp2(fVars0.z);
     r3.xyz = const_7.xyz;
-    r0.xyzw = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
-    offset.x = r2.w - 1;
-    r1.xyzw = (SegmentData[0 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
-    offset.x = r2.w;
-    r4.w = fVars0.z - pow(2.0, fVars0.z);
-    r4.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    r4.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    r6.w = IN.color_1.r / r4.w;
-    r5.w = pow(2.0, abs(r6.w));
-    OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r0.w = ((r6.w == 0 ? 1.0 : 0.0) * (2 * r5.w)) - r5.w;
-    r0.w = (r0.w * r4.w) - pow(2.0, r4.w * r0.w);
-    r2.xyzw = (SegmentData[1 + offset.x].xyzx * r3.yyyz) + r3.zzzy;
-    r6.x = dot(ModelViewProj[0].xyzw, r2.xyzw);
-    r6.y = dot(ModelViewProj[1].xyzw, r2.xyzw);
-    r2.xy = normalize(r6.xy - r4.xy);
-    r5.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
-    r5.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
-    r1.xy = normalize(r5.xy - r4.xy) + r2.xy;
-    r0.xy = (-2 * (r1.xy * (determinant(float2x2(r1.xy, r2.xy)) < 0 ? 1.0 : 0.0))) + r1.xy;
-    r1.w = ((((IN.color_1.r / r4.w) - pow(2.0, r6.w)) * fVars1.w) + fVars1.z) * IN.position.x;
-    r1.xy = r0.xy * r0.xy;
-    r3.w = r3.x + fVars1.y;
-    r5.w = (r0.w < fVars1.x ? 1.0 : 0.0);
-    r6.w = ((r0.w >= r3.w ? 1.0 : 0.0) * -r5.w) + 1;
-    r3.w = (((r0.w * fVars2.x) >= r3.w ? 1.0 : 0.0) * -r6.w) + r6.w;
-    r2.w = ((r5.w * (r3.z < fVars2.x ? 1.0 : 0.0)) * -r3.w) + r3.w;
-    OUT.position.xy = (r1.w * (r0.xy / sqrt(r1.y + r1.x))) + r4.xy;
-    OUT.color_0.a = (((r0.w >= r4.w ? 1.0 : 0.0) * -r2.w) + r2.w) * fVars2.y;
+    q7.x = IN.color_1.r / q5.x;
+    q0.x = IN.color_1.r - (IN.color_1.r >= fVars0.y ? fVars0.y : 0);
+    q3.xyzw = (SegmentData[1 + q0.x].xyzx * r3.yyyz) + r3.zzzy;
+    mdl100.xy = mul(float2x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw), q3.xyzw);
+    q1.xyzw = (SegmentData[0 + q0.x].xyzx * r3.yyyz) + r3.zzzy;
+    q11.x = r3.x + fVars1.y;
+    mdl104.xy = mul(float2x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw), q1.xyzw);
+    q32.xy = normalize(mdl100.xy - mdl104.xy);
+    q10.x = (q7.x == 0 ? exp2(abs(q7.x)) : -exp2(abs(q7.x)));
+    q12.x = (q10.x * q5.x) - exp2(q5.x * q10.x);
+    q13.x = (q12.x < fVars1.x ? 1.0 : 0.0);
+    q14.x = 1 - (q12.x >= q11.x ? q13.x : 0);
+    q15.x = q14.x - (((q12.x * fVars2.x) >= q11.x ? 1.0 : 0.0) * q14.x);
+    q16.x = q15.x - ((r3.z < fVars2.x ? q13.x : 0) * q15.x);
     OUT.color_0.rgb = 1;
+    OUT.color_0.a = (q16.x - (q12.x >= q5.x ? q16.x : 0)) * fVars2.y;
+    q2.xyzw = (SegmentData[0 + (q0.x - 1)].xyzx * r3.yyyz) + r3.zzzy;
+    mdl102.xy = mul(float2x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw), q2.xyzw);
+    q33.xy = normalize(mdl102.xy - mdl104.xy) + q32.xy;
+    m4.x = determinant(float2x2(q33.xy, q32.xy));
+    q36.xy = q33.xy - (2 * (m4.x < 0 ? q33.xy : 0));
+    r1.xy = sqr(q36.xy);
+    q9.x = ((((IN.color_1.r / q5.x) - exp2(q7.x)) * fVars1.w) + fVars1.z) * IN.position.x;
+    OUT.position.zw = mul(float2x4(ModelViewProj[2].xyzw, ModelViewProj[3].xyzw), q1.xyzw);
+    OUT.position.xy = (q9.x * (q36.xy / sqrt(r1.y + r1.x))) + mdl104.xy;
     OUT.texcoord_0.xy = IN.position.xy;
 
     return OUT;

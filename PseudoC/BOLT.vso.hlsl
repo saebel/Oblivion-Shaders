@@ -63,7 +63,7 @@
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
     r0.w = (r1.w < 0 ? 1.0 : 0.0);
     r0.xy = r1.xy * r0.w;
-    r7.y = pow(2.0, fVars0.z);	// partial precision
+    r7.y = pow(2.0, fVars0.z);	// partial precision
     r0.w = r7.y;
     r0.xy = (-2 * r0.xy) + r1.xy;
     r4.w = fVars0.z - r0.w;
@@ -74,17 +74,17 @@
     r2.w = 1.0 / sqrt(r0.w);
     r0.w = abs(r6.w);
     r0.xy = r0.xy * r2.w;
-    r7.y = pow(2.0, r0.w);	// partial precision
+    r7.y = pow(2.0, r0.w);	// partial precision
     r5.w = r7.y;
     r0.w = (r6.w == 0 ? 1.0 : 0.0);
     r3.w = 2 * r5.w;
-    r7.y = pow(2.0, r6.w);	// partial precision
+    r7.y = pow(2.0, r6.w);	// partial precision
     r2.w = r7.y;
     r0.w = (r0.w * r3.w) - r5.w;
     r1.w = (IN.color_1.r * r1.w) - r2.w;
     r3.w = r4.w * r0.w;
     r1.w = (r1.w * fVars1.w) + fVars1.z;
-    r7.y = pow(2.0, r3.w);	// partial precision
+    r7.y = pow(2.0, r3.w);	// partial precision
     r2.w = r7.y;
     r0.w = (r0.w * r4.w) - r2.w;
     r3.w = r3.x + fVars1.y;

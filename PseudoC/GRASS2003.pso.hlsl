@@ -23,31 +23,31 @@
 //
 
     const float4 const_0 = {0, 1, 0.4, 0};
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float3 texcoord_4 : TEXCOORD4_centroid;			// partial precision
-    float4 texcoord_5 : TEXCOORD5_centroid;			// partial precision
-    float4 texcoord_1 : TEXCOORD1;			// partial precision
+    float2 texcoord_0 : TEXCOORD0;			// partial precision
+    float3 texcoord_4 : TEXCOORD4_centroid;			// partial precision
+    float4 texcoord_5 : TEXCOORD5_centroid;			// partial precision
+    float4 texcoord_1 : TEXCOORD1;			// partial precision
     float4 IN.color_0 : COLOR0;
     sampler2D DiffuseMap;
     sampler2D AttMap;
-    r0.x = IN.texcoord_1.z;			// partial precision
-    r0.y = IN.texcoord_1.w;			// partial precision
-    r1.xyzw = tex2D(AttMap, r0.xy);			// partial precision
-    r2.xyzw = tex2D(AttMap, IN.texcoord_1.xy);			// partial precision
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);			// partial precision
-    r1.w = 1 - r2.x;			// partial precision
-    r2.xyz = IN.texcoord_5.xyz;			// partial precision
-    r2.xyz = r2.xyz + IN.texcoord_4.xyz;			// partial precision
-    r1.w = saturate(r1.w - r1.x);			// partial precision
+    r0.x = IN.texcoord_1.z;			// partial precision
+    r0.y = IN.texcoord_1.w;			// partial precision
+    r1.xyzw = tex2D(AttMap, r0.xy);			// partial precision
+    r2.xyzw = tex2D(AttMap, IN.texcoord_1.xy);			// partial precision
+    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);			// partial precision
+    r1.w = 1 - r2.x;			// partial precision
+    r2.xyz = IN.texcoord_5.xyz;			// partial precision
+    r2.xyz = r2.xyz + IN.texcoord_4.xyz;			// partial precision
+    r1.w = saturate(r1.w - r1.x);			// partial precision
     r1.y = 0.4;
-    r1.xyz = r1.y * PointLightColor.rgb;			// partial precision
-    r1.xyz = (r1.w * r1.xyz) + r2.xyz;			// partial precision
-    r2.xyz = (-r0.xyz * r1.xyz) + IN.color_0.rgb;			// partial precision
-    r0.w = AlphaTestRef.x - r0.w;			// partial precision
-    r2.xyz = r2.xyz * IN.color_0.a;			// partial precision
-    r0.w = (r0.w >= 0.0 ? 1 : 0);			// partial precision
-    r0.xyz = (r0.xyz * r1.xyz) + r2.xyz;			// partial precision
-    r0.w = r0.w * IN.texcoord_5.w;			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r1.xyz = r1.y * PointLightColor.rgb;			// partial precision
+    r1.xyz = (r1.w * r1.xyz) + r2.xyz;			// partial precision
+    r2.xyz = (-r0.xyz * r1.xyz) + IN.color_0.rgb;			// partial precision
+    r0.w = AlphaTestRef.x - r0.w;			// partial precision
+    r2.xyz = r2.xyz * IN.color_0.a;			// partial precision
+    r0.w = (r0.w >= 0.0 ? 0 : 1);			// partial precision
+    r0.xyz = (r0.xyz * r1.xyz) + r2.xyz;			// partial precision
+    r0.w = r0.w * IN.texcoord_5.w;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 19 instruction slots used (3 texture, 16 arithmetic)

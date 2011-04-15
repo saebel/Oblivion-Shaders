@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D sampScramble;
 sampler2D sampSourceImage;
-
-
+//
+//
 // Registers:
 //
 //   Name            Reg   Size
@@ -17,7 +17,6 @@ sampler2D sampSourceImage;
 //   sampScramble    texture_1       1
 //   sampSourceImage texture_2       1
 //
-
 
 
 // Structures:
@@ -35,13 +34,14 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
     float4 r0;
 
     r0.xyzw = tex2D(sampScramble, IN.texcoord_0.y);
     r0.y = r0.x;
     r0.x = IN.texcoord_0.x;
-    OUT.color_0.rgba = tex2D(sampSourceImage, r0.xy);
+    r0.xyzw = tex2D(sampSourceImage, r0.xy);
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = r0.xyz;
 
     return OUT;
 };

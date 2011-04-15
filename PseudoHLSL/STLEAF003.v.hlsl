@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 float4 BillboardRight;
 float4 BillboardUp;
@@ -22,8 +22,8 @@ float4 RockParams;
 float4 RustleParams;
 float SunDimmer;
 float4 WindMatrices[16];
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -49,9 +49,8 @@ float4 WindMatrices[16];
 //   WindMatrices[1]   const_19      4
 //   WindMatrices[2]   const_20      4
 //   WindMatrices[3]   const_21      4
-//   LeafBase       const_34     48
+//   LeafBase[0]       const_34     48
 //
-
 
 
 // Structures:
@@ -75,81 +74,87 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
+#define	PI			3.14159274
+#define	anglei(v)		(((v) + PI) / (2 * PI))
+#define	angler(v)		(((v) * (2 * PI)) - PI)
+#define	fracr(v)		angler(frac(anglei(v)))	// signed modulo % PI
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
-    const float4 const_4 = {PI * 2, -PI, -2.52398507e-007, 2.47609005e-005};
     const float4 const_82 = {(1.0 / (PI * 2)), 0.25, 0.5, 0};
-    const float4 const_83 = {(1.0 / 48), 0.499999553, 0.25, -0.00138883968};
-    const float4 const_84 = {(1.0 / 24), -0.5, 1, 0};
 
-    float1 offset;
+    float3 mdl70;
+    float1 q0;
+    float1 q1;
+    float2 q11;
+    float1 q12;
+    float3 q14;
+    float3 q15;
+    float1 q18;
+    float1 q2;
+    float2 q3;
+    float4 q32;
+    float2 q5;
+    float1 q6;
+    float4 q68;
+    float1 q7;
+    float1 q8;
+    float2 q9;
     float4 r0;
     float4 r1;
     float4 r2;
     float4 r3;
     float1 r4;
-    float4 r5;
+    float1 r5;
 
-    offset.x = IN.blendindices.z;
-    r0.w = (pow(2.0, (((IN.blendindices.z / 48) + RustleParams.y) * 0.499999553) + 0.25) * PI * 2) - PI;
-    r0.w = r0.w * r0.w;
-    r1.w = (pow(2.0, (((IN.blendindices.z / 48) + RockParams.y) * 0.499999553) + 0.25) * PI * 2) - PI;
-    r1.w = r1.w * r1.w;
-    r2.w = (r1.w * ((r1.w * ((r1.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24);
-    r1.xy = (((((r1.w * ((r1.w * r2.w) - 0.5)) + 1) * RockParams.z) * RockParams.x) / (PI * 2)) + const_82.yz;
-    r1.w = (r0.w * ((r0.w * ((r0.w * -2.52398507e-007) + 2.47609005e-005)) - 0.00138883968)) + (1.0 / 24);
-    r0.w = (r0.w * ((r0.w * r1.w) - 0.5)) + 1;
-    r0.xy = (PI * 2 * frac(r1.xy)) - PI;
-    r0.xy = r0.xy * r0.xy;
-    r1.xy = (-2.52398507e-007 * r0.xy) + 2.47609005e-005;
-    r1.xy = (r1 * r0.xy) - 0.00138883968;
-    r1.xy = (r1 * r0.xy) + (1.0 / 24);
-    r1.xy = (r1 * r0.xy) - 0.5;
-    r1.xw = (r0.yyzx * r1.yyzx) + 1;
-    r2.xy = (PI * 2 * frac((((r0.w * RustleParams.z) * RustleParams.x) / (PI * 2)) + const_82.yz)) - PI;
-    r2.xy = r2.xy * r2.xy;
-    r0.xy = (-2.52398507e-007 * r2.xy) + 2.47609005e-005;
-    r0.xy = (r0 * r2.xy) - 0.00138883968;
-    r3.xy = (r0 * r2.xy) + (1.0 / 24);
-    r0.xyzw = IN.blendindices.w * LeafBase[offset.x];
-    offset.x = IN.blendindices.y;
-    r1.y = -r1.w;
+    q6.x = angler(exp2((((IN.blendindices.z / 48) + RustleParams.y) * 0.499999553) + 0.25));	// [0,1] to [-PI,PI]
+    q7.x = sqr(q6.x);
+    q0.x = angler(exp2((((IN.blendindices.z / 48) + RockParams.y) * 0.499999553) + 0.25));	// [0,1] to [-PI,PI]
+    q1.x = sqr(q0.x);
+    q12.x = IN.blendindices.y;
+    r2.zw = BillboardRight.zw;
     r1.z = 0;
+    r3.z = 0;
+    q8.x = (q7.x * ((q7.x * ((q7.x * -2.52398507e-007) + 2.47609005e-005)) - (1.0 / 72))) + (1.0 / 24);
+    q2.x = (q1.x * ((q1.x * ((q1.x * -2.52398507e-007) + 2.47609005e-005)) - (1.0 / 72))) + (1.0 / 24);
+    q9.xy = (((((q7.x * ((q7.x * q8.x) - 0.5)) + 1) * RustleParams.z) * RustleParams.x) / (PI * 2)) + const_82.yz;
+    r2.xy = angler(frac(q9.xy)) * angler(frac(q9.xy));
+    q3.xy = (((((q1.x * ((q1.x * q2.x) - 0.5)) + 1) * RockParams.z) * RockParams.x) / (PI * 2)) + const_82.yz;
+    r0.xy = angler(frac(q3.xy)) * angler(frac(q3.xy));
+    q11.xy = (((((-2.52398507e-007 * r2.xy) + 2.47609005e-005) * r2.xy) - (1.0 / 72)) * r2.xy) + (1.0 / 24);
+    r3.xy = (q11.xy * r2.xy) - 0.5;
+    r3.xw = (r2.yx * r3.yx) + 1;
+    r3.y = -r3.w;
+    r2.y = dot(r3.wxz, BillboardRight.xyz);
+    r2.x = dot(r3.xyz, BillboardRight.xyz);
+    q5.xy = (((((-2.52398507e-007 * r0.xy) + 2.47609005e-005) * r0.xy) - (1.0 / 72)) * r0.xy) + (1.0 / 24);
+    r1.xy = (q5.xy * r0.xy) - 0.5;
+    r1.xw = (r0.yx * r1.yx) + 1;
+    r0.xyzw = IN.blendindices.w * LeafBase[IN.blendindices.z];
+    q14.xyz = normalize((LeafLighting.y * (r0.xyz / length(r0.xyzw))) + IN.normal.xyz);
+    r1.y = -r1.w;
     r4.x = dot(r1.zwx, r0.xyz);
     r5.x = dot(r1.zxy, r0.xyz);
-    r0.xyz = normalize((LeafLighting.y * (r0.xyz / length(r0.xyzw))) + IN.normal.xyz);
-    r3.xy = (r3 * r2.xy) - 0.5;
-    r3.xw = (r2.yyzx * r3.yyzx) + 1;
-    r3.y = -r3.w;
-    r3.z = 0;
-    r1.x = dot(r3.xyz, BillboardUp.xyz);
     r1.y = dot(r3.wxz, BillboardUp.xyz);
+    r1.x = dot(r3.xyz, BillboardUp.xyz);
     r1.zw = BillboardUp.zw;
-    r2.x = dot(r3.xyz, BillboardRight.xyz);
-    r2.y = dot(r3.wxz, BillboardRight.xyz);
-    r2.zw = BillboardRight.zw;
-    r1.xyzw = (r4.x * r1.xyzw) + (r5.x * r2.xyzw);
-    r2.xyzw = r1.xyzw + IN.position.xyzw;
-    r1.w = dot(WindMatrices[3 + offset.x], r2.xyzw);
-    r1.x = dot(WindMatrices[0 + offset.x], r2.xyzw);
-    r1.y = dot(WindMatrices[1 + offset.x], r2.xyzw);
-    r1.z = dot(WindMatrices[2 + offset.x], r2.xyzw);
-    r1.xyzw = r1.xyzw - r2.xyzw;
-    r2.xyzw = (IN.blendindices.x * r1.xyzw) + r2.xyzw;
-    r1.xyz = LightPos.xyz - r2.xyz;
-    r0.w = 1.0 / length(r1.xyz);
-    r5.w = saturate(dot(r0.xyz, r1.xyz * r0.w));
-    r1.xyzw = (SunDimmer.x * (saturate(dot(r0.xyz, LightVector.xyz)) * DiffColor.rgba)) + AmbientColor.rgba;
-    r1.xyz = r1.xyz * pow(2.0, IN.blendindices.z);
-    r3.w = saturate((1.0 / r0.w) / LightPos.w);
-    r3.x = dot(ModelViewProj[0].xyzw, r2.xyzw);
-    r3.y = dot(ModelViewProj[1].xyzw, r2.xyzw);
-    r3.z = dot(ModelViewProj[2].xyzw, r2.xyzw);
+    q68.xyzw = ((r4.x * r1.xyzw) + (r5.x * r2.xyzw)) + IN.position.xyzw;
+    q32.xyzw = mul(float4x4(WindMatrices[0 + q12.x].xyzw, WindMatrices[1 + q12.x].xyzw, WindMatrices[2 + q12.x].xyzw, WindMatrices[3 + q12.x].xyzw), q68.xyzw);
+    r1.xyzw = (SunDimmer.x * (shades(q14.xyz, LightVector.xyz) * DiffColor.rgba)) + AmbientColor.rgba;
+    r1.xyz = r1.xyz * exp2(IN.blendindices.z);
+    r2.xyzw = (IN.blendindices.x * (q32.xyzw - q68.xyzw)) + q68.xyzw;
+    mdl70.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), r2.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r2.xyzw);
-    OUT.texcoord_1.xyzw = ((1.0 - (r3.w * r3.w)) * (r5.w * DiffColorPt.xyzw)) + r1.xyzw;
-    OUT.position.xyz = r3.xyz;
-    OUT.texcoord_2.w = 1 - saturate((FogParam.x - length(r3.xyz)) / FogParam.y);
+    OUT.position.xyz = mdl70.xyz;
+    q15.xyz = LightPos.xyz - r2.xyz;
+    q18.x = saturate(length(q15.xyz) / LightPos.w);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyzw = ((1.0 - sqr(q18.x)) * (shades(q14.xyz, normalize(q15.xyz)) * DiffColorPt.xyzw)) + r1.xyzw;
+    OUT.texcoord_2.w = 1 - saturate((FogParam.x - length(mdl70.xyz)) / FogParam.y);
     OUT.texcoord_2.xyz = FogColor.rgb;
 
     return OUT;

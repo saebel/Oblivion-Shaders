@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 row_major float4x4 ModelViewProj;
 row_major float4x4 WorldViewTranspose;
-
-
+//
+//
 // Registers:
 //
 //   Name               Reg   Size
@@ -22,7 +22,6 @@ row_major float4x4 WorldViewTranspose;
 //   WorldViewTranspose[1] const_6        1
 //   WorldViewTranspose[2] const_7        1
 //
-
 
 
 // Structures:
@@ -43,20 +42,19 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0.5, 5, -4.4, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    float3 r0;
+    float1 mdl0;
+    float3 q4;
 
-    r0.x = dot(WorldViewTranspose[0].xyz, IN.normal.xyz);
-    r0.y = dot(WorldViewTranspose[1].xyz, IN.normal.xyz);
-    r0.z = dot(WorldViewTranspose[2].xyz, IN.normal.xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    q4.xyz = mul(float3x3(WorldViewTranspose[0].xyz, WorldViewTranspose[1].xyz, WorldViewTranspose[2].xyz), IN.normal.xyz);
+    mdl0.x = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_0.xyz = (0.5 * r0.xyz) + 0.5;
-    r0.y = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = (r0.y * 5) - 4.4;
-    OUT.position.z = r0.y;
+    OUT.position.xy = mul(float2x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw), IN.position.xyzw);
+    OUT.position.z = mdl0.x;
+    OUT.texcoord_0.xyz = compress(q4.xyz);	// [-1,+1] to [0,1]
+    OUT.texcoord_1.x = (mdl0.x * 5) - 4.4;
 
     return OUT;
 };

@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D NormalMap;
 float4 PSLightColor[4];
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -18,21 +18,16 @@ float4 PSLightColor[4];
 //   NormalMap    texture_0       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    texcoord IN.texcoord_1
-    r0.xyz = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_1.xyz) - 0.5)));
-    r0.xyz = r0.xyz * PSLightColor[0].rgb;
-  + r0.w = PSLightColor[0].a;
-
-// approximately 4 instruction slots used (2 texture, 2 arithmetic)
-
 
 // Structures:
 
 struct VS_OUTPUT {
+    float4 texcoord_1 : TEXCOORD1;
+    float4 NormalUV : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
+    float4 output_0 : COLOR0;
 };
 
 // Code:
@@ -40,9 +35,19 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
+    float4 r0;
 
+    IN.NormalUV.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    r0.xyz = saturate(dot(expand(IN.NormalUV.xyz), expand(IN.texcoord_1.xyz))) * PSLightColor[0].rgb;
+    r0.w = PSLightColor[0].a;
+    OUT.output_0.xyzw = r0.xyzw;
 
     return OUT;
 };
 
+// approximately 4 instruction slots used (2 texture, 2 arithmetic)

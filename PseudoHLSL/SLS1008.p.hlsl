@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 float3 LightColor[3];
 sampler2D NormalMap;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -19,11 +19,10 @@ sampler2D NormalMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 NormalUV : TEXCOORD0;
     float3 texcoord_1 : TEXCOORD1;
 };
 
@@ -36,21 +35,20 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_1 = {-0.5, 0, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
-    float4 r0;
+    float1 q2;
     float4 r1;
-    float4 r2;
 
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    r0.xyz = 2 * (r1.xyz - 0.5);	// [0,1] to [-1,+1]
-    r0.x = saturate(dot(r0.xyz, 2 * (IN.texcoord_1.xyz - 0.5)));	// [0,1] to [-1,+1]
-    r0.w = r0.x * r0.x;
-    r0.w = r0.w * r0.w;
-    r2.w = r0.w * r0.w;
-    r0.w = r1.w * r0.w;
-    r0.xyz = r1.w * (r2.w * LightColor[0].r);
-    OUT.color_0.rgba = r0.xyzw;
+    r1.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    q2.x = sqr(sqr(shades(expand(r1.xyz), expand(IN.texcoord_1.xyz))));
+    OUT.color_0.a = r1.w * q2.x;
+    OUT.color_0.rgb = r1.w * (sqr(q2.x) * LightColor[0].r);
 
     return OUT;
 };

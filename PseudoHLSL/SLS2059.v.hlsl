@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 row_major float4x4 ModelViewProj;
 float Time;
 row_major float4x4 WorldViewTranspose;
-
-
+//
+//
 // Registers:
 //
 //   Name               Reg   Size
@@ -26,7 +26,6 @@ row_major float4x4 WorldViewTranspose;
 //   Time               const_22      1
 //   EyePosition        const_25      1
 //
-
 
 
 // Structures:
@@ -47,24 +46,16 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_7 = {(1.0 / 300), 0.02, 1, 0};
+    float2 q19;
+    float1 q2;
 
-    float4 r0;
-    float3 r1;
-
-    r0.xyzw = IN.position.xyzw * (1.0 / 300);
-    r1.xyz = normalize(EyePosition.xyz - IN.position.xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = dot(IN.normal.xyz, r1.xyz);
-    r1.x = dot(WorldViewTranspose[0].xyzw, r0.xyzw);
-    r1.y = dot(WorldViewTranspose[2].xyzw, r0.xyzw);
-    OUT.texcoord_0.z = r1.y;
-    OUT.texcoord_0.w = max(r1.y * 0.02, 1);
-    r1.y = dot(WorldViewTranspose[1].xyzw, r0.xyzw);
-    OUT.texcoord_0.xy = r1.xy - Time.x;
+    q19.xy = mul(float2x4(WorldViewTranspose[0].xyzw, WorldViewTranspose[1].xyzw), IN.position.xyzw / 300);
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    q2.x = dot(WorldViewTranspose[2].xyzw, IN.position.xyzw / 300);
+    OUT.texcoord_0.w = max(q2.x * 0.02, 1);
+    OUT.texcoord_0.xy = q19.xy - Time.x;
+    OUT.texcoord_0.z = q2.x;
+    OUT.texcoord_1.x = dot(IN.normal.xyz, normalize(EyePosition.xyz - IN.position.xyz));
 
     return OUT;
 };

@@ -44,7 +44,7 @@
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
     float4 IN.color_1 : COLOR1;
-    r0.w = 2.w * IN.color_1.r;
+    r0.w = 2 * IN.color_1.r;
     r0.w = frac(r0.w);
     r0.w = (2 * IN.color_1.r) - r0.w;
     offset.w = r0.w;
@@ -65,9 +65,9 @@
     r2.xz = fVars2.xz;
     r3.xy = (fVars2.zw < r6.w ? 1.0 : 0.0);
     r4.zw = const_13.zw;
-    r1.xzw = (fVars2.yyw * r4.zyz) + r4.wywz;
+    r1.xzw = (fVars2.yywy * r4.zyzw) + r4.wywz;
     r2.xz = r2.xz * r3.x;
-    r2.yw = lerp(fVars2.yw, fVars2.xx, r3.x);
+    r2.yw = lerp(fVars2.yw, fVars2.xz, r3.x);
     r1.xzw = r1.xzw - r2.xzw;
     r1.y = -r2.y;
     OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);

@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 samplerCUBE EnvironmentCubeMap;
 sampler2D NormalMap;
-
-
+//
+//
 // Registers:
 //
 //   Name               Reg   Size
@@ -21,11 +21,10 @@ sampler2D NormalMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 NormalUV : TEXCOORD0;
     float4 texcoord_1 : TEXCOORD1;
     float4 texcoord_2 : TEXCOORD2;
     float4 texcoord_3 : TEXCOORD3;
@@ -40,24 +39,22 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_0 = {2, -1, 1, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	envreflect(i, n)	((2 * dot(i, n)) * (i)) - ((n) * dot(i, i))
 
+    float3 q0;
     float4 r0;
     float4 r1;
-    float3 r2;
 
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    r1.xyz = (2 * r1.xyz) - 1;
-    r0.x = dot(r1.xyz, IN.texcoord_1.xyz);
-    r0.y = dot(r1.xyz, IN.texcoord_2.xyz);
-    r0.z = dot(r1.xyz, IN.texcoord_3.xyz);
-    r2.x = IN.texcoord_1.w;
-    r2.y = IN.texcoord_2.w;
-    r2.z = IN.texcoord_3.w;
-    r0.xyzw = texCUBE(EnvironmentCubeMap, ((2 * dot(r0.xyz, r2.xyz)) * r0.xyz) - (r2.xyz * dot(r0.xyz, r0.xyz)));
-    r0.w = 1;
-    r0.xyz = (r1.w * r0.xyz) * AmbientColor.a;
-    OUT.color_0.rgba = r0.xyzw;
+    r1.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    q0.xyz = expand(r1.xyz);	// [0,1] to [-1,+1]
+    r0.z = dot(q0.xyz, IN.texcoord_3.xyz);
+    r0.y = dot(q0.xyz, IN.texcoord_2.xyz);
+    r0.x = dot(q0.xyz, IN.texcoord_1.xyz);
+    r0.xyzw = texCUBE(EnvironmentCubeMap, envreflect(r0.xyz, float3(IN.texcoord_1.w, IN.texcoord_2.w, IN.texcoord_3.w)));
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = (r1.w * r0.xyz) * AmbientColor.a;
 
     return OUT;
 };

@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 sampler2D AttMapXY;
 sampler2D AttMapZ;
 samplerCUBE NormalCubeMap;
 sampler2D NormalMap;
 float4 PSLightColor[4];
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -24,25 +24,18 @@ float4 PSLightColor[4];
 //   NormalCubeMap texture_3       1
 //
 
-    IN.texcoord_0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    IN.texcoord_1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    IN.texcoord_2.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    IN.texcoord_3.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    r0.xyz = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
-    r0.xyz = r0.xyz * PSLightColor[0].rgb;
-    r1.xyz = IN.texcoord_1.xyz * IN.texcoord_2.xyz;
-    r0.xyz = r0.xyz * r1.xyz;
-  + r0.w = PSLightColor[0].a;
-
-// approximately 8 instruction slots used (4 texture, 4 arithmetic)
-
 
 // Structures:
 
 struct VS_OUTPUT {
+    float4 NormalUV : TEXCOORD0;
+    float2 texcoord_1 : TEXCOORD1;
+    float2 texcoord_2 : TEXCOORD2;
+    float4 texcoord_3 : TEXCOORD3;
 };
 
 struct PS_OUTPUT {
+    float4 output_0 : COLOR0;
 };
 
 // Code:
@@ -50,9 +43,26 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
+    float3 att0;
+    float3 att1;
+    float3 q2;
+    float4 r0;
 
+    IN.texcoord_3.xyzw = texCUBE(NormalCubeMap, IN.texcoord_3.xyz);
+    IN.NormalUV.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    att0.xyz = tex2D(AttMapZ, IN.texcoord_2.xy);
+    att1.xyz = tex2D(AttMapXY, IN.texcoord_1.xy);
+    q2.xyz = saturate(dot(expand(IN.NormalUV.xyz), expand(IN.texcoord_3.xyz))) * PSLightColor[0].rgb;
+    r0.xyz = q2.xyz * (att1.xyz * att0.xyz);
+    r0.w = PSLightColor[0].a;
+    OUT.output_0.xyzw = r0.xyzw;
 
     return OUT;
 };
 
+// approximately 8 instruction slots used (4 texture, 4 arithmetic)

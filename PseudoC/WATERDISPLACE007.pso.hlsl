@@ -24,7 +24,7 @@
     float2 texcoord_0 : TEXCOORD0;
     sampler2D DisplaySampler;
     r0.xy = IN.texcoord_0.xy - 0.5;
-    r0.w = dot(r0.xy, r0.xy) + 0;
+    r0.w = dot(r0.xy, r0.xy);
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r0.w = r0.w - 0.4;

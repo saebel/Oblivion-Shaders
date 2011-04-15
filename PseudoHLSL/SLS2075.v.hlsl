@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float4 FogParam;
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -27,7 +27,6 @@ row_major float4x4 ObjToCubeSpace;
 //   LightPosition[0]  const_16       1
 //   FogParam       const_23      1
 //
-
 
 
 // Structures:
@@ -51,24 +50,17 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {0, 1, 0, 0};
+    float3 mdl0;
 
-    float3 r0;
-
-    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    r0.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
+    mdl0.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.w = dot(ObjToCubeSpace[3].xyzw, IN.position.xyzw);
-    OUT.position.xyz = r0.xyz;
-    OUT.texcoord_3.w = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
+    OUT.position.xyz = mdl0.xyz;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
-    OUT.texcoord_6.xyz = IN.position.xyz;
+    OUT.texcoord_1.xyzw = mul(ObjToCubeSpace, IN.position.xyzw);
     OUT.texcoord_2.xyzw = LightPosition[0].xyzw;
+    OUT.texcoord_3.w = 1 - saturate((FogParam.x - length(mdl0.xyz)) / FogParam.y);
     OUT.texcoord_3.xyz = 0;
+    OUT.texcoord_6.xyz = IN.position.xyz;
 
     return OUT;
 };

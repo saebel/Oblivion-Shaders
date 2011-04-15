@@ -67,7 +67,7 @@
     r2.w = r0.y * WindData.z;
     r1.xz = r0.w * -EyeVector.xy;
     r0.w = IN.color_0.a * IN.color_0.a;
-    r1.yw = r1.z * const_7.xz;
+    r1.yw = r1.z * const_7.zw;
     r2.w = r2.w * r0.w;
     r0.xyz = r1.zxw * const_7.zyy;
     r2.xy = const_7.xy;

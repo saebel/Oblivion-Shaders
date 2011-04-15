@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 float4 BlendColor[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -22,7 +22,6 @@ row_major float4x4 ModelViewProj;
 //   BlendColor[1]    const_5        1
 //   BlendColor[2]    const_6        1
 //
-
 
 
 // Structures:
@@ -42,14 +41,13 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-
     float3 r0;
 
-    r0.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    r0.z = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.color_0.rgb = (IN.color_0.b * BlendColor[2].rgb) + ((IN.color_0.r * BlendColor[0].rgb) + (BlendColor[1].rgb * IN.color_0.g));
+    r0.xyz = (IN.color_0.r * BlendColor[0].rgb) + (BlendColor[1].rgb * IN.color_0.g);
     OUT.color_0.a = BlendColor[0].a * IN.color_0.a;
+    OUT.color_0.rgb = (IN.color_0.b * BlendColor[2].rgb) + r0.xyz;
+    r0.xy = mul(float2x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw), IN.position.xyzw);
+    r0.z = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     OUT.position.xyzw = r0.xyzz;
 
     return OUT;

@@ -27,14 +27,14 @@
     const float4 const_3 = {-0.5, 0, 1, 0};
     float2 IN.texcoord_0 : TEXCOORD0;
     float2 IN.texcoord_1 : TEXCOORD1;
-    float3 input_2 : TEXCOORD3_centroid;
+    float3 IN.texcoord_3 : TEXCOORD3_centroid;
     float4 IN.color_1 : COLOR1;
     sampler2D NormalMap;
     sampler2D SourceTexture;
     r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
     r0.xyz = r0.xyz - 0.5;
     r0.xyz = 2 * r0.xyz;
-    r1.w = dot(r0.xyz, IN.input_2.xyz);
+    r1.w = dot(r0.xyz, IN.texcoord_3.xyz);
     r0.w = max(r1.w, 0);
     r2.w = 1 - r0.w;
     r0.xyzw = tex2D(SourceTexture, IN.texcoord_1.xy);

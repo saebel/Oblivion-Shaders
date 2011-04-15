@@ -5,10 +5,10 @@
 //
 //
 // Parameters:
-
+//
 sampler2D SourceTexture;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -17,12 +17,11 @@ sampler2D SourceTexture;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
     float4 color_0 : COLOR0;
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
+    float2 SourceUV : TEXCOORD0;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -34,9 +33,13 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+    float4 r0;
+    float4 t0;
 
-
-    OUT.color_0.rgba = (tex2D(SourceTexture, IN.texcoord_0.xy)) * IN.color_0.rgba;			// partial precision
+    t0.xyzw = tex2D(SourceTexture, IN.SourceUV.xy);			// partial precision
+    r0.xyzw = t0.xyzw * IN.color_0.rgba;			// partial precision
+    OUT.color_0.a = r0.w;			// partial precision
+    OUT.color_0.rgb = r0.xyz;			// partial precision
 
     return OUT;
 };

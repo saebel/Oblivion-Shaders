@@ -51,12 +51,12 @@
     r0.xyz = ShallowColor.rgb - r0.xyz;
     r1.w = 1;
     r2.w = r1.w - FresnelRI.x;
-    r1.xyz = (r0.w * r0.xyz) + DeepColor.rgb;			// partial precision
+    r1.xyz = (r0.w * r0.xyz) + DeepColor.rgb;			// partial precision
     r2.w = (r2.w * r3.w) + FresnelRI.x;
     r0.xyz = ReflectionColor.rgb - r1.xyz;
     r0.w = r1.w - VarAmounts.y;
     r2.x = saturate(dot(r2.xyz, SunDir.xyz));
-    r0.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
+    r0.xyz = (r0.w * r0.xyz) + r1.xyz;			// partial precision
     r1.w = pow(abs(r2.x), VarAmounts.x);
     r0.xyz = r0.xyz * VarAmounts.y;
     r3.w = saturate(SunDir.w);
@@ -64,7 +64,7 @@
     r0.w = FogParam.x - r4.w;
     r0.xyz = r1.w * SunColor.rgb;
     r1.w = 1.0 / FogParam.y;
-    r1.xyz = saturate((r3.w * r0)) + r1.xyz);
+    r1.xyz = saturate((r3.w * r0.xyz) + r1.xyz);
     r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor.rgb - r1.xyz;
     r1.w = 1 - r0.w;

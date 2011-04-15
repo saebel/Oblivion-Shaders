@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -22,7 +22,6 @@ row_major float4x4 ModelViewProj;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -32,6 +31,8 @@ struct VS_INPUT {
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
     float4 color_0 : COLOR0;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -48,22 +49,15 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0.5, 0, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    float3 r0;
-
-    r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_3.xyz = (0.5 * r0.xyz) + 0.5;
+    OUT.color_0.rgba = IN.color_0.rgba;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xy = IN.texcoord_0.xy;
     OUT.texcoord_2.xy = IN.texcoord_0.xy;
-    OUT.color_0.rgba = IN.color_0.rgba;
+    OUT.texcoord_3.xyz = compress(mul(TanSpaceProj, LightDirection[0].xyz));	// [-1,+1] to [0,1]
 
     return OUT;
 };

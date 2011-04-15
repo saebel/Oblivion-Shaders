@@ -28,7 +28,7 @@
     r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r0.x = dot(const_0.xyz, r1.xyz);
     r0.x = r0.x + 0.14;
-    r0.yz = const_2.zxyw;
+    r0.yz = const_2.xy;
     r2.x = dot(const_3.xyz, r0.xyz);
     r2.y = dot(const_4.xyz, r0.xyz);
     r2.z = dot(const_5.xyz, r0.xyz);

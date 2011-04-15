@@ -19,7 +19,7 @@
 
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
-    OUT.position.xy = (IN.position * texRatio0.xy) + texRatio0.zw;
+    OUT.position.xy = (IN.position.xy * texRatio0.xy) + texRatio0.zw;
     OUT.position.zw = IN.position.zw;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
 

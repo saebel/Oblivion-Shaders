@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 Bones[54];
 float3 LightDirection[3];
 row_major float4x4 SkinModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name              Reg   Size
@@ -24,7 +24,6 @@ row_major float4x4 SkinModelViewProj;
 //   Bones[1]             const_43      18
 //   Bones[2]             const_44      18
 //
-
 
 
 // Structures:
@@ -52,109 +51,84 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const float4 const_0 = {1, 765.01001, 0, 0.5};
 
-    float1 offset;
+    float3 m61;
+    float4 q1;
+    float1 q13;
+    float3 q14;
+    float3 q17;
+    float1 q2;
+    float1 q21;
+    float3 q36;
+    float3 q37;
+    float3 q38;
+    float3 q39;
+    float3 q40;
+    float3 q43;
+    float3 q44;
+    float3 q45;
+    float3 q46;
+    float3 q47;
+    float3 q48;
+    float3 q49;
+    float1 q5;
+    float3 q50;
+    float3 q51;
+    float3 q52;
+    float3 q53;
+    float3 q56;
+    float3 q57;
+    float3 q58;
+    float3 q59;
+    float3 q62;
+    float1 q9;
     float4 r0;
     float4 r1;
-    float4 r2;
-    float3 r3;
-    float3 r4;
-    float3 r5;
 
     r0.xyzw = IN.blendindices.zyxw * 765.01001;
-    offset.x = r0.y;
-    r1.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r2.x = dot(Bones[0 + offset.x], r1.xyzw);
-    r2.y = dot(Bones[1 + offset.x], r1.xyzw);
-    r2.z = dot(Bones[2 + offset.x], r1.xyzw);
-    offset.x = r0.x;
-    r3.xyz = r2.xyz * IN.blendweight.y;
-    r2.x = dot(Bones[0 + offset.x], r1.xyzw);
-    r2.y = dot(Bones[1 + offset.x], r1.xyzw);
-    r2.z = dot(Bones[2 + offset.x], r1.xyzw);
-    offset.x = r0.z;
-    r3.xyz = (IN.blendweight.x * r2.xyz) + r3.xyz;
-    r2.x = dot(Bones[0 + offset.x], r1.xyzw);
-    r2.y = dot(Bones[1 + offset.x], r1.xyzw);
-    r2.z = dot(Bones[2 + offset.x], r1.xyzw);
-    offset.x = r0.w;
-    r3.xyz = (IN.blendweight.z * r2.xyz) + r3.xyz;
-    r2.x = dot(Bones[0 + offset.x], r1.xyzw);
-    r2.y = dot(Bones[1 + offset.x], r1.xyzw);
-    r2.z = dot(Bones[2 + offset.x], r1.xyzw);
-    offset.x = r0.y;
-    r2.w = 1 - dot(IN.blendweight.xyz, 1);
-    r1.xyz = (r2.w * r2.xyz) + r3.xyz;
-    r2.x = dot(Bones[0 + offset.x], IN.tangent.xyz);
-    r2.y = dot(Bones[1 + offset.x], IN.tangent.xyz);
-    r2.z = dot(Bones[2 + offset.x], IN.tangent.xyz);
-    offset.x = r0.x;
-    r3.xyz = r2.xyz * IN.blendweight.y;
-    r2.x = dot(Bones[0 + offset.x], IN.tangent.xyz);
-    r2.y = dot(Bones[1 + offset.x], IN.tangent.xyz);
-    r2.z = dot(Bones[2 + offset.x], IN.tangent.xyz);
-    offset.x = r0.z;
-    r3.xyz = (IN.blendweight.x * r2.xyz) + r3.xyz;
-    r2.x = dot(Bones[0 + offset.x], IN.tangent.xyz);
-    r2.y = dot(Bones[1 + offset.x], IN.tangent.xyz);
-    r2.z = dot(Bones[2 + offset.x], IN.tangent.xyz);
-    offset.x = r0.w;
-    r3.xyz = (IN.blendweight.z * r2.xyz) + r3.xyz;
-    r2.x = dot(Bones[0 + offset.x], IN.tangent.xyz);
-    r2.y = dot(Bones[1 + offset.x], IN.tangent.xyz);
-    r2.z = dot(Bones[2 + offset.x], IN.tangent.xyz);
-    offset.x = r0.y;
+    q9.x = r0.w;
+    q5.x = r0.w;
+    q45.xyz = mul(float3x3(Bones[0 + r0.z].xyz, Bones[1 + r0.z].xyz, Bones[2 + r0.z].xyz), IN.tangent.xyz);
+    q44.xyz = mul(float3x3(Bones[0 + r0.x].xyz, Bones[1 + r0.x].xyz, Bones[2 + r0.x].xyz), IN.tangent.xyz);
+    q43.xyz = mul(float3x3(Bones[0 + r0.y].xyz, Bones[1 + r0.y].xyz, Bones[2 + r0.y].xyz), IN.tangent.xyz);
+    q59.xyz = mul(float3x3(Bones[0 + r0.w].xyz, Bones[1 + r0.w].xyz, Bones[2 + r0.w].xyz), IN.normal.xyz);
+    q62.xyz = mul(float3x3(Bones[0 + r0.x].xyz, Bones[1 + r0.x].xyz, Bones[2 + r0.x].xyz), IN.normal.xyz);
+    q56.xyz = mul(float3x3(Bones[0 + r0.y].xyz, Bones[1 + r0.y].xyz, Bones[2 + r0.y].xyz), IN.normal.xyz);
+    q51.xyz = mul(float3x3(Bones[0 + r0.z].xyz, Bones[1 + r0.z].xyz, Bones[2 + r0.z].xyz), IN.binormal.xyz);
+    q50.xyz = mul(float3x3(Bones[0 + r0.x].xyz, Bones[1 + r0.x].xyz, Bones[2 + r0.x].xyz), IN.binormal.xyz);
+    q49.xyz = mul(float3x3(Bones[0 + r0.y].xyz, Bones[1 + r0.y].xyz, Bones[2 + r0.y].xyz), IN.binormal.xyz);
+    q47.xyz = mul(float3x3(Bones[0 + q9.x].xyz, Bones[1 + q9.x].xyz, Bones[2 + q9.x].xyz), IN.tangent.xyz);
+    q2.x = 1 - weight(IN.blendweight.xyz);
+    q21.x = r0.z;
+    q57.xyz = mul(float3x3(Bones[0 + q21.x].xyz, Bones[1 + q21.x].xyz, Bones[2 + q21.x].xyz), IN.normal.xyz);
     r1.w = 1;
-    r2.xyz = (r2.w * r2.xyz) + r3.xyz;
-    OUT.position.x = dot(SkinModelViewProj[0].xyzw, r1.xyzw);
-    OUT.position.y = dot(SkinModelViewProj[1].xyzw, r1.xyzw);
-    OUT.position.z = dot(SkinModelViewProj[2].xyzw, r1.xyzw);
-    OUT.position.w = dot(SkinModelViewProj[3].xyzw, r1.xyzw);
-    r1.xyz = normalize(r2.xyz);
-    r2.x = dot(Bones[0 + offset.x], IN.binormal.xyz);
-    r2.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
-    r2.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
-    offset.x = r0.x;
-    r3.xyz = r2.xyz * IN.blendweight.y;
-    r2.x = dot(Bones[0 + offset.x], IN.binormal.xyz);
-    r2.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
-    r2.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
-    offset.x = r0.z;
-    r3.xyz = (IN.blendweight.x * r2.xyz) + r3.xyz;
-    r2.x = dot(Bones[0 + offset.x], IN.binormal.xyz);
-    r2.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
-    r2.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
-    offset.x = r0.w;
-    r4.xyz = (IN.blendweight.z * r2.xyz) + r3.xyz;
-    r2.x = dot(Bones[0 + offset.x], IN.binormal.xyz);
-    r2.y = dot(Bones[1 + offset.x], IN.binormal.xyz);
-    r2.z = dot(Bones[2 + offset.x], IN.binormal.xyz);
-    offset.x = r0.y;
-    r3.x = dot(Bones[0 + offset.x], IN.normal.xyz);
-    r3.y = dot(Bones[1 + offset.x], IN.normal.xyz);
-    r3.z = dot(Bones[2 + offset.x], IN.normal.xyz);
-    offset.x = r0.x;
-    r5.xyz = r3.xyz * IN.blendweight.y;
-    r3.x = dot(Bones[0 + offset.x], IN.normal.xyz);
-    r3.y = dot(Bones[1 + offset.x], IN.normal.xyz);
-    r3.z = dot(Bones[2 + offset.x], IN.normal.xyz);
-    offset.x = r0.z;
-    r0.x = dot(Bones[0 + offset.x], IN.normal.xyz);
-    r0.y = dot(Bones[1 + offset.x], IN.normal.xyz);
-    r0.z = dot(Bones[2 + offset.x], IN.normal.xyz);
-    offset.x = r0.w;
-    r3.xyz = (IN.blendweight.z * r0.xyz) + ((IN.blendweight.x * r3.xyz) + r5.xyz);
-    r0.x = dot(Bones[0 + offset.x], IN.normal.xyz);
-    r0.y = dot(Bones[1 + offset.x], IN.normal.xyz);
-    r0.z = dot(Bones[2 + offset.x], IN.normal.xyz);
-    r1.x = dot(r1.xyz, LightDirection[0].xyz);
-    r1.y = dot(normalize((r2.w * r2.xyz) + r4.xyz), LightDirection[0].xyz);
-    r1.z = dot(normalize((r2.w * r0.xyz) + r3.xyz), LightDirection[0].xyz);
-    OUT.texcoord_3.xyz = (0.5 * r1.xyz) + 0.5;
+    q1.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
+    q13.x = r0.w;
+    q38.xyz = mul(float3x4(Bones[0 + r0.z].xyzw, Bones[1 + r0.z].xyzw, Bones[2 + r0.z].xyzw), q1.xyzw);
+    q37.xyz = mul(float3x4(Bones[0 + r0.x].xyzw, Bones[1 + r0.x].xyzw, Bones[2 + r0.x].xyzw), q1.xyzw);
+    q36.xyz = mul(float3x4(Bones[0 + r0.y].xyzw, Bones[1 + r0.y].xyzw, Bones[2 + r0.y].xyzw), q1.xyzw);
+    q40.xyz = mul(float3x4(Bones[0 + q5.x].xyzw, Bones[1 + q5.x].xyzw, Bones[2 + q5.x].xyzw), q1.xyzw);
+    q53.xyz = mul(float3x3(Bones[0 + q13.x].xyz, Bones[1 + q13.x].xyz, Bones[2 + q13.x].xyz), IN.binormal.xyz);
+    q58.xyz = (IN.blendweight.z * q57.xyz) + ((IN.blendweight.x * q62.xyz) + (q56.xyz * IN.blendweight.y));
+    q17.xyz = normalize((q2.x * q59.xyz) + q58.xyz);
+    q52.xyz = (IN.blendweight.z * q51.xyz) + ((IN.blendweight.x * q50.xyz) + (q49.xyz * IN.blendweight.y));
+    q14.xyz = normalize((q2.x * q53.xyz) + q52.xyz);
+    q46.xyz = (IN.blendweight.z * q45.xyz) + ((IN.blendweight.x * q44.xyz) + (q43.xyz * IN.blendweight.y));
+    q48.xyz = normalize((q2.x * q47.xyz) + q46.xyz);
+    m61.xyz = mul(float3x3(q48.xyz, q14.xyz, q17.xyz), LightDirection[0].xyz);
+    q39.xyz = (IN.blendweight.z * q38.xyz) + ((IN.blendweight.x * q37.xyz) + (q36.xyz * IN.blendweight.y));
+    r1.xyz = (q2.x * q40.xyz) + q39.xyz;
+    OUT.position.xyzw = mul(SkinModelViewProj, r1.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xy = IN.texcoord_0.xy;
     OUT.texcoord_2.xy = IN.texcoord_0.xy;
+    OUT.texcoord_3.xyz = compress(m61.xyz);	// [-1,+1] to [0,1]
 
     return OUT;
 };

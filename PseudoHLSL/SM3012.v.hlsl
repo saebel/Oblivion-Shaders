@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float3 BoundWorldCenter;
 float3 EyePosition;
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;
-
-
+//
+//
 // Registers:
 //
 //   Name             Reg   Size
@@ -26,7 +26,6 @@ row_major float4x4 ObjToCubeSpace;
 //   EyePosition      const_14      1
 //   BoundWorldCenter const_20      1
 //
-
 
 
 // Structures:
@@ -49,27 +48,26 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {-2, 3, 0, 0};
-    const float4 const_5 = {0.5, -0.8, 6.66666651, 1};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
-    float3 r0;
-    float4 r1;
+    float3 eye0;
+    float3 q11;
+    float1 q2;
+    float3 q5;
 
-    r0.x = dot(ObjToCubeSpace[0].xyzw, IN.position.xyzw);
-    r0.y = dot(ObjToCubeSpace[1].xyzw, IN.position.xyzw);
-    r0.z = dot(ObjToCubeSpace[2].xyzw, IN.position.xyzw);
-    r1.xyz = normalize(r0.xyz - BoundWorldCenter.xyz);
-    r0.xyz = EyePosition.xyz - r0.xyz;
-    r1.w = saturate(((dot(r1.xyz, normalize(r0.xyz)) / length(r1.xyz)) - 0.8) * 6.66666651);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xyz = (0.5 * r1.xyz) + 0.5;	// [-1,+1] to [0,1]
-    OUT.texcoord_2.xyz = r0.xyz;
-    OUT.texcoord_1.w = ((r1.w * -2) + 3) * (r1.w * r1.w);
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    q11.xyz = mul(float3x4(ObjToCubeSpace[0].xyzw, ObjToCubeSpace[1].xyzw, ObjToCubeSpace[2].xyzw), IN.position.xyzw);
+    q5.xyz = normalize(q11.xyz - BoundWorldCenter.xyz);
+    eye0.xyz = EyePosition.xyz - q11.xyz;
+    q2.x = saturate(((dot(q5.xyz, normalize(eye0.xyz)) / length(q5.xyz)) - 0.8) * 6.66666651);
     OUT.color_0.rgb = 1;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.w = (3 - (q2.x * 2)) * sqr(q2.x);
+    OUT.texcoord_1.xyz = compress(q5.xyz);	// [-1,+1] to [0,1]
+    OUT.texcoord_2.xyz = eye0.xyz;
 
     return OUT;
 };

@@ -47,7 +47,7 @@
     sampler2D NormalMap;
     sampler2D DetailMap;
     r0.xy = EyePos.xy - IN.texcoord_1.xy;
-    r0.w = dot(r0.xy, r0.xy) + 0;
+    r0.w = dot(r0.xy, r0.xy);
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r2.w = saturate((r0.w * -(1.0 / 8192)) - -1);
@@ -76,18 +76,18 @@
     r1.xyz = DeepColor.rgb;
     r1.xyz = ShallowColor.rgb - r1.xyz;
     r2.w = r0.w * r2.w;
-    r2.xyz = (r2.x * r1.xyz) + DeepColor.rgb;			// partial precision
+    r2.xyz = (r2.x * r1.xyz) + DeepColor.rgb;			// partial precision
     r1.xyz = ReflectionColor.rgb - r2.xyz;
     r3.z = -1;
     r4.w = -(r3.z + VarAmounts.y);
     r0.w = -(r3.z + FresnelRI.x);
-    r1.xyz = (r4.w * r1.xyz) + r2.xyz;			// partial precision
+    r1.xyz = (r4.w * r1.xyz) + r2.xyz;			// partial precision
     r2.w = (r0.w * r2.w) + FresnelRI.x;
     r1.xyz = r1.xyz * VarAmounts.y;
     r1.xyz = (r2.w * r1.xyz) + r2.xyz;
     r0.w = saturate(SunDir.w);
     r1.w = 1.0 / r1.w;
-    r2.xyz = saturate((r0.w * r0)) + r1.xyz);
+    r2.xyz = saturate((r0.w * r0.xyz) + r1.xyz);
     r0.xyzw = tex2D(DetailMap, r3.xy);
     r0.w = FogParam.x - r1.w;
     r1.w = 1.0 / FogParam.y;

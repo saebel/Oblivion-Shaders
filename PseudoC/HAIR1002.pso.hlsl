@@ -27,14 +27,14 @@
 //
 
     IN.texcoord_0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    IN.texcoord_1.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    IN.texcoord_1.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
     texm3x2pad IN.texcoord_2, 2 * ((IN.texcoord_1) - 0.5)
-    texm3x2IN.texcoord_3 = tex2D(DiffuseMap, IN.texcoord_0.xy);, 2 * ((IN.texcoord_1) - 0.5)
+    texm3x2IN.texcoord_3 = tex2D(AnisoMap, IN.texcoord_3.xy);, 2 * ((IN.texcoord_1) - 0.5)
     r0.xyz = IN.texcoord_3.xyz * IN.input_0.w;
     r0.xyz = saturate((PSLightColor[0].rgb * r0.xyz) + IN.input_0.xyz);
     r0.xyz = saturate(r0.xyz + AmbientColor.rgb);
     r0.xyz = IN.texcoord_0.xyz * r0.xyz;
   + r0.w = IN.texcoord_0.w * AmbientColor.a;
-    2 * (mul) r0.xyz, r0, const_7
+    2 * (mul) r0.xyz, r0, Toggles
 
 // approximately 9 instruction slots used (4 texture, 5 arithmetic)

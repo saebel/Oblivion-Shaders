@@ -43,10 +43,10 @@
     r0.w = frac(IN.blendindices.y);
     r0.w = IN.blendindices.y - r0.w;
     offset.w = r0.w;
-    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
-    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
+    r0.x = dot(WindMatrices[0 + offset.w].xyzw, IN.position.xyzw);
+    r0.y = dot(WindMatrices[1 + offset.w].xyzw, IN.position.xyzw);
+    r0.z = dot(WindMatrices[2 + offset.w].xyzw, IN.position.xyzw);
+    r0.w = dot(WindMatrices[3 + offset.w].xyzw, IN.position.xyzw);
     r0.xyzw = r0.xyzw - IN.position.xyzw;
     r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
     r2.y = dot(IN.binormal.xyz, LightDirection[0].xyz);

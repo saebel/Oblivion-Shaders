@@ -61,7 +61,8 @@
     r0.xyz = (0 < r0.xyz ? 1.0 : 0.0);
     r1.w = (r0.w * PI * 2) - PI;
     r3.xyz = lerp(r4.xyz, r5.xyz, r0.xyz);
-    r0.x = cos(r1.w); r0.y = sin(r1.w);
+    r0.x = cos(r1.w);
+    r0.y = sin(r1.w);
     r4.xyz = r3.xyz - EyePosition.xyz;
     r6.xyz = r0.xxy * const_5.wxw;
     r5.xyz = normalize(-r4.xyz);

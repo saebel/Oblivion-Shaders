@@ -5,10 +5,10 @@
 //
 //
 // Parameters:
-
+//
 sampler2D DiffuseMap;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -17,12 +17,11 @@ sampler2D DiffuseMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float3 texcoord_1 : TEXCOORD1;			// partial precision
+    float2 DiffuseUV : TEXCOORD0;			// partial precision
+    float3 texcoord_1 : TEXCOORD1;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -34,12 +33,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
     float4 r0;
 
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);			// partial precision
-    r0.xyz = r0.xyz * IN.texcoord_1.xyz;			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r0.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);			// partial precision
+    OUT.color_0.a = r0.w;			// partial precision
+    OUT.color_0.rgb = r0.xyz * IN.texcoord_1.xyz;			// partial precision
 
     return OUT;
 };

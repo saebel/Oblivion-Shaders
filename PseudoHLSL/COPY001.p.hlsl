@@ -4,24 +4,24 @@
 //   vsa shaderdump19/COPY001.pso /Fcshaderdump19/COPY001.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
-
-sampler2D Src0;
-
-
+//
+sampler2D ScreenSpace;
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Src0         texture_0       1
+//   ScreenSpace         texture_0       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -37,7 +37,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     float4 r0;
 
-    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(ScreenSpace, IN.ScreenOffset.xy);
     OUT.color_0.rgba = (r0.xyzx * const_0.xxxy) + const_0.zzzx;
 
     return OUT;

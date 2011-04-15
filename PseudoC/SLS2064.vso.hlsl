@@ -46,7 +46,7 @@
     r0.w = min(r0.w, 1);
     OUT.texcoord_2.w = 1 - r0.w;
     r0.w = (1.0 / 512);
-    r0.xy = (IN.texcoord_0 * r0.w) + ShadowProjTransform.xy;
+    r0.xy = (IN.texcoord_0.xy * r0.w) + ShadowProjTransform.xy;
     OUT.texcoord_0.xy = r0.xy;
     OUT.texcoord_1.xy = r0.xy;
     OUT.texcoord_2.xyz = 1;

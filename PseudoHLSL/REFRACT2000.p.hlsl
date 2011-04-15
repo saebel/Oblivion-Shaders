@@ -4,27 +4,28 @@
 //   vsa shaderdump19/REFRACT2000.pso /Fcshaderdump19/REFRACT2000.pso.dis
 //
 //
+#define	OverlaySpace	Src1
+#define	ScreenSpace	Src0
 // Parameters:
-
-sampler2D Src0;
-sampler2D Src1;
-
-
+//
+sampler2D ScreenSpace;
+sampler2D OverlaySpace;
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Src0         texture_0       1
-//   Src1         texture_1       1
+//   ScreenSpace         texture_0       1
+//   OverlaySpace         texture_1       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
+    float2 ScreenOffset : TEXCOORD0;
+    float2 OverlayOffset : TEXCOORD1;
 };
 
 struct PS_OUTPUT {
@@ -36,17 +37,25 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 2, 0, 1};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
+    float1 q1;
     float4 r0;
     float2 r1;
+    float4 t0;
+    float4 t2;
 
-    r0.xyzw = tex2D(Src1, IN.texcoord_1.xy);
-    r1.x = (2 * -(r0.z * (r0.x - 0.5))) + IN.texcoord_0.x;
-    r1.y = (2 * (r0.z * (r0.y - 0.5))) + IN.texcoord_0.y;	// [0,1] to [-1,+1]
-    r0.xyzw = tex2D(Src1, r1.xy);
-    r0.xyzw = lerp(tex2D(Src0, r1.xy), (tex2D(Src0, IN.texcoord_0.xy)), ((r0.w * r0.w) <= 0.0 ? 1 : 0));
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyz = tex2D(OverlaySpace, IN.OverlayOffset.xy);
+    t0.xyzw = tex2D(ScreenSpace, IN.ScreenOffset.xy);
+    q1.x = r0.z * (r0.y - 0.5);
+    r1.x = IN.ScreenOffset.x - (2 * (r0.z * (r0.x - 0.5)));	// [0,1] to [-1,+1]
+    r1.y = (2 * q1.x) + IN.ScreenOffset.y;
+    r0.xyz = tex2D(OverlaySpace, r1.xy);
+    t2.xyzw = tex2D(ScreenSpace, r1.xy);
+    r0.xyzw = (q1.x == 0 ? t2.xyzw : t0.xyzw);
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = r0.xyz;
 
     return OUT;
 };

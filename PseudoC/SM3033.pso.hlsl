@@ -4,12 +4,12 @@
 //   psa shaderdump19/SM3033.pso /Fcshaderdump19/SM3033.pso.dis
 //
     const float4 const_0 = {-0.5, 0.5, 0, 0};
-    float3 IN.texcoord_0 : TEXCOORD0;			// partial precision
-    float IN.texcoord_1 : TEXCOORD1;			// partial precision
-    r0.xyz = IN.texcoord_0.xyz - 0.5;			// partial precision
-    r1.xyz = 2 * r0.xyz;			// partial precision
-    r0.xyz = normalize(r1.xyz);			// partial precision
-    OUT.color_0.rgb = (0.5 * r0.xyz) + 0.5;			// partial precision
-    OUT.color_0.a = IN.texcoord_1.x;			// partial precision
+    float3 IN.texcoord_0 : TEXCOORD0;			// partial precision
+    float IN.texcoord_1 : TEXCOORD1;			// partial precision
+    r0.xyz = IN.texcoord_0.xyz - 0.5;			// partial precision
+    r1.xyz = 2 * r0.xyz;			// partial precision
+    r0.xyz = normalize(r1.xyz);			// partial precision
+    OUT.color_0.rgb = (0.5 * r0.xyz) + 0.5;			// partial precision
+    OUT.color_0.a = IN.texcoord_1.x;			// partial precision
 
 // approximately 7 instruction slots used

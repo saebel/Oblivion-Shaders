@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float2 BlendRadius;
 float4 DeepColor;
 sampler2D DepthMap;
@@ -23,8 +23,8 @@ float4 ShallowColor;
 float4 SunColor;
 float4 SunDir;
 float4 VarAmounts;
-
-
+//
+//
 // Registers:
 //
 //   Name            Reg   Size
@@ -49,7 +49,6 @@ float4 VarAmounts;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
@@ -72,65 +71,76 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_4 = {-0.5, 0.1, 0.0002, 0.25};
-    const float4 const_13 = {2496, 4, -0.2, -0.55};
-    const float4 const_14 = {(1.0 / 0.35), 1, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const float4 const_15 = {2, -1, 0, -(1.0 / 8192)};
 
+    float1 depth34;
+    float1 eye23;
+    float3 eye7;
+    float3 noxel0;
+    float1 q13;
+    float1 q14;
+    float1 q15;
+    float1 q16;
+    float1 q18;
+    float1 q19;
+    float2 q21;
+    float3 q40;
+    float3 q41;
+    float1 q5;
+    float1 q52;
+    float1 q53;
+    float4 q55;
+    float1 q6;
     float4 r0;
     float4 r1;
-    float4 r2;
-    float4 r3;
-    float4 r4;
-    float4 r5;
-    float4 r6;
-    float4 r7;
-    float4 r9;
+    float3 r2;
+    float3 r3;
+    float3 r4;
+    float2 r5;
+    float3 t56;
+    float3 t57;
 
-    r0.xy = EyePos.xy - IN.texcoord_1.xy;
-    r3.w = sqrt(dot(IN.texcoord_6.xy - 0.5, r0.xy) + 0);
-    r4.w = length(r0.xy);
     r0.xyzw = tex2D(DisplacementMap, IN.texcoord_6.xy);
-    r4.x = IN.texcoord_7.z + Scroll.x;
-    r4.y = IN.texcoord_7.w + Scroll.y;
-    r1.xyzw = tex2D(NormalMap, r4.xy);
-    r2.w = saturate(1 - (r4.w / 8192));
-    r2.xyz = (2 * r1.xyz) - 1;
-    r2.xy = (r2.w * r2.w) * r2.xy;
-    r0.xyz = lerp((2 * r0.xyz) - 1, r2.xyz, (-(saturate(max(0.1, (2 * r3.w) / BlendRadius.x)) - 1)) * BlendRadius.y);
-    r1.w = 1;
-    r3.xyz = normalize(r0.xyz);
-    r1.xy = (((saturate(r4.w * 0.0002) * 2496) + 4) * r3.xy) + IN.texcoord_0.xy;
-    r1.z = IN.texcoord_0.z;
-    r0.w = dot(IN.texcoord_5.xyzw, r1.xyzw);
-    r0.x = dot(IN.texcoord_2.xyzw, r1.xyzw);
-    r0.y = dot(IN.texcoord_3.xyzw, r1.xyzw);
-    r0.z = dot(IN.texcoord_4.xyzw, r1.xyzw);
-    r1.xyzw = tex2D(DetailMap, (0.1 * r3.xy) + r4.xy);
-    r6.w = r2.w * VarAmounts.w;
-    r2.xyzw = tex2Dproj(ReflectionMap, r0);			// partial precision
-    r4.x = IN.texcoord_6.z;
-    r4.y = IN.texcoord_6.w;
-    r0.xyzw = tex2D(DepthMap, r4.xy);
-    r4.xyz = EyePos.xyz - IN.texcoord_1.xyz;
-    r0.w = 1.0 / length(r4.xyz);
+    depth34.x = tex2D(DepthMap, IN.texcoord_6.zw);
+    eye23.x = length(EyePos.xy - IN.texcoord_1.xy);
+    q6.x = saturate(1 - (eye23.x / 8192));
     r5.xy = const_15.xy;
-    r3.w = (r5.x * -r3.w) + BlendRadius.x;
-    r4.xyz = r4.xyz * r0.w;
-    r5.x = saturate(dot(r4.xyz, r3.xyz));
-    r1.w = 1 - r5.x;
-    r2.w = r1.w * r1.w;
-    r7.w = pow(abs(saturate(dot((-(2 * dot(-r4.xyz, r3.xyz)) * r3.xyz) - r4.xyz, SunDir.xyz))), VarAmounts.x);
-    r9.w = ((FresnelRI.x - r5.y) * (r1.w * (r2.w * r2.w))) + FresnelRI.x;
-    r3.xyz = lerp((VarAmounts.y * (r2.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, ((r5.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb), r9.w);
-    r2.xyz = lerp(r1.xyz, ((saturate(SunDir.w) * (r7.w * SunColor.rgb)) + r3.xyz), r6.w);
-    r1.xyz = ((1 - saturate((FogParam.x - (1.0 / r0.w)) / FogParam.y)) * (FogColor.rgb - r2.xyz)) + r2.xyz;
-    r4.w = max(VarAmounts.z, r9.w);
-    r4.w = ((r0.x - 1) >= 0.0 ? (((1 - r0.x) * (0.25 - r4.w)) + r4.w) : r4.w);
-    r5.w = 1 - ((r0.x - 0.2) / 0.35);
-    r0.w = ((r0.x - 0.2) >= 0.0 ? 0 : ((r0.x - 0.55) >= 0.0 ? (r4.w * ((r5.w * -(r5.w * r5.w)) + 1)) : r4.w));
-    r1.w = (r3.w >= 0.0 ? 0 : r0.w);
-    OUT.color_0.rgba = r0.x <= 0.0 ? r1.xyzw : 0;
+    q21.xy = IN.texcoord_7.zw + Scroll.xy;
+    noxel0.xyz = tex2D(NormalMap, q21.xy);
+    r2.xyz = expand(noxel0.xyz);	// [0,1] to [-1,+1]
+    r2.xy = sqr(q6.x) * r2.xy;
+    r1.z = IN.texcoord_0.z;
+    eye7.xyz = EyePos.xyz - IN.texcoord_1.xyz;
+    q5.x = 1 - saturate(max(0.1, (2 * length(IN.texcoord_6.xy - 0.5)) / BlendRadius.x));
+    r3.xyz = normalize(lerp(expand(r0.xyz), r2.xyz, q5.x * BlendRadius.y));
+    t57.xyz = tex2D(DetailMap, (0.1 * r3.xy) + q21.xy);
+    q53.x = shades(normalize(eye7.xyz), r3.xyz);
+    q52.x = pow(abs(shades(reflect(normalize(eye7.xyz), r3.xyz), SunDir.xyz)), VarAmounts.x);
+    q15.x = 1 - saturate((FogParam.x - length(eye7.xyz)) / FogParam.y);
+    q18.x = 1 - ((depth34.x - 0.2) / 0.35);
+    r1.w = 1;
+    r4.xyz = (q53.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
+    q13.x = ((FresnelRI.x - r5.y) * ((1 - q53.x) * sqr(sqr(1 - q53.x)))) + FresnelRI.x;
+    q14.x = max(VarAmounts.z, q13.x);
+    q16.x = (depth34.x >= 1 ? q14.x : (((1 - depth34.x) * (0.25 - q14.x)) + q14.x));
+    q19.x = (depth34.x >= 0.2 ? (depth34.x >= 0.55 ? q16.x : (q16.x * (1 - (q18.x * sqr(q18.x))))) : 0);
+    r1.xy = (((saturate(eye23.x * 0.0002) * 2496) + 4) * r3.xy) + IN.texcoord_0.xy;
+    q55.xyzw = mul(float4x4(IN.texcoord_2.xyzw, IN.texcoord_3.xyzw, IN.texcoord_4.xyzw, IN.texcoord_5.xyzw), r1.xyzw);
+    t56.xyz = tex2Dproj(ReflectionMap, q55.xyzw);			// partial precision
+    q40.xyz = lerp((VarAmounts.y * (t56.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, r4.xyz, q13.x);
+    q41.xyz = lerp(t57.xyz, (saturate(SunDir.w) * (q52.x * SunColor.rgb)) + q40.xyz, q6.x * VarAmounts.w);
+    r1.xyz = (q15.x * (FogColor.rgb - q41.xyz)) + q41.xyz;
+    r1.w = ((BlendRadius.x - (r5.x * length(IN.texcoord_6.xy - 0.5))) >= 0.0 ? q19.x : 0);
+    r0.xyzw = (depth34.x <= 0.0 ? 0 : r1.xyzw);
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = r0.xyz;
 
     return OUT;
 };

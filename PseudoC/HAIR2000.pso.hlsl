@@ -46,7 +46,7 @@
     r0.xyzw = tex2D(HeightMap, IN.texcoord_0.xy);
     r0.w = (r0.x * 0.04) - 0.02;
     r0.xy = IN.texcoord_0.xy;
-    r1.xy = (IN.texcoord_1 * r0.w) + r0.xy;
+    r1.xy = (IN.texcoord_1.xy * r0.w) + r0.xy;
     r0.xyzw = tex2D(NormalMap, r1.xy);
     r0.xyz = r0.xyz - 0.5;
     r0.xyz = 2 * r0.xyz;
@@ -63,7 +63,7 @@
     r4.w = 1 - r4.w;
     r5.w = r4.w * r4.w;
     r6.w = saturate((r4.w * r5.w) + r6.w);
-    r2.xyz = saturate((r6.w * PSLightColor[0]) + IN.color_0.rgb);
+    r2.xyz = saturate((r6.w * PSLightColor[0].rgb) + IN.color_0.rgb);
     r2.xyz = saturate((r4.w * r5.w) + r2.xyz);
     r2.xyz = r2.xyz * PSLightColor[0].rgb;
     r2.xyz = (IN.color_0.a * r2.xyz) + AmbientColor.rgb;
@@ -85,17 +85,17 @@
     r3.w = r2.w * IN.color_0.a;
     r1.xyz = r5.xyz * r1.xyz;
     r3.xyz = r3.xyz + AmbientColor.rgb;
-    r4.w = (r1.x <= 0.0 ? 1 : 0);
+    r4.w = (r1.x <= 0.0 ? 0 : 1);
     r0.xyz = r0.xyz * r4.xyz;
-    r5.w = (r1.y <= 0.0 ? 1 : 0);
+    r5.w = (r1.y <= 0.0 ? 0 : 1);
     r3.xyz = r3.xyz * r0.xyz;
-    r2.w = (r1.z <= 0.0 ? 1 : 0);
+    r2.w = (r1.z <= 0.0 ? 0 : 1);
     r0.xyz = lerp(r2.xyz, r3.xyz, r1.w);
     r1.w = r4.w * r5.w;
     r1.xyz = (r3.w * r1.xyz) + r0.xyz;
     r1.w = r2.w * r1.w;
     r0.w = r0.w * AmbientColor.a;
-    r0.xyz = (r1.w <= 0.0 ? r1.xyz : r0.xyz);
+    r0.xyz = (r1.w <= 0.0 ? r0.xyz : r1.xyz);
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 57 instruction slots used (6 texture, 51 arithmetic)

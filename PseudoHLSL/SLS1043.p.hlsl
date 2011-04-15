@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 sampler2D BaseMap;
 sampler2D GlowMap;
 float4 PSLightColor[4];
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -23,12 +23,11 @@ float4 PSLightColor[4];
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
+    float2 BaseUV : TEXCOORD0;
+    float2 GlowUV : TEXCOORD1;
     float3 texcoord_2 : TEXCOORD2;
     float4 color_0 : COLOR0;
     float4 color_1 : COLOR1;
@@ -43,15 +42,15 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
+    float1 q0;
     float4 r0;
     float4 r1;
 
-    r0.xyzw = tex2D(GlowMap, IN.texcoord_1.xy);
-    r0.w = dot(PSLightColor[1].rgba, IN.color_0.rgba) + dot(PSLightColor[2].rgba, IN.color_1.rgba);
-    r1.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
-    r0.xyz = r0.xyz * (r1.xyz * IN.texcoord_2.xyz);
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyzw = tex2D(GlowMap, IN.GlowUV.xy);
+    r1.xyzw = tex2D(BaseMap, IN.BaseUV.xy);
+    q0.x = dot(PSLightColor[1].rgba, IN.color_0.rgba) + dot(PSLightColor[2].rgba, IN.color_1.rgba);
+    OUT.color_0.rgb = r0.xyz * (r1.xyz * IN.texcoord_2.xyz);
+    OUT.color_0.a = q0.x;
 
     return OUT;
 };

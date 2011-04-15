@@ -19,7 +19,7 @@
 //
 
     IN.texcoord_0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    texcoord IN.texcoord_1
+    float4 texcoord_1 : TEXCOORD1;
     r0.xyz = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_1.xyz) - 0.5)));
     r0.xyz = r0.xyz * PSLightColor[0].rgb;
   + r0.w = PSLightColor[0].a;

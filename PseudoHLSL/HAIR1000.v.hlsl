@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -24,7 +24,6 @@ row_major float4x4 ModelViewProj;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -34,6 +33,8 @@ struct VS_INPUT {
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
     float4 color_0 : COLOR0;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -53,27 +54,16 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     const int4 const_4 = {0, 1, 0, 0};
 
-    float3 r0;
-    float3 r1;
-    float3 r2;
+    float3 eye5;
 
-    r2.xyz = normalize(normalize(EyePosition.xyz - IN.position.xyz) + LightDirection[0].xyz);
-    r0.x = dot(IN.tangent.xyz, r2.xyz);
-    r0.y = dot(IN.binormal.xyz, r2.xyz);
-    r0.z = dot(IN.normal.xyz, r2.xyz);
-    r1.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r1.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r1.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = normalize(r1.xyz);
-    OUT.texcoord_3.xyz = normalize(r0.xyz);
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
-    OUT.texcoord_1.xy = IN.texcoord_0.xy;
+    eye5.xyz = mul(TanSpaceProj, normalize(normalize(EyePosition.xyz - IN.position.xyz) + LightDirection[0].xyz));
     OUT.color_0.rgba = const_4.xxxy;
     OUT.color_1.rgba = IN.color_0.rgba;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = IN.texcoord_0.xy;
+    OUT.texcoord_2.xyz = normalize(mul(TanSpaceProj, LightDirection[0].xyz));
+    OUT.texcoord_3.xyz = normalize(eye5.xyz);
 
     return OUT;
 };

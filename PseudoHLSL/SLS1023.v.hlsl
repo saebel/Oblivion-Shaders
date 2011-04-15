@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float3 LightDirection[3];
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -23,7 +23,6 @@ row_major float4x4 ModelViewProj;
 //   LightPosition[0]  const_16       1
 //   LightPosition[1]  const_17       1
 //
-
 
 
 // Structures:
@@ -47,20 +46,19 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const int4 const_4 = {0, 1, 0, 0};
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
-    float4 r0;
-    float4 r2;
+    float3 lit0;
+    float1 lit3;
 
-    r0.xyz = LightPosition[1].xyz - IN.position.xyz;
-    r2.w = 1.0 / length(r0.xyz);
-    r0.w = saturate((1.0 / r2.w) / LightPosition[1].w);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.color_0.rgb = saturate(dot(LightDirection[0].xyz, IN.normal.xyz)) * IN.color_0.rgb;
-    OUT.color_1.rgb = ((1.0 - (r0.w * r0.w)) * dot(r0.xyz * r2.w, IN.normal.xyz)) * IN.color_0.rgb;
+    OUT.color_0.rgb = shades(LightDirection[0].xyz, IN.normal.xyz) * IN.color_0.rgb;
+    lit0.xyz = LightPosition[1].xyz - IN.position.xyz;
+    lit3.x = saturate(length(lit0.xyz) / LightPosition[1].w);
+    OUT.color_1.rgb = ((1.0 - sqr(lit3.x)) * dot(normalize(lit0.xyz), IN.normal.xyz)) * IN.color_0.rgb;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;

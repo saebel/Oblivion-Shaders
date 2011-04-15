@@ -4,30 +4,31 @@
 //   vsa shaderdump19/MAP000.pso /Fcshaderdump19/MAP000.pso.dis
 //
 //
+#define	OverlaySpace	Src1
+#define	ScreenSpace	Src0
 // Parameters:
-
+//
 float4 CameraPos;
-sampler2D Src0;
-sampler2D Src1;
+sampler2D ScreenSpace;
+sampler2D OverlaySpace;
 sampler2D Src2;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   CameraPos    const_1       1
-//   Src0         texture_0       1
-//   Src1         texture_1       1
+//   ScreenSpace         texture_0       1
+//   OverlaySpace         texture_1       1
 //   Src2         texture_2       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 OverlayOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -39,48 +40,59 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const float4 const_0 = {0.2, 0.2, 0.15, 0.1};
-    const float4 const_2 = {0.5, 0.25, 0.75, 0};
     const float4 const_3 = {0.458999991, 0.231000006, 0.128999993, 0};
     const int4 const_4 = {1, -1, 2, 10};
 
+    float4 q5;
+    float3 q8;
     float4 r0;
-    float4 r1;
+    float2 r1;
     float4 r2;
-    float4 r3;
-    float4 r4;
-    float4 r5;
-    float4 r6;
-    float4 r7;
-    float4 r8;
-    float4 r9;
+    float2 r3;
+    float2 r4;
+    float2 r5;
+    float2 r6;
+    float2 r7;
+    float4 t0;
+    float3 t1;
+    float4 t10;
+    float4 t11;
+    float4 t2;
+    float4 t3;
+    float4 t4;
+    float4 t6;
+    float4 t9;
 
-    r4.xy = (const_4.xy * CameraPos.xy) + IN.texcoord_0.xy;
-    r0.x = r4.x;
-    r0.y = IN.texcoord_0.y;
-    r2.xyzw = tex2D(Src0, r0.xy);
-    r0.xyzw = tex2D(Src2, IN.texcoord_0.xy);
-    r0.w = 1;
-    r5.xy = IN.texcoord_0.xy - CameraPos.xy;
-    r1.x = r5.x;
-    r1.y = IN.texcoord_0.y;
+    t3.xyzw = tex2D(ScreenSpace, IN.OverlayOffset.xy + CameraPos.xy);
+    r5.xy = IN.OverlayOffset.xy - CameraPos.xy;
+    t11.xyzw = tex2D(ScreenSpace, r5.xy);
     r6.y = r5.y;
-    r8.xyzw = tex2D(Src0, r5.xy);
-    r5.xyzw = (2 * (tex2D(Src0, r1.xy))) + r8.xyzw;
-    r1.xyzw = tex2D(Src1, IN.texcoord_0.xy);
-    r7.xy = (-const_4.xy * CameraPos.xy) + IN.texcoord_0.xy;
+    r1.x = r5.x;
+    r7.xy = IN.OverlayOffset.xy - (const_4.xy * CameraPos.xy);
+    t4.xyzw = tex2D(ScreenSpace, r7.xy);
     r3.y = r7.y;
-    r6.x = IN.texcoord_0.x;
-    r9.xyzw = (2 * (tex2D(Src0, r6.xy))) + r8.xyzw;
-    r6.xyzw = tex2D(Src0, r4.xy);
-    r4.xyzw = tex2D(Src0, IN.texcoord_0.xy + CameraPos.xy);
-    r7.xyzw = tex2D(Src0, r7.xy);
-    r2.xyzw = ((2 * -r2.xyzw) + ((r7.xyzw + r5.xyzw) - r6.xyzw)) - r4.xyzw;
-    r3.x = IN.texcoord_0.x;
-    r3.xyzw = ((2 * -(tex2D(Src0, r3.xy))) + ((r6.xyzw + r9.xyzw) - r7.xyzw)) - r4.xyzw;
-    r2.xyzw = (r2.xyzw * r2.xyzw) + (r3.xyzw * r3.xyzw);
-    r0.xyz = lerp(const_3.xyz, ((0.75 * r0.xyz) + (r1.xyz * 0.25)), min(dot(const_0.xyz, r2.xyz) + min(r2.w * 10, 0.1), 0.5));
-    OUT.color_0.rgba = r0.xyzw;
+    r6.x = IN.OverlayOffset.x;
+    t2.xyzw = tex2D(ScreenSpace, r6.xy);
+    r3.x = IN.OverlayOffset.x;
+    t6.xyzw = tex2D(ScreenSpace, r3.xy);
+    r1.y = IN.OverlayOffset.y;
+    t0.xyzw = tex2D(ScreenSpace, r1.xy);
+    r0.y = IN.OverlayOffset.y;
+    r4.xy = (const_4.xy * CameraPos.xy) + IN.OverlayOffset.xy;
+    t10.xyzw = tex2D(ScreenSpace, r4.xy);
+    r0.x = r4.x;
+    t9.xyzw = tex2D(ScreenSpace, r0.xy);
+    r0.xyzw = tex2D(Src2, IN.OverlayOffset.xy);
+    q5.xyzw = (((t4.xyzw + ((2 * t0.xyzw) + t11.xyzw)) - t10.xyzw) - (2 * t9.xyzw)) - t3.xyzw;
+    r2.xyzw = sqr(q5.xyzw) + sqr((((t10.xyzw + ((2 * t2.xyzw) + t11.xyzw)) - t4.xyzw) - (2 * t6.xyzw)) - t3.xyzw);
+    t1.xyz = tex2D(OverlaySpace, IN.OverlayOffset.xy);
+    q8.xyz = lerp(const_3.xyz, (0.75 * r0.xyz) + (t1.xyz / 4), min(dot(const_0.xyz, r2.xyz) + min(r2.w * 10, 0.1), 0.5));
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = q8.xyz;
 
     return OUT;
 };

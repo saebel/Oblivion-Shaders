@@ -16,7 +16,14 @@
 //   Name           Reg   Size
 //   -------------- ----- ----
 //   PSNumDecals    c6       1
-//   PSDecalOffsets c9       8
+//   PSDecalOffsets[0] c9        1
+//   PSDecalOffsets[1] c10        1
+//   PSDecalOffsets[2] c11        1
+//   PSDecalOffsets[3] c12        1
+//   PSDecalOffsets[4] c13        1
+//   PSDecalOffsets[5] c14        1
+//   PSDecalOffsets[6] c15        1
+//   PSDecalOffsets[7] c16        1
 //   DecalMap       s1       1
 //
 

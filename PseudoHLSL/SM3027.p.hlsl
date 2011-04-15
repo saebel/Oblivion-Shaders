@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D BaseMap;
 float4 LightData;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -19,11 +19,11 @@ float4 LightData;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
+    float2 BaseUV : TEXCOORD0;			// partial precision
+    float3 texcoord_1 : TEXCOORD1;	// only .z			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -35,13 +35,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
     float4 r0;
 
-    texcoord_1 IN.input_1.z;			// partial precision
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
-    OUT.color_0.rgb = IN.input_1.z / LightData.w;			// partial precision
-    OUT.color_0.a = r0.w;			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
+    OUT.color_0.a = r0.w;			// partial precision
+    OUT.color_0.rgb = IN.texcoord_1.z / LightData.w;			// partial precision
 
     return OUT;
 };

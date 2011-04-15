@@ -58,6 +58,6 @@
     OUT.texcoord_5.xyzw = ModelViewProj[3].xyzw;
     r0.zw = r0.zw * 8.13802108e-005;
     OUT.texcoord_6.xy = IN.texcoord_0.xy;
-    OUT.texcoord_6.zw = (const_12.xyxy * r0.zw) + const_12.xyzx;
+    OUT.texcoord_6.zw = (const_12.xy * r0.zw) + const_12.zx;
 
 // approximately 25 instruction slots used

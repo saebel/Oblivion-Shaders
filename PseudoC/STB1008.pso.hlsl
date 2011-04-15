@@ -26,9 +26,9 @@
 
     const int4 const_0 = {1, 0, 0, 0};
     IN.texcoord_0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    IN.texcoord_1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    IN.texcoord_2.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    IN.texcoord_3.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
+    IN.texcoord_1.xyzw = tex2D(AttMapXY, IN.texcoord_1.xy);
+    IN.texcoord_2.xyzw = tex2D(AttMapZ, IN.texcoord_2.xy);
+    IN.texcoord_3.xyzw = texCUBE(NormalCubeMap, IN.texcoord_3.xyz);
     r0.xyzw = saturate(dot(2 * ((IN.texcoord_0.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
     r0.w = r0.w * r0.w;
     r0.w = r0.w * r0.w;

@@ -4,12 +4,11 @@
 //   vsa shaderdump19/SLS2073.pso /Fcshaderdump19/SLS2073.pso.dis
 //
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float3 texcoord_0 : TEXCOORD0;			// partial precision
-    float texcoord_1 : TEXCOORD1;			// partial precision
+    float3 texcoord_0 : TEXCOORD0;			// partial precision
+    float texcoord_1 : TEXCOORD1;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -21,13 +20,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0.5, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    float4 r0;
-
-    r0.w = IN.texcoord_1.x;			// partial precision
-    r0.xyz = (0.5 * normalize(2 * (IN.texcoord_0.xyz - 0.5))) + 0.5;			// partial precision	// [0,1] to [-1,+1]
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    OUT.color_0.a = IN.texcoord_1.x;			// partial precision
+    OUT.color_0.rgb = compress(normalize(expand(IN.texcoord_0.xyz)));			// partial precision
 
     return OUT;
 };

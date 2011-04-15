@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float4 AlphaTestRef;
 sampler2D AttMap;
 sampler2D DiffuseMap;
 float4 PointLightColor;
-
-
+//
+//
 // Registers:
 //
 //   Name            Reg   Size
@@ -23,14 +23,13 @@ float4 PointLightColor;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float3 texcoord_4 : TEXCOORD4_centroid;			// partial precision
-    float4 texcoord_5 : TEXCOORD5_centroid;			// partial precision
-    float4 texcoord_1 : TEXCOORD1;			// partial precision
+    float2 DiffuseUV : TEXCOORD0;			// partial precision
+    float3 texcoord_4 : TEXCOORD4_centroid;			// partial precision
+    float4 texcoord_5 : TEXCOORD5_centroid;			// partial precision
+    float4 texcoord_1 : TEXCOORD1;			// partial precision
     float4 color_0 : COLOR0;
 };
 
@@ -43,21 +42,17 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {0, 1, 0.4, 0};
-
+    float1 att0;
+    float1 att1;
+    float3 q2;
     float4 r0;
-    float4 r1;
-    float4 r2;
 
-    r0.x = IN.texcoord_1.z;			// partial precision
-    r0.y = IN.texcoord_1.w;			// partial precision
-    r1.xyzw = tex2D(AttMap, r0.xy);			// partial precision
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);			// partial precision
-    r0.w = ((AlphaTestRef.x - r0.w) >= 0.0 ? 1 : 0) * IN.texcoord_5.w;			// partial precision
-    r2.xyzw = tex2D(AttMap, IN.texcoord_1.xy);			// partial precision
-    r1.xyz = (saturate((1 - r2.x) - r1.x) * (0.4 * PointLightColor.rgb)) + (IN.texcoord_5.xyz + IN.texcoord_4.xyz);			// partial precision
-    r0.xyz = (r0.xyz * r1.xyz) + (((-r0.xyz * r1.xyz) + IN.color_0.rgb) * IN.color_0.a);			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r0.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);			// partial precision
+    att1.x = tex2D(AttMap, IN.texcoord_1.zw);			// partial precision
+    att0.x = tex2D(AttMap, IN.texcoord_1.xy);			// partial precision
+    q2.xyz = (saturate((1 - att0.x) - att1.x) * (0.4 * PointLightColor.rgb)) + (IN.texcoord_5.xyz + IN.texcoord_4.xyz);			// partial precision
+    OUT.color_0.a = (AlphaTestRef.x >= r0.w ? 0 : IN.texcoord_5.w);			// partial precision
+    OUT.color_0.rgb = (r0.xyz * q2.xyz) + ((IN.color_0.rgb - (r0.xyz * q2.xyz)) * IN.color_0.a);			// partial precision
 
     return OUT;
 };

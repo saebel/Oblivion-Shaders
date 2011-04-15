@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 sampler2D BaseMap;
 float4 LightColor;
 float4 LightData;
 sampler2D ShadowMap;
 float4 ToggleADTS;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -25,13 +25,13 @@ float4 ToggleADTS;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float3 input_1 : TEXCOORD6_centroid;
-    float4 input_2 : TEXCOORD1_centroid;			// partial precision
+    float2 BaseUV : TEXCOORD0;			// partial precision
+    float3 texcoord_6 : TEXCOORD6_centroid;
+    float4 texcoord_1 : TEXCOORD1_centroid;			// partial precision
+    float4 texcoord_2 : TEXCOORD2_centroid;	// only .w			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -43,97 +43,103 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const float4 const_0 = {0.5, 1, 15, 0};
     const float4 const_1 = {-(1.0 / 256), 1, -1, 0};
-    const float4 const_2 = {(1.0 / 15), 0.6, 0, 0};
     const float4 const_3 = {0.01, 0.02, -0.01, -0.02};
 
+    float1 l0;
+    float1 q2;
+    float1 q3;
+    float1 q4;
     float4 r0;
     float4 r1;
     float4 r2;
     float4 r3;
-    float4 r4;
+    float3 r4;
     float4 r5;
-    float4 r6;
 
-    centroid texcoord_2 IN.input_3.w;			// partial precision
-    r0.xyz = IN.input_1.xyz - LightData.xyz;
     r5.xyw = const_0.xyw;
-    r5.z = saturate((length(r0.xyz) / 1.0) / (r5.x * LightData.w));
-    r0.xy = (0.5 * (IN.input_2.xy / IN.input_2.w)) + 0.5;			// partial precision	// [-1,+1] to [0,1]
-    r0.zw = 1 - r0.y;			// partial precision
-    r1.xyzw = tex2D(ShadowMap, saturate(r0.xzzw >= 0.0 ? 0 : r0.xwzw));
-    r6.w = IN.input_2.z / LightData.w;
-    r0.w = ((-(1.0 / 256) - (r1.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r3.w = 1.0 / ((r5.z <= 0.0 ? (1 - r5.z) : 1) * 15);			// partial precision
-    r3.xy = (const_1.yz * r0.xy) + const_1.wy;			// partial precision
-    r1.xyzw = max((r3.w * const_3.xxyy) + r3.xyxy, 0);			// partial precision
-    r2.xyzw = tex2D(ShadowMap, saturate(r1.xy));
-    r0.w = r0.w + ((-(1.0 / 256) - (r2.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r1.xyzw = tex2D(ShadowMap, saturate(r1.zwzw));
-    r0.z = r1.x - r6.w;
-    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 1 : 0);			// partial precision
-    r1.xyzw = max((r3.w * const_3.zxwy) + r3.xyxy, 0);			// partial precision
-    r2.xyzw = tex2D(ShadowMap, saturate(r1.xy));
-    r0.z = r2.x - r6.w;
-    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 1 : 0);			// partial precision
-    r1.xyzw = tex2D(ShadowMap, saturate(r1.zwzw));
-    r0.z = r1.x - r6.w;
-    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 1 : 0);			// partial precision
-    r1.xyzw = max((r3.w * const_3.xzyw) + r3.xyxy, 0);			// partial precision
-    r2.xyzw = tex2D(ShadowMap, saturate(r1.xy));
-    r0.z = r2.x - r6.w;
-    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 1 : 0);			// partial precision
-    r1.xyzw = tex2D(ShadowMap, saturate(r1.zwzw));
-    r0.z = r1.x - r6.w;
-    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 1 : 0);			// partial precision
-    r1.xyzw = max((r3.w * const_3.zzww) + r3.xyxy, 0);			// partial precision
-    r2.xyzw = tex2D(ShadowMap, saturate(r1.xy));
-    r0.w = r0.w + ((-(1.0 / 256) - (r2.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r1.xyzw = tex2D(ShadowMap, saturate(r1.zwzw));
-    r0.z = r0.w + ((-(1.0 / 256) - (r1.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r0.w = r3.y;			// partial precision
-    r1.xyzw = r3.w * const_3.xyzw;			// partial precision
-    r2.x = saturate(r0.x + r1.w);			// partial precision
-    r2.y = saturate(r0.w);			// partial precision
-    r6.z = 1 - r0.y;			// partial precision
-    r3.zw = r6.z + r1.xy;			// partial precision
-    r4.xyzw = tex2D(ShadowMap, r2.xy);
-    r2.xyzw = max(r3.xzxw, 0);			// partial precision
-    r5.x = r4.x - r6.w;
-    r4.xyzw = tex2D(ShadowMap, saturate(r2.xy));
-    r0.z = r0.z + ((-(1.0 / 256) - (r4.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r2.xyzw = tex2D(ShadowMap, saturate(r2.zwzw));
-    r0.z = r0.z + ((-(1.0 / 256) - (r2.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r3.y = r3.x;			// partial precision
-    r3.xz = r6.z + r1.zy;			// partial precision
-    r2.xyzw = max(r3.yxyz, 0);			// partial precision
-    r3.xyzw = tex2D(ShadowMap, saturate(r2.xy));
-    r2.xyzw = tex2D(ShadowMap, saturate(r2.zwzw));
-    r2.w = r0.z + ((-(1.0 / 256) - (r3.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r0.xyz = r0.x + r1.zyx;			// partial precision
-    r1.xyzw = max(r0.zwyw, 0);			// partial precision
-    r0.y = r2.w + ((-(1.0 / 256) - (r2.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r2.xyzw = tex2D(ShadowMap, saturate(r1.xy));
-    r1.xyzw = tex2D(ShadowMap, saturate(r1.zwzw));
-    r0.z = -(1.0 / 256) - (r1.x - r6.w);
-    r1.w = r0.y + ((-(1.0 / 256) - (r2.x - r6.w)) >= 0.0 ? 1 : 0);			// partial precision
-    r1.z = (r0.z >= 0.0 ? 1 : 0);			// partial precision
-    r0.xyzw = tex2D(ShadowMap, saturate(r0.xwzw));
-    r0.w = ((r1.w + r1.z) + ((-(1.0 / 256) - (r0.x - r6.w)) >= 0.0 ? 1 : 0)) + ((-(1.0 / 256) - r5.x) >= 0.0 ? 1 : 0);			// partial precision
-    r1.w = 1 - ((LightColor.a * (saturate(r0.w / 15) - 1)) + r5.y);			// partial precision
-    r0.w = (ToggleADTS.w <= 0.0 ? r5.y : r5.w);
-    r2.xyz = lerp(1, (((r1.w * 0.6) * -LightColor.rgb) + r5.y), r5.z * r5.z);			// partial precision
+    r5.z = saturate(length(IN.texcoord_6.xyz - LightData.xyz) / (r5.x * LightData.w));
+    r0.xy = compress(IN.texcoord_1.xy / IN.texcoord_1.w);			// partial precision	// [-1,+1] to [0,1]
+    l0.x = IN.texcoord_1.z / LightData.w;
+    q2.x = 1.0 / ((r5.z <= 0.0 ? 1 : (1 - r5.z)) * 15);			// partial precision
+    r0.zw = 1 - r0.y;			// partial precision
+    r1.xyz = tex2D(ShadowMap, saturate(r0.xz >= 0.0 ? r0.xwzw : 0));
+    r3.xy = (const_1.yz * r0.xy) + const_1.wy;			// partial precision
+    r0.w = ((-(1.0 / 256) - (r1.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r1.xyzw = max((q2.x * const_3.xxyy) + r3.xyxy, 0);			// partial precision
+    r2.xyz = tex2D(ShadowMap, saturate(r1.xy));
+    r1.xyz = tex2D(ShadowMap, saturate(r1.zw));
+    r0.z = r2.x - l0.x;
+    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 0 : 1);			// partial precision
+    r0.z = r1.x - l0.x;
+    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 0 : 1);			// partial precision
+    r1.xyzw = max((q2.x * const_3.zxwy) + r3.xyxy, 0);			// partial precision
+    r2.xyz = tex2D(ShadowMap, saturate(r1.xy));
+    r1.xyz = tex2D(ShadowMap, saturate(r1.zw));
+    r0.z = r2.x - l0.x;
+    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 0 : 1);			// partial precision
+    r0.z = r1.x - l0.x;
+    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 0 : 1);			// partial precision
+    r1.xyzw = max((q2.x * const_3.xzyw) + r3.xyxy, 0);			// partial precision
+    r2.xyz = tex2D(ShadowMap, saturate(r1.xy));
+    r1.xyz = tex2D(ShadowMap, saturate(r1.zw));
+    r0.z = r2.x - l0.x;
+    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 0 : 1);			// partial precision
+    r0.z = r1.x - l0.x;
+    r0.w = r0.w + ((-(1.0 / 256) - r0.z) >= 0.0 ? 0 : 1);			// partial precision
+    r1.xyzw = max((q2.x * const_3.zzww) + r3.xyxy, 0);			// partial precision
+    r2.xyz = tex2D(ShadowMap, saturate(r1.xy));
+    r1.xyz = tex2D(ShadowMap, saturate(r1.zw));
+    r0.w = r0.w + ((-(1.0 / 256) - (r2.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r0.z = r0.w + ((-(1.0 / 256) - (r1.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r0.w = r3.y;			// partial precision
+    r2.y = saturate(r0.w);			// partial precision
+    r3.y = r3.x;			// partial precision
+    r1.xyzw = q2.x * const_3.xyzw;			// partial precision
+    r2.x = saturate(r0.x + r1.w);			// partial precision
+    r4.xyz = tex2D(ShadowMap, r2.xy);
+    r5.x = r4.x - l0.x;
+    r3.zw = (1 - r0.y) + r1.xy;			// partial precision
+    r2.xyzw = max(r3.xzxw, 0);			// partial precision
+    r4.xyz = tex2D(ShadowMap, saturate(r2.xy));
+    r2.xyz = tex2D(ShadowMap, saturate(r2.zw));
+    r0.z = r0.z + ((-(1.0 / 256) - (r4.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r0.z = r0.z + ((-(1.0 / 256) - (r2.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r3.xz = (1 - r0.y) + r1.zw;			// partial precision
+    r2.xyzw = max(r3.yxyz, 0);			// partial precision
+    r3.xyz = tex2D(ShadowMap, saturate(r2.xy));
+    r2.xyz = tex2D(ShadowMap, saturate(r2.zw));
+    r2.w = r0.z + ((-(1.0 / 256) - (r3.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r0.xyz = r0.x + r1.zyx;			// partial precision
+    r1.xyzw = max(r0.zwyw, 0);			// partial precision
+    r0.y = r2.w + ((-(1.0 / 256) - (r2.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r2.xyz = tex2D(ShadowMap, saturate(r1.xy));
+    r1.xyz = tex2D(ShadowMap, saturate(r1.zw));
+    r1.w = r0.y + ((-(1.0 / 256) - (r2.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r0.xyz = tex2D(ShadowMap, saturate(r0.xw));
+    q3.x = (r1.w + ((-(1.0 / 256) - (r1.x - l0.x)) >= 0.0 ? 0 : 1)) + ((-(1.0 / 256) - (r0.x - l0.x)) >= 0.0 ? 0 : 1);			// partial precision
+    r0.w = (ToggleADTS.w <= 0.0 ? r5.w : r5.y);
+    q4.x = (LightColor.a * (saturate((q3.x + ((-(1.0 / 256) - r5.x) >= 0.0 ? 0 : 1)) / 15) - 1)) + r5.y;			// partial precision
+    r1.w = 1 - q4.x;			// partial precision
+    r2.xyz = lerp(1, r5.y - ((r1.w * 0.6) * LightColor.rgb), sqr(r5.z));			// partial precision
+    r1.xyz = 1 - r2.xyz;			// partial precision
 
-    if (0 != r0.w) {
-      r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
-      r2.w = r0.w;			// partial precision
+    if (0 != r0.w) {
+      r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
+      r2.w = r0.w;			// partial precision
     }
     else {
+      r2.w = 1;
     }
 
-    OUT.color_0.rgb = (IN.input_3.w * (1 - r2.xyz)) + r2.xyz;			// partial precision
-    OUT.color_0.a = min(min(1, 1), r1.w);			// partial precision
+    OUT.color_0.a = min(min(r2.w, 1), r1.w);			// partial precision
+    OUT.color_0.rgb = (IN.texcoord_2.w * r1.xyz) + r2.xyz;			// partial precision
 
     return OUT;
 };

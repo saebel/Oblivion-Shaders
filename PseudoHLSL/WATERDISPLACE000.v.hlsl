@@ -6,10 +6,10 @@
 //
 //
 // Parameters:
-
+//
 row_major float3x3 TranslationMatrix;
-
-
+//
+//
 // Registers:
 //
 //   Name              Reg   Size
@@ -17,7 +17,6 @@ row_major float3x3 TranslationMatrix;
 //   TranslationMatrix[0] const_8        1
 //   TranslationMatrix[1] const_9        1
 //
-
 
 
 // Structures:
@@ -39,12 +38,12 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     const int4 const_0 = {1, 0, 0, 0};
 
-    float3 r0;
+    float3 q0;
 
-    r0.xyz = (IN.position.xyx * const_0.xxy) + const_0.yyx;
-    OUT.position.x = dot(r0.xyz, TranslationMatrix[0].xyz);
-    OUT.position.y = dot(r0.xyz, TranslationMatrix[1].xyz);
+    q0.xyz = (IN.position.xyx * const_0.xxy) + const_0.yyx;
     OUT.position.zw = IN.position.zw;
+    OUT.position.y = dot(q0.xyz, TranslationMatrix[1].xyz);
+    OUT.position.x = dot(q0.xyz, TranslationMatrix[0].xyz);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;

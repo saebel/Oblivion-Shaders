@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 row_major float4x4 ModelViewProj;
 float4 WindMatrices[16];
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -23,7 +23,6 @@ float4 WindMatrices[16];
 //   WindMatrices[2]  const_40      4
 //   WindMatrices[3]  const_41      4
 //
-
 
 
 // Structures:
@@ -47,21 +46,14 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     const int4 const_4 = {1, 0, 0, 0};
 
-    float1 offset;
-    float4 r0;
+    float1 q0;
+    float4 q3;
 
-    offset.x = IN.blendindices.y;
-    r0.w = dot(WindMatrices[3 + offset.x], IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.x], IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.x], IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.x], IN.position.xyzw);
-    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + IN.position.xyzw;
-    OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    q0.x = IN.blendindices.y;
+    q3.xyzw = mul(float4x4(WindMatrices[0 + q0.x].xyzw, WindMatrices[1 + q0.x].xyzw, WindMatrices[2 + q0.x].xyzw, WindMatrices[3 + q0.x].xyzw), IN.position.xyzw);
     OUT.color_0.rgba = (IN.blendindices.z * const_4.xxxy) + const_4.yyyx;
+    OUT.position.xyzw = mul(ModelViewProj, (IN.blendindices.x * (q3.xyzw - IN.position.xyzw)) + IN.position.xyzw);
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;
 };

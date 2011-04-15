@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 AlphaParam;
 float4 AmbientColor;
 float3 DiffuseColor;
@@ -16,8 +16,8 @@ float4 FogColor;
 float4 FogParam;
 float4 InstanceData[2];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -37,7 +37,6 @@ row_major float4x4 ModelViewProj;
 //   InstanceData[0]  const_20       1
 //   InstanceData[1]  const_21       1
 //
-
 
 
 // Structures:
@@ -62,40 +61,44 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_6 = {-1, 0, 1, 0.01};
-    const float4 const_7 = {-0.5, 0, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    float4 offset;
+    const float4 const_6 = {-1, 0, 1, 0.01};
+
+    float1 eye6;
+    float3 mdl11;
+    float3 q1;
+    float1 q4;
     float4 r0;
     float4 r1;
     float4 r2;
 
-    offset.w = IN.texcoord_1.x;
+    eye6.x = length(EyePos.xyz - (InstanceData[0 + IN.texcoord_1.x]));
     r2.xyw = const_6.xyw;
+    r2.z = IN.position.z;
+    q4.x = 1 - saturate((eye6.x - AlphaParam.x) / AlphaParam.y);
     r1.xz = -EyeDir.xy / length(r2.xxy * EyeDir.xyx);
-    r1.yw = r1.z * const_6.xx;
+    r1.yw = r1.z * const_6.xy;
     r0.xyz = r1.zxw * const_6.xzz;
-    r1.xy = r0.xy * (1.0 / sqrt(dot(r1.yxw, r0.xyz)));
+    r1.xy = r0.xy / sqrt(dot(r1.yxw, r0.xyz));
     r0.w = r1.x;
+    r2.y = dot(r1.yzw, IN.position.xyz);
+    r1.xyzw = frac(InstanceData[0 + IN.texcoord_1.x]);
+    q1.xyz = expand(r1.xyz);	// [0,1] to [-1,+1]
     r2.x = dot(r0.wyz, IN.position.xyz);
     r0.w = IN.position.w;
-    r2.y = dot(r1.yzw, IN.position.xyz);
-    r2.z = IN.position.z;
-    r0.xyz = ((r2.w * InstanceData[0 + offset.w].w) * r2.xyz) + InstanceData[0 + offset.w];
-    r2.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    r2.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    r2.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
+    r0.xyz = ((r2.w * InstanceData[0 + IN.texcoord_1.x].w) * r2.xyz) + InstanceData[0 + IN.texcoord_1.x];
+    mdl11.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), r0.xyzw);
+    OUT.color_0.rgb = FogColor.rgb;
+    OUT.color_0.a = 1 - saturate((FogParam.x - length(mdl11.xyz)) / FogParam.y);
     OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r0.w = length(EyePos.xyz - (InstanceData[0 + offset.w]));
-    r1.xyzw = frac(InstanceData[0 + offset.w]);
-    OUT.texcoord_4.xyz = (DiffuseColor.rgb * (r1.w * (dot(DiffuseDir.xyz, 2 * (r1.xyz - 0.5)) * IN.color_0.rgb))) + AmbientColor.rgb;	// [0,1] to [-1,+1]
-    OUT.position.xyz = r2.xyz;
-    OUT.color_0.a = 1 - saturate((FogParam.x - length(r2.xyz)) / FogParam.y);
-    OUT.texcoord_5.w = ((AlphaParam.x < r0.w ? 1.0 : 0.0) * (saturate(1 - ((r0.w - AlphaParam.x) / AlphaParam.y)) - 1)) + 1;
+    OUT.position.xyz = mdl11.xyz;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.w = 1;
+    OUT.texcoord_4.xyz = (DiffuseColor.rgb * (r1.w * (dot(DiffuseDir.xyz, q1.xyz) * IN.color_0.rgb))) + AmbientColor.rgb;
+    OUT.texcoord_5.w = (AlphaParam.x < eye6.x ? q4.x : 0) + 1;
     OUT.texcoord_5.xyz = 0;
-    OUT.color_0.rgb = FogColor.rgb;
 
     return OUT;
 };

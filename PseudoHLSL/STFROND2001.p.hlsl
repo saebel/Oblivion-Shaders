@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D DiffuseMap;
 float SunlightDimmer;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -19,11 +19,10 @@ float SunlightDimmer;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 DiffuseUV : TEXCOORD0;
     float3 color_0 : COLOR0;
     float3 color_1 : COLOR1;
     float4 texcoord_1 : TEXCOORD1;
@@ -38,14 +37,13 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
+    float3 q0;
     float4 r0;
-    float3 r1;
 
-    r0.xyzw = tex2D(DiffuseMap, IN.texcoord_0.xy);
-    r1.xyz = (SunlightDimmer.x * IN.color_1.rgb) + IN.color_0.rgb;
-    r0.xyz = (r0.xyz * r1.xyz) + (((-r0.xyz * r1.xyz) + IN.texcoord_1.xyz) * IN.texcoord_1.w);
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);
+    q0.xyz = (SunlightDimmer.x * IN.color_1.rgb) + IN.color_0.rgb;
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = (r0.xyz * q0.xyz) + ((IN.texcoord_1.xyz - (r0.xyz * q0.xyz)) * IN.texcoord_1.w);
 
     return OUT;
 };

@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
 float4 WindMatrices[16];
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -29,7 +29,6 @@ float4 WindMatrices[16];
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -39,6 +38,8 @@ struct VS_INPUT {
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
     float4 blendindices : BLENDINDICES;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -53,32 +54,17 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-
-    float4 offset;
+    float1 q0;
+    float4 q4;
     float4 r0;
-    float4 r1;
 
-    offset.w = IN.blendindices.y;
-    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
-    r1.xyzw = IN.position.xyzw;
-    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + r1.xyzw;
-    r1.xyz = EyePosition.xyz - r0.xyz;
-    OUT.position.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r0.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r0.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r0.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    OUT.texcoord_1.xyz = normalize(r0.xyz);
-    r0.xyz = normalize(normalize(r1.xyz) + LightDirection[0].xyz);
-    OUT.texcoord_3.x = dot(IN.tangent.xyz, r0.xyz);
-    OUT.texcoord_3.y = dot(IN.binormal.xyz, r0.xyz);
-    OUT.texcoord_3.z = dot(IN.normal.xyz, r0.xyz);
+    q0.x = IN.blendindices.y;
+    q4.xyzw = mul(float4x4(WindMatrices[0 + q0.x].xyzw, WindMatrices[1 + q0.x].xyzw, WindMatrices[2 + q0.x].xyzw, WindMatrices[3 + q0.x].xyzw), IN.position.xyzw);
+    r0.xyzw = (IN.blendindices.x * (q4.xyzw - IN.position.xyzw)) + IN.position.xyzw;
+    OUT.position.xyzw = mul(ModelViewProj, r0.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = normalize(mul(TanSpaceProj, LightDirection[0].xyz));
+    OUT.texcoord_3.xyz = mul(TanSpaceProj, normalize(normalize(EyePosition.xyz - r0.xyz) + LightDirection[0].xyz));
 
     return OUT;
 };

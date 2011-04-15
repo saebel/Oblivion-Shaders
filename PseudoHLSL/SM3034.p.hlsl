@@ -4,7 +4,6 @@
 //   psa shaderdump19/SM3034.pso /Fcshaderdump19/SM3034.pso.dis
 //
 
-
 // Structures:
 
 struct VS_OUTPUT {
@@ -21,8 +20,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     const float4 const_0 = {0.901899993, 0.831399977, 0.721660018, 1};
 
-
-    OUT.color_0.rgba = const_0.xyzw;			// partial precision
+    OUT.color_0.rgba = const_0.xyzw;			// partial precision
 
     return OUT;
 };

@@ -4,7 +4,6 @@
 //   psa shaderdump19/SLS1038.pso /Fcshaderdump19/SLS1038.pso.dis
 //
 
-
 // Structures:
 
 struct VS_OUTPUT {
@@ -19,10 +18,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_0 = {0, 0, 0, 0};
+    float4 r0;
 
-
-    OUT.color_0.rgba = 0;
+    r0.xyzw = 0;
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = r0.xyz;
 
     return OUT;
 };

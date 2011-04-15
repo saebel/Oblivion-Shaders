@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 AddlParams;
 float4 AlphaParam;
 float4 AmbientColor;
@@ -18,8 +18,8 @@ float4 InstanceData[2];
 row_major float4x4 ModelViewProj;
 float3 ScaleMask;
 float4 WindData;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -41,7 +41,6 @@ float4 WindData;
 //   InstanceData[0]  const_20       1
 //   InstanceData[1]  const_21       1
 //
-
 
 
 // Structures:
@@ -66,61 +65,63 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
 #define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
 #define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+#define	PI			3.14159274
+#define	anglei(v)		(((v) + PI) / (2 * PI))
+#define	angler(v)		(((v) * (2 * PI)) - PI)
+#define	fracr(v)		angler(frac(anglei(v)))	// signed modulo % PI
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
     const float4 const_3 = {-0.5, 0.01, 1, 0};
-    const float4 const_8 = {(1.0 / 128), (1.0 / (PI * 2)), 0.5, 0};
-    const float4 const_16 = {PI * 2, -PI, 0, 0};
-    const float4 const_17 = {D3DSINCOSCONST1};
-    const float4 const_18 = {D3DSINCOSCONST2};
 
-    float4 offset;
+    float1 q0;
+    float3 q1;
     float4 r0;
     float4 r1;
-    float3 r2;
+    float4 r2;
     float4 r3;
-    float3 r5;
+    float3 r4;
 
-    offset.w = IN.texcoord_1.x;
-    r0.xyzw = frac(InstanceData[0 + offset.w]);
+    r0.xyzw = frac(InstanceData[0 + IN.texcoord_1.x]);
     r0.xyz = r0.xyz - 0.5;
-    r2.xyz = 2 * r0.xyz;
-    OUT.texcoord_5.xyz = (((r0.w * IN.color_0.rgb) * saturate(dot(DiffuseDir.xyz, r2.xyz))) * DiffuseColor.rgb) * AddlParams.x;
-    r0.w = ((InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x) / 128) + WindData.w;
-    r1.w = (frac((r0.w / (PI * 2)) + 0.5) * PI * 2) - PI;
-    r0.w = r2.y;
-    r1.xy = EyeVector.xy * EyeVector.xy;
-    r0.xy = -EyeVector.xy / sqrt(r1.y + r1.x);
+    r4.xyz = r0.w * IN.color_0.rgb;
     r1.yz = const_3.yz;
-    r3.xyw = r2.zyzz * r0.yxzx;
+    r1.w = IN.position.w;
+    r2.xyz = 2 * r0.xyz;
+    r2.w = shades(DiffuseDir.xyz, r2.xyz);
+    r0.w = r2.y;
+    r0.xy = -normalize(EyeVector.xy);
+    r3.xyw = r2.zyz * r0.yxx;
     r3.xy = -r3.xy;
     r3.z = (r2.x * r0.y) + r3.y;
-    r5.xyz = ((r1.y * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r1.z;
-    r1.xyz = normalize(r3.xwzw);
+    q0.x = ((InstanceData[0 + IN.texcoord_1.x].y + InstanceData[0 + IN.texcoord_1.x].x) / 128) + WindData.w;
+    q1.xyz = (((r1.y * InstanceData[0 + IN.texcoord_1.x].w) * ScaleMask.xyz) + r1.z) * IN.position.xyz;
+    r1.xyz = normalize(r3.xwz);
     r0.z = r1.y;
-    r3.xyz = r5.xyz * IN.position.xyz;
-    r0.y = dot(r0.zyw, r3.xyz);
+    r0.y = dot(r0.zyw, q1.xyz);
     r0.w = r2.x;
-    r0.z = r1.x;
-    r0.x = dot(r0.zxw, r3.xyz);
-    r0.xy = (((sin(r1.w) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r0.xy;
     r2.xy = r1.z * const_3.zw;
-    r0.z = dot(r2.xyz, r3.xyz);
-    r1.w = IN.position.w;
-    r1.xyz = r0.xyz + InstanceData[0 + offset.w];
+    r0.z = r1.x;
+    r0.x = dot(r0.zxw, q1.xyz);
+    r0.z = dot(r2.xyz, q1.xyz);
+    r0.xy = (((sin(fracr(q0.x)) * WindData.z) * sqr(IN.color_0.a)) * WindData.xy) + r0.xy;
+    r1.xyz = r0.xyz + InstanceData[0 + IN.texcoord_1.x];
+    r0.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), r1.xyzw);
     r0.w = dot(ModelViewProj[3].xyzw, r1.xyzw);
-    r0.x = dot(ModelViewProj[0].xyzw, r1.xyzw);
-    r0.y = dot(ModelViewProj[1].xyzw, r1.xyzw);
-    r0.z = dot(ModelViewProj[2].xyzw, r1.xyzw);
     r1.xy = saturate((length(r0.xyzw) - AlphaParam.xz) / AlphaParam.yw);
+    OUT.color_0.rgb = FogColor.rgb;
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r0.xyz)) / FogParam.y);
     OUT.position.xyzw = r0.xyzw;
-    OUT.texcoord_5.w = r1.x * (1 - r1.y);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_4.xyzw = AmbientColor.rgba;
-    OUT.color_0.rgb = FogColor.rgb;
+    OUT.texcoord_5.w = r1.x * (1 - r1.y);
+    OUT.texcoord_5.xyz = ((r4.xyz * r2.w) * DiffuseColor.rgb) * AddlParams.x;
 
     return OUT;
 };

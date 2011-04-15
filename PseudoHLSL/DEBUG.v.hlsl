@@ -4,7 +4,6 @@
 //   vsa shaderdump19/DEBUG.vso /Fcshaderdump19/DEBUG.vso.dis
 //
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -21,8 +20,6 @@ struct VS_OUTPUT {
 
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
-
-
 
     OUT.position.xyzw = IN.position.xyzw;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;

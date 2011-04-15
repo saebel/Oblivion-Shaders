@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float3 CameraUp;
 float3 EyePosition;
 float3 MaxPos;
@@ -13,8 +13,8 @@ float3 MinPos;
 float3 Params;
 float3 Velocity;
 row_major float4x4 WorldViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -30,7 +30,6 @@ row_major float4x4 WorldViewProj;
 //   Params        const_12      1
 //   CameraUp      const_13      1
 //
-
 
 
 // Structures:
@@ -52,29 +51,30 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0, 1, 0.5, 0};
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
+    float3 eye10;
+    float3 q1;
+    float3 q20;
+    float3 q4;
+    float3 q5;
+    float3 q7;
     float4 r0;
-    float4 r1;
-    float3 r2;
-    float3 r3;
-    float3 r5;
+    float3 r4;
 
+    q20.xyz = MaxPos.xyz - MinPos.xyz;
+    q5.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / q20.xyz;
+    q7.xyz = q20.xyz * (q5.xyz == 0 ? -frac(abs(q5.xyz)) : frac(abs(q5.xyz)));
+    q1.xyz = (0 < Velocity.xyz ? (MaxPos.xyz - abs(q7.xyz)) : (abs(q7.xyz) + MinPos.xyz));
     r0.w = 1;
-    r2.xyz = MaxPos.xyz - MinPos.xyz;
-    r3.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / (r2.xyz);
-    r5.xyz = frac(abs(r3.xyz));
-    r3.xyz = r2.xyz * (r3.xyz == 0 ? r5.xyz : -r5.xyz);
-    r3.xyz = (0 < Velocity.xyz ? (abs(r3.xyz) + MinPos.xyz) : (MaxPos.xyz - abs(r3.xyz)));
-    r0.xyz = (IN.position.x * normalize((CameraUp.yzx * r0.zxy) - (r0.yzx * CameraUp.zxy))) + (normalize(EyePosition.xyz - r3.xyz) * IN.position.y);
-    r0.xyz = r3.xyz + ((IN.position.z * CameraUp.xyz) + r0.xyz);
-    r1.w = 1 - length((((-0.5 * abs(r2.xyz)) + MaxPos.xyz) - r3.xyz) / abs(r2.xyz));
-    OUT.position.x = dot(WorldViewProj[0].xyzw, r0.xyzw);
-    OUT.position.y = dot(WorldViewProj[1].xyzw, r0.xyzw);
-    OUT.position.z = dot(WorldViewProj[2].xyzw, r0.xyzw);
-    OUT.position.w = dot(WorldViewProj[3].xyzw, r0.xyzw);
-    OUT.color_0.a = r1.w * r1.w;
     OUT.color_0.rgb = 1;
+    OUT.color_0.a = sqr(1 - length((((-0.5 * abs(q20.xyz)) + MaxPos.xyz) - q1.xyz) / abs(q20.xyz)));
+    eye10.xyz = normalize(EyePosition.xyz - q1.xyz);
+    r4.xyz = eye10.xyz * IN.position.y;
+    q4.xyz = (IN.position.z * CameraUp.xyz) + ((IN.position.x * normalize(cross(CameraUp.xyz, eye10.xyz))) + r4.xyz);
+    r0.xyz = q1.xyz + q4.xyz;
+    OUT.position.xyzw = mul(WorldViewProj, r0.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
 
     return OUT;

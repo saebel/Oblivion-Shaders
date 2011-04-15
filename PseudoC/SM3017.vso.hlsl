@@ -19,38 +19,46 @@
 //   ModelViewProj[1]   const_1        1
 //   ModelViewProj[2]   const_2        1
 //   ModelViewProj[3]   const_3        1
-//   DecalFade       const_32      8
-//   DecalProjection[0] const_40         1
-//   DecalProjection[1] const_41         1
-//   DecalProjection[2] const_42         1
-//   DecalProjection[3] const_43         1
-//   DecalProjection[4] const_44         1
-//   DecalProjection[5] const_45         1
-//   DecalProjection[6] const_46         1
-//   DecalProjection[7] const_47         1
-//   DecalProjection[8] const_48        1
-//   DecalProjection[9] const_49        1
-//   DecalProjection[10] const_50        1
-//   DecalProjection[11] const_51        1
-//   DecalProjection[12] const_52        1
-//   DecalProjection[13] const_53        1
-//   DecalProjection[14] const_54        1
-//   DecalProjection[15] const_55        1
-//   DecalProjection[16] const_56       1
-//   DecalProjection[17] const_57       1
-//   DecalProjection[18] const_58       1
-//   DecalProjection[19] const_59       1
-//   DecalProjection[20] const_60      1
-//   DecalProjection[21] const_61      1
-//   DecalProjection[22] const_62      1
-//   DecalProjection[23] const_63      1
-//   DecalProjection[24] const_64      1
-//   DecalProjection[25] const_65      1
-//   DecalProjection[26] const_66      1
-//   DecalProjection[27] const_67      1
-//   DecalProjection[28] const_68      1
-//   DecalProjection[29] const_69      1
-//   DecalProjection[30] const_70      1
+//   DecalFade[0]       const_32       1
+//   DecalFade[1]       const_33       1
+//   DecalFade[2]       const_34       1
+//   DecalFade[3]       const_35       1
+//   DecalFade[4]       const_36       1
+//   DecalFade[5]       const_37       1
+//   DecalFade[6]       const_38       1
+//   DecalFade[7]       const_39       1
+//   DecalProjection[0][0] const_40         1
+//   DecalProjection[0][1] const_41         1
+//   DecalProjection[0][2] const_42         1
+//   DecalProjection[0][3] const_43         1
+//   DecalProjection[1][0] const_44         1
+//   DecalProjection[1][1] const_45         1
+//   DecalProjection[1][2] const_46         1
+//   DecalProjection[1][3] const_47         1
+//   DecalProjection[2][0] const_48        1
+//   DecalProjection[2][1] const_49        1
+//   DecalProjection[2][2] const_50        1
+//   DecalProjection[2][3] const_51        1
+//   DecalProjection[3][0] const_52        1
+//   DecalProjection[3][1] const_53        1
+//   DecalProjection[3][2] const_54        1
+//   DecalProjection[3][3] const_55        1
+//   DecalProjection[4][0] const_56       1
+//   DecalProjection[4][1] const_57       1
+//   DecalProjection[4][2] const_58       1
+//   DecalProjection[4][3] const_59       1
+//   DecalProjection[5][0] const_60      1
+//   DecalProjection[5][1] const_61      1
+//   DecalProjection[5][2] const_62      1
+//   DecalProjection[5][3] const_63      1
+//   DecalProjection[6][0] const_64      1
+//   DecalProjection[6][1] const_65      1
+//   DecalProjection[6][2] const_66      1
+//   DecalProjection[6][3] const_67      1
+//   DecalProjection[7][0] const_68      1
+//   DecalProjection[7][1] const_69      1
+//   DecalProjection[7][2] const_70      1
+//   DecalProjection[7][3] const_71      1
 //
 
     const float4 const_4 = {0.0125000002, 0.5, 0, 1};
@@ -69,125 +77,125 @@
     OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
     OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
     OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    r0.x = DecalProjection[0].w;
-    r0.y = DecalProjection[1].w;
-    r0.z = DecalProjection[2].w;
+    r0.x = DecalProjection[0][0].w;
+    r0.y = DecalProjection[0][1].w;
+    r0.z = DecalProjection[0][2].w;
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
     r0.xyz = r0.xyz + IN.position.xyz;
-    r1.x = dot(DecalProjection[0].xyz, r0.xyz);
-    r1.y = dot(DecalProjection[1].xyz, r0.xyz);
-    r0.z = dot(DecalProjection[2].xyz, r0.xyz);
-    r0.w = dot(IN.normal.xyz, DecalProjection[2].xyz);
+    r1.x = dot(DecalProjection[0][0].xyz, r0.xyz);
+    r1.y = dot(DecalProjection[0][1].xyz, r0.xyz);
+    r0.z = dot(DecalProjection[0][2].xyz, r0.xyz);
+    r0.w = dot(IN.normal.xyz, DecalProjection[0][2].xyz);
     OUT.texcoord_0.xy = (0.0125000002 * r1.xy) + 0.5;
     r0.w = max(r0.w, 0);
     r1.w = (abs(r0.z) * -(1.0 / 256)) + 1;
     r1.z = 1 - r0.w;
     r0.w = pow(abs(r1.z), 10);
-    r0.x = DecalProjection[4].w;
-    r0.y = DecalProjection[5].w;
-    r0.z = DecalProjection[6].w;
-    r0.w = r0.w * const_32.x;
+    r0.x = DecalProjection[1][0].w;
+    r0.y = DecalProjection[1][1].w;
+    r0.z = DecalProjection[1][2].w;
+    r0.w = r0.w * DecalFade[0].x;
     r0.xyz = r0.xyz + IN.position.xyz;
     OUT.texcoord_0.z = r1.w * r0.w;
-    r1.x = dot(DecalProjection[4].xyz, r0.xyz);
-    r1.y = dot(DecalProjection[5].xyz, r0.xyz);
-    r1.w = dot(IN.normal.xyz, DecalProjection[6].xyz);
-    r0.w = dot(DecalProjection[6].xyz, r0.xyz);
+    r1.x = dot(DecalProjection[1][0].xyz, r0.xyz);
+    r1.y = dot(DecalProjection[1][1].xyz, r0.xyz);
+    r1.w = dot(IN.normal.xyz, DecalProjection[1][2].xyz);
+    r0.w = dot(DecalProjection[1][2].xyz, r0.xyz);
     r0.z = max(r1.w, 0);
     OUT.texcoord_1.xy = (0.0125000002 * r1.xy) + 0.5;
     r1.z = 1 - r0.z;
     r1.w = (abs(r0.w) * -(1.0 / 256)) + 1;
     r0.w = pow(abs(r1.z), 10);
-    r0.w = r0.w * const_33.x;
-    r0.x = DecalProjection[8].w;
-    r0.y = DecalProjection[9].w;
-    r0.z = DecalProjection[10].w;
+    r0.w = r0.w * DecalFade[1].x;
+    r0.x = DecalProjection[2][0].w;
+    r0.y = DecalProjection[2][1].w;
+    r0.z = DecalProjection[2][2].w;
     OUT.texcoord_1.z = r1.w * r0.w;
     r0.xyz = r0.xyz + IN.position.xyz;
-    r1.x = dot(DecalProjection[8].xyz, r0.xyz);
-    r1.y = dot(DecalProjection[9].xyz, r0.xyz);
-    r0.z = dot(DecalProjection[10].xyz, r0.xyz);
-    r0.w = dot(IN.normal.xyz, DecalProjection[10].xyz);
+    r1.x = dot(DecalProjection[2][0].xyz, r0.xyz);
+    r1.y = dot(DecalProjection[2][1].xyz, r0.xyz);
+    r0.z = dot(DecalProjection[2][2].xyz, r0.xyz);
+    r0.w = dot(IN.normal.xyz, DecalProjection[2][2].xyz);
     OUT.texcoord_2.xy = (0.0125000002 * r1.xy) + 0.5;
     r0.w = max(r0.w, 0);
     r1.w = (abs(r0.z) * -(1.0 / 256)) + 1;
     r1.z = 1 - r0.w;
     r0.w = pow(abs(r1.z), 10);
-    r0.x = DecalProjection[12].w;
-    r0.y = DecalProjection[13].w;
-    r0.z = DecalProjection[14].w;
-    r0.w = r0.w * const_34.x;
+    r0.x = DecalProjection[3][0].w;
+    r0.y = DecalProjection[3][1].w;
+    r0.z = DecalProjection[3][2].w;
+    r0.w = r0.w * DecalFade[2].x;
     r0.xyz = r0.xyz + IN.position.xyz;
     OUT.texcoord_2.z = r1.w * r0.w;
-    r1.x = dot(DecalProjection[12].xyz, r0.xyz);
-    r1.y = dot(DecalProjection[13].xyz, r0.xyz);
-    r1.w = dot(IN.normal.xyz, DecalProjection[14].xyz);
-    r0.w = dot(DecalProjection[14].xyz, r0.xyz);
+    r1.x = dot(DecalProjection[3][0].xyz, r0.xyz);
+    r1.y = dot(DecalProjection[3][1].xyz, r0.xyz);
+    r1.w = dot(IN.normal.xyz, DecalProjection[3][2].xyz);
+    r0.w = dot(DecalProjection[3][2].xyz, r0.xyz);
     r0.z = max(r1.w, 0);
     OUT.texcoord_3.xy = (0.0125000002 * r1.xy) + 0.5;
     r1.z = 1 - r0.z;
     r1.w = (abs(r0.w) * -(1.0 / 256)) + 1;
     r0.w = pow(abs(r1.z), 10);
-    r0.w = r0.w * const_35.x;
-    r0.x = DecalProjection[16].w;
-    r0.y = DecalProjection[17].w;
-    r0.z = DecalProjection[18].w;
+    r0.w = r0.w * DecalFade[3].x;
+    r0.x = DecalProjection[4][0].w;
+    r0.y = DecalProjection[4][1].w;
+    r0.z = DecalProjection[4][2].w;
     OUT.texcoord_3.z = r1.w * r0.w;
     r0.xyz = r0.xyz + IN.position.xyz;
-    r1.x = dot(DecalProjection[16].xyz, r0.xyz);
-    r1.y = dot(DecalProjection[17].xyz, r0.xyz);
-    r0.z = dot(DecalProjection[18].xyz, r0.xyz);
-    r0.w = dot(IN.normal.xyz, DecalProjection[18].xyz);
+    r1.x = dot(DecalProjection[4][0].xyz, r0.xyz);
+    r1.y = dot(DecalProjection[4][1].xyz, r0.xyz);
+    r0.z = dot(DecalProjection[4][2].xyz, r0.xyz);
+    r0.w = dot(IN.normal.xyz, DecalProjection[4][2].xyz);
     OUT.texcoord_4.xy = (0.0125000002 * r1.xy) + 0.5;
     r0.w = max(r0.w, 0);
     r1.w = (abs(r0.z) * -(1.0 / 256)) + 1;
     r1.z = 1 - r0.w;
     r0.w = pow(abs(r1.z), 10);
-    r0.x = DecalProjection[20].w;
-    r0.y = DecalProjection[21].w;
-    r0.z = DecalProjection[22].w;
-    r0.w = r0.w * const_36.x;
+    r0.x = DecalProjection[5][0].w;
+    r0.y = DecalProjection[5][1].w;
+    r0.z = DecalProjection[5][2].w;
+    r0.w = r0.w * DecalFade[4].x;
     r0.xyz = r0.xyz + IN.position.xyz;
     OUT.texcoord_4.z = r1.w * r0.w;
-    r1.x = dot(DecalProjection[20].xyz, r0.xyz);
-    r1.y = dot(DecalProjection[21].xyz, r0.xyz);
-    r1.w = dot(IN.normal.xyz, DecalProjection[22].xyz);
-    r0.w = dot(DecalProjection[22].xyz, r0.xyz);
+    r1.x = dot(DecalProjection[5][0].xyz, r0.xyz);
+    r1.y = dot(DecalProjection[5][1].xyz, r0.xyz);
+    r1.w = dot(IN.normal.xyz, DecalProjection[5][2].xyz);
+    r0.w = dot(DecalProjection[5][2].xyz, r0.xyz);
     r0.z = max(r1.w, 0);
     OUT.texcoord_5.xy = (0.0125000002 * r1.xy) + 0.5;
     r1.z = 1 - r0.z;
     r1.w = (abs(r0.w) * -(1.0 / 256)) + 1;
     r0.w = pow(abs(r1.z), 10);
-    r0.w = r0.w * const_37.x;
-    r0.x = DecalProjection[24].w;
-    r0.y = DecalProjection[25].w;
-    r0.z = DecalProjection[26].w;
+    r0.w = r0.w * DecalFade[5].x;
+    r0.x = DecalProjection[6][0].w;
+    r0.y = DecalProjection[6][1].w;
+    r0.z = DecalProjection[6][2].w;
     OUT.texcoord_5.z = r1.w * r0.w;
     r0.xyz = r0.xyz + IN.position.xyz;
-    r1.x = dot(DecalProjection[24].xyz, r0.xyz);
-    r0.w = dot(IN.normal.xyz, DecalProjection[26].xyz);
-    r1.y = dot(DecalProjection[25].xyz, r0.xyz);
+    r1.x = dot(DecalProjection[6][0].xyz, r0.xyz);
+    r0.w = dot(IN.normal.xyz, DecalProjection[6][2].xyz);
+    r1.y = dot(DecalProjection[6][1].xyz, r0.xyz);
     r0.w = max(r0.w, 0);
-    r0.z = dot(DecalProjection[26].xyz, r0.xyz);
+    r0.z = dot(DecalProjection[6][2].xyz, r0.xyz);
     r1.w = 1 - r0.w;
     OUT.texcoord_6.xy = (0.0125000002 * r1.xy) + 0.5;
     r0.w = pow(abs(r1.w), 10);
     r0.z = (abs(r0.z) * -(1.0 / 256)) + 1;
-    r0.w = r0.w * const_38.x;
+    r0.w = r0.w * DecalFade[6].x;
     OUT.texcoord_6.z = r0.z * r0.w;
-    r0.x = DecalProjection[28].w;
-    r0.y = DecalProjection[29].w;
-    r0.z = DecalProjection[30].w;
+    r0.x = DecalProjection[7][0].w;
+    r0.y = DecalProjection[7][1].w;
+    r0.z = DecalProjection[7][2].w;
     r0.xyz = r0.xyz + IN.position.xyz;
-    r0.w = dot(IN.normal.xyz, DecalProjection[30].xyz);
-    r1.x = dot(DecalProjection[28].xyz, r0.xyz);
+    r0.w = dot(IN.normal.xyz, DecalProjection[7][2].xyz);
+    r1.x = dot(DecalProjection[7][0].xyz, r0.xyz);
     r0.w = max(r0.w, 0);
-    r1.y = dot(DecalProjection[29].xyz, r0.xyz);
+    r1.y = dot(DecalProjection[7][1].xyz, r0.xyz);
     r1.w = 1 - r0.w;
-    r0.z = dot(DecalProjection[30].xyz, r0.xyz);
+    r0.z = dot(DecalProjection[7][2].xyz, r0.xyz);
     r0.w = pow(abs(r1.w), 10);
     r0.z = (abs(r0.z) * -(1.0 / 256)) + 1;
-    r0.w = r0.w * const_39.x;
+    r0.w = r0.w * DecalFade[7].x;
     OUT.texcoord_7.xy = (0.0125000002 * r1.xy) + 0.5;
     OUT.texcoord_7.z = r0.z * r0.w;
 

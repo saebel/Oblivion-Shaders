@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D BaseMap;
 float4 Toggles;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -19,11 +19,10 @@ float4 Toggles;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 BaseUV : TEXCOORD0;
     float3 texcoord_6 : TEXCOORD6_centroid;
     float3 color_0 : COLOR0;
 };
@@ -37,16 +36,16 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {0.04, -0.02, 1, 0};
+#define	uvtile(w)		(((w) * 0.04) - 0.02)
 
     float4 r0;
+    float2 uv0;
 
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
-    r0.xy = (((r0.w * 0.04) - 0.02) * (IN.texcoord_6.xy / length(IN.texcoord_6.xyz))) + IN.texcoord_0.xy;
-    r0.xyzw = tex2D(BaseMap, r0.xy);			// partial precision
-    r0.w = 1;
-    r0.xyz = (Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz);			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
+    uv0.xy = (uvtile(r0.w) * (IN.texcoord_6.xy / length(IN.texcoord_6.xyz))) + IN.BaseUV.xy;
+    r0.xyzw = tex2D(BaseMap, uv0.xy);			// partial precision
+    OUT.color_0.a = 1;			// partial precision
+    OUT.color_0.rgb = (Toggles.x <= 0.0 ? r0.xyz : (r0.xyz * IN.color_0.rgb));			// partial precision
 
     return OUT;
 };

@@ -60,11 +60,11 @@
     r2.x = (2 * r2.y) - r0.z;
     r1.xyzw = (r1.yzxz >= r1.xxyy ? 1.0 : 0.0);
     r3.xy = r1.yw * r1.xz;
-    r2.yz = r0.x * const_16.xz;
+    r2.yz = r0.x * const_16.zw;
     r0.w = -r0.y;
     r2.z = r3.y * r2.z;
     r2.xy = (r3.y * r2.xy) + r0.wx;
-    r1.yz = (r0.xz * const_16.xz) - r2.yz;
+    r1.yz = (r0.zy * const_16.zw) - r2.yz;
     r0.w = InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x;
     r1.x = -r2.x;
     r1.w = r0.w * (1.0 / 17);

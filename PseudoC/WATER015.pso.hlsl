@@ -51,7 +51,7 @@
     sampler2D NormalMap;
     sampler2D DetailMap;
     r0.xy = EyePos.xy - IN.texcoord_1.xy;
-    r0.w = dot(r0.xy, r0.xy) + 0;
+    r0.w = dot(r0.xy, r0.xy);
     r0.w = 1.0 / sqrt(r0.w);
     r1.w = 1.0 / r0.w;
     r2.w = saturate((r1.w * -(1.0 / 8192)) - -1);
@@ -72,7 +72,7 @@
     r0.w = dot(IN.texcoord_5.xyzw, r1.xyzw);
     r2.w = r2.w * VarAmounts.w;
     r1.xy = (0.1 * r2.xy) + r3.xy;
-    r0.xyzw = tex2Dproj(ReflectionMap, r0);			// partial precision
+    r0.xyzw = tex2Dproj(ReflectionMap, r0.xyzw);			// partial precision
     r1.xyzw = tex2D(DetailMap, r1.xy);
     r3.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r4.xyz = normalize(r3.xyz);
@@ -80,14 +80,14 @@
     r0.xyz = r0.xyz - ReflectionColor.rgb;
     r0.w = -(r6.x - 1);
     r3.z = VarAmounts.y;
-    r0.xyz = (r3.z * r0.xyz) + ReflectionColor.rgb;			// partial precision
+    r0.xyz = (r3.z * r0.xyz) + ReflectionColor.rgb;			// partial precision
     r1.w = r0.w * r0.w;
     r1.w = r1.w * r1.w;
     r3.xyz = DeepColor.rgb;
     r3.xyz = ShallowColor.rgb - r3.xyz;
     r1.w = r0.w * r1.w;
     r5.x = dot(-r4.xyz, r2.xyz);
-    r3.xyz = (r6.x * r3.xyz) + DeepColor.rgb;			// partial precision
+    r3.xyz = (r6.x * r3.xyz) + DeepColor.rgb;			// partial precision
     r3.w = 2 * r5.x;
     r5.z = -1;
     r0.w = -(r5.z + FresnelRI.x);

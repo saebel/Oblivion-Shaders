@@ -4,26 +4,26 @@
 //   vsa shaderdump19/MENUBG000.pso /Fcshaderdump19/MENUBG000.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
-
+//
 float BlendValue;
-sampler2D Src0;
-
-
+sampler2D ScreenSpace;
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   BlendValue   const_1       1
-//   Src0         texture_0       1
+//   ScreenSpace         texture_0       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -41,19 +41,16 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     const float4 const_4 = {1, -0.271581799, -0.646873832, 0};
     const float4 const_5 = {1, -1.1081773, 1.70506454, 0};
 
-    float4 r0;
+    float3 m0;
+    float3 r0;
     float4 r1;
-    float3 r2;
 
-    r0.w = 1;
-    r1.xyzw = tex2D(Src0, IN.texcoord_0.xy);
+    r1.xyzw = tex2D(ScreenSpace, IN.ScreenOffset.xy);
     r0.x = dot(const_0.xyz, r1.xyz) + 0.14;
-    r0.yz = const_2.zxyw;
-    r2.x = dot(const_3.xyz, r0.xyz);
-    r2.y = dot(const_4.xyz, r0.xyz);
-    r2.z = dot(const_5.xyz, r0.xyz);
-    r0.xyz = lerp(r2.xyz, r1.xyz, BlendValue.x);
-    OUT.color_0.rgba = r0.xyzw;
+    r0.yz = const_2.xy;
+    m0.xyz = mul(float3x3(const_3.xyz, const_4.xyz, const_5.xyz), r0.xyz);
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = lerp(m0.xyz, r1.xyz, BlendValue.x);
 
     return OUT;
 };

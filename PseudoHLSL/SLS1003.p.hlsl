@@ -5,10 +5,10 @@
 //
 //
 // Parameters:
-
+//
 sampler2D DiffuseMap;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -17,11 +17,10 @@ sampler2D DiffuseMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 DiffuseUV : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -33,9 +32,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+    float4 r0;
 
-
-    OUT.color_0.rgba = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    r0.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = r0.xyz;
 
     return OUT;
 };

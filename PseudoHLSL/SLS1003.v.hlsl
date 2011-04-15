@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -22,7 +22,6 @@ row_major float4x4 ModelViewProj;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -31,6 +30,8 @@ struct VS_INPUT {
     float4 texcoord_0 : TEXCOORD0;
     float3 tangent : TANGENT;
     float3 binormal : BINORMAL;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -46,27 +47,20 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0.5, 0, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
+    float3 lit0;
     float3 r0;
-    float3 r1;
-    float3 r2;
 
-    r0.xyz = LightPosition[0].xyz - IN.position.xyz;
-    r2.xyz = normalize(r0.xyz);
-    r0.xyz = r0.xyz / LightPosition[0].w;
-    r1.x = dot(IN.tangent.xyz, r2.xyz);
-    r1.y = dot(IN.binormal.xyz, r2.xyz);
-    r1.z = dot(IN.normal.xyz, r2.xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_3.xyz = normalize(r1.xyz);
-    OUT.texcoord_1.xy = (0.5 * r0.xy) + 0.5;
-    OUT.texcoord_2.x = (r0.z * 0.5) + 0.5;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    lit0.xyz = LightPosition[0].xyz - IN.position.xyz;
+    r0.xyz = lit0.xyz / LightPosition[0].w;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xy = compress(r0.xy);	// [-1,+1] to [0,1]
+    OUT.texcoord_2.x = compress(r0.z);	// [-1,+1] to [0,1]
     OUT.texcoord_2.y = 0.5;
+    OUT.texcoord_3.xyz = normalize(mul(TanSpaceProj, normalize(lit0.xyz)));
 
     return OUT;
 };

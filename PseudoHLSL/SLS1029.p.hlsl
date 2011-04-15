@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D AttMapXY;
 sampler2D AttMapZ;
 samplerCUBE NormalCubeMap;
 sampler2D NormalMap;
 float4 PSLightColor[4];
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -28,12 +28,11 @@ float4 PSLightColor[4];
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
     float3 color_0 : COLOR0;
-    float2 texcoord_0 : TEXCOORD0;
+    float2 NormalUV : TEXCOORD0;
     float2 texcoord_1 : TEXCOORD1;
     float2 texcoord_2 : TEXCOORD2;
     float3 texcoord_3 : TEXCOORD3;
@@ -48,20 +47,27 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
+    float3 att0;
+    float3 att1;
+    float3 q2;
     float4 r0;
     float4 r1;
-    float4 r2;
-    float4 r3;
+    float1 r2;
 
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);
-    r0.w = AmbientColor.a;
     r1.xyzw = texCUBE(NormalCubeMap, IN.texcoord_3.xyz);
-    r2.xyzw = tex2D(AttMapXY, IN.texcoord_1.xy);
-    r3.xyzw = tex2D(AttMapZ, IN.texcoord_2.xy);
-    r0.xyz = saturate((PSLightColor[1].rgb * ((r2.xyz * r3.xyz) * saturate(dot(2 * (r0.xyz - 0.5), 2 * (r1.xyz - 0.5))))) + ((saturate(dot(2 * (r0.xyz - 0.5), 2 * (IN.color_0.rgb - 0.5))) * PSLightColor[0].rgb) + AmbientColor.rgb));	// [0,1] to [-1,+1]
-    OUT.color_0.rgba = r0.xyzw;
+    r0.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    att0.xyz = tex2D(AttMapZ, IN.texcoord_2.xy);
+    att1.xyz = tex2D(AttMapXY, IN.texcoord_1.xy);
+    r2.x = shades(expand(r0.xyz), expand(IN.color_0.rgb));
+    r0.xyz = (att1.xyz * att0.xyz) * shades(expand(r0.xyz), expand(r1.xyz));
+    q2.xyz = saturate((PSLightColor[1].rgb * r0.xyz) + ((r2.x * PSLightColor[0].rgb) + AmbientColor.rgb));
+    OUT.color_0.a = AmbientColor.a;
+    OUT.color_0.rgb = q2.xyz;
 
     return OUT;
 };

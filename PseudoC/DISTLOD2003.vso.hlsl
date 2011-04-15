@@ -49,7 +49,7 @@
     r0.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r0.w = 1.0 / sqrt(r0.x);
     r1.xz = r0.w * -EyeDir.xy;
-    r1.yw = r1.z * const_6.xx;
+    r1.yw = r1.z * const_6.xy;
     r0.xyz = r1.zxw * const_6.xzz;
     r1.x = dot(r1.yxw, r0.xyz);
     r0.w = 1.0 / sqrt(r1.x);

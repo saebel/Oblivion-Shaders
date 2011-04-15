@@ -4,7 +4,6 @@
 //   vsa shaderdump19/SLS2065.pso /Fcshaderdump19/SLS2065.pso.dis
 //
 
-
 // Structures:
 
 struct VS_OUTPUT {
@@ -21,8 +20,11 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     const float4 const_0 = {0.5, 0.5, 0, 0};
 
+    float4 r0;
 
-    OUT.color_0.rgba = const_0.xyzw;			// partial precision
+    r0.xyzw = const_0.xyzw;			// partial precision
+    OUT.color_0.a = r0.w;			// partial precision
+    OUT.color_0.rgb = r0.xyz;			// partial precision
 
     return OUT;
 };

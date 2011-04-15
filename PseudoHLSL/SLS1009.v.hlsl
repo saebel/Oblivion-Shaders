@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -24,7 +24,6 @@ row_major float4x4 ModelViewProj;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -33,6 +32,8 @@ struct VS_INPUT {
     float3 binormal : BINORMAL;
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -46,21 +47,15 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0.5, 0, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    float3 r0;
-    float3 r1;
+    float3 eye5;
 
-    r1.xyz = normalize(normalize(EyePosition.xyz - IN.position.xyz) + LightDirection[0].xyz);
-    r0.x = dot(IN.tangent.xyz, r1.xyz);
-    r0.y = dot(IN.binormal.xyz, r1.xyz);
-    r0.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xyz = (0.5 * r0.xyz) + 0.5;
+    eye5.xyz = mul(TanSpaceProj, normalize(normalize(EyePosition.xyz - IN.position.xyz) + LightDirection[0].xyz));
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = compress(eye5.xyz);	// [-1,+1] to [0,1]
 
     return OUT;
 };

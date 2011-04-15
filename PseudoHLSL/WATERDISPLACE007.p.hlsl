@@ -6,11 +6,11 @@
 //
 //
 // Parameters:
-
+//
 sampler2D DisplaySampler;
 float2 TextureOffset;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -18,7 +18,6 @@ float2 TextureOffset;
 //   TextureOffset  const_2       1
 //   DisplaySampler texture_0       1
 //
-
 
 
 // Structures:
@@ -36,13 +35,15 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0, -0.4, 10};
     const float4 const_1 = {0.5, 0.5, 0.5, 1};
 
     float4 r0;
+    float4 t1;
 
-    r0.xyzw = lerp(const_1.xyzw, (tex2D(DisplaySampler, IN.texcoord_0.xy + TextureOffset.xy)), saturate((sqrt(dot(IN.texcoord_0.xy - 0.5, r0.xy) + 0) - 0.4) * 10));
-    OUT.color_0.rgba = r0.xyzw;
+    t1.xyzw = tex2D(DisplaySampler, IN.texcoord_0.xy + TextureOffset.xy);
+    r0.xyzw = lerp(const_1.xyzw, t1.xyzw, saturate((length(IN.texcoord_0.xy - 0.5) - 0.4) * 10));
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = r0.xyz;
 
     return OUT;
 };

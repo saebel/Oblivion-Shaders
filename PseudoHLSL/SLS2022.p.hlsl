@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D AttenuationMap;
 sampler2D BaseMap;
@@ -14,8 +14,8 @@ sampler2D GlowMap;
 sampler2D NormalMap;
 float4 PSLightColor[4];
 float4 Toggles;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -32,16 +32,15 @@ float4 Toggles;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float3 texcoord_1 : TEXCOORD1_centroid;			// partial precision
-    float3 texcoord_2 : TEXCOORD2_centroid;			// partial precision
-    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
-    float3 texcoord_4 : TEXCOORD4_centroid;			// partial precision
-    float4 texcoord_5 : TEXCOORD5;			// partial precision
+    float2 BaseUV : TEXCOORD0;			// partial precision
+    float3 texcoord_1 : TEXCOORD1_centroid;			// partial precision
+    float3 texcoord_2 : TEXCOORD2_centroid;			// partial precision
+    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
+    float3 texcoord_4 : TEXCOORD4_centroid;			// partial precision
+    float4 texcoord_5 : TEXCOORD5;			// partial precision
     float3 color_0 : COLOR0;
     float4 color_1 : COLOR1;
 };
@@ -55,40 +54,45 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0.2, 0.5, 0};
-    const int4 const_4 = {1, 0, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
+    float1 att0;
+    float1 att5;
+    float3 q1;
+    float3 q10;
+    float1 q22;
+    float3 q25;
+    float1 q3;
+    float1 q4;
+    float1 q6;
+    float1 q7;
+    float3 q8;
+    float3 q9;
     float4 r0;
     float4 r1;
     float4 r2;
-    float4 r3;
-    float4 r4;
-    float4 r5;
 
-    r0.xyz = normalize(IN.texcoord_2.xyz);			// partial precision
-    r2.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
-    r5.xyz = normalize(2 * (r2.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
-    r0.x = dot(r5.xyz, r0.xyz);			// partial precision
-    r3.w = r2.w * pow(abs(saturate(dot(r5.xyz, normalize(IN.texcoord_4.xyz)))), Toggles.z);			// partial precision
-    r0.w = ((0.2 - r0.x) >= 0.0 ? r3.w : (r3.w * max(r0.x + 0.5, 0)));			// partial precision
-    r5.w = saturate(r0.x);			// partial precision
-    r0.x = IN.texcoord_5.z;			// partial precision
-    r0.y = IN.texcoord_5.w;			// partial precision
-    r3.xyzw = tex2D(AttenuationMap, r0.xy);			// partial precision
-    r4.xyzw = tex2D(AttenuationMap, IN.texcoord_5.xy);			// partial precision
-    r3.w = saturate((1 - r4.x) - r3.x);			// partial precision
-    r4.xyz = normalize(IN.texcoord_3.xyz);			// partial precision
-    r4.w = r2.w * pow(abs(saturate(dot(r5.xyz, r4.xyz))), Toggles.z);			// partial precision
-    r4.x = dot(r5.xyz, IN.texcoord_1.xyz);			// partial precision
-    r2.xyz = saturate(((0.2 - r4.x) >= 0.0 ? r4.w : (r4.w * max(r4.x + 0.5, 0))) * PSLightColor[0].rgb);			// partial precision
-    r2.xyz = saturate((r0.w * PSLightColor[1].rgb) * r3.w) + r2.xyz;			// partial precision
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
-    r0.w = r0.w * AmbientColor.a;			// partial precision
-    r1.xyzw = tex2D(GlowMap, IN.texcoord_0.xy);
-    r3.xyz = ((saturate(r4.x) * PSLightColor[0].rgb) + (r3.w * (r5.w * PSLightColor[1].rgb))) + ((r1.xyz * EmittanceColor.rgb) + AmbientColor.rgb);			// partial precision
-    r0.xyz = ((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz) * max(r3.xyz, 0)) + r2.xyz;			// partial precision
-    r0.xyz = (Toggles.y <= 0.0 ? lerp(IN.color_1.rgb, r0.xyz, IN.color_1.a) : r0.xyz);			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r2.xyzw = tex2D(NormalMap, IN.BaseUV.xy);			// partial precision
+    r1.xyzw = tex2D(GlowMap, IN.BaseUV.xy);
+    r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
+    att5.x = tex2D(AttenuationMap, IN.texcoord_5.zw);			// partial precision
+    att0.x = tex2D(AttenuationMap, IN.texcoord_5.xy);			// partial precision
+    q6.x = saturate((1 - att0.x) - att5.x);			// partial precision
+    q1.xyz = normalize(expand(r2.xyz));			// partial precision
+    q4.x = r2.w * pow(abs(shades(q1.xyz, normalize(IN.texcoord_4.xyz))), Toggles.z);			// partial precision
+    q22.x = r2.w * pow(abs(shades(q1.xyz, normalize(IN.texcoord_3.xyz))), Toggles.z);			// partial precision
+    q3.x = dot(q1.xyz, normalize(IN.texcoord_2.xyz));			// partial precision
+    q8.xyz = saturate(((0.2 >= q3.x ? (q4.x * max(q3.x + 0.5, 0)) : q4.x) * PSLightColor[1].rgb) * q6.x);			// partial precision
+    q7.x = dot(q1.xyz, IN.texcoord_1.xyz);			// partial precision
+    q9.xyz = saturate((0.2 >= q7.x ? (q22.x * max(q7.x + 0.5, 0)) : q22.x) * PSLightColor[0].rgb);			// partial precision
+    q10.xyz = (saturate(q7.x) * PSLightColor[0].rgb) + (q6.x * (saturate(q3.x) * PSLightColor[1].rgb));			// partial precision
+    r0.xyz = (Toggles.x <= 0.0 ? r0.xyz : (r0.xyz * IN.color_0.rgb));			// partial precision
+    q25.xyz = (r0.xyz * max(q10.xyz + ((r1.xyz * EmittanceColor.rgb) + AmbientColor.rgb), 0)) + (q8.xyz + q9.xyz);			// partial precision
+    OUT.color_0.a = r0.w * AmbientColor.a;			// partial precision
+    OUT.color_0.rgb = (Toggles.y <= 0.0 ? q25.xyz : lerp(IN.color_1.rgb, q25.xyz, IN.color_1.a));			// partial precision
 
     return OUT;
 };

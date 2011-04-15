@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 samplerCUBE EnvironmentCubeMap;
 sampler2D NormalMap;
 float4 PSLightColor[4];
 float4 Toggles;
-
-
+//
+//
 // Registers:
 //
 //   Name               Reg   Size
@@ -25,13 +25,12 @@ float4 Toggles;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float4 texcoord_1 : TEXCOORD1_centroid;			// partial precision
-    float3 texcoord_2 : TEXCOORD2_centroid;			// partial precision
+    float2 NormalUV : TEXCOORD0;			// partial precision
+    float4 texcoord_1 : TEXCOORD1_centroid;			// partial precision
+    float3 texcoord_2 : TEXCOORD2_centroid;			// partial precision
     float3 color_0 : COLOR0;
 };
 
@@ -44,20 +43,21 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 3, 1, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	envreflect(i, n)	((2 * dot(i, n)) * (i)) - ((n) * dot(i, i))
 
+    float3 q2;
+    float3 q3;
     float4 r0;
     float4 r1;
 
-    r0.xyz = 2 * (IN.texcoord_1.xyz - 0.5);			// partial precision	// [0,1] to [-1,+1]
-    r1.xyz = normalize(IN.texcoord_2.xyz);			// partial precision
-    r0.xyzw = texCUBE(EnvironmentCubeMap, ((2 * dot(r0.xyz, r1.xyz)) * r0.xyz) - (r1.xyz * dot(r0.xyz, r0.xyz)));			// partial precision
-    r0.w = 1;
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
-    r0.xyz = (r0.xyz * r1.w) * AmbientColor.a;			// partial precision
-    r0.xyz = ((Toggles.x <= 0.0 ? (r0.xyz * IN.color_0.rgb) : r0.xyz) * PSLightColor[0].rgb) * IN.texcoord_1.w;			// partial precision
-    r0.xyz = r0.xyz * 3;			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r0.xyzw = texCUBE(EnvironmentCubeMap, envreflect(expand(IN.texcoord_1.xyz), normalize(IN.texcoord_2.xyz)));			// partial precision
+    r1.xyzw = tex2D(NormalMap, IN.NormalUV.xy);			// partial precision
+    q2.xyz = (r0.xyz * r1.w) * AmbientColor.a;			// partial precision
+    q3.xyz = ((Toggles.x <= 0.0 ? q2.xyz : (q2.xyz * IN.color_0.rgb)) * PSLightColor[0].rgb) * IN.texcoord_1.w;			// partial precision
+    OUT.color_0.a = 1;			// partial precision
+    OUT.color_0.rgb = q3.xyz * 3;			// partial precision
 
     return OUT;
 };

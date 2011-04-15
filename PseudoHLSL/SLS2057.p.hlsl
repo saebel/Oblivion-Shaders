@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 sampler2D NormalMap;
 float4 PSLightColor[4];
 sampler2D ShadowMap;
 sampler2D ShadowMaskMap;
 float4 Toggles;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -27,17 +27,16 @@ float4 Toggles;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
+    float2 NormalUV : TEXCOORD0;			// partial precision
     float3 texcoord_1 : TEXCOORD1_centroid;
     float3 texcoord_2 : TEXCOORD2_centroid;
     float4 color_0 : COLOR0;
     float4 color_1 : COLOR1;
-    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
-    float4 texcoord_4 : TEXCOORD4;			// partial precision
+    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
+    float4 texcoord_4 : TEXCOORD4;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -49,26 +48,28 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0.2, 0.5, 0};
-    const int4 const_1 = {-1, 1, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
+    float1 q1;
+    float1 q3;
+    float3 q4;
+    float1 q9;
     float4 r0;
-    float4 r1;
-    float4 r2;
+    float3 t2;
+    float1 t5;
 
-    r0.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
-    r0.xyz = normalize(2 * (r0.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
-    r2.w = r0.w * pow(abs(saturate(dot(r0.xyz, 2 * (IN.texcoord_3.xyz - 0.5)))), Toggles.z);			// partial precision	// [0,1] to [-1,+1]
-    r0.x = dot(r0.xyz, 2 * (IN.texcoord_2.xyz - 0.5));			// partial precision	// [0,1] to [-1,+1]
-    r0.xyz = ((0.2 - r0.x) >= 0.0 ? r2.w : (r2.w * max(r0.x + 0.5, 0))) * PSLightColor[0].rgb;			// partial precision
-    r2.xyz = r0.xyz * IN.texcoord_1.xyz;
-    r0.x = IN.texcoord_4.z;			// partial precision
-    r0.y = IN.texcoord_4.w;			// partial precision
-    r0.xyzw = tex2D(ShadowMaskMap, r0.xy);			// partial precision
-    r0.w = dot(PSLightColor[1].rgba, IN.color_0.rgba) + dot(PSLightColor[2].rgba, IN.color_1.rgba);			// partial precision
-    r1.xyzw = tex2D(ShadowMap, IN.texcoord_4.xy);			// partial precision
-    r0.xyz = r2.xyz * ((r0.x * (r1.xyz - 1)) + 1);			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    t5.x = tex2D(ShadowMaskMap, IN.texcoord_4.zw);			// partial precision
+    t2.xyz = tex2D(ShadowMap, IN.texcoord_4.xy);			// partial precision
+    r0.xyzw = tex2D(NormalMap, IN.NormalUV.xy);			// partial precision
+    q9.x = r0.w * pow(abs(shades(normalize(expand(r0.xyz)), expand(IN.texcoord_3.xyz))), Toggles.z);			// partial precision
+    q1.x = dot(normalize(expand(r0.xyz)), expand(IN.texcoord_2.xyz));			// partial precision
+    q3.x = dot(PSLightColor[1].rgba, IN.color_0.rgba) + dot(PSLightColor[2].rgba, IN.color_1.rgba);			// partial precision
+    q4.xyz = ((0.2 >= q1.x ? (q9.x * max(q1.x + 0.5, 0)) : q9.x) * PSLightColor[0].rgb) * IN.texcoord_1.xyz;
+    OUT.color_0.a = q3.x;			// partial precision
+    OUT.color_0.rgb = q4.xyz * ((t5.x * (t2.xyz - 1)) + 1);			// partial precision
 
     return OUT;
 };

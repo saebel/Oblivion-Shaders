@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
 float4 ShadowProjData;
 float4 ShadowProjTransform;
-
-
+//
+//
 // Registers:
 //
 //   Name                Reg   Size
@@ -24,7 +24,6 @@ float4 ShadowProjTransform;
 //   ShadowProjTransform const_23      1
 //   ShadowProjData      const_24      1
 //
-
 
 
 // Structures:
@@ -51,22 +50,19 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {(1.0 / 512), 0, 1, 0};
+    float2 q0;
+    float2 q1;
 
-    float2 r0;
-
-    r0.xy = (IN.texcoord_0 / 512) + ShadowProjTransform.xy;
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.w = 1 - saturate((ShadowProjData.x - length(ShadowProjTransform.zw - IN.position.xy)) / ShadowProjData.y);
-    OUT.texcoord_0.xy = r0.xy;
-    OUT.texcoord_1.xy = r0.xy;
-    OUT.texcoord_2.xyz = 1;
-    OUT.texcoord_3.xyz = LightDirection[0].xyz;
+    q0.xy = ShadowProjTransform.zw - IN.position.xy;
     OUT.color_0.rgba = IN.texcoord_1.xyzw;
     OUT.color_1.rgba = IN.texcoord_2.xyzw;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
+    q1.xy = (IN.texcoord_0.xy / 512) + ShadowProjTransform.xy;
+    OUT.texcoord_0.xy = q1.xy;
+    OUT.texcoord_1.xy = q1.xy;
+    OUT.texcoord_2.w = 1 - saturate((ShadowProjData.x - length(q0.xy)) / ShadowProjData.y);
+    OUT.texcoord_2.xyz = 1;
+    OUT.texcoord_3.xyz = LightDirection[0].xyz;
 
     return OUT;
 };

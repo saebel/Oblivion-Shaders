@@ -5,7 +5,6 @@
 //    /Fcshaderdump19/WATERDISPLACE000.pso.dis
 //
 
-
 // Structures:
 
 struct VS_OUTPUT {
@@ -22,8 +21,11 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     const float4 const_0 = {1.0 - 0.1, 0.5, 0.5, 0.5};
 
+    float4 r0;
 
-    OUT.color_0.rgba = const_0.xyzw;
+    r0.xyzw = const_0.xyzw;
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = r0.xyz;
 
     return OUT;
 };

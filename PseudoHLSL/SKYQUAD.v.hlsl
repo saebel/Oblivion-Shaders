@@ -4,7 +4,6 @@
 //   vsa shaderdump19/SKYQUAD.vso /Fcshaderdump19/SKYQUAD.vso.dis
 //
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -24,9 +23,8 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     const int4 const_0 = {1, 0, 0, 0};
 
-
-    OUT.position.xyzw = (IN.position.xyzx * const_0.xxxy) + const_0.yyyx;
     OUT.color_0.rgba = IN.color_0.rgba;
+    OUT.position.xyzw = (IN.position.xyzx * const_0.xxxy) + const_0.yyyx;
 
     return OUT;
 };

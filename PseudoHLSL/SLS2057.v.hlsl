@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 row_major float4x4 ModelViewProj;
 row_major float4x4 WorldViewTranspose;
-
-
+//
+//
 // Registers:
 //
 //   Name               Reg   Size
@@ -21,7 +21,6 @@ row_major float4x4 WorldViewTranspose;
 //   WorldViewTranspose[0] const_4        1
 //   WorldViewTranspose[1] const_5        1
 //
-
 
 
 // Structures:
@@ -43,22 +42,17 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_6 = {0.1, -0.1, (1.0 / 750), 0.8};
-    const int4 const_7 = {1, 0, 0, 0};
+    float1 mdl0;
+    float2 q6;
 
-    float2 r0;
-
-    r0.x = dot(WorldViewTranspose[0].xyz, IN.normal.xyz);
-    r0.y = dot(WorldViewTranspose[1].xyz, IN.normal.xyz);
-    r0.xy = min(r0.xy, 0.1);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
+    q6.xy = mul(float2x3(WorldViewTranspose[0].xyz, WorldViewTranspose[1].xyz), IN.normal.xyz);
+    mdl0.x = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
     OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.xy = max(r0.xy, -0.1);
-    r0.y = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.z = r0.y;
-    OUT.texcoord_0.z = max((r0.y / 750) + 0.8, 1);
+    OUT.position.xy = mul(float2x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw), IN.position.xyzw);
+    OUT.position.z = mdl0.x;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_0.z = max((mdl0.x / 750) + 0.8, 1);
+    OUT.texcoord_1.xy = max(min(q6.xy, 0.1), -0.1);
 
     return OUT;
 };

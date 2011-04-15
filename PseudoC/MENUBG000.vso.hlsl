@@ -19,7 +19,7 @@
     const float4 const_0 = {0.3, 0.59, 0.11, 0};
     float4 IN.position : POSITION;
     float4 IN.texcoord_0 : TEXCOORD0;
-    OUT.texcoord_0.xy = (IN.texcoord_0 * texRatio0.xy) + texRatio0.zw;
+    OUT.texcoord_0.xy = (IN.texcoord_0.xy * texRatio0.xy) + texRatio0.zw;
     OUT.position.xyzw = IN.position.xyzw;
     OUT.texcoord_1.xyz = const_0.xyz;
 

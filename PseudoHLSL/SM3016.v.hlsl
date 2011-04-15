@@ -5,14 +5,14 @@
 //
 //
 // Parameters:
-
+//
 float4 Bones[54];
 float4 FogColor;
 float4 FogParam;
 row_major float4x4 ObjToCubeMap;
 row_major float4x4 SkinModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name              Reg   Size
@@ -31,7 +31,6 @@ row_major float4x4 SkinModelViewProj;
 //   Bones[1]             const_32      18
 //   Bones[2]             const_33      18
 //
-
 
 
 // Structures:
@@ -56,45 +55,40 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
+
     const float4 const_0 = {1, 765.01001, 0, 0};
 
+    float3 mdl12;
     float4 offset;
+    float4 q0;
+    float1 q1;
+    float3 q10;
+    float3 q11;
+    float3 q7;
+    float3 q8;
+    float3 q9;
     float4 r0;
-    float3 r1;
-    float3 r2;
 
-    offset.xyzw = (765.01001 * IN.blendindices.zyxw) - frac(765.01001 * IN.blendindices.zyxw);
-    r0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
-    r1.x = dot(Bones[0 + offset.y], r0.xyzw);
-    r1.y = dot(Bones[1 + offset.y], r0.xyzw);
-    r1.z = dot(Bones[2 + offset.y], r0.xyzw);
-    r2.xyz = r1.xyz * IN.blendweight.y;
-    r1.x = dot(Bones[0 + offset.x], r0.xyzw);
-    r1.y = dot(Bones[1 + offset.x], r0.xyzw);
-    r1.z = dot(Bones[2 + offset.x], r0.xyzw);
-    r2.xyz = (IN.blendweight.x * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.z], r0.xyzw);
-    r1.y = dot(Bones[1 + offset.z], r0.xyzw);
-    r1.z = dot(Bones[2 + offset.z], r0.xyzw);
-    r2.xyz = (IN.blendweight.z * r1.xyz) + r2.xyz;
-    r1.x = dot(Bones[0 + offset.w], r0.xyzw);
-    r1.y = dot(Bones[1 + offset.w], r0.xyzw);
-    r1.z = dot(Bones[2 + offset.w], r0.xyzw);
+    offset.xyzw = 765.01001 * IN.blendindices.zyxw;
     r0.w = 1;
-    r0.xyz = ((1 - dot(IN.blendweight.xyz, 1)) * r1.xyz) + r2.xyz;
-    r1.x = dot(SkinModelViewProj[0].xyzw, r0.xyzw);
-    r1.y = dot(SkinModelViewProj[1].xyzw, r0.xyzw);
-    r1.z = dot(SkinModelViewProj[2].xyzw, r0.xyzw);
+    q0.xyzw = (IN.position.xyzx * const_0.xxxz) + const_0.zzzx;
+    q11.xyz = mul(float3x4(Bones[0 + offset.w].xyzw, Bones[1 + offset.w].xyzw, Bones[2 + offset.w].xyzw), q0.xyzw);
+    q9.xyz = mul(float3x4(Bones[0 + offset.z].xyzw, Bones[1 + offset.z].xyzw, Bones[2 + offset.z].xyzw), q0.xyzw);
+    q8.xyz = mul(float3x4(Bones[0 + offset.x].xyzw, Bones[1 + offset.x].xyzw, Bones[2 + offset.x].xyzw), q0.xyzw);
+    q7.xyz = mul(float3x4(Bones[0 + offset.y].xyzw, Bones[1 + offset.y].xyzw, Bones[2 + offset.y].xyzw), q0.xyzw);
+    q10.xyz = (IN.blendweight.z * q9.xyz) + ((IN.blendweight.x * q8.xyz) + (q7.xyz * IN.blendweight.y));
+    r0.xyz = ((1 - weight(IN.blendweight.xyz)) * q11.xyz) + q10.xyz;
+    mdl12.xyz = mul(float3x4(SkinModelViewProj[0].xyzw, SkinModelViewProj[1].xyzw, SkinModelViewProj[2].xyzw), r0.xyzw);
     OUT.position.w = dot(SkinModelViewProj[3].xyzw, r0.xyzw);
-    OUT.position.xyz = r1.xyz;
-    OUT.texcoord_2.w = (1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y)) * FogParam.z;
-    OUT.texcoord_1.x = dot(ObjToCubeMap[0].xyzw, r0.xyzw);
-    OUT.texcoord_1.y = dot(ObjToCubeMap[1].xyzw, r0.xyzw);
-    OUT.texcoord_1.z = dot(ObjToCubeMap[2].xyzw, r0.xyzw);
-    OUT.texcoord_1.w = dot(ObjToCubeMap[3].xyzw, r0.xyzw);
-    OUT.texcoord_6.xyz = r0.xyz;
+    OUT.position.xyz = mdl12.xyz;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyzw = mul(ObjToCubeMap, r0.xyzw);
+    q1.x = 1 - saturate((FogParam.x - length(mdl12.xyz)) / FogParam.y);
     OUT.texcoord_2.xyz = FogColor.rgb;
+    OUT.texcoord_2.w = q1.x * FogParam.z;
+    OUT.texcoord_6.xyz = r0.xyz;
 
     return OUT;
 };

@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float3 FogColor;
 float4 FogParam;
@@ -13,8 +13,8 @@ float3 LightDirection[3];
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
 float4 WindMatrices[16];
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -36,7 +36,6 @@ float4 WindMatrices[16];
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -46,6 +45,8 @@ struct VS_INPUT {
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
     float4 blendindices : BLENDINDICES;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -65,54 +66,36 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+
     const float4 const_4 = {0.5, 0, 1, 0};
 
-    float4 offset;
+    float3 eye1;
+    float3 lit4;
+    float3 mdl25;
+    float1 q0;
+    float4 q8;
     float4 r0;
-    float4 r1;
-    float3 r2;
-    float3 r3;
-    float3 r4;
 
-    offset.w = IN.blendindices.y;
-    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
-    r1.xyzw = IN.position.xyzw;
-    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + r1.xyzw;
-    r1.xyz = EyePosition.xyz - r0.xyz;
-    r1.w = 1.0 / length(r1.xyz);
-    r4.xyz = normalize((r1.w * r1.xyz) + LightDirection[0].xyz);
-    r2.x = dot(IN.tangent.xyz, r4.xyz);
-    r2.y = dot(IN.binormal.xyz, r4.xyz);
-    r2.z = dot(IN.normal.xyz, r4.xyz);
-    r3.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r3.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r3.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_1.xyz = normalize(r3.xyz);
-    r3.xyz = LightPosition[1].xyz - r0.xyz;
-    OUT.texcoord_3.xyz = normalize(r2.xyz);
-    r2.xyz = normalize(r3.xyz);
-    OUT.texcoord_2.x = dot(IN.tangent.xyz, r2.xyz);
-    OUT.texcoord_2.y = dot(IN.binormal.xyz, r2.xyz);
-    OUT.texcoord_2.z = dot(IN.normal.xyz, r2.xyz);
-    r2.xyz = (r1.w * r1.xyz) + r2.xyz;
-    r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    r0.xyz = normalize(r2.xyz);
-    OUT.texcoord_5.xyz = (0.5 * (r3.xyz / LightPosition[1].w)) + 0.5;	// [-1,+1] to [0,1]
-    OUT.texcoord_4.x = dot(IN.tangent.xyz, r0.xyz);
-    OUT.texcoord_4.y = dot(IN.binormal.xyz, r0.xyz);
-    OUT.texcoord_4.z = dot(IN.normal.xyz, r0.xyz);
-    OUT.position.xyz = r1.xyz;
-    OUT.color_1.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
-    OUT.texcoord_5.w = 0.5;
+    q0.x = IN.blendindices.y;
+    q8.xyzw = mul(float4x4(WindMatrices[0 + q0.x].xyzw, WindMatrices[1 + q0.x].xyzw, WindMatrices[2 + q0.x].xyzw, WindMatrices[3 + q0.x].xyzw), IN.position.xyzw);
     OUT.color_0.rgba = (IN.blendindices.z * const_4.zzzy) + const_4.yyyz;
+    r0.xyzw = (IN.blendindices.x * (q8.xyzw - IN.position.xyzw)) + IN.position.xyzw;
+    mdl25.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), r0.xyzw);
+    lit4.xyz = LightPosition[1].xyz - r0.xyz;
     OUT.color_1.rgb = FogColor.rgb;
+    eye1.xyz = EyePosition.xyz - r0.xyz;
+    OUT.color_1.a = 1 - saturate((FogParam.x - length(mdl25.xyz)) / FogParam.y);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
+    OUT.position.xyz = mdl25.xyz;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = normalize(mul(TanSpaceProj, LightDirection[0].xyz));
+    OUT.texcoord_2.xyz = mul(TanSpaceProj, normalize(lit4.xyz));
+    OUT.texcoord_3.xyz = normalize(mul(TanSpaceProj, normalize(normalize(eye1.xyz) + LightDirection[0].xyz)));
+    OUT.texcoord_4.xyz = mul(TanSpaceProj, normalize(normalize(eye1.xyz) + normalize(lit4.xyz)));
+    OUT.texcoord_5.w = 0.5;
+    OUT.texcoord_5.xyz = compress(lit4.xyz / LightPosition[1].w);	// [-1,+1] to [0,1]
 
     return OUT;
 };

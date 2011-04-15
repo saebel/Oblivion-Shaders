@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 samplerCUBE EnvironmentCubeMap;
 float4 MatAlpha;
 sampler2D NormalMap;
 float4 PSLightColor;
-
-
+//
+//
 // Registers:
 //
 //   Name               Reg   Size
@@ -23,14 +23,13 @@ float4 PSLightColor;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float4 input_1 : TEXCOORD1_centroid;			// partial precision
-    float3 input_2 : TEXCOORD2_centroid;			// partial precision
-    float3 color_0 : COLOR0;			// partial precision
+    float2 NormalUV : TEXCOORD0;			// partial precision
+    float4 texcoord_1 : TEXCOORD1_centroid;			// partial precision
+    float3 texcoord_2 : TEXCOORD2_centroid;			// partial precision
+    float3 color_0 : COLOR0;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -42,17 +41,17 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 1, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	envreflect(i, n)	((2 * dot(i, n)) * (i)) - ((n) * dot(i, i))
 
     float4 r0;
     float4 r1;
 
-    r0.xyz = 2 * (IN.input_1.xyz - 0.5);			// partial precision	// [0,1] to [-1,+1]
-    r1.xyz = normalize(IN.input_2.xyz);			// partial precision
-    r0.xyzw = texCUBE(EnvironmentCubeMap, ((2 * dot(r0.xyz, r1.xyz)) * r0.xyz) - (r1.xyz * dot(r0.xyz, r0.xyz)));			// partial precision
-    r1.xyzw = tex2D(NormalMap, IN.texcoord_0.xy);			// partial precision
-    OUT.color_0.rgb = ((((r0.xyz * r1.w) * MatAlpha.x) * IN.color_0.rgb) * PSLightColor.rgb) * IN.input_1.w;			// partial precision
-    OUT.color_0.a = 1;			// partial precision
+    r0.xyzw = texCUBE(EnvironmentCubeMap, envreflect(expand(IN.texcoord_1.xyz), normalize(IN.texcoord_2.xyz)));			// partial precision
+    r1.xyzw = tex2D(NormalMap, IN.NormalUV.xy);			// partial precision
+    OUT.color_0.a = 1;			// partial precision
+    OUT.color_0.rgb = ((((r0.xyz * r1.w) * MatAlpha.x) * IN.color_0.rgb) * PSLightColor.rgb) * IN.texcoord_1.w;			// partial precision
 
     return OUT;
 };

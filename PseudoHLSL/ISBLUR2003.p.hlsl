@@ -4,29 +4,30 @@
 //   vsa shaderdump19/ISBLUR2003.pso /Fcshaderdump19/ISBLUR2003.pso.dis
 //
 //
+#define	OverlaySpace	Src1
+#define	ScreenSpace	Src0
 // Parameters:
-
-sampler2D Src0;
-sampler2D Src1;
+//
+sampler2D ScreenSpace;
+sampler2D OverlaySpace;
 float4 blendW;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   blendW       const_0       1
-//   Src0         texture_0       1
-//   Src1         texture_1       1
+//   ScreenSpace         texture_0       1
+//   OverlaySpace         texture_1       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
+    float2 ScreenOffset : TEXCOORD0;
+    float2 OverlayOffset : TEXCOORD1;
 };
 
 struct PS_OUTPUT {
@@ -38,16 +39,13 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_1 = {1, 0, 0, 0};
-
     float4 r0;
-    float4 r1;
+    float3 t0;
 
-    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
-    r0.w = 1;
-    r1.xyzw = tex2D(Src1, IN.texcoord_1.xy);
-    r0.xyz = (blendW.x * r0.xyz) + (r1.xyz * blendW.y);
-    OUT.color_0.rgba = r0.xyzw;
+    t0.xyz = tex2D(OverlaySpace, IN.OverlayOffset.xy);
+    r0.xyzw = tex2D(ScreenSpace, IN.ScreenOffset.xy);
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = (blendW.x * r0.xyz) + (t0.xyz * blendW.y);
 
     return OUT;
 };

@@ -26,27 +26,27 @@
 
     const float4 const_0 = {-0.5, 20, 0.5, 0};
     float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;			// partial precision
-    float4 texcoord_2 : TEXCOORD2_centroid;			// partial precision
-    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
+    float2 texcoord_1 : TEXCOORD1;			// partial precision
+    float4 texcoord_2 : TEXCOORD2_centroid;			// partial precision
+    float3 texcoord_3 : TEXCOORD3_centroid;			// partial precision
     sampler2D BaseMap;
     sampler2D NormalMap;
     sampler2D ShadowMap;
     r1.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r1.xyz = r1.xyz - 0.5;
-    r2.xyz = 2 * r1.xyz;			// partial precision
-    r1.xyz = normalize(r2.xyz);			// partial precision
-    r2.x = saturate(dot(r1.xyz, IN.texcoord_3.xyz));			// partial precision
+    r2.xyz = 2 * r1.xyz;			// partial precision
+    r1.xyz = normalize(r2.xyz);			// partial precision
+    r2.x = saturate(dot(r1.xyz, IN.texcoord_3.xyz));			// partial precision
     r1.xyz = PSLightColor[0].rgb;
-    r1.xyz = (r2.x * r1.xyz) + AmbientColor.rgb;			// partial precision
-    r0.xyz = r0.xyz * IN.texcoord_2.xyz;			// partial precision
-    r1.xyz = r1.xyz * r0.xyz;			// partial precision
+    r1.xyz = (r2.x * r1.xyz) + AmbientColor.rgb;			// partial precision
+    r0.xyz = r0.xyz * IN.texcoord_2.xyz;			// partial precision
+    r1.xyz = r1.xyz * r0.xyz;			// partial precision
     r0.xy = IN.texcoord_0.xy * 20;
     r0.xyzw = tex2D(ShadowMap, r0.xy);
     r0.w = (r0.x * 0.5) + 0.5;
-    r0.xyz = r1.xyz * r0.w;			// partial precision
-    r0.w = IN.texcoord_2.w;			// partial precision
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    r0.xyz = r1.xyz * r0.w;			// partial precision
+    r0.w = IN.texcoord_2.w;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 18 instruction slots used (3 texture, 15 arithmetic)

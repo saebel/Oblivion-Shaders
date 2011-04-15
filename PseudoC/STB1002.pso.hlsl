@@ -23,8 +23,8 @@
 //
 
     IN.texcoord_0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
-    IN.texcoord_1.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
-    texcoord IN.texcoord_3
+    IN.texcoord_1.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
+    float4 texcoord_3 : TEXCOORD3;
     r0.xyz = saturate(dot(2 * ((IN.texcoord_1.xyz) - 0.5), 2 * ((IN.texcoord_3.xyz) - 0.5)));
     r0.xyz = saturate((PSLightColor[0].rgb * r0.xyz) + AmbientColor.rgb);
     r1.xyz = IN.texcoord_0.xyz * IN.input_0.xyz;

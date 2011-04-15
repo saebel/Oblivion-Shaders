@@ -4,7 +4,6 @@
 //   psa shaderdump19/SKYSISUN.pso /Fcshaderdump19/SKYSISUN.pso.dis
 //
 
-
 // Structures:
 
 struct VS_OUTPUT {
@@ -18,9 +17,6 @@ struct PS_OUTPUT {
 
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
-
-    const int4 const_0 = {0, 0, 0, 0};
-
 
     OUT.color_0.rgba = 0;
 

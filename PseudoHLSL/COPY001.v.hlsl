@@ -5,11 +5,11 @@
 //
 //
 // Parameters:
-
+//
 row_major float2x2 RotationMatrix;
 float4 texRatio0;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -18,7 +18,6 @@ float4 texRatio0;
 //   RotationMatrix[0] const_8        1
 //   RotationMatrix[1] const_9        1
 //
-
 
 
 // Structures:
@@ -38,13 +37,11 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 0.5, 0, 0};
-
     float2 r0;
 
-    r0.xy = ((IN.texcoord_0 * texRatio0.xy) + texRatio0.zw) - 0.5;
-    OUT.texcoord_0.xy = ((r0.x * RotationMatrix[0].xy) + (r0.y * RotationMatrix[1].xy)) + 0.5;
     OUT.position.xyzw = IN.position.xyzw;
+    r0.xy = ((IN.texcoord_0.xy * texRatio0.xy) + texRatio0.zw) - 0.5;
+    OUT.texcoord_0.xy = ((r0.x * RotationMatrix[0].xy) + (r0.y * RotationMatrix[1].xy)) + 0.5;
 
     return OUT;
 };

@@ -23,16 +23,16 @@
     float3 texcoord_6 : TEXCOORD6_centroid;
     float3 IN.color_0 : COLOR0;
     sampler2D BaseMap;
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r0.x = dot(IN.texcoord_6.xyz, IN.texcoord_6.xyz);
     r1.w = 1.0 / sqrt(r0.x);
-    r0.xy = r1.w * IN.texcoord_6.xy;			// partial precision
-    r0.w = (r0.w * 0.04) - 0.02;			// partial precision
+    r0.xy = r1.w * IN.texcoord_6.xy;			// partial precision
+    r0.w = (r0.w * 0.04) - 0.02;			// partial precision
     r0.xy = (r0.w * r0.xy) + IN.texcoord_0.xy;
-    r0.xyzw = tex2D(BaseMap, r0.xy);			// partial precision
-    r1.xyz = r0.xyz * IN.color_0.rgb;			// partial precision
-    r0.xyz = (Toggles.x <= 0.0 ? r1.xyz : r0.xyz);			// partial precision
+    r0.xyzw = tex2D(BaseMap, r0.xy);			// partial precision
+    r1.xyz = r0.xyz * IN.color_0.rgb;			// partial precision
+    r0.xyz = (Toggles.x <= 0.0 ? r0.xyz : r1.xyz);			// partial precision
     r0.w = 1;
-    OUT.color_0.rgba = r0.xyzw;			// partial precision
+    OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 11 instruction slots used (2 texture, 9 arithmetic)

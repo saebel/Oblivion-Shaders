@@ -53,7 +53,7 @@
     sampler2D DisplacementMap;
     r0.xyzw = tex2D(DisplacementMap, IN.texcoord_6.xy);
     r1.xy = IN.texcoord_6.xy - 0.5;
-    r0.w = dot(r1.xy, r1.xy) + 0;
+    r0.w = dot(r1.xy, r1.xy);
     r0.w = 1.0 / sqrt(r0.w);
     r2.w = 1.0 / r0.w;
     r0.w = 2 * r2.w;
@@ -61,7 +61,7 @@
     r0.w = r0.w * r1.w;
     r4.w = saturate(max(0.1, r0.w));
     r1.xy = EyePos.xy - IN.texcoord_1.xy;
-    r0.w = dot(r1.xy, r1.xy) + 0;
+    r0.w = dot(r1.xy, r1.xy);
     r0.w = 1.0 / sqrt(r0.w);
     r0.w = 1.0 / r0.w;
     r1.xyz = (2 * r0.xyz) - 1;
@@ -89,13 +89,13 @@
     r0.xyz = (-r0.w * r1.xyz) + r0.xyz;
     r6.w = saturate(r2.x);
     r2.xy = (0.1 * r1.xy) + r4.xy;
-    r1.xyzw = texCUBE(ReflectionMap, r0.xyz);			// partial precision
+    r1.xyzw = texCUBE(ReflectionMap, r0.xyz);			// partial precision
     r0.xyzw = tex2D(DetailMap, r2.xy);
     r0.w = -(r6.w - 1);
     r1.w = r0.w * r0.w;
     r2.xyz = ReflectionColor.rgb - r3.y;
     r1.w = r1.w * r1.w;
-    r1.xyz = r1.xyz * r2.xyz;			// partial precision
+    r1.xyz = r1.xyz * r2.xyz;			// partial precision
     r1.w = r0.w * r1.w;
     r1.xyz = r1.xyz * ReflectionColor.rgb;
     r0.w = -(r3.y + FresnelRI.x);
@@ -104,16 +104,16 @@
     r2.xyz = DeepColor.rgb;
     r2.xyz = ShallowColor.rgb - r2.xyz;
     r0.w = max(VarAmounts.z, r3.w);
-    r2.xyz = (r6.w * r2.xyz) + DeepColor.rgb;			// partial precision
+    r2.xyz = (r6.w * r2.xyz) + DeepColor.rgb;			// partial precision
     r1.w = FogParam.x - r5.w;
-    r2.xyz = saturate((r3.w * r1)) + r2.xyz);
+    r2.xyz = saturate((r3.w * r1.xyz) + r2.xyz);
     r3.w = 1.0 / FogParam.y;
     r1.xyz = lerp(r0.xyz, r2.xyz, r4.w);
     r1.w = saturate(r1.w * r3.w);
     r0.xyz = FogColor.rgb - r1.xyz;
     r1.w = -(r1.w - 1);
     r0.xyz = (r1.w * r0.xyz) + r1.xyz;
-    r0.w = (r2.w >= 0.0 ? 0 : r0.w);
+    r0.w = (r2.w >= 0.0 ? r0.w : 0);
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 68 instruction slots used (4 texture, 64 arithmetic)

@@ -4,7 +4,6 @@
 //   vsa shaderdump19/SKYQUADSI.vso /Fcshaderdump19/SKYQUADSI.vso.dis
 //
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -21,7 +20,6 @@ VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
     const int4 const_0 = {1, 0, 0, 0};
-
 
     OUT.position.xyzw = (IN.position.xyzx * const_0.xxxy) + const_0.yyyx;
 

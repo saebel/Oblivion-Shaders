@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -24,7 +24,6 @@ row_major float4x4 ModelViewProj;
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -36,6 +35,8 @@ struct VS_INPUT {
     float4 color_0 : COLOR0;
     float4 texcoord_1 : TEXCOORD1;
     float4 texcoord_2 : TEXCOORD2;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -53,31 +54,22 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    const float4 const_4 = {0.5, 1, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
 
-    float3 r0;
-    float3 r1;
-    float3 r2;
+    float3 eye8;
+    float3 lit0;
 
-    r2.xyz = normalize(LightPosition[0].xyz - IN.position.xyz);
-    r1.x = dot(IN.tangent.xyz, r2.xyz);
-    r1.y = dot(IN.binormal.xyz, r2.xyz);
-    r1.z = dot(IN.normal.xyz, r2.xyz);
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_2.xyz = (0.5 * normalize(r1.xyz)) + 0.5;	// [-1,+1] to [0,1]
-    r1.xyz = normalize(normalize(EyePosition.xyz - IN.position.xyz) + r2.xyz);
-    r0.x = dot(IN.tangent.xyz, r1.xyz);
-    r0.y = dot(IN.binormal.xyz, r1.xyz);
-    r0.z = dot(IN.normal.xyz, r1.xyz);
-    OUT.texcoord_3.xyz = (0.5 * r0.xyz) + 0.5;
+    lit0.xyz = normalize(LightPosition[0].xyz - IN.position.xyz);
+    eye8.xyz = mul(TanSpaceProj, normalize(normalize(EyePosition.xyz - IN.position.xyz) + lit0.xyz));
+    OUT.color_0.rgba = IN.texcoord_1.xyzw;
+    OUT.color_1.rgba = IN.texcoord_2.xyzw;
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
     OUT.texcoord_1.xyz = IN.color_0.rgb;
     OUT.texcoord_2.w = 1;
-    OUT.color_0.rgba = IN.texcoord_1.xyzw;
-    OUT.color_1.rgba = IN.texcoord_2.xyzw;
+    OUT.texcoord_2.xyz = compress(normalize(mul(TanSpaceProj, lit0.xyz)));	// [-1,+1] to [0,1]
+    OUT.texcoord_3.xyz = compress(eye8.xyz);	// [-1,+1] to [0,1]
 
     return OUT;
 };

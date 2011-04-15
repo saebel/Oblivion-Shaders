@@ -5,12 +5,12 @@
 //
 //
 // Parameters:
-
+//
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
 row_major float4x4 WorldViewTranspose;
-
-
+//
+//
 // Registers:
 //
 //   Name               Reg   Size
@@ -24,7 +24,6 @@ row_major float4x4 WorldViewTranspose;
 //   WorldViewTranspose[2] const_6        1
 //   LightPosition[0]      const_16       1
 //
-
 
 
 // Structures:
@@ -43,16 +42,9 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-
-
-    OUT.position.x = dot(ModelViewProj[0].xyzw, IN.position.xyzw);
-    OUT.position.y = dot(ModelViewProj[1].xyzw, IN.position.xyzw);
-    OUT.position.z = dot(ModelViewProj[2].xyzw, IN.position.xyzw);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.x = dot(WorldViewTranspose[0].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.y = dot(WorldViewTranspose[1].xyzw, IN.position.xyzw);
-    OUT.texcoord_1.z = dot(WorldViewTranspose[2].xyzw, IN.position.xyzw);
+    OUT.position.xyzw = mul(ModelViewProj, IN.position.xyzw);
     OUT.texcoord_1.w = LightPosition[0].w;
+    OUT.texcoord_1.xyz = mul(float3x4(WorldViewTranspose[0].xyzw, WorldViewTranspose[1].xyzw, WorldViewTranspose[2].xyzw), IN.position.xyzw);
 
     return OUT;
 };

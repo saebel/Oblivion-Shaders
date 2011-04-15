@@ -5,7 +5,7 @@
 //
 //
 // Parameters:
-
+//
 float4 AlphaParam;
 float4 EyeVector;
 float4 FogColor;
@@ -18,8 +18,8 @@ float4 ObjToCube2;
 float4 ObjToCube3;
 float3 ScaleMask;
 float4 WindData;
-
-
+//
+//
 // Registers:
 //
 //   Name          Reg   Size
@@ -41,7 +41,6 @@ float4 WindData;
 //   InstanceData[0]  const_20       1
 //   InstanceData[1]  const_21       1
 //
-
 
 
 // Structures:
@@ -68,56 +67,53 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-#define	PI	3.14159274
 #define	D3DSINCOSCONST1	-1.55009923e-006, -2.17013894e-005, 0.00260416674, 0.00026041668
 #define	D3DSINCOSCONST2	-0.020833334, -0.125, 1, 0.5
+#define	PI			3.14159274
+#define	anglei(v)		(((v) + PI) / (2 * PI))
+#define	angler(v)		(((v) * (2 * PI)) - PI)
+#define	fracr(v)		angler(frac(anglei(v)))	// signed modulo % PI
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	weight(v)		dot(v, 1)
+#define	sqr(v)			((v) * (v))
 
     const float4 const_7 = {0.01, 1, -1, 0};
-    const float4 const_8 = {(1.0 / 128), (1.0 / (PI * 2)), 0.5, 0};
-    const float4 const_16 = {PI * 2, -PI, 0, 0};
-    const float4 const_17 = {D3DSINCOSCONST1};
-    const float4 const_18 = {D3DSINCOSCONST2};
 
-    float4 offset;
+    float1 q0;
+    float4 q1;
     float4 r0;
     float4 r1;
-    float4 r2;
+    float3 r2;
 
-    offset.w = IN.texcoord_1.x;
-    r0.w = ((InstanceData[0 + offset.w].y + InstanceData[0 + offset.w].x) / 128) + WindData.w;
-    r0.xy = EyeVector.xy * EyeVector.xy;
-    r1.xz = -EyeVector.xy / sqrt(r0.y + r0.x);
-    r1.yw = r1.z * const_7.xz;
-    r0.xyz = r1.zxw * const_7.zyy;
-    r1.xy = r0.xy * (1.0 / sqrt(dot(r1.yxw, r0.xyz)));
-    r2.w = (frac((r0.w / (PI * 2)) + 0.5) * PI * 2) - PI;
-    r0.w = r1.x;
+    r0.xy = sqr(EyeVector.xy);
     r2.xy = const_7.xy;
-    r2.xyz = (((r2.x * InstanceData[0 + offset.w].w) * ScaleMask.xyz) + r2.y) * IN.position.xyz;
-    r1.x = dot(r0.wyz, r2.xyz);
-    r0.w = IN.position.w;
+    r1.xz = -EyeVector.xy / sqrt(r0.y + r0.x);
+    r1.yw = r1.z * const_7.zw;
+    r0.xyz = r1.zxw * const_7.zyy;
+    r1.xy = r0.xy / sqrt(dot(r1.yxw, r0.xyz));
+    r0.w = r1.x;
+    q0.x = ((InstanceData[0 + IN.texcoord_1.x].y + InstanceData[0 + IN.texcoord_1.x].x) / 128) + WindData.w;
+    r2.xyz = (((r2.x * InstanceData[0 + IN.texcoord_1.x].w) * ScaleMask.xyz) + r2.y) * IN.position.xyz;
     r1.y = dot(r1.yzw, r2.xyz);
-    r0.xy = (((sin(r2.w) * WindData.z) * (IN.color_0.a * IN.color_0.a)) * WindData.xy) + r1.xy;
+    r1.x = dot(r0.wyz, r2.xyz);
     r0.z = r2.z;
-    r0.xyz = r0.xyz + InstanceData[0 + offset.w];
+    r0.w = IN.position.w;
+    r0.xy = (((sin(fracr(q0.x)) * WindData.z) * sqr(IN.color_0.a)) * WindData.xy) + r1.xy;
+    r0.xyz = r0.xyz + InstanceData[0 + IN.texcoord_1.x];
+    r1.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), r0.xyzw);
     r1.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    r0.xyzw = (r0.xyzx * const_7.yyyw) + const_7.wwwy;
     r2.xy = saturate((length(r1.xyzw) - AlphaParam.xz) / AlphaParam.yw);
+    OUT.color_0.rgb = FogColor.rgb;
     OUT.color_0.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
     OUT.position.xyzw = r1.xyzw;
-    OUT.texcoord_5.w = r2.x * (1 - r2.y);
-    OUT.texcoord_1.x = dot(ObjToCube0.xyzw, r0.xyzw);
-    OUT.texcoord_1.y = dot(ObjToCube1.xyzw, r0.xyzw);
-    OUT.texcoord_1.z = dot(ObjToCube2.xyzw, r0.xyzw);
-    OUT.texcoord_1.w = dot(ObjToCube3.xyzw, r0.xyzw);
-    OUT.texcoord_2.xyzw = r0.xyzw;
     OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    q1.xyzw = (r0.xyzx * const_7.yyyw) + const_7.wwwy;
+    OUT.texcoord_1.xyzw = mul(float4x4(ObjToCube0.xyzw, ObjToCube1.xyzw, ObjToCube2.xyzw, ObjToCube3.xyzw), q1.xyzw);
+    OUT.texcoord_2.xyzw = q1.xyzw;
     OUT.texcoord_4.xyzw = 0;
+    OUT.texcoord_5.w = r2.x * (1 - r2.y);
     OUT.texcoord_5.xyz = 0;
-    OUT.color_0.rgb = FogColor.rgb;
 
     return OUT;
 };

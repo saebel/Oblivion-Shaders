@@ -5,10 +5,10 @@
 //
 //
 // Parameters:
-
+//
 sampler2D BaseMap;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -17,12 +17,11 @@ sampler2D BaseMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;			// partial precision
-    float4 texcoord_1 : TEXCOORD1;			// partial precision
+    float2 BaseUV : TEXCOORD0;			// partial precision
+    float4 texcoord_1 : TEXCOORD1;			// partial precision
 };
 
 struct PS_OUTPUT {
@@ -34,11 +33,11 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
+    float4 r0;
 
-    float3 r0;
-
-    r0.xyz = saturate(IN.texcoord_1.z / IN.texcoord_1.w);			// partial precision
-    OUT.color_0.rgba = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
+    r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
+    OUT.color_0.a = r0.w;			// partial precision
+    OUT.color_0.rgb = saturate(IN.texcoord_1.z / IN.texcoord_1.w);			// partial precision
 
     return OUT;
 };

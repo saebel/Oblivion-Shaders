@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D BaseMap;
 sampler2D FaceGenMap;
 sampler2D FaceGenMap2;
 sampler2D NormalMap;
 float4 PSLightColor[4];
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
@@ -27,14 +27,13 @@ float4 PSLightColor[4];
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
-    float2 texcoord_2 : TEXCOORD2;
-    float2 texcoord_3 : TEXCOORD3;
+    float2 BaseUV : TEXCOORD0;
+    float2 NormalUV : TEXCOORD1;
+    float2 FaceUV : TEXCOORD2;
+    float2 Face2UV : TEXCOORD3;
     float3 color_1 : COLOR1;
     float4 color_0 : COLOR0;
 };
@@ -48,22 +47,26 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const float4 const_0 = {-0.5, 2, 0, 0};
+#define	expand(v)		(((v) - 0.5) / 0.5)
+#define	compress(v)		(((v) * 0.5) + 0.5)
+#define	shade(n, l)		max(dot(n, l), 0)
+#define	shades(n, l)		saturate(dot(n, l))
 
+    float3 q0;
+    float3 q2;
     float4 r0;
     float4 r1;
     float4 r2;
     float4 r3;
 
-    r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);
-    r0.w = r0.w * AmbientColor.a;
-    r1.xyzw = tex2D(FaceGenMap, IN.texcoord_2.xy);
-    r2.xyzw = tex2D(FaceGenMap2, IN.texcoord_3.xy);
-    r0.xyz = 2 * ((2 * r2.xyz) * ((2 * (r1.xyz - 0.5)) + r0.xyz));	// [0,1] to [-1,+1]
-    r3.xyzw = tex2D(NormalMap, IN.texcoord_1.xy);
-    r3.xyz = saturate((saturate(dot(2 * (r3.xyz - 0.5), 2 * (IN.color_1.rgb - 0.5))) * PSLightColor[0]) + AmbientColor.rgb);	// [0,1] to [-1,+1]
-    r0.xyz = (r0.xyz * r3.xyz) + (((-r0.xyz * r3.xyz) + IN.color_0.rgb) * IN.color_0.a);
-    OUT.color_0.rgba = r0.xyzw;
+    r3.xyzw = tex2D(NormalMap, IN.NormalUV.xy);
+    r2.xyzw = tex2D(FaceGenMap2, IN.Face2UV.xy);
+    r1.xyzw = tex2D(FaceGenMap, IN.FaceUV.xy);
+    r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);
+    q0.xyz = saturate((shades(expand(r3.xyz), expand(IN.color_1.rgb)) * PSLightColor[0].rgb) + AmbientColor.rgb);
+    q2.xyz = 2 * ((2 * r2.xyz) * (expand(r1.xyz) + r0.xyz));
+    OUT.color_0.a = r0.w * AmbientColor.a;
+    OUT.color_0.rgb = (q2.xyz * q0.xyz) + ((IN.color_0.rgb - (q2.xyz * q0.xyz)) * IN.color_0.a);
 
     return OUT;
 };

@@ -5,13 +5,13 @@
 //
 //
 // Parameters:
-
+//
 float4 AmbientColor;
 sampler2D DiffuseMap;
 float4 EmittanceColor;
 sampler2D GlowMap;
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -23,12 +23,11 @@ sampler2D GlowMap;
 //
 
 
-
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
-    float2 texcoord_1 : TEXCOORD1;
+    float2 DiffuseUV : TEXCOORD0;
+    float2 GlowUV : TEXCOORD1;
 };
 
 struct PS_OUTPUT {
@@ -40,13 +39,13 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
-    float3 r0;
+    float4 r0;
     float4 r1;
 
-    r1.xyzw = tex2D(GlowMap, IN.texcoord_1.xy);
-    r0.xyz = (r1.xyz * EmittanceColor.rgb) + AmbientColor.rgb;
-    OUT.color_0.rgba = tex2D(DiffuseMap, IN.texcoord_0.xy);
+    r1.xyzw = tex2D(GlowMap, IN.GlowUV.xy);
+    r0.xyzw = tex2D(DiffuseMap, IN.DiffuseUV.xy);
+    OUT.color_0.a = r0.w;
+    OUT.color_0.rgb = (r1.xyz * EmittanceColor.rgb) + AmbientColor.rgb;
 
     return OUT;
 };

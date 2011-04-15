@@ -4,29 +4,30 @@
 //   vsa shaderdump19/NIGHTEYE000.pso /Fcshaderdump19/NIGHTEYE000.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
-
+//
 float4 SpellInput;
-sampler2D Src0;
-
-
+sampler2D ScreenSpace;
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   SpellInput   const_1       1
-//   Src0         texture_0       1
+//   ScreenSpace         texture_0       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float4 texcoord_0 : TEXCOORD0;
+    float4 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
+    float4 output_0 : COLOR0;
 };
 
 // Code:
@@ -37,19 +38,17 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     const int4 const_0 = {1, 0, 0, -1};
     const float4 const_2 = {1, 1, 1, 0.5};
     const float4 const_3 = {0.21, 0.5, 0.78, 0};
-    const int4 const_4 = {0, 0, 0, 1};
 
+    float1 q1;
     float4 r0;
     float4 r1;
 
-    IN.texcoord_0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
+    IN.ScreenOffset.xyzw = tex2D(ScreenSpace, IN.ScreenOffset.xy);
     r1.xyzw = dot(const_0.xyz, SpellInput.xyz);
-    IN.texcoord_0.w = -1 + r1.w;
-    IN.texcoord_0.w = IN.texcoord_0.w * IN.texcoord_0.w;
-    r1.xyz = dot(const_2.xyz, IN.texcoord_0.xyz) * const_3.xyz;
-    IN.texcoord_0.w = (((-IN.texcoord_0.w * 0.5) + 0.5) > 0.5 ? 1 : 0);	// [-1,+1] to [0,1]
     r0.w = 1;
-    r0.xyz = lerp(r1.xyz, IN.texcoord_0.xyz, IN.texcoord_0.w);
+    q1.x = 0.5 - (((r1.w - 1) * (r1.w - 1)) * 0.5);
+    r0.xyz = lerp(dot(const_2.xyz, IN.ScreenOffset.xyz) * const_3.xyz, IN.ScreenOffset.xyz, q1.x > 0.5 ? 0 : 1);
+    OUT.output_0.xyzw = r0.xyzw;
 
     return OUT;
 };

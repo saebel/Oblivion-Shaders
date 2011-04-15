@@ -5,15 +5,15 @@
 //
 //
 // Parameters:
-
+//
 float4 EyePosition;
 float3 FogColor;
 float4 FogParam;
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
 float4 WindMatrices[16];
-
-
+//
+//
 // Registers:
 //
 //   Name           Reg   Size
@@ -33,7 +33,6 @@ float4 WindMatrices[16];
 //
 
 
-
 // Structures:
 
 struct VS_INPUT {
@@ -43,6 +42,8 @@ struct VS_INPUT {
     float3 normal : NORMAL;
     float4 texcoord_0 : TEXCOORD0;
     float4 blendindices : BLENDINDICES;
+
+#define	TanSpaceProj	float3x3(IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz)
 };
 
 struct VS_OUTPUT {
@@ -61,37 +62,25 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     const int4 const_4 = {0, 1, 0, 0};
 
-    float4 offset;
+    float3 eye12;
+    float3 mdl11;
+    float1 q0;
+    float4 q4;
     float4 r0;
-    float4 r1;
-    float3 r2;
-    float3 r3;
 
-    offset.w = IN.blendindices.y;
-    r0.w = dot(WindMatrices[3 + offset.w], IN.position.xyzw);
-    r0.x = dot(WindMatrices[0 + offset.w], IN.position.xyzw);
-    r0.y = dot(WindMatrices[1 + offset.w], IN.position.xyzw);
-    r0.z = dot(WindMatrices[2 + offset.w], IN.position.xyzw);
-    r1.xyzw = IN.position.xyzw;
-    r0.xyzw = (IN.blendindices.x * (r0.xyzw - IN.position.xyzw)) + r1.xyzw;
-    r1.x = dot(ModelViewProj[0].xyzw, r0.xyzw);
-    r1.y = dot(ModelViewProj[1].xyzw, r0.xyzw);
-    r1.z = dot(ModelViewProj[2].xyzw, r0.xyzw);
-    r2.x = dot(IN.tangent.xyz, LightDirection[0].xyz);
-    r2.y = dot(IN.binormal.xyz, LightDirection[0].xyz);
-    r2.z = dot(IN.normal.xyz, LightDirection[0].xyz);
-    r3.xyz = normalize(normalize(EyePosition.xyz - r0.xyz) + LightDirection[0].xyz);
-    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
-    OUT.texcoord_1.xyz = normalize(r2.xyz);
-    r2.x = dot(IN.tangent.xyz, r3.xyz);
-    r2.y = dot(IN.binormal.xyz, r3.xyz);
-    r2.z = dot(IN.normal.xyz, r3.xyz);
-    OUT.texcoord_3.xyz = normalize(r2.xyz);
-    OUT.position.xyz = r1.xyz;
-    OUT.color_1.a = 1 - saturate((FogParam.x - length(r1.xyz)) / FogParam.y);
-    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    q0.x = IN.blendindices.y;
+    q4.xyzw = mul(float4x4(WindMatrices[0 + q0.x].xyzw, WindMatrices[1 + q0.x].xyzw, WindMatrices[2 + q0.x].xyzw, WindMatrices[3 + q0.x].xyzw), IN.position.xyzw);
     OUT.color_0.rgba = (IN.blendindices.z * const_4.yyyx) + const_4.xxxy;
+    r0.xyzw = (IN.blendindices.x * (q4.xyzw - IN.position.xyzw)) + IN.position.xyzw;
+    mdl11.xyz = mul(float3x4(ModelViewProj[0].xyzw, ModelViewProj[1].xyzw, ModelViewProj[2].xyzw), r0.xyzw);
+    eye12.xyz = mul(TanSpaceProj, normalize(normalize(EyePosition.xyz - r0.xyz) + LightDirection[0].xyz));
     OUT.color_1.rgb = FogColor.rgb;
+    OUT.color_1.a = 1 - saturate((FogParam.x - length(mdl11.xyz)) / FogParam.y);
+    OUT.position.w = dot(ModelViewProj[3].xyzw, r0.xyzw);
+    OUT.position.xyz = mdl11.xyz;
+    OUT.texcoord_0.xy = IN.texcoord_0.xy;
+    OUT.texcoord_1.xyz = normalize(mul(TanSpaceProj, LightDirection[0].xyz));
+    OUT.texcoord_3.xyz = normalize(eye12.xyz);
 
     return OUT;
 };

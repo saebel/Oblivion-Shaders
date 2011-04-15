@@ -28,7 +28,7 @@
     IN.texcoord_0.w = IN.texcoord_0.w * IN.texcoord_0.w;
   + r1.xyz = dot(const_2.xyz, IN.texcoord_0.xyz);
     r0.w = (-IN.texcoord_0.w * 0.5) + 0.5;
-    IN.texcoord_0.w = (r0.w > 0.5 ? 1 : 0);
+    IN.texcoord_0.w = (r0.w > 0.5 ? 0 : 1);
   + r1.xyz = r1.xyz * const_3.xyz;
     r0.xyz = lerp(r1.xyz, IN.texcoord_0.xyz, IN.texcoord_0.w);
   + r0.w = 1;

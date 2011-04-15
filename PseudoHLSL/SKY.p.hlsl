@@ -5,17 +5,16 @@
 //
 //
 // Parameters:
-
+//
 float2 Params;
-
-
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
 //   Params       const_4       1
 //
-
 
 
 // Structures:
@@ -33,10 +32,8 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-
-
-    OUT.color_0.rgb = IN.color_0.rgb * Params.y;
     OUT.color_0.a = IN.color_0.a;
+    OUT.color_0.rgb = IN.color_0.rgb * Params.y;
 
     return OUT;
 };

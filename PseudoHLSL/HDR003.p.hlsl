@@ -4,24 +4,24 @@
 //   vsa shaderdump19/HDR003.pso /Fcshaderdump19/HDR003.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
-
-sampler2D Src0;
-
-
+//
+sampler2D ScreenSpace;
+//
+//
 // Registers:
 //
 //   Name         Reg   Size
 //   ------------ ----- ----
-//   Src0         texture_0       1
+//   ScreenSpace         texture_0       1
 //
-
 
 
 // Structures:
 
 struct VS_OUTPUT {
-    float2 texcoord_0 : TEXCOORD0;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -33,17 +33,15 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    const int4 const_0 = {1, 0, 0, 0};
-
     float4 out;
-    float4 r0;
+    float3 t0;
 
-    r0.xyzw = tex2D(Src0, IN.texcoord_0.xy);
-    r0.w = 1;
-    OUT.color_0.rgba = r0.xyzw;
-    //
-    // - copy input to output, set w to 1
+    t0.xyz = tex2D(ScreenSpace, IN.ScreenOffset.xy);
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = t0.xyz;
     // - full screen Shader
+    // - copy input to output, set w to 1
+    //
     // out.xyzw = [in.xyz,1]
 
     return OUT;
