@@ -41,7 +41,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float4 t1;
 
     t1.xyzw = tex2D(DisplaySampler, IN.texcoord_0.xy + TextureOffset.xy);
-    r0.xyzw = lerp(const_1.xyzw, t1.xyzw, saturate((length(IN.texcoord_0.xy - 0.5) - 0.4) * 10));
+    r0.xyzw = lerp(t1.xyzw, const_1.xyzw, saturate((length(IN.texcoord_0.xy - 0.5) - 0.4) * 10));
     OUT.color_0.a = r0.w;
     OUT.color_0.rgb = r0.xyz;
 

@@ -43,7 +43,7 @@
     r1.w = pow(abs(r2.w), fVars.x);
     r0.xyz = r0.xyz * r0.w;
     r1.xyzw = (r1.w * RimColor.rgba) + r0.xyzw;
-    r0.xyz = lerp(IN.color_1.rgb, r1.xyz, IN.color_1.a);
+    r0.xyz = lerp(r1.xyz, IN.color_1.rgb, IN.color_1.a);
     r0.w = r1.w;
     OUT.color_0.rgba = r0.xyzw;
 

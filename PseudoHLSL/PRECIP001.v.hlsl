@@ -65,8 +65,8 @@ VS_OUTPUT main(VS_INPUT IN) {
 
     q20.xyz = MaxPos.xyz - MinPos.xyz;
     q5.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / q20.xyz;
-    q7.xyz = q20.xyz * (q5.xyz == 0 ? -frac(abs(q5.xyz)) : frac(abs(q5.xyz)));
-    q1.xyz = (0 < Velocity.xyz ? (MaxPos.xyz - abs(q7.xyz)) : (abs(q7.xyz) + MinPos.xyz));
+    q7.xyz = q20.xyz * (q5.xyz == 0 ? frac(abs(q5.xyz)) : -frac(abs(q5.xyz)));
+    q1.xyz = (0 < Velocity.xyz ? (abs(q7.xyz) + MinPos.xyz) : (MaxPos.xyz - abs(q7.xyz)));
     r0.w = 1;
     OUT.color_0.rgb = 1;
     OUT.color_0.a = sqr(1 - length((((-0.5 * abs(q20.xyz)) + MaxPos.xyz) - q1.xyz) / abs(q20.xyz)));

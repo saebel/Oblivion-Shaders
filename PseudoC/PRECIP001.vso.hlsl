@@ -49,12 +49,12 @@
     r3.xyz = r3.xyz * r4.xyz;
     r5.xyz = frac(abs(r3.xyz));
     r4.xyz = (r3.xyz == 0 ? 1.0 : 0.0);
-    r3.xyz = lerp(r5.xyz, -r5.xyz, r4.xyz);
+    r3.xyz = lerp(-r5.xyz, r5.xyz, r4.xyz);
     r3.xyz = r2.xyz * r3.xyz;
     r4.xyz = abs(r3.xyz) + MinPos.xyz;
     r5.xyz = MaxPos.xyz - abs(r3.xyz);
     r0.xyz = (0 < r0.xyz ? 1.0 : 0.0);
-    r3.xyz = lerp(r4.xyz, r5.xyz, r0.xyz);
+    r3.xyz = lerp(r5.xyz, r4.xyz, r0.xyz);
     r4.xyz = r3.xyz - EyePosition.xyz;
     r0.xyz = normalize(-r4.xyz);
     r4.xyz = r0.yzx * CameraUp.zxy;

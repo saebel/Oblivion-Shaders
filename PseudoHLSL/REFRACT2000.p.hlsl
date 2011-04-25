@@ -53,7 +53,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.y = (2 * q1.x) + IN.ScreenOffset.y;
     r0.xyz = tex2D(OverlaySpace, r1.xy);
     t2.xyzw = tex2D(ScreenSpace, r1.xy);
-    r0.xyzw = (q1.x == 0 ? t2.xyzw : t0.xyzw);
+    r0.xyzw = (q1.x == 0 ? t0.xyzw : t2.xyzw);
     OUT.color_0.a = r0.w;
     OUT.color_0.rgb = r0.xyz;
 

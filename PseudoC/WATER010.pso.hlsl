@@ -71,7 +71,7 @@
     r0.w = -(r4.w - 1);
     r2.xy = r3.w * r2.xy;
     r3.w = r0.w * BlendRadius.y;
-    r0.xyz = lerp(r1.xyz, r2.xyz, r3.w);
+    r0.xyz = lerp(r2.xyz, r1.xyz, r3.w);
     r3.xy = const_3.xy;
     r1.w = (r3.x * -r1.w) + BlendRadius.x;
     r2.xyz = normalize(r0.xyz);
@@ -101,7 +101,7 @@
     r2.w = FogParam.x - r2.w;
     r2.xyz = saturate((r3.w * r1.xyz) + r2.xyz);
     r3.w = 1.0 / FogParam.y;
-    r1.xyz = lerp(r0.xyz, r2.xyz, r4.w);
+    r1.xyz = lerp(r2.xyz, r0.xyz, r4.w);
     r2.w = saturate(r2.w * r3.w);
     r0.xyz = FogColor.rgb - r1.xyz;
     r2.w = -(r2.w - 1);

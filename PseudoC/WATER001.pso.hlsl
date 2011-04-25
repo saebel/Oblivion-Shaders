@@ -102,13 +102,13 @@
     r5.x = saturate(dot(r3.xyz, SunDir.xyz));
     r3.xyz = (r6.x * r2.xyz) + DeepColor.rgb;			// partial precision
     r4.w = pow(abs(r5.x), VarAmounts.x);
-    r2.xyz = lerp(r1.xyz, r3.xyz, r3.w);
+    r2.xyz = lerp(r3.xyz, r1.xyz, r3.w);
     r1.w = saturate(SunDir.w);
     r1.xyz = r4.w * SunColor.rgb;
     r0.w = FogParam.x - r0.w;
     r2.xyz = (r1.w * r1.xyz) + r2.xyz;
     r1.w = 1.0 / FogParam.y;
-    r1.xyz = lerp(r0.xyz, r2.xyz, r2.w);
+    r1.xyz = lerp(r2.xyz, r0.xyz, r2.w);
     r0.w = saturate(r0.w * r1.w);
     r0.xyz = FogColor.rgb - r1.xyz;
     r1.w = -(r0.w - 1);

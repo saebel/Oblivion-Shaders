@@ -97,7 +97,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyz = max(q9.xyz + ((r0.xyz * EmittanceColor.rgb) + AmbientColor.rgb), 0);			// partial precision
     q25.xyz = ((Toggles.x <= 0.0 ? r1.xyz : (r1.xyz * IN.color_0.rgb)) * r0.xyz) + (q7.xyz + q8.xyz);			// partial precision
     OUT.color_0.a = AmbientColor.a;			// partial precision
-    OUT.color_0.rgb = (Toggles.y <= 0.0 ? q25.xyz : lerp(IN.color_1.rgb, q25.xyz, IN.color_1.a));			// partial precision
+    OUT.color_0.rgb = (Toggles.y <= 0.0 ? q25.xyz : lerp(q25.xyz, IN.color_1.rgb, IN.color_1.a));			// partial precision
 
     return OUT;
 };

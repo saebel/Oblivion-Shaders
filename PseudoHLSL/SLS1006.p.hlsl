@@ -46,7 +46,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     r1.xyzw = tex2D(LayerMap, IN.LayerUV.xy);
     r0.xyzw = tex2D(DiffuseMap, IN.LayerUV.xy);
-    q0.xyz = (2 * ((IN.color_0.g * (EmittanceColor.rgb - 0.5)) + 0.5)) * lerp(r1.xyz, r0.xyz, r1.w);	// [0,1] to [-1,+1]
+    q0.xyz = (2 * ((IN.color_0.g * (EmittanceColor.rgb - 0.5)) + 0.5)) * lerp(r0.xyz, r1.xyz, r1.w);	// [0,1] to [-1,+1]
     OUT.color_0.a = r0.w;
     OUT.color_0.rgb = q0.xyz;
 

@@ -509,7 +509,7 @@
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r1.xyzw = tex2D(LayerMap, IN.texcoord_0.xy);			// partial precision
     r2.w = r3.z - ToggleADTS.x;			// partial precision
-    r3.xyz = lerp(r1.xyz, r0.xyz, r1.w);			// partial precision
+    r3.xyz = lerp(r0.xyz, r1.xyz, r1.w);			// partial precision
     r0.z = ToggleADTS.x;			// partial precision
     r0.xyz = (r0.z * AmbientColor.rgb) + r2.w;			// partial precision
     r1.xyz = r4.xyz * r3.xyz;			// partial precision

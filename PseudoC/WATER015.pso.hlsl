@@ -94,13 +94,13 @@
     r2.xyz = (-r3.w * r2.xyz) - r4.xyz;
     r1.w = (r0.w * r1.w) + FresnelRI.x;
     r4.x = saturate(dot(r2.xyz, SunDir.xyz));
-    r2.xyz = lerp(r0.xyz, r3.xyz, r1.w);
+    r2.xyz = lerp(r3.xyz, r0.xyz, r1.w);
     r0.w = pow(abs(r4.x), VarAmounts.x);
     r0.xyz = r0.w * SunColor.rgb;
     r0.w = saturate(SunDir.w);
     r2.xyz = (r0.w * r0.xyz) + r2.xyz;
     r0.w = max(VarAmounts.z, r1.w);
-    r0.xyz = lerp(r1.xyz, r2.xyz, r2.w);
+    r0.xyz = lerp(r2.xyz, r1.xyz, r2.w);
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 60 instruction slots used (3 texture, 57 arithmetic)

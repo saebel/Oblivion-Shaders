@@ -31,7 +31,7 @@
     r2.xyz = r2.w + EmittanceColor.rgb;
     r2.xyz = (IN.color_0.g * r2.xyz) + 0.5;
     r3.xyz = 2 * r2.xyz;
-    r2.xyz = lerp(r1.xyz, r0.xyz, r1.w);
+    r2.xyz = lerp(r0.xyz, r1.xyz, r1.w);
     r0.xyz = r3.xyz * r2.xyz;
     OUT.color_0.rgba = r0.xyzw;
 

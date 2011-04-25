@@ -278,7 +278,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r2.xyzw = tex2D(LayerMap, IN.BaseUV.xy);			// partial precision
     r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
     r3.xyz = r1.xyz * IN.color_0.g;			// partial precision
-    r1.xyz = lerp(r2.xyz, r0.xyz, r2.w);			// partial precision
+    r1.xyz = lerp(r0.xyz, r2.xyz, r2.w);			// partial precision
     r0.xyz = r4.xyz + ((ToggleADTS.x * AmbientColor.rgb) + (r6.z - ToggleADTS.x));			// partial precision
     q62.xyz = (((2 * ((IN.color_0.g * (r6.x + HairTint.rgb)) + 0.5)) * r1.xyz) * r0.xyz) + (r1.w * r3.xyz);			// partial precision
     OUT.color_0.a = r0.w * MatAlpha.x;			// partial precision

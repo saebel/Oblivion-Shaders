@@ -111,7 +111,7 @@
     r4.w = r1.w * r1.w;
     r1.w = (r1.w * -r4.w) - -1;
     r4.w = r3.w * r1.w;
-    r2.xyz = lerp(r1.xyz, r3.xyz, r5.w);
+    r2.xyz = lerp(r3.xyz, r1.xyz, r5.w);
     r1.w = r0.x - 0.55;
     r1.xyz = FogColor.rgb - r2.xyz;
     r1.w = (r1.w >= 0.0 ? r3.w : r4.w);

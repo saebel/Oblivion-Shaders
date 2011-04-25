@@ -52,7 +52,7 @@
     r5.xyz = frac(abs(r3.xyz));
     r4.xyz = (r3.xyz == 0 ? 1.0 : 0.0);
     r0.w = (Params.z * Params.x) + IN.texcoord_1.x;
-    r3.xyz = lerp(r5.xyz, -r5.xyz, r4.xyz);
+    r3.xyz = lerp(-r5.xyz, r5.xyz, r4.xyz);
     r0.w = (r0.w * (1.0 / (PI * 2))) + 0.5;
     r3.xyz = r2.xyz * r3.xyz;
     r0.w = frac(r0.w);
@@ -60,7 +60,7 @@
     r5.xyz = MaxPos.xyz - abs(r3.xyz);
     r0.xyz = (0 < r0.xyz ? 1.0 : 0.0);
     r1.w = (r0.w * PI * 2) - PI;
-    r3.xyz = lerp(r4.xyz, r5.xyz, r0.xyz);
+    r3.xyz = lerp(r5.xyz, r4.xyz, r0.xyz);
     r0.x = cos(r1.w);
     r0.y = sin(r1.w);
     r4.xyz = r3.xyz - EyePosition.xyz;

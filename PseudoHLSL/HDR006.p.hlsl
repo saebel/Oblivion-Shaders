@@ -68,7 +68,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     t0.xyz = tex2D(ScreenSpace, IN.ScreenOffset.xy);
     r0.xyzw = tex2D(AvgLum, IN.ScreenOffset.xy);
-    q3.xyz = lerp(r0.xyz, t0.xyz, 1 - pow(abs(HDRParam.z), TimingData.z));		// lerp(ScreenSpace, AvgLum, 1.0 - pow(something))
+    q3.xyz = lerp(t0.xyz, r0.xyz, 1 - pow(abs(HDRParam.z), TimingData.z));		// lerp(ScreenSpace, AvgLum, 1.0 - pow(something))
     OUT.color_0.a = 1;
     OUT.color_0.rgb = q3.xyz * (min(max(0.01, length(q3.xyz)), HDRParam.w) / max(0.01, length(q3.xyz)));
 

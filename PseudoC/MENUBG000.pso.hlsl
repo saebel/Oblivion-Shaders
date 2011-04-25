@@ -32,7 +32,7 @@
     r2.x = dot(const_3.xyz, r0.xyz);
     r2.y = dot(const_4.xyz, r0.xyz);
     r2.z = dot(const_5.xyz, r0.xyz);
-    r0.xyz = lerp(r2.xyz, r1.xyz, BlendValue.x);
+    r0.xyz = lerp(r1.xyz, r2.xyz, BlendValue.x);
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 

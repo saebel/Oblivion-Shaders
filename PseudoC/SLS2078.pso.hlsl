@@ -88,9 +88,9 @@
     r3.w = r1.w * 0.6;			// partial precision
     r2.w = r5.w * r5.w;
     r0.xyz = (r3.w * -PSLightColor[0].rgb) + r0.z;			// partial precision
-    r1.xyz = lerp(1, r0.xyz, r2.w);			// partial precision
+    r1.xyz = lerp(r0.xyz, 1, r2.w);			// partial precision
     r0.w = (r0.w <= 0.0 ? 1 : r1.w);			// partial precision
-    r0.xyz = lerp(1, r1.xyz, IN.texcoord_3.w);			// partial precision
+    r0.xyz = lerp(r1.xyz, 1, IN.texcoord_3.w);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 
 // approximately 66 instruction slots used (5 texture, 61 arithmetic)

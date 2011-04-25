@@ -50,7 +50,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.yz = const_2.xy;
     m0.xyz = mul(float3x3(const_3.xyz, const_4.xyz, const_5.xyz), r0.xyz);
     OUT.color_0.a = 1;
-    OUT.color_0.rgb = lerp(m0.xyz, r1.xyz, BlendValue.x);
+    OUT.color_0.rgb = lerp(r1.xyz, m0.xyz, BlendValue.x);
 
     return OUT;
 };

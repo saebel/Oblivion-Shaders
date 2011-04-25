@@ -91,7 +91,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     q4.xyz = ((IN.color_0.a * (r2.xyz * PSLightColor[0].rgb)) + AmbientColor.rgb) + IN.color_0.rgb;
     r2.xyz = q4.xyz * (r1.xyz * (2 * q0.xyz));
     r1.xyz = (q8.x * q2.x) * PSLightColor[0].rgb;
-    r0.xyz = lerp(r2.xyz, (((IN.color_0.a * r1.xyz) + q5.xyz) + AmbientColor.rgb) * (r0.xyz * (2 * q0.xyz)), r1.w);
+    r0.xyz = lerp((((IN.color_0.a * r1.xyz) + q5.xyz) + AmbientColor.rgb) * (r0.xyz * (2 * q0.xyz)), r2.xyz, r1.w);
     r1.xyz = ((0.5 * q0.xyz) + 0.15) * (r3.w * PSLightColor[0].rgb);
     r1.w = (r1.z <= 0.0 ? 0 : 1) * ((r1.x <= 0.0 ? 0 : 1) * (r1.y <= 0.0 ? 0 : 1));
     OUT.color_0.a = r0.w * AmbientColor.a;

@@ -74,7 +74,7 @@
     r0.w = -(r4.w - 1);
     r0.xy = r1.w * r0.xy;
     r0.w = r0.w * BlendRadius.y;
-    r2.xyz = lerp(r1.xyz, r0.xyz, r0.w);
+    r2.xyz = lerp(r0.xyz, r1.xyz, r0.w);
     r0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     r3.x = dot(r0.xyz, r0.xyz);	// normalize + length
     r1.xyz = normalize(r2.xyz);
@@ -108,7 +108,7 @@
     r1.w = FogParam.x - r5.w;
     r2.xyz = saturate((r3.w * r1.xyz) + r2.xyz);
     r3.w = 1.0 / FogParam.y;
-    r1.xyz = lerp(r0.xyz, r2.xyz, r4.w);
+    r1.xyz = lerp(r2.xyz, r0.xyz, r4.w);
     r1.w = saturate(r1.w * r3.w);
     r0.xyz = FogColor.rgb - r1.xyz;
     r1.w = -(r1.w - 1);

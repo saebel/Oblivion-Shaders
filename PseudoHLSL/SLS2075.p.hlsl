@@ -57,7 +57,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.xyz = (r0.xyz + FillColor.rgb) * r0.w;
     r1.xyzw = (pow(abs(1 - shade(expand(r1.xyz), IN.texcoord_3.xyz)), fVars.x) * RimColor.rgba) + r0.xyzw;
     OUT.color_0.a = r1.w;
-    OUT.color_0.rgb = lerp(IN.color_1.rgb, r1.xyz, IN.color_1.a);
+    OUT.color_0.rgb = lerp(r1.xyz, IN.color_1.rgb, IN.color_1.a);
 
     return OUT;
 };

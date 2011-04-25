@@ -304,7 +304,7 @@ sub str_optimize {
 		# case "(-(2 * dot(-q6.xyz, r0.xyz)) * r0.xyz) - q6.xyz" -> reflection
 		# case "-q6.xyz - 2 * dot(-q6.xyz, r0.xyz) * r0.xyz" -> reflection
 		# case "(-(2 * dot(-q5.xyz, r0.xyz)) * r0.xyz) - q5.xyz,"
-		$prev =~ s/\(-\(2 \* dot\(-([^()]*), ([^()]*)\)\) \* \2\) - \1/reflect($1, $2)/s;
+		$prev =~ s/\(-\(2 \* dot\(-([^()]*), ([^()]*)\)\) \* \2\) - \1/reflect(-$1, $2)/s;
 
 		# case "((2 * dot(q1.xyz, normalize(IN.texcoord_2.xyz))) * q1.xyz) - (normalize(IN.texcoord_2.xyz) * dot(q1.xyz, q1.xyz))"
 		# case "((2 * dot(q3.xyz, q1.xyz)) * q3.xyz) - (q1.xyz * dot(q3.xyz, q3.xyz))"

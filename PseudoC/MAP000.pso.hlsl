@@ -72,7 +72,7 @@
     r1.xyz = r1.xyz * 0.25;
     r1.w = min(r0.w, 0.5);
     r1.xyz = (0.75 * r0.xyz) + r1.xyz;
-    r0.xyz = lerp(const_3.xyz, r1.xyz, r1.w);
+    r0.xyz = lerp(r1.xyz, const_3.xyz, r1.w);
     r0.w = 1;
     OUT.color_0.rgba = r0.xyzw;
 

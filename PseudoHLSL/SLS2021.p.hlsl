@@ -86,7 +86,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.xyz = (Toggles.x <= 0.0 ? r0.xyz : (r0.xyz * IN.color_0.rgb));			// partial precision
     q23.xyz = (r1.xyz * max(q9.xyz + AmbientColor.rgb, 0)) + (q7.xyz + q8.xyz);			// partial precision
     OUT.color_0.a = r0.w * AmbientColor.a;			// partial precision
-    OUT.color_0.rgb = (Toggles.y <= 0.0 ? q23.xyz : lerp(IN.color_1.rgb, q23.xyz, IN.color_1.a));			// partial precision
+    OUT.color_0.rgb = (Toggles.y <= 0.0 ? q23.xyz : lerp(q23.xyz, IN.color_1.rgb, IN.color_1.a));			// partial precision
 
     return OUT;
 };

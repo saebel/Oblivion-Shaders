@@ -90,7 +90,7 @@
     r5.w = (r1.y <= 0.0 ? 0 : 1);
     r3.xyz = r3.xyz * r0.xyz;
     r2.w = (r1.z <= 0.0 ? 0 : 1);
-    r0.xyz = lerp(r2.xyz, r3.xyz, r1.w);
+    r0.xyz = lerp(r3.xyz, r2.xyz, r1.w);
     r1.w = r4.w * r5.w;
     r1.xyz = (r3.w * r1.xyz) + r0.xyz;
     r1.w = r2.w * r1.w;

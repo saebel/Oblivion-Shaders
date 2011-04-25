@@ -90,14 +90,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     t13.xyz = tex2D(DetailMap, (0.1 * r0.xy) + q1.xy);
     eye0.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     q6.xyz = normalize(eye0.xyz);
-    r2.xyz = reflect(q6.xyz, r0.xyz);
+    r2.xyz = reflect(-q6.xyz, r0.xyz);
     q7.x = 1 - shades(q6.xyz, r0.xyz);
     q12.x = 1 - saturate((FogParam.x - length(eye0.xyz)) / FogParam.y);
     q26.xyz = (shades(q6.xyz, -r0.xyz) * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
     q27.xyz = (((VarAmounts.y + 1) * (ReflectionColor.rgb - q26.xyz)) + q26.xyz) * VarAmounts.y;
     q28.xyz = ((((FresnelRI.x + 1) * (q7.x * sqr(sqr(q7.x)))) + FresnelRI.x) * q27.xyz) + q26.xyz;
     q30.xyz = saturate((r0.w * (pow(abs(shades(r2.xyz, SunDir.xyz)), VarAmounts.x) * SunColor.rgb)) + q28.xyz);
-    q14.xyz = lerp(t13.xyz, q30.xyz, eye21.x * VarAmounts.w);
+    q14.xyz = lerp(q30.xyz, t13.xyz, eye21.x * VarAmounts.w);
     OUT.color_0.a = saturate(((length(eye0.xyz) - 1) / 1600) + 0.75);
     OUT.color_0.rgb = (q12.x * (FogColor.rgb - q14.xyz)) + q14.xyz;
 

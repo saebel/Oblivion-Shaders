@@ -180,7 +180,7 @@
     r0.z = r1.w * 0.6;			// partial precision
     r0.w = r5.z * r5.z;			// partial precision
     r0.xyz = (r0.z * -LightColor.rgb) + r5.y;			// partial precision
-    r2.xyz = lerp(1, r0.xyz, r0.w);			// partial precision
+    r2.xyz = lerp(r0.xyz, 1, r0.w);			// partial precision
     r1.xyz = 1 - r2.xyz;			// partial precision
     r0.w = (ToggleADTS.w <= 0.0 ? r5.w : r5.y);
     if_ne 0, r0.w

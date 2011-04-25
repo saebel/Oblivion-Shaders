@@ -93,7 +93,7 @@
     r1.w = FogParam.x - r2.w;
     r0.w = r2.w - 1;
     r2.w = 1.0 / FogParam.y;
-    r1.xyz = lerp(r0.xyz, r2.xyz, r3.w);
+    r1.xyz = lerp(r2.xyz, r0.xyz, r3.w);
     r1.w = saturate(r1.w * r2.w);
     r0.xyz = FogColor.rgb - r1.xyz;
     r1.w = -(r1.w - 1);

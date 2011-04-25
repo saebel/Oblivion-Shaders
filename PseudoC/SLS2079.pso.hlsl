@@ -93,9 +93,9 @@
     r1.w = r2.w * 0.6;			// partial precision
     r3.w = r6.w * r6.w;
     r0.xyz = (r1.w * -PSLightColor[0].rgb) + r0.z;			// partial precision
-    r1.xyz = lerp(1, r0.xyz, r3.w);			// partial precision
+    r1.xyz = lerp(r0.xyz, 1, r3.w);			// partial precision
     r1.w = min(r0.w, 1);			// partial precision
-    r0.xyz = lerp(1, r1.xyz, IN.texcoord_3.w);			// partial precision
+    r0.xyz = lerp(r1.xyz, 1, IN.texcoord_3.w);			// partial precision
     r0.w = min(r1.w, r2.w);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision
 

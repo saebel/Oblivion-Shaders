@@ -89,7 +89,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.xyz = ((r1.xyz * (ReflectionColor.rgb + 1)) * ReflectionColor.rgb) * VarAmounts.y;
     q11.x = ((FresnelRI.x + 1) * (q9.x * sqr(sqr(q9.x)))) + FresnelRI.x;
     q14.xyz = saturate((q11.x * r1.xyz) + ((saturate(q7.x) * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb));
-    q30.xyz = lerp(t29.xyz, q14.xyz, eye18.x * VarAmounts.w);
+    q30.xyz = lerp(q14.xyz, t29.xyz, eye18.x * VarAmounts.w);
     OUT.color_0.a = max(VarAmounts.z, q11.x);
     OUT.color_0.rgb = (q12.x * (FogColor.rgb - q30.xyz)) + q30.xyz;
 

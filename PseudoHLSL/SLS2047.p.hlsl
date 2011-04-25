@@ -98,22 +98,22 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.w = r0.w * IN.texcoord_1.z;			// partial precision
     r0.xyz = r0.xyz * r0.w;			// partial precision
     r0.xyzw = (1 >= q2.x ? 0 : r0.xyzw);			// partial precision
-    r2.xyz = lerp(r8.xyz, r0.xyz, r8.w * IN.texcoord_2.z);			// partial precision
+    r2.xyz = lerp(r0.xyz, r8.xyz, r8.w * IN.texcoord_2.z);			// partial precision
     r2.w = (r8.w * IN.texcoord_2.z) + r0.w;			// partial precision
     r0.xyzw = (2 >= q2.x ? r0.xyzw : r2.xyzw);			// partial precision
-    r2.xyz = lerp(r7.xyz, r0.xyz, r7.w * IN.texcoord_3.z);			// partial precision
+    r2.xyz = lerp(r0.xyz, r7.xyz, r7.w * IN.texcoord_3.z);			// partial precision
     r2.w = (r7.w * IN.texcoord_3.z) + r0.w;			// partial precision
     r0.xyzw = (3 >= q2.x ? r0.xyzw : r2.xyzw);			// partial precision
-    r2.xyz = lerp(r6.xyz, r0.xyz, r6.w * IN.texcoord_4.z);			// partial precision
+    r2.xyz = lerp(r0.xyz, r6.xyz, r6.w * IN.texcoord_4.z);			// partial precision
     r2.w = (r6.w * IN.texcoord_4.z) + r0.w;			// partial precision
     r0.xyzw = (4 >= q2.x ? r0.xyzw : r2.xyzw);			// partial precision
-    r2.xyz = lerp(r5.xyz, r0.xyz, r5.w * IN.texcoord_5.z);			// partial precision
+    r2.xyz = lerp(r0.xyz, r5.xyz, r5.w * IN.texcoord_5.z);			// partial precision
     r2.w = (r5.w * IN.texcoord_5.z) + r0.w;			// partial precision
     r0.xyzw = (5 >= q2.x ? r0.xyzw : r2.xyzw);			// partial precision
-    r2.xyz = lerp(r4.xyz, r0.xyz, r4.w * IN.texcoord_6.z);			// partial precision
+    r2.xyz = lerp(r0.xyz, r4.xyz, r4.w * IN.texcoord_6.z);			// partial precision
     r2.w = (r4.w * IN.texcoord_6.z) + r0.w;			// partial precision
     r0.xyzw = (6 >= q2.x ? r0.xyzw : r2.xyzw);			// partial precision
-    r2.xyz = lerp(r3.xyz, r0.xyz, r3.w * IN.texcoord_7.z);			// partial precision
+    r2.xyz = lerp(r0.xyz, r3.xyz, r3.w * IN.texcoord_7.z);			// partial precision
     r2.w = (r3.w * IN.texcoord_7.z) + r0.w;			// partial precision
     r0.xyzw = (7 >= q2.x ? r0.xyzw : r2.xyzw);			// partial precision
     OUT.color_0.a = saturate(r0.w);			// partial precision

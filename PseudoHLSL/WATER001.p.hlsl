@@ -99,7 +99,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.z = IN.texcoord_0.z;
     eye6.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     q22.x = shades(normalize(eye6.xyz), r3.xyz);
-    r4.w = pow(abs(shades(reflect(normalize(eye6.xyz), r3.xyz), SunDir.xyz)), VarAmounts.x);
+    r4.w = pow(abs(shades(reflect(-normalize(eye6.xyz), r3.xyz), SunDir.xyz)), VarAmounts.x);
     q14.x = 1 - saturate((FogParam.x - length(eye6.xyz)) / FogParam.y);
     r1.w = 1;
     q12.x = ((FresnelRI.x + 1) * ((1 - q22.x) * sqr(sqr(1 - q22.x)))) + FresnelRI.x;
@@ -107,8 +107,8 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     q38.xyzw = mul(float4x4(IN.texcoord_2.xyzw, IN.texcoord_3.xyzw, IN.texcoord_4.xyzw, IN.texcoord_5.xyzw), r1.xyzw);
     t5.xyz = tex2Dproj(ReflectionMap, q38.xyzw);			// partial precision
     r3.xyz = (q22.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
-    q13.xyz = lerp((VarAmounts.y * (t5.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, r3.xyz, q12.x);
-    q29.xyz = lerp(r0.xyz, (saturate(SunDir.w) * (r4.w * SunColor.rgb)) + q13.xyz, q4.x * VarAmounts.w);
+    q13.xyz = lerp(r3.xyz, (VarAmounts.y * (t5.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, q12.x);
+    q29.xyz = lerp((saturate(SunDir.w) * (r4.w * SunColor.rgb)) + q13.xyz, r0.xyz, q4.x * VarAmounts.w);
     OUT.color_0.a = max(VarAmounts.z, q12.x);
     OUT.color_0.rgb = (q14.x * (FogColor.rgb - q29.xyz)) + q29.xyz;
 

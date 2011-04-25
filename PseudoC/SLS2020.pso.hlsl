@@ -87,14 +87,14 @@
     r4.xyz = r2.w + EmittanceColor.rgb;
     r4.xyz = (IN.color_0.g * r4.xyz) + 0.5;
     r5.xyz = 2 * r4.xyz;			// partial precision
-    r4.xyz = lerp(r1.xyz, r0.xyz, r1.w);			// partial precision
+    r4.xyz = lerp(r0.xyz, r1.xyz, r1.w);			// partial precision
     r1.w = saturate(r6.x);			// partial precision
     r1.xyz = r5.xyz * r4.xyz;			// partial precision
     r0.xyz = r1.w * PSLightColor[0].rgb;			// partial precision
     r3.xyz = (r3.xyz * r0.xyz) + AmbientColor.rgb;			// partial precision
     r0.xyz = max(r3.xyz, 0);			// partial precision
     r0.xyz = (r1.xyz * r0.xyz) + r2.xyz;			// partial precision
-    r1.xyz = lerp(IN.color_1.rgb, r0.xyz, IN.color_1.a);			// partial precision
+    r1.xyz = lerp(r0.xyz, IN.color_1.rgb, IN.color_1.a);			// partial precision
     r0.w = r0.w * AmbientColor.a;			// partial precision
     r0.xyz = (Toggles.y <= 0.0 ? r0.xyz : r1.xyz);			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision

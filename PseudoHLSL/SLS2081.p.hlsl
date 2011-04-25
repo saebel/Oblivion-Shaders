@@ -100,7 +100,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     q11.x = q10.x + ((-0.000195312503 - (r2.x - (IN.texcoord_1.z / IN.texcoord_2.w))) >= 0.0 ? 0 : 1);			// partial precision
     q12.x = q11.x + ((-0.000195312503 - (r1.x - (IN.texcoord_1.z / IN.texcoord_2.w))) >= 0.0 ? 0 : 1);			// partial precision
     q13.x = 1 - ((PSLightColor[0].a * (saturate(q12.x / 7) - 1)) + 1);			// partial precision
-    q14.xyz = lerp(1, lerp(1, ((q13.x * 0.6) * -PSLightColor[0].rgb) + 1, sqr(q1.x)), IN.texcoord_3.w);			// partial precision
+    q14.xyz = lerp(lerp(((q13.x * 0.6) * -PSLightColor[0].rgb) + 1, 1, sqr(q1.x)), 1, IN.texcoord_3.w);			// partial precision
     OUT.color_0.a = min(min(r0.w, 1), q13.x);			// partial precision
     OUT.color_0.rgb = q14.xyz;			// partial precision
 

@@ -115,7 +115,7 @@
     r3.xyz = r3.xyz + r0.xyz;			// partial precision
     r0.xyz = max(r3.xyz, 0);			// partial precision
     r0.xyz = (r1.xyz * r0.xyz) + r2.xyz;			// partial precision
-    r1.xyz = lerp(IN.color_1.rgb, r0.xyz, IN.color_1.a);			// partial precision
+    r1.xyz = lerp(r0.xyz, IN.color_1.rgb, IN.color_1.a);			// partial precision
     r0.xyz = (Toggles.y <= 0.0 ? r0.xyz : r1.xyz);			// partial precision
     r0.w = AmbientColor.a;			// partial precision
     OUT.color_0.rgba = r0.xyzw;			// partial precision

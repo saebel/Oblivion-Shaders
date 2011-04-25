@@ -123,13 +123,13 @@
     r0.w = r0.x - 0.2;
     r4.xyz = (r5.x * r3.xyz) + DeepColor.rgb;			// partial precision
     r1.w = (r0.w * -(1.0 / 0.35)) + 1;
-    r3.xyz = lerp(r2.xyz, r4.xyz, r6.w);
+    r3.xyz = lerp(r4.xyz, r2.xyz, r6.w);
     r6.w = r1.w * r1.w;
     r2.xyz = r7.w * SunColor.rgb;
     r1.w = (r1.w * -r6.w) - -1;
     r3.xyz = (r4.w * r2.xyz) + r3.xyz;
     r4.w = r3.w * r1.w;
-    r2.xyz = lerp(r1.xyz, r3.xyz, r5.w);
+    r2.xyz = lerp(r3.xyz, r1.xyz, r5.w);
     r1.w = r0.x - 0.55;
     r1.xyz = FogColor.rgb - r2.xyz;
     r1.w = (r1.w >= 0.0 ? r3.w : r4.w);

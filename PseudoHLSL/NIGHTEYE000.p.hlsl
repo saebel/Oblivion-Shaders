@@ -47,7 +47,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.xyzw = dot(const_0.xyz, SpellInput.xyz);
     r0.w = 1;
     q1.x = 0.5 - (((r1.w - 1) * (r1.w - 1)) * 0.5);
-    r0.xyz = lerp(dot(const_2.xyz, IN.ScreenOffset.xyz) * const_3.xyz, IN.ScreenOffset.xyz, q1.x > 0.5 ? 0 : 1);
+    r0.xyz = lerp(IN.ScreenOffset.xyz, dot(const_2.xyz, IN.ScreenOffset.xyz) * const_3.xyz, q1.x > 0.5 ? 0 : 1);
     OUT.output_0.xyzw = r0.xyzw;
 
     return OUT;

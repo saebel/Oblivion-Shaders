@@ -94,7 +94,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r2.xyz = normalize(r0.xyz);
     t12.xyz = tex2D(DetailMap, (0.1 * r2.xy) + q0.xy);
     q18.x = shades(eye6.xyz, r2.xyz);
-    q26.x = pow(abs(shades(reflect(eye6.xyz, r2.xyz), SunDir.xyz)), VarAmounts.x);
+    q26.x = pow(abs(shades(reflect(-eye6.xyz, r2.xyz), SunDir.xyz)), VarAmounts.x);
     r1.z = IN.texcoord_0.z;
     r1.w = 1;
     r3.xyz = (q18.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
@@ -102,9 +102,9 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r1.xy = (((saturate(eye16.x * 0.0002) * 2496) + 4) * r2.xy) + IN.texcoord_0.xy;
     q22.xyzw = mul(float4x4(IN.texcoord_2.xyzw, IN.texcoord_3.xyzw, IN.texcoord_4.xyzw, IN.texcoord_5.xyzw), r1.xyzw);
     t5.xyz = tex2Dproj(ReflectionMap, q22.xyzw);			// partial precision
-    q11.xyz = lerp((VarAmounts.y * (t5.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, r3.xyz, q10.x);
+    q11.xyz = lerp(r3.xyz, (VarAmounts.y * (t5.xyz - ReflectionColor.rgb)) + ReflectionColor.rgb, q10.x);
     OUT.color_0.a = max(VarAmounts.z, q10.x);
-    OUT.color_0.rgb = lerp(t12.xyz, (saturate(SunDir.w) * (q26.x * SunColor.rgb)) + q11.xyz, q4.x * VarAmounts.w);
+    OUT.color_0.rgb = lerp((saturate(SunDir.w) * (q26.x * SunColor.rgb)) + q11.xyz, t12.xyz, q4.x * VarAmounts.w);
 
     return OUT;
 };

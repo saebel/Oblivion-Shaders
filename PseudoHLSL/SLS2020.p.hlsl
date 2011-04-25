@@ -86,10 +86,10 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     q10.x = (r0.w * 0.7) * pow(abs(q4.x), 30);			// partial precision
     r0.xyzw = tex2D(BaseMap, IN.BaseUV.xy);			// partial precision
     q11.xyz = saturate((0.2 >= r6.x ? (q10.x * max(r6.x + 0.5, 0)) : q10.x) * PSLightColor[0].rgb) * q3.xyz;			// partial precision
-    q12.xyz = (2 * ((IN.color_0.g * (EmittanceColor.rgb - 0.5)) + 0.5)) * lerp(r1.xyz, r0.xyz, r1.w);			// partial precision	// [0,1] to [-1,+1]
+    q12.xyz = (2 * ((IN.color_0.g * (EmittanceColor.rgb - 0.5)) + 0.5)) * lerp(r0.xyz, r1.xyz, r1.w);			// partial precision	// [0,1] to [-1,+1]
     q13.xyz = (q12.xyz * max((q3.xyz * (saturate(r6.x) * PSLightColor[0].rgb)) + AmbientColor.rgb, 0)) + q11.xyz;			// partial precision
     OUT.color_0.a = r0.w * AmbientColor.a;			// partial precision
-    OUT.color_0.rgb = (Toggles.y <= 0.0 ? q13.xyz : lerp(IN.color_1.rgb, q13.xyz, IN.color_1.a));			// partial precision
+    OUT.color_0.rgb = (Toggles.y <= 0.0 ? q13.xyz : lerp(q13.xyz, IN.color_1.rgb, IN.color_1.a));			// partial precision
 
     return OUT;
 };

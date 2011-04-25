@@ -84,32 +84,32 @@
     r2.w = 1 - r9.w;
     r0.xyzw = (r2.w >= 0.0 ? 0 : r0.xyzw);			// partial precision
     r2.w = (r8.w * IN.texcoord_2.z) + r0.w;			// partial precision
-    r2.xyz = lerp(r8.xyz, r0.xyz, r10.w);			// partial precision
+    r2.xyz = lerp(r0.xyz, r8.xyz, r10.w);			// partial precision
     r8.w = 2 - r9.w;
     r0.xyzw = (r8.w >= 0.0 ? r0.xyzw : r2.xyzw);			// partial precision
     r8.w = r7.w * IN.texcoord_3.z;			// partial precision
     r2.w = (r7.w * IN.texcoord_3.z) + r0.w;			// partial precision
-    r2.xyz = lerp(r7.xyz, r0.xyz, r8.w);			// partial precision
+    r2.xyz = lerp(r0.xyz, r7.xyz, r8.w);			// partial precision
     r7.w = 3 - r9.w;
     r0.xyzw = (r7.w >= 0.0 ? r0.xyzw : r2.xyzw);			// partial precision
     r7.w = r6.w * IN.texcoord_4.z;			// partial precision
     r2.w = (r6.w * IN.texcoord_4.z) + r0.w;			// partial precision
-    r2.xyz = lerp(r6.xyz, r0.xyz, r7.w);			// partial precision
+    r2.xyz = lerp(r0.xyz, r6.xyz, r7.w);			// partial precision
     r6.w = 4 - r9.w;
     r0.xyzw = (r6.w >= 0.0 ? r0.xyzw : r2.xyzw);			// partial precision
     r6.w = r5.w * IN.texcoord_5.z;			// partial precision
     r2.w = (r5.w * IN.texcoord_5.z) + r0.w;			// partial precision
-    r2.xyz = lerp(r5.xyz, r0.xyz, r6.w);			// partial precision
+    r2.xyz = lerp(r0.xyz, r5.xyz, r6.w);			// partial precision
     r5.w = 5 - r9.w;
     r0.xyzw = (r5.w >= 0.0 ? r0.xyzw : r2.xyzw);			// partial precision
     r6.w = r4.w * IN.texcoord_6.z;			// partial precision
     r2.w = (r4.w * IN.texcoord_6.z) + r0.w;			// partial precision
     r5.w = 6 - r9.w;
-    r2.xyz = lerp(r4.xyz, r0.xyz, r6.w);			// partial precision
+    r2.xyz = lerp(r0.xyz, r4.xyz, r6.w);			// partial precision
     r4.w = 7 - r9.w;
     r0.xyzw = (r5.w >= 0.0 ? r0.xyzw : r2.xyzw);			// partial precision
     r5.w = r3.w * IN.texcoord_7.z;			// partial precision
-    r2.xyz = lerp(r3.xyz, r0.xyz, r5.w);			// partial precision
+    r2.xyz = lerp(r0.xyz, r3.xyz, r5.w);			// partial precision
     r2.w = (r3.w * IN.texcoord_7.z) + r0.w;			// partial precision
     r0.xyzw = (r4.w >= 0.0 ? r0.xyzw : r2.xyzw);			// partial precision
     r0.w = saturate(r0.w);			// partial precision

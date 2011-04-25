@@ -135,8 +135,8 @@
     r1.xyz = (r6.w * -PSLightColor.rgb) + r2.y;			// partial precision
     r6.w = r2.w * r2.w;			// partial precision
     r1.w = AlphaTestRef.x - r1.w;			// partial precision
-    r2.xyz = lerp(1, r1.xyz, r6.w);			// partial precision
-    r1.xyz = lerp(1, r2.xyz, IN.color_0.a);			// partial precision
+    r2.xyz = lerp(r1.xyz, 1, r6.w);			// partial precision
+    r1.xyz = lerp(r2.xyz, 1, IN.color_0.a);			// partial precision
     r1.w = (r1.w >= 0.0 ? 0 : 1);			// partial precision
     r1.xyz = r1.xyz - 1;			// partial precision
     r2.w = r1.w * IN.texcoord_5.w;			// partial precision

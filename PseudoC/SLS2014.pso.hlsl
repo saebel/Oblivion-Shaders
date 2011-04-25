@@ -81,7 +81,7 @@
     r3.xyz = r2.w + EmittanceColor.rgb;
     r3.xyz = (IN.color_0.g * r3.xyz) + 0.5;
     r4.xyz = 2 * r3.xyz;			// partial precision
-    r3.xyz = lerp(r1.xyz, r0.xyz, r1.w);			// partial precision
+    r3.xyz = lerp(r0.xyz, r1.xyz, r1.w);			// partial precision
     r0.xyz = r4.xyz * r3.xyz;			// partial precision
     r1.xyz = (-r0.xyz * r2.xyz) + IN.color_1.rgb;			// partial precision
     r0.xyz = r2.xyz * r0.xyz;			// partial precision

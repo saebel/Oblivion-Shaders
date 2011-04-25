@@ -66,8 +66,8 @@ VS_OUTPUT main(VS_INPUT IN) {
     q13.xyz = MaxPos.xyz - MinPos.xyz;
     r3.z = IN.position.z;
     q4.xyz = (((Params.x * Velocity.xyz) + IN.texcoord_1.xyz) - MinPos.xyz) / q13.xyz;
-    q6.xyz = q13.xyz * (q4.xyz == 0 ? -frac(abs(q4.xyz)) : frac(abs(q4.xyz)));
-    r4.xyz = (0 < Velocity.xyz ? (MaxPos.xyz - abs(q6.xyz)) : (abs(q6.xyz) + MinPos.xyz));
+    q6.xyz = q13.xyz * (q4.xyz == 0 ? frac(abs(q4.xyz)) : -frac(abs(q4.xyz)));
+    r4.xyz = (0 < Velocity.xyz ? (abs(q6.xyz) + MinPos.xyz) : (MaxPos.xyz - abs(q6.xyz)));
     eye1.xy = r4.xy - EyePosition.xy;
     r1.xy = sqr(eye1.xy);
     r1.xz = normalize(eye1.xy);

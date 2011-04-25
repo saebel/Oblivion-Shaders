@@ -44,7 +44,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
 
     t0.xyzw = tex2D(TexMapBlend, IN.TexBlendUV.xy);
     t1.xyzw = tex2D(TexMap, IN.TexUV.xy);
-    r0.xyzw = lerp(t0.xyzw, t1.xyzw, Params.x);
+    r0.xyzw = lerp(t1.xyzw, t0.xyzw, Params.x);
     OUT.color_0.a = r0.w * IN.color_0.a;
     OUT.color_0.rgb = (r0.xyz * IN.color_0.rgb) * Params.y;
 

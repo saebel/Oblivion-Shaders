@@ -325,7 +325,7 @@
     r5.xyz = 2 * r0.xyz;			// partial precision
     r0.xyzw = tex2D(BaseMap, IN.texcoord_0.xy);			// partial precision
     r2.xyzw = tex2D(LayerMap, IN.texcoord_0.xy);			// partial precision
-    r1.xyz = lerp(r2.xyz, r0.xyz, r2.w);			// partial precision
+    r1.xyz = lerp(r0.xyz, r2.xyz, r2.w);			// partial precision
     r0.y = r6.z - ToggleADTS.x;			// partial precision
     r1.xyz = r5.xyz * r1.xyz;			// partial precision
     r0.z = ToggleADTS.x;			// partial precision

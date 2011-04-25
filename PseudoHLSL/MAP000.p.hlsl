@@ -90,7 +90,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     q5.xyzw = (((t4.xyzw + ((2 * t0.xyzw) + t11.xyzw)) - t10.xyzw) - (2 * t9.xyzw)) - t3.xyzw;
     r2.xyzw = sqr(q5.xyzw) + sqr((((t10.xyzw + ((2 * t2.xyzw) + t11.xyzw)) - t4.xyzw) - (2 * t6.xyzw)) - t3.xyzw);
     t1.xyz = tex2D(OverlaySpace, IN.OverlayOffset.xy);
-    q8.xyz = lerp(const_3.xyz, (0.75 * r0.xyz) + (t1.xyz / 4), min(dot(const_0.xyz, r2.xyz) + min(r2.w * 10, 0.1), 0.5));
+    q8.xyz = lerp((0.75 * r0.xyz) + (t1.xyz / 4), const_3.xyz, min(dot(const_0.xyz, r2.xyz) + min(r2.w * 10, 0.1), 0.5));
     OUT.color_0.a = 1;
     OUT.color_0.rgb = q8.xyz;
 

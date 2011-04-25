@@ -83,7 +83,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     q12.x = max(VarAmounts.z, ((FresnelRI.x + 1) * (q10.x * sqr(sqr(q10.x)))) + FresnelRI.x);
     q7.x = 1 - saturate((FogParam.x - length(eye4.xyz)) / FogParam.y);
     r4.xyz = (saturate(2 * r2.y) * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
-    q9.xyz = lerp(t8.xyz, r4.xyz, eye16.x * VarAmounts.w);
+    q9.xyz = lerp(r4.xyz, t8.xyz, eye16.x * VarAmounts.w);
     r0.xyz = (q7.x * (FogColor.rgb - q9.xyz)) + q9.xyz;
     r0.x = ((eye16.x * r0.x) * 0.2) + r0.x;
     OUT.color_0.a = q12.x;

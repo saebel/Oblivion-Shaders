@@ -31,7 +31,7 @@
     r2.w = saturate(r0.w * 10);
     r0.xy = IN.texcoord_0.xy + TextureOffset.xy;
     r1.xyzw = tex2D(DisplaySampler, r0.xy);
-    r0.xyzw = lerp(const_1.xyzw, r1.xyzw, r2.w);
+    r0.xyzw = lerp(r1.xyzw, const_1.xyzw, r2.w);
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 11 instruction slots used (1 texture, 10 arithmetic)

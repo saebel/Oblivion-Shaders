@@ -92,14 +92,14 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r2.xy = sqr(eye21.x) * r2.xy;
     eye6.xyz = EyePos.xyz - IN.texcoord_1.xyz;
     q5.x = 1 - saturate(max(0.1, (2 * length(IN.texcoord_6.xy - 0.5)) / BlendRadius.x));
-    r2.xyz = normalize(lerp(expand(r0.xyz), r2.xyz, q5.x * BlendRadius.y));
+    r2.xyz = normalize(lerp(r2.xyz, expand(r0.xyz), q5.x * BlendRadius.y));
     t15.xyz = tex2D(DetailMap, (0.1 * r2.xy) + q18.xy);
     q8.x = shades(normalize(eye6.xyz), r2.xyz);
     q14.x = 1 - saturate((FogParam.x - length(eye6.xyz)) / FogParam.y);
     q10.xyz = (q8.x * (ShallowColor.rgb - DeepColor.rgb)) + DeepColor.rgb;			// partial precision
     q12.x = ((FresnelRI.x - r3.y) * ((1 - q8.x) * sqr(sqr(1 - q8.x)))) + FresnelRI.x;
     q13.xyz = (((VarAmounts.y - r3.y) * (ReflectionColor.rgb - q10.xyz)) + q10.xyz) * VarAmounts.y;
-    q16.xyz = lerp(t15.xyz, saturate((q12.x * q13.xyz) + q10.xyz), eye21.x * VarAmounts.w);
+    q16.xyz = lerp(saturate((q12.x * q13.xyz) + q10.xyz), t15.xyz, eye21.x * VarAmounts.w);
     OUT.color_0.a = ((BlendRadius.x - (r3.x * length(IN.texcoord_6.xy - 0.5))) >= 0.0 ? max(VarAmounts.z, q12.x) : 0);
     OUT.color_0.rgb = (q14.x * (FogColor.rgb - q16.xyz)) + q16.xyz;
 

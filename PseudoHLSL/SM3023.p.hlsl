@@ -127,7 +127,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     r0.w = (ToggleADTS.w <= 0.0 ? r5.w : r5.y);
     q4.x = (LightColor.a * (saturate((q3.x + ((-(1.0 / 256) - r5.x) >= 0.0 ? 0 : 1)) / 15) - 1)) + r5.y;			// partial precision
     r1.w = 1 - q4.x;			// partial precision
-    r2.xyz = lerp(1, r5.y - ((r1.w * 0.6) * LightColor.rgb), sqr(r5.z));			// partial precision
+    r2.xyz = lerp(r5.y - ((r1.w * 0.6) * LightColor.rgb), 1, sqr(r5.z));			// partial precision
     r1.xyz = 1 - r2.xyz;			// partial precision
 
     if (0 != r0.w) {

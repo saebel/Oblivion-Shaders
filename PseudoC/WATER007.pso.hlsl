@@ -89,7 +89,7 @@
     r1.w = r5.w * BlendRadius.y;
     r1.xyz = (2 * r0.xyz) - 1;
     r0.w = saturate(r4.w * 0.0002);
-    r0.xyz = lerp(r1.xyz, r2.xyz, r1.w);
+    r0.xyz = lerp(r2.xyz, r1.xyz, r1.w);
     r0.w = (r0.w * 2496) + 4;
     r3.xyz = normalize(r0.xyz);
     r1.xy = (r0.w * r3.xy) + IN.texcoord_0.xy;
@@ -145,13 +145,13 @@
     r5.w = (r0.w * -(1.0 / 0.35)) + 1;
     r4.xyz = (r5.x * r3.xyz) + DeepColor.rgb;			// partial precision
     r8.w = r5.w * r5.w;
-    r3.xyz = lerp(r2.xyz, r4.xyz, r9.w);
+    r3.xyz = lerp(r4.xyz, r2.xyz, r9.w);
     r5.w = (r5.w * -r8.w) - -1;
     r2.xyz = r7.w * SunColor.rgb;
     r5.w = r4.w * r5.w;
     r3.xyz = (r2.w * r2.xyz) + r3.xyz;
     r2.w = r0.x - 0.55;
-    r2.xyz = lerp(r1.xyz, r3.xyz, r6.w);
+    r2.xyz = lerp(r3.xyz, r1.xyz, r6.w);
     r2.w = (r2.w >= 0.0 ? r4.w : r5.w);
     r1.xyz = FogColor.rgb - r2.xyz;
     r0.w = (r0.w >= 0.0 ? r2.w : 0);

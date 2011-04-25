@@ -35,7 +35,7 @@
     r2.xyzw = tex2D(Src0, IN.texcoord_0.xy);
     r0.w = r0.w * r0.w;
     r3.w = (r0.w <= 0.0 ? 0 : 1);
-    r0.xyzw = lerp(r1.xyzw, r2.xyzw, r3.w);
+    r0.xyzw = lerp(r2.xyzw, r1.xyzw, r3.w);
     OUT.color_0.rgba = r0.xyzw;
 
 // approximately 15 instruction slots used (4 texture, 11 arithmetic)

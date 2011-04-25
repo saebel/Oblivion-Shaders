@@ -47,12 +47,12 @@
     r1.xyz = r1.xyz * r3.xyz;
     r4.xyz = frac(abs(r1.xyz));
     r3.xyz = (r1.xyz == 0 ? 1.0 : 0.0);
-    r1.xyz = lerp(r4.xyz, -r4.xyz, r3.xyz);
+    r1.xyz = lerp(-r4.xyz, r4.xyz, r3.xyz);
     r3.xyz = r2.xyz * r1.xyz;
     r1.xyz = abs(r3.xyz) + MinPos.xyz;
     r3.xyz = MaxPos.xyz - abs(r3.xyz);
     r0.xyz = (0 < r0.xyz ? 1.0 : 0.0);
-    r4.xyz = lerp(r1.xyz, r3.xyz, r0.xyz);
+    r4.xyz = lerp(r3.xyz, r1.xyz, r0.xyz);
     r0.xy = r4.xy - EyePosition.xy;
     r1.xy = r0.xy * r0.xy;
     r0.w = r1.y + r1.x;
