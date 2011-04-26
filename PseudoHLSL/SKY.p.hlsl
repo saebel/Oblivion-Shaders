@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-float2 Params;
+float2 Params : register(c4);
 //
 //
 // Registers:

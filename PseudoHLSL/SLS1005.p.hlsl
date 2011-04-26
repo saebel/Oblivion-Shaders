@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-sampler2D Decal2Map;
-sampler2D DecalMap;
-sampler2D DiffuseMap;
+sampler2D Decal2Map : register(s2);
+sampler2D DecalMap : register(s1);
+sampler2D DiffuseMap : register(s0);
 //
 //
 // Registers:

@@ -8,9 +8,9 @@
 #define	ScreenSpace	Src0
 // Parameters:
 //
-sampler2D ScreenSpace;
-sampler2D OverlaySpace;
-float4 blendW;
+sampler2D ScreenSpace : register(s0);
+sampler2D OverlaySpace : register(s1);
+float4 blendW : register(c0);
 //
 //
 // Registers:

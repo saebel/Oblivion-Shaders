@@ -6,13 +6,13 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-sampler2D AnisoMap;
-sampler2D DiffuseMap;
-sampler2D HeightMap;
-sampler2D LayerMap;
-sampler2D NormalMap;
-float4 PSHairTint;
+float4 AmbientColor : register(c1);
+sampler2D AnisoMap : register(s3);
+sampler2D DiffuseMap : register(s0);
+sampler2D HeightMap : register(s2);
+sampler2D LayerMap : register(s5);
+sampler2D NormalMap : register(s1);
+float4 PSHairTint : register(c24);
 float4 PSLightColor[4];
 //
 //

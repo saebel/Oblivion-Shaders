@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D AttenuationMap;
-sampler2D NormalMap;
+sampler2D AttenuationMap : register(s3);
+sampler2D NormalMap : register(s0);
 float4 PSLightColor[4];
 //
 //

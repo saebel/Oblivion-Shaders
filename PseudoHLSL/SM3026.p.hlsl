@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D BaseMap;
-float4 LightData;
+sampler2D BaseMap : register(s0);
+float4 LightData : register(c10);
 //
 //
 // Registers:

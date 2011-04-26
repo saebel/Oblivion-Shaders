@@ -6,11 +6,11 @@
 //
 // Parameters:
 //
-sampler2D BaseMap;
-float4 LightColor;
-float4 LightData;
-sampler2D ShadowMap;
-float4 ToggleADTS;
+sampler2D BaseMap : register(s0);
+float4 LightColor : register(c9);
+float4 LightData : register(c10);
+sampler2D ShadowMap : register(s2);
+float4 ToggleADTS : register(c5);
 //
 //
 // Registers:

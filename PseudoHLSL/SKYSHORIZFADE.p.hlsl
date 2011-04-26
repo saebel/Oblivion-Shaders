@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-sampler2D TexMap;
+sampler2D TexMap : register(s0);
 //
 //
 // Registers:

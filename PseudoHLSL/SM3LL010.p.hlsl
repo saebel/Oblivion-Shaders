@@ -6,15 +6,15 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-sampler2D BaseMap;
+float4 AmbientColor : register(c0);
+sampler2D BaseMap : register(s0);
 float4 LightData[8];
-float3 MatAlpha;
-sampler2D NormalMap;
-sampler2D ShadowMap;
-sampler2D ShadowMask;
-float4 ToggleADTS;
-float4 ToggleNumLights;
+float3 MatAlpha : register(c3);
+sampler2D NormalMap : register(s1);
+sampler2D ShadowMap : register(s2);
+sampler2D ShadowMask : register(s3);
+float4 ToggleADTS : register(c5);
+float4 ToggleNumLights : register(c6);
 //
 //
 // Registers:

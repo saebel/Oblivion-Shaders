@@ -8,7 +8,7 @@
 //
 float4 BlendColor[3];
 row_major float4x4 ModelViewProj;
-float TexCoordYOff;
+float TexCoordYOff : register(c12);
 //
 //
 // Registers:

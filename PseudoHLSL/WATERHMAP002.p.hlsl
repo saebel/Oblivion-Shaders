@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-float fPassNum;
-sampler2D sampButterfly;
-sampler2D sampSourceImage;
+float fPassNum : register(c1);
+sampler2D sampButterfly : register(s0);
+sampler2D sampSourceImage : register(s2);
 //
 //
 // Registers:

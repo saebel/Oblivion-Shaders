@@ -6,12 +6,12 @@
 //
 // Parameters:
 //
-float4 EyePosition;
+float4 EyePosition : register(c25);
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
 row_major float4x4 ShadowProj;
-float4 ShadowProjData;
-float4 ShadowProjTransform;
+float4 ShadowProjData : register(c32);
+float4 ShadowProjTransform : register(c33);
 //
 //
 // Registers:

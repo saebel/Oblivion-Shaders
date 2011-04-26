@@ -6,20 +6,20 @@
 //
 // Parameters:
 //
-float4 DeepColor;
-sampler2D DepthMap;
-sampler2D DetailMap;
-float4 EyePos;
-float4 FogColor;
-float4 FogParam;
-float FresnelRI;
-sampler2D NormalMap;
-float4 ReflectionColor;
-float2 Scroll;
-float4 ShallowColor;
-float4 SunColor;
-float4 SunDir;
-float4 VarAmounts;
+float4 DeepColor : register(c6);
+sampler2D DepthMap : register(s3);
+sampler2D DetailMap : register(s2);
+float4 EyePos : register(c1);
+float4 FogColor : register(c10);
+float4 FogParam : register(c9);
+float FresnelRI : register(c11);
+sampler2D NormalMap : register(s1);
+float4 ReflectionColor : register(c7);
+float2 Scroll : register(c0);
+float4 ShallowColor : register(c5);
+float4 SunColor : register(c3);
+float4 SunDir : register(c2);
+float4 VarAmounts : register(c8);
 //
 //
 // Registers:

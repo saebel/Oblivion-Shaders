@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D DiffuseMap;
-float SunlightDimmer;
+sampler2D DiffuseMap : register(s0);
+float SunlightDimmer : register(c0);
 //
 //
 // Registers:

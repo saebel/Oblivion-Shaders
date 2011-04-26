@@ -6,10 +6,10 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-sampler2D DiffuseMap;
-float4 EmittanceColor;
-sampler2D GlowMap;
+float4 AmbientColor : register(c1);
+sampler2D DiffuseMap : register(s0);
+float4 EmittanceColor : register(c6);
+sampler2D GlowMap : register(s1);
 //
 //
 // Registers:

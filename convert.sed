@@ -383,6 +383,7 @@ s/\([][a-zINOUT0-9_]\+\)\.xw = \([INOUT.]*[][a-zA-Z0-9_\-]\+\)\.\([xyzw]\)[xyzw]
 s/\([][a-zINOUT0-9_]\+\)\.yw = \([INOUT.]*[][a-zA-Z0-9_\-]\+\)\.[xyzw]\([xyzw]\)[xyzw]\([xyzw]\);/\1.yw = \2.\3\4;/g
 # r1.xy = saturate(r1.zwzw);
 # r1.xy = saturate((r0.xzzw >= 0.0 ? 0 : r0.xwzw));
+# r1.xy = saturate(r0.xz >= 0.0 ? r0.xwzw : 0);
 s/\([][a-zINOUT0-9_]\+\)\.\(xyz\) = \([a-z]\+\)(\([INOUT.]*[][a-zA-Z0-9_\-]\+\)\.\([xyzw][xyzw][xyzw]\)\([xyzw]*\));/\1.\2 = \3(\4.\5);/g
 s/\([][a-zINOUT0-9_]\+\)\.\(xy\) = \([a-z]\+\)(\([INOUT.]*[][a-zA-Z0-9_\-]\+\)\.\([xyzw][xyzw]\)\([xyzw]*\));/\1.\2 = \3(\4.\5);/g
 s/\([][a-zINOUT0-9_]\+\)\.\(xy\) = \([a-z]\+\)((\([INOUT.]*[][a-zA-Z0-9_\-]\+\)\.\([xyzw][xyzw]\)\([xyzw]*\) \(.*\) \([INOUT.]*[][a-zA-Z0-9_\-]\+\)\.\([xyzw][xyzw]\)\([xyzw]*\)));/\1.\2 = \3(\4.\5 \7 \8.\9);/g

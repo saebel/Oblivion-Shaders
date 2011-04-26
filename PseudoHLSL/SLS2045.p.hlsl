@@ -6,11 +6,11 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-samplerCUBE EnvironmentCubeMap;
-sampler2D NormalMap;
+float4 AmbientColor : register(c1);
+samplerCUBE EnvironmentCubeMap : register(s1);
+sampler2D NormalMap : register(s0);
 float4 PSLightColor[4];
-float4 Toggles;
+float4 Toggles : register(c7);
 //
 //
 // Registers:

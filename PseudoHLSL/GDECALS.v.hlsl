@@ -7,7 +7,7 @@
 // Parameters:
 //
 float4 Bones[54];
-float4 DecalFade;
+float4 DecalFade : register(c31);
 row_major float4x4 SkinModelViewProj;
 //
 //

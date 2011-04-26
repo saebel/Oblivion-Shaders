@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float4 AlphaTestRef;
-sampler2D DiffuseMap;
+float4 AlphaTestRef : register(c3);
+sampler2D DiffuseMap : register(s0);
 //
 //
 // Registers:

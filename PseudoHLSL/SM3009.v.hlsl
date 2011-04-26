@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-float3 EyePosition;
+float3 EyePosition : register(c14);
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;
 //

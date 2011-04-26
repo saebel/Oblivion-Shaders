@@ -7,7 +7,7 @@
 // Parameters:
 //
 float4 BlendColor[3];
-float3 EyePosition;
+float3 EyePosition : register(c7);
 row_major float4x4 Model;
 row_major float4x4 ModelViewProj;
 //

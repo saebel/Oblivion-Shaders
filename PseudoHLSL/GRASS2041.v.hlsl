@@ -6,17 +6,17 @@
 //
 // Parameters:
 //
-float4 AlphaParam;
-float4 FogColor;
-float4 FogParam;
+float4 AlphaParam : register(c5);
+float4 FogColor : register(c14);
+float4 FogParam : register(c15);
 float4 InstanceData[2];
 row_major float4x4 ModelViewProj;
-float4 ObjToCube0;
-float4 ObjToCube1;
-float4 ObjToCube2;
-float4 ObjToCube3;
-float3 ScaleMask;
-float4 WindData;
+float4 ObjToCube0 : register(c0);
+float4 ObjToCube1 : register(c1);
+float4 ObjToCube2 : register(c3);
+float4 ObjToCube3 : register(c6);
+float3 ScaleMask : register(c2);
+float4 WindData : register(c4);
 //
 //
 // Registers:

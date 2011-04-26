@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-sampler2D DiffuseMap;
-float4 EmittanceColor;
-sampler2D LayerMap;
+sampler2D DiffuseMap : register(s0);
+float4 EmittanceColor : register(c6);
+sampler2D LayerMap : register(s1);
 //
 //
 // Registers:

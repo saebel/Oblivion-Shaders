@@ -6,17 +6,17 @@
 //
 // Parameters:
 //
-float4 Acceleration;
-float4 Color1;
-float4 Color2;
-float4 Color3;
+float4 Acceleration : register(c12);
+float4 Color1 : register(c8);
+float4 Color2 : register(c9);
+float4 Color3 : register(c10);
 float4 InstanceData[2];
-float4 Velocity;
+float4 Velocity : register(c11);
 row_major float4x4 WorldViewProj;
-float4 fVars0;
-float4 fVars1;
-float4 fVars2;
-float4 fVars3;
+float4 fVars0 : register(c4);
+float4 fVars1 : register(c5);
+float4 fVars2 : register(c6);
+float4 fVars3 : register(c7);
 //
 //
 // Registers:

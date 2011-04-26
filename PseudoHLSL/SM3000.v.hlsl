@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float4 FogColor;
-float4 FogParam;
+float4 FogColor : register(c16);
+float4 FogParam : register(c15);
 row_major float4x4 ModelViewProj;
 //
 //

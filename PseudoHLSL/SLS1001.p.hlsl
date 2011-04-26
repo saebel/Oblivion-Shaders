@@ -6,10 +6,10 @@
 //
 // Parameters:
 //
-sampler2D AttMapXY;
-sampler2D AttMapZ;
-samplerCUBE NormalCubeMap;
-sampler2D NormalMap;
+sampler2D AttMapXY : register(s1);
+sampler2D AttMapZ : register(s2);
+samplerCUBE NormalCubeMap : register(s3);
+sampler2D NormalMap : register(s0);
 float4 PSLightColor[4];
 //
 //

@@ -7,11 +7,11 @@
 // Parameters:
 //
 float4 Bones[54];
-float4 EyePosition;
+float4 EyePosition : register(c25);
 float3 LightDirection[3];
 row_major float4x4 ShadowProj;
-float4 ShadowProjData;
-float4 ShadowProjTransform;
+float4 ShadowProjData : register(c32);
+float4 ShadowProjTransform : register(c33);
 row_major float4x4 SkinModelViewProj;
 //
 //

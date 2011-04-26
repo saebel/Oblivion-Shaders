@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D Src0;
-float4 blurParams;
+sampler2D Src0 : register(s0);
+float4 blurParams : register(c1);
 //
 //
 // Registers:

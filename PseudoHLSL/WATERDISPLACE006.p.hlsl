@@ -7,10 +7,10 @@
 //
 // Parameters:
 //
-float BlendAmount;
-sampler2D HeightMap01;
-sampler2D HeightMap02;
-float fDamp;
+float BlendAmount : register(c1);
+sampler2D HeightMap01 : register(s0);
+sampler2D HeightMap02 : register(s1);
+float fDamp : register(c3);
 //
 //
 // Registers:

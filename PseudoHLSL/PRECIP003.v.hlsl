@@ -6,12 +6,12 @@
 //
 // Parameters:
 //
-float3 CameraUp;
-float3 EyePosition;
-float3 MaxPos;
-float3 MinPos;
-float3 Params;
-float3 Velocity;
+float3 CameraUp : register(c13);
+float3 EyePosition : register(c8);
+float3 MaxPos : register(c11);
+float3 MinPos : register(c10);
+float3 Params : register(c12);
+float3 Velocity : register(c9);
 row_major float4x4 WorldViewProj;
 //
 //

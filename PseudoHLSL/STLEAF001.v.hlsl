@@ -6,19 +6,19 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-float4 BillboardRight;
-float4 BillboardUp;
-float4 DiffColor;
-float3 FogColor;
-float4 FogParam;
+float4 AmbientColor : register(c5);
+float4 BillboardRight : register(c13);
+float4 BillboardUp : register(c14);
+float4 DiffColor : register(c6);
+float3 FogColor : register(c9);
+float4 FogParam : register(c8);
 float4 LeafBase[48];
-float4 LeafLighting;
-float4 LightVector;
+float4 LeafLighting : register(c17);
+float4 LightVector : register(c11);
 row_major float4x4 ModelViewProj;
-float4 RockParams;
-float4 RustleParams;
-float SunDimmer;
+float4 RockParams : register(c15);
+float4 RustleParams : register(c16);
+float SunDimmer : register(c10);
 float4 WindMatrices[16];
 //
 //

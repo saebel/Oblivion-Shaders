@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-float3 EyePosition;
+float3 EyePosition : register(c14);
 row_major float4x4 ModelViewProj;
-float Time;
+float Time : register(c19);
 row_major float4x4 WorldViewTranspose;
 //
 //

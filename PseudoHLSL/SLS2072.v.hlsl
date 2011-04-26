@@ -7,12 +7,12 @@
 // Parameters:
 //
 float4 Bones[54];
-float4 EyePosition;
-float3 FogColor;
-float4 FogParam;
+float4 EyePosition : register(c8);
+float3 FogColor : register(c13);
+float4 FogParam : register(c12);
 row_major float4x4 SkinModelViewProj;
-float UOffset;
-float VOffset;
+float UOffset : register(c9);
+float VOffset : register(c10);
 //
 //
 // Registers:

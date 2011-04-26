@@ -7,8 +7,8 @@
 #define	ScreenSpace	Src0
 // Parameters:
 //
-float3 AmbientColor;
-sampler2D ScreenSpace;
+float3 AmbientColor : register(c0);
+sampler2D ScreenSpace : register(s0);
 //
 //
 // Registers:

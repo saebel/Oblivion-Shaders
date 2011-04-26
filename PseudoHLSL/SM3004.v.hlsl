@@ -6,12 +6,12 @@
 //
 // Parameters:
 //
-float4 FogColor;
-float4 FogParam;
+float4 FogColor : register(c16);
+float4 FogParam : register(c15);
 row_major float4x4 ModelViewProj;
 row_major float4x4 ShadowProj;
-float4 ShadowProjData;
-float4 ShadowProjTransform;
+float4 ShadowProjData : register(c25);
+float4 ShadowProjTransform : register(c26);
 //
 //
 // Registers:

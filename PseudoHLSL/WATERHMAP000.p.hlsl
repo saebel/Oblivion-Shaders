@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-float Time;
-sampler2D amplitudeSamp;
-sampler2D freqSamp;
+float Time : register(c0);
+sampler2D amplitudeSamp : register(s0);
+sampler2D freqSamp : register(s1);
 //
 //
 // Registers:

@@ -7,8 +7,8 @@
 #define	ScreenSpace	Src0
 // Parameters:
 //
-float4 HDRParam;
-sampler2D ScreenSpace;
+float4 HDRParam : register(c1);
+sampler2D ScreenSpace : register(s0);
 //
 //	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
 //		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000

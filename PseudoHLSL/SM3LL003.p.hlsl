@@ -6,17 +6,17 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-sampler2D AnisoMap;
-sampler2D BaseMap;
-float3 EyePosition;
-float3 HairTint;
-sampler2D LayerMap;
+float4 AmbientColor : register(c0);
+sampler2D AnisoMap : register(s4);
+sampler2D BaseMap : register(s0);
+float3 EyePosition : register(c1);
+float3 HairTint : register(c2);
+sampler2D LayerMap : register(s5);
 float4 LightData[8];
-float3 MatAlpha;
-sampler2D NormalMap;
-float4 ToggleADTS;
-float4 ToggleNumLights;
+float3 MatAlpha : register(c3);
+sampler2D NormalMap : register(s1);
+float4 ToggleADTS : register(c5);
+float4 ToggleNumLights : register(c6);
 //
 //
 // Registers:

@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-samplerCUBE EnvironmentCubeMap;
-sampler2D NormalMap;
+float4 AmbientColor : register(c1);
+samplerCUBE EnvironmentCubeMap : register(s3);
+sampler2D NormalMap : register(s0);
 //
 //
 // Registers:

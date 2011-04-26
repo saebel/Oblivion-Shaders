@@ -8,8 +8,8 @@
 // Parameters:
 //
 float4 BlurOffsets[16];
-float2 BlurScale;
-sampler2D ScreenSpace;
+float2 BlurScale : register(c2);
+sampler2D ScreenSpace : register(s0);
 //
 //	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
 //		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000

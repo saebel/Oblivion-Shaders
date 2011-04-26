@@ -6,19 +6,19 @@
 //
 // Parameters:
 //
-float4 AddlParams;
-float4 AlphaParam;
-float4 AmbientColor;
-float3 DiffuseColor;
-float3 DiffuseDir;
-float4 FogColor;
-float4 FogParam;
+float4 AddlParams : register(c7);
+float4 AlphaParam : register(c5);
+float4 AmbientColor : register(c6);
+float3 DiffuseColor : register(c1);
+float3 DiffuseDir : register(c0);
+float4 FogColor : register(c14);
+float4 FogParam : register(c15);
 float4 InstanceData[2];
 row_major float4x4 ModelViewProj;
-float3 ScaleMask;
-float4 ShadowProjData;
-float4 ShadowProjTransform;
-float4 WindData;
+float3 ScaleMask : register(c2);
+float4 ShadowProjData : register(c8);
+float4 ShadowProjTransform : register(c13);
+float4 WindData : register(c4);
 //
 //
 // Registers:

@@ -6,15 +6,15 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-float4 DiffColor;
-float4 DiffColorPt;
-float3 FogColor;
-float4 FogParam;
-float4 LightPos;
-float4 LightRadius;
+float4 AmbientColor : register(c5);
+float4 DiffColor : register(c6);
+float4 DiffColorPt : register(c7);
+float3 FogColor : register(c15);
+float4 FogParam : register(c14);
+float4 LightPos : register(c9);
+float4 LightRadius : register(c10);
 row_major float4x4 ModelViewProj;
-float SunDimmer;
+float SunDimmer : register(c16);
 float4 WindMatrices[16];
 //
 //

@@ -7,7 +7,7 @@
 // Parameters:
 //
 float3 LightColor[3];
-sampler2D NormalMap;
+sampler2D NormalMap : register(s0);
 //
 //
 // Registers:

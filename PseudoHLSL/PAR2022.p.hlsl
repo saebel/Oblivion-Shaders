@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D BaseMap;
-float4 Toggles;
+sampler2D BaseMap : register(s0);
+float4 Toggles : register(c7);
 //
 //
 // Registers:

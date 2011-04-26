@@ -7,7 +7,7 @@
 // Parameters:
 //
 float4 Bones[54];
-float4 EyePosition;
+float4 EyePosition : register(c25);
 row_major float4x4 SkinModelViewProj;
 //
 //

@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D BaseMap;
-sampler2D GlowMap;
+sampler2D BaseMap : register(s0);
+sampler2D GlowMap : register(s1);
 //
 //
 // Registers:

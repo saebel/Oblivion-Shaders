@@ -305,6 +305,7 @@ sub str_optimize {
 		# case "-q6.xyz - 2 * dot(-q6.xyz, r0.xyz) * r0.xyz" -> reflection
 		# case "(-(2 * dot(-q5.xyz, r0.xyz)) * r0.xyz) - q5.xyz,"
 		$prev =~ s/\(-\(2 \* dot\(-([^()]*), ([^()]*)\)\) \* \2\) - \1/reflect(-$1, $2)/s;
+		$prev =~ s/\(-\(2 \* dot\(([^()]*), ([^()]*)\)\) \* \2\) - \1/reflect($1, $2)/s;
 
 		# case "((2 * dot(q1.xyz, normalize(IN.texcoord_2.xyz))) * q1.xyz) - (normalize(IN.texcoord_2.xyz) * dot(q1.xyz, q1.xyz))"
 		# case "((2 * dot(q3.xyz, q1.xyz)) * q3.xyz) - (q1.xyz * dot(q3.xyz, q3.xyz))"
@@ -2981,6 +2982,41 @@ foreach (@defins) {
 		$line = str_replace($sbs, $key, $line);
 
 		$shader[$lnb] = $line;
+	}
+}
+
+# last pass (specific registers) --------------------------------
+
+my %_regp = ();
+
+$snb = scalar(@prolog);
+$lnb = 0;
+for ($lnb = 0; $lnb < $snb; $lnb++) {
+	$line = $prolog[$lnb];
+
+	#//   Scroll          const_0       1
+	if ($line =~ /([a-zA-Z0-9]+) +const_([0-9]+) +1/) {
+		$_regp{$1} = "$1 : register(c$2)";
+	}
+	#//   ReflectionMap   texture_0       1
+	if ($line =~ /\/\/ +([a-zA-Z0-9]+) +texture_([0-9]+) +1/) {
+		$_regp{$1} = "$1 : register(s$2)";
+	}
+
+	$prolog[$lnb] = $line;
+}
+
+foreach $key (sort keys %_regp) {
+	$snb = scalar(@prolog);
+	$lnb = 0;
+	for ($lnb = 0; $lnb < $snb; $lnb++) {
+		$line = $prolog[$lnb];
+
+		if ($line =~ /$key;/) {
+			$line =~ s/$key/$_regp{$key}/g;
+		}
+
+		$prolog[$lnb] = $line;
 	}
 }
 

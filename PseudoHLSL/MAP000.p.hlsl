@@ -8,10 +8,10 @@
 #define	ScreenSpace	Src0
 // Parameters:
 //
-float4 CameraPos;
-sampler2D ScreenSpace;
-sampler2D OverlaySpace;
-sampler2D Src2;
+float4 CameraPos : register(c1);
+sampler2D ScreenSpace : register(s0);
+sampler2D OverlaySpace : register(s1);
+sampler2D Src2 : register(s2);
 //
 //
 // Registers:

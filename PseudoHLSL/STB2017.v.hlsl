@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-float4 FogParam;
+float4 FogParam : register(c23);
 float4 LightPosition[3];
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;

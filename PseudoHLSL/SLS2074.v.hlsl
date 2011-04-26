@@ -7,7 +7,7 @@
 // Parameters:
 //
 float4 Bones[54];
-float4 FogParam;
+float4 FogParam : register(c23);
 float4 LightPosition[3];
 row_major float4x4 ObjToCubeSpace;
 row_major float4x4 SkinModelViewProj;

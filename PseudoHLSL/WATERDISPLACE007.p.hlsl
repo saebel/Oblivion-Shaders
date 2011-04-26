@@ -7,8 +7,8 @@
 //
 // Parameters:
 //
-sampler2D DisplaySampler;
-float2 TextureOffset;
+sampler2D DisplaySampler : register(s0);
+float2 TextureOffset : register(c2);
 //
 //
 // Registers:

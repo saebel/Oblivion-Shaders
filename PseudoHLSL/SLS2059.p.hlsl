@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-sampler2D BaseMap;
+sampler2D BaseMap : register(s0);
 //
 //
 // Registers:

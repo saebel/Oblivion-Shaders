@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-samplerCUBE EnvironmentCubeMap;
-float4 MatAlpha;
-sampler2D NormalMap;
+samplerCUBE EnvironmentCubeMap : register(s1);
+float4 MatAlpha : register(c3);
+sampler2D NormalMap : register(s0);
 //
 //
 // Registers:

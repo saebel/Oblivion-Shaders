@@ -7,7 +7,7 @@
 //
 // Parameters:
 //
-sampler2D HeightMap;
+sampler2D HeightMap : register(s0);
 //
 //
 // Registers:

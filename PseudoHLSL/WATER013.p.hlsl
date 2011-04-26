@@ -6,16 +6,16 @@
 //
 // Parameters:
 //
-float4 DeepColor;
-float4 EyePos;
-float4 FogColor;
-float4 FogParam;
-float FresnelRI;
-float4 ReflectionColor;
-float4 ShallowColor;
-float4 SunColor;
-float4 SunDir;
-float4 VarAmounts;
+float4 DeepColor : register(c6);
+float4 EyePos : register(c1);
+float4 FogColor : register(c10);
+float4 FogParam : register(c9);
+float FresnelRI : register(c11);
+float4 ReflectionColor : register(c7);
+float4 ShallowColor : register(c5);
+float4 SunColor : register(c3);
+float4 SunDir : register(c2);
+float4 VarAmounts : register(c8);
 //
 //
 // Registers:

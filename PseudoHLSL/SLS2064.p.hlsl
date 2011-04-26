@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D NormalMap;
-float PSRefractionPower;
+sampler2D NormalMap : register(s0);
+float PSRefractionPower : register(c25);
 //
 //
 // Registers:

@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float4 CoreColor;
-float4 GlowColor;
+float4 CoreColor : register(c0);
+float4 GlowColor : register(c1);
 //
 //
 // Registers:

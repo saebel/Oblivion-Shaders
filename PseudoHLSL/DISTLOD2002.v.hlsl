@@ -6,13 +6,13 @@
 //
 // Parameters:
 //
-float4 AlphaParam;
-float4 AmbientColor;
-float3 DiffuseColor;
-float3 DiffuseDir;
-float4 EyePos;
-float4 FogColor;
-float4 FogParam;
+float4 AlphaParam : register(c12);
+float4 AmbientColor : register(c13);
+float3 DiffuseColor : register(c5);
+float3 DiffuseDir : register(c4);
+float4 EyePos : register(c9);
+float4 FogColor : register(c10);
+float4 FogParam : register(c11);
 float4 InstanceData[2];
 row_major float4x4 ModelViewProj;
 //

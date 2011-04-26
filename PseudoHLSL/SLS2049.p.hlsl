@@ -6,12 +6,12 @@
 //
 // Parameters:
 //
-float4 AmbientColor;
-sampler2D BaseMap;
-sampler2D NormalMap;
+float4 AmbientColor : register(c1);
+sampler2D BaseMap : register(s0);
+sampler2D NormalMap : register(s1);
 float4 PSLightColor[4];
-sampler2D ShadowMap;
-sampler2D ShadowMaskMap;
+sampler2D ShadowMap : register(s2);
+sampler2D ShadowMaskMap : register(s3);
 //
 //
 // Registers:

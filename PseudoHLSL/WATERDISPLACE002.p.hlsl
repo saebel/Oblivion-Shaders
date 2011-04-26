@@ -7,8 +7,8 @@
 //
 // Parameters:
 //
-sampler2D HeightMap;
-float3 WadingVars;
+sampler2D HeightMap : register(s0);
+float3 WadingVars : register(c5);
 //
 //
 // Registers:

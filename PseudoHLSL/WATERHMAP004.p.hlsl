@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D sampScramble;
-sampler2D sampSourceImage;
+sampler2D sampScramble : register(s1);
+sampler2D sampSourceImage : register(s2);
 //
 //
 // Registers:

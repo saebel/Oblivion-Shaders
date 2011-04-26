@@ -7,7 +7,7 @@
 #define	ScreenSpace	Src0
 // Parameters:
 //
-sampler2D ScreenSpace;
+sampler2D ScreenSpace : register(s0);
 //
 //
 // Registers:

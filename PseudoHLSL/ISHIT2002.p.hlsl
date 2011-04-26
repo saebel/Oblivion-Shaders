@@ -7,10 +7,10 @@
 #define	OverlaySpace	Src1
 // Parameters:
 //
-sampler2D Src0;
-sampler2D OverlaySpace;
-float4 blurParams;
-float4 doubleVisParams;
+sampler2D Src0 : register(s0);
+sampler2D OverlaySpace : register(s1);
+float4 blurParams : register(c1);
+float4 doubleVisParams : register(c2);
 //
 //
 // Registers:

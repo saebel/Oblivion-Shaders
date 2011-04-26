@@ -7,8 +7,8 @@
 #define	ScreenSpace	Src0
 // Parameters:
 //
-float4 SpellInput;
-sampler2D ScreenSpace;
+float4 SpellInput : register(c1);
+sampler2D ScreenSpace : register(s0);
 //
 //
 // Registers:

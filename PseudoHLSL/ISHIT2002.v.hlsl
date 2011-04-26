@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float4 texRatio0;
-float4 texRatio1;
+float4 texRatio0 : register(c6);
+float4 texRatio1 : register(c7);
 //
 //
 // Registers:

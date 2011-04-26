@@ -7,8 +7,8 @@
 //
 // Parameters:
 //
-sampler2D DisplaceMap;
-float fDamp;
+sampler2D DisplaceMap : register(s0);
+float fDamp : register(c3);
 //
 //
 // Registers:

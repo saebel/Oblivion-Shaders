@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-sampler2D amplitudeSamp;
-int fResolution;
+sampler2D amplitudeSamp : register(s0);
+int fResolution : register(c2);
 //
 //
 // Registers:

@@ -6,11 +6,11 @@
 //
 // Parameters:
 //
-float4 AlphaTestRef;
-sampler2D DiffuseMap;
-float4 LightData;
-float4 PSLightColor;
-sampler2D ShadowMap;
+float4 AlphaTestRef : register(c3);
+sampler2D DiffuseMap : register(s0);
+float4 LightData : register(c4);
+float4 PSLightColor : register(c2);
+sampler2D ShadowMap : register(s1);
 //
 //
 // Registers:

@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-float4 EyePosition;
+float4 EyePosition : register(c25);
 float3 LightColor[3];
 float3 LightDirection[3];
 float4 LightPosition[3];

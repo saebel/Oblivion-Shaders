@@ -7,8 +7,8 @@
 #define	ScreenSpace	Src0
 // Parameters:
 //
-float BlendValue;
-sampler2D ScreenSpace;
+float BlendValue : register(c1);
+sampler2D ScreenSpace : register(s0);
 //
 //
 // Registers:

@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float3 BoundWorldCenter;
-float3 EyePosition;
+float3 BoundWorldCenter : register(c20);
+float3 EyePosition : register(c14);
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;
 //

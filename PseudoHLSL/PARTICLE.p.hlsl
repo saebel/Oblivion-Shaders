@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-sampler2D SourceTexture;
+sampler2D SourceTexture : register(s0);
 //
 //
 // Registers:

@@ -6,12 +6,12 @@
 //
 // Parameters:
 //
-float4 AlphaTestRef;
-sampler2D AttMap;
-sampler2D DiffuseMap;
-float4 PointLightColor;
-sampler2D ShadowMap;
-sampler2D ShadowMaskMap;
+float4 AlphaTestRef : register(c3);
+sampler2D AttMap : register(s1);
+sampler2D DiffuseMap : register(s0);
+float4 PointLightColor : register(c2);
+sampler2D ShadowMap : register(s2);
+sampler2D ShadowMaskMap : register(s3);
 //
 //
 // Registers:

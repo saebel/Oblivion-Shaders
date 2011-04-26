@@ -6,10 +6,10 @@
 //
 // Parameters:
 //
-float3 FogColor;
-float4 FogParam;
-float4 HighDetailRange;
-float4 LODLandFlags;
+float3 FogColor : register(c24);
+float4 FogParam : register(c23);
+float4 HighDetailRange : register(c12);
+float4 LODLandFlags : register(c47);
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
 row_major float4x4 ObjToCubeSpace;

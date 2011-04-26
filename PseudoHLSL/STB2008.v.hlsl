@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-float4 EyePosition;
-float3 FogColor;
-float4 FogParam;
+float4 EyePosition : register(c25);
+float3 FogColor : register(c24);
+float4 FogParam : register(c23);
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
 float4 WindMatrices[16];

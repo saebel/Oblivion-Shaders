@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-sampler2D DiffuseMap;
+sampler2D DiffuseMap : register(s0);
 //
 //
 // Registers:

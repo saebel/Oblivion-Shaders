@@ -8,8 +8,8 @@
 //
 float3 LightDirection[3];
 row_major float4x4 ModelViewProj;
-float4 ShadowProjData;
-float4 ShadowProjTransform;
+float4 ShadowProjData : register(c24);
+float4 ShadowProjTransform : register(c23);
 //
 //
 // Registers:

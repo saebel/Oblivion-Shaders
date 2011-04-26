@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-sampler2D NormalMap;
+sampler2D NormalMap : register(s1);
 float4 PSLightColor[4];
-float4 Toggles;
+float4 Toggles : register(c7);
 //
 //
 // Registers:

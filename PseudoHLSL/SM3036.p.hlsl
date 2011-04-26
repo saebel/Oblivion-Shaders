@@ -6,11 +6,11 @@
 //
 // Parameters:
 //
-float4 FillColor;
-sampler2D NormalMap;
-float4 RimColor;
-sampler2D SourceTexture;
-float4 fVars;
+float4 FillColor : register(c0);
+sampler2D NormalMap : register(s0);
+float4 RimColor : register(c1);
+sampler2D SourceTexture : register(s1);
+float4 fVars : register(c2);
 //
 //
 // Registers:

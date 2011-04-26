@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float4 EmittanceColor;
-sampler2D GlowMap;
+float4 EmittanceColor : register(c6);
+sampler2D GlowMap : register(s0);
 //
 //
 // Registers:

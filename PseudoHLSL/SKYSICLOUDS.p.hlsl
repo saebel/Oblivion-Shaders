@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-float2 Params;
-sampler2D TexMap;
-sampler2D TexMapBlend;
+float2 Params : register(c4);
+sampler2D TexMap : register(s0);
+sampler2D TexMapBlend : register(s1);
 //
 //
 // Registers:
