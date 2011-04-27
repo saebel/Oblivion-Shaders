@@ -9,7 +9,7 @@
 float4 AmbientColor : register(c1);
 sampler2D BaseMap : register(s0);
 sampler2D NormalMap : register(s1);
-float4 PSLightColor[4];
+float4 PSLightColor[4] : register(c2);
 float4 Toggles : register(c7);
 //
 //

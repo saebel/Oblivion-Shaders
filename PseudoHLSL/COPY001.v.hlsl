@@ -6,7 +6,7 @@
 //
 // Parameters:
 //
-row_major float2x2 RotationMatrix;
+row_major float2x2 RotationMatrix : register(c8);
 float4 texRatio0 : register(c6);
 //
 //

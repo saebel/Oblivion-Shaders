@@ -11,7 +11,7 @@ float4 DiffColor : register(c6);
 float3 FogColor : register(c15);
 float4 FogParam : register(c14);
 float4 LightVector : register(c8);
-row_major float4x4 ModelViewProj;
+row_major float4x4 ModelViewProj : register(c0);
 float SunDimmer : register(c16);
 float4 WindMatrices[16];
 //

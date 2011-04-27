@@ -11,7 +11,7 @@ sampler2D BaseMap : register(s0);
 sampler2D FaceGenMap0 : register(s2);
 sampler2D FaceGenMap1 : register(s3);
 sampler2D NormalMap : register(s1);
-float4 PSLightColor[4];
+float4 PSLightColor[4] : register(c2);
 sampler2D ShadowMap : register(s6);
 sampler2D ShadowMaskMap : register(s7);
 float4 Toggles : register(c7);

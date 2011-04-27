@@ -8,7 +8,7 @@
 //
 float4 AmbientColor : register(c0);
 sampler2D BaseMap : register(s0);
-float4 LightData[16];
+float4 LightData[16] : register(c9);
 float3 MatAlpha : register(c3);
 sampler2D NormalMap : register(s1);
 sampler2D ShadowMap : register(s2);

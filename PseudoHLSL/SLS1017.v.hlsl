@@ -8,7 +8,7 @@
 //
 float3 FogColor : register(c24);
 float4 FogParam : register(c23);
-row_major float4x4 ModelViewProj;
+row_major float4x4 ModelViewProj : register(c0);
 //
 //
 // Registers:

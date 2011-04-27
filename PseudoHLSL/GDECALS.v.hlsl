@@ -6,9 +6,9 @@
 //
 // Parameters:
 //
-float4 Bones[54];
+float4 Bones[54] : register(c42);
 float4 DecalFade : register(c31);
-row_major float4x4 SkinModelViewProj;
+row_major float4x4 SkinModelViewProj : register(c1);
 //
 //
 // Registers:

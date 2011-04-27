@@ -7,9 +7,9 @@
 // Parameters:
 //
 float4 EyePosition : register(c25);
-row_major float4x4 ModelViewProj;
+row_major float4x4 ModelViewProj : register(c0);
 float Time : register(c22);
-row_major float4x4 WorldViewTranspose;
+row_major float4x4 WorldViewTranspose : register(c4);
 //
 //
 // Registers:

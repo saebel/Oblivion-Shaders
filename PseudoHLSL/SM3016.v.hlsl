@@ -6,11 +6,11 @@
 //
 // Parameters:
 //
-float4 Bones[54];
+float4 Bones[54] : register(c31);
 float4 FogColor : register(c16);
 float4 FogParam : register(c15);
-row_major float4x4 ObjToCubeMap;
-row_major float4x4 SkinModelViewProj;
+row_major float4x4 ObjToCubeMap : register(c10);
+row_major float4x4 SkinModelViewProj : register(c1);
 //
 //
 // Registers:

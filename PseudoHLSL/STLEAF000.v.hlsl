@@ -13,7 +13,7 @@ float4 DiffColor : register(c6);
 float4 LeafBase[48];
 float4 LeafLighting : register(c17);
 float4 LightVector : register(c11);
-row_major float4x4 ModelViewProj;
+row_major float4x4 ModelViewProj : register(c0);
 float4 RockParams : register(c15);
 float4 RustleParams : register(c16);
 float SunDimmer : register(c10);

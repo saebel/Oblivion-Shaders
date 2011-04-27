@@ -7,7 +7,7 @@
 // Parameters:
 //
 sampler2D DecalMap : register(s1);
-float4 PSDecalOffsets[8];
+float4 PSDecalOffsets[8] : register(c9);
 float4 PSNumDecals : register(c6);
 //
 //

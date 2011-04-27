@@ -13,7 +13,7 @@ sampler2D HeightMap : register(s2);
 sampler2D LayerMap : register(s5);
 sampler2D NormalMap : register(s1);
 float4 PSHairTint : register(c24);
-float4 PSLightColor[4];
+float4 PSLightColor[4] : register(c2);
 //
 //
 // Registers:

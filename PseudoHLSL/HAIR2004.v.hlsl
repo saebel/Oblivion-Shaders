@@ -7,10 +7,10 @@
 // Parameters:
 //
 float4 EyePosition : register(c25);
-float3 LightColor[3];
-float3 LightDirection[3];
-float4 LightPosition[3];
-row_major float4x4 ModelViewProj;
+float3 LightColor[3] : register(c19);
+float3 LightDirection[3] : register(c13);
+float4 LightPosition[3] : register(c16);
+row_major float4x4 ModelViewProj : register(c0);
 //
 //
 // Registers:

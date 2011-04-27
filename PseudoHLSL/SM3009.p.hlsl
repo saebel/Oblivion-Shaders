@@ -10,7 +10,7 @@ float4 AmbientColor : register(c0);
 sampler2D BaseMap : register(s0);
 float3 EyePosition : register(c1);
 sampler2D GlowMap : register(s6);
-float4 LightData[20];
+float4 LightData[20] : register(c9);
 float3 MatAlpha : register(c3);
 float3 MatEmit : register(c4);
 sampler2D NormalMap : register(s1);

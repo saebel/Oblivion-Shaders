@@ -7,10 +7,10 @@
 // Parameters:
 //
 float4 DepthOffset : register(c10);
-row_major float4x4 ModelViewProj;
+row_major float4x4 ModelViewProj : register(c0);
 float4 QPosAdjust : register(c9);
 float Tile : register(c8);
-row_major float4x4 WorldMat;
+row_major float4x4 WorldMat : register(c4);
 //
 //
 // Registers:

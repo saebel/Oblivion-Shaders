@@ -8,7 +8,7 @@
 //
 float4 AmbientColor : register(c1);
 sampler2D DiffuseMap : register(s0);
-float4 PSLightColor[4];
+float4 PSLightColor[4] : register(c2);
 //
 //
 // Registers:

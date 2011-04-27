@@ -8,8 +8,8 @@
 //
 float4 FogColor : register(c16);
 float4 FogParam : register(c15);
-row_major float4x4 ModelViewProj;
-row_major float4x4 ShadowProj;
+row_major float4x4 ModelViewProj : register(c0);
+row_major float4x4 ShadowProj : register(c21);
 float4 ShadowProjData : register(c25);
 float4 ShadowProjTransform : register(c26);
 //

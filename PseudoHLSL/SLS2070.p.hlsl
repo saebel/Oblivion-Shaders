@@ -8,7 +8,7 @@
 //
 sampler2D BaseMap : register(s0);
 sampler2D GlowMap : register(s1);
-float4 PSLightColor[4];
+float4 PSLightColor[4] : register(c2);
 //
 //
 // Registers:

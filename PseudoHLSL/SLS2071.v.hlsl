@@ -9,7 +9,7 @@
 float4 EyePosition : register(c8);
 float3 FogColor : register(c13);
 float4 FogParam : register(c12);
-row_major float4x4 ModelViewProj;
+row_major float4x4 ModelViewProj : register(c0);
 float UOffset : register(c9);
 float VOffset : register(c10);
 //

@@ -7,7 +7,7 @@
 //
 // Parameters:
 //
-row_major float3x3 TranslationMatrix;
+row_major float3x3 TranslationMatrix : register(c8);
 //
 //
 // Registers:

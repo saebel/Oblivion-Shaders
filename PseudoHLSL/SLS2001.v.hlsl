@@ -10,9 +10,9 @@ float3 FogColor : register(c24);
 float4 FogParam : register(c23);
 float4 HighDetailRange : register(c12);
 float4 LODLandFlags : register(c47);
-float3 LightDirection[3];
-row_major float4x4 ModelViewProj;
-row_major float4x4 ObjToCubeSpace;
+float3 LightDirection[3] : register(c13);
+row_major float4x4 ModelViewProj : register(c0);
+row_major float4x4 ObjToCubeSpace : register(c8);
 //
 //
 // Registers:

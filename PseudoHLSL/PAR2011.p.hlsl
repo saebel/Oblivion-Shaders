@@ -11,7 +11,7 @@ sampler2D BaseMap : register(s0);
 float4 EmittanceColor : register(c6);
 sampler2D GlowMap : register(s4);
 sampler2D NormalMap : register(s1);
-float4 PSLightColor[4];
+float4 PSLightColor[4] : register(c2);
 sampler2D ShadowMap : register(s6);
 sampler2D ShadowMaskMap : register(s7);
 float4 Toggles : register(c7);

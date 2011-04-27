@@ -8,8 +8,8 @@
 //
 float4 BoundWorldCenter : register(c46);
 float4 EyePosition : register(c25);
-row_major float4x4 ModelViewProj;
-row_major float4x4 ObjToCubeSpace;
+row_major float4x4 ModelViewProj : register(c0);
+row_major float4x4 ObjToCubeSpace : register(c8);
 //
 //
 // Registers:

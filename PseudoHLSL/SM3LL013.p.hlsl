@@ -12,7 +12,7 @@ sampler2D BaseMap : register(s0);
 float3 EyePosition : register(c1);
 float3 HairTint : register(c2);
 sampler2D LayerMap : register(s5);
-float4 LightData[8];
+float4 LightData[8] : register(c9);
 float3 MatAlpha : register(c3);
 sampler2D NormalMap : register(s1);
 sampler2D ShadowMap : register(s2);

@@ -11,7 +11,7 @@ sampler2D BaseMap : register(s0);
 float3 EyePosition : register(c1);
 sampler2D FaceGenMap0 : register(s4);
 sampler2D FaceGenMap1 : register(s5);
-float4 LightData[16];
+float4 LightData[16] : register(c9);
 float3 MatAlpha : register(c3);
 sampler2D NormalMap : register(s1);
 sampler2D ShadowMap : register(s2);

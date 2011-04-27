@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-row_major float4x4 ModelViewProj;
-float4 SegmentData[2];
+row_major float4x4 ModelViewProj : register(c0);
+float4 SegmentData[2] : register(c14);
 float4 fVars0 : register(c4);
 float4 fVars1 : register(c5);
 float4 fVars2 : register(c6);

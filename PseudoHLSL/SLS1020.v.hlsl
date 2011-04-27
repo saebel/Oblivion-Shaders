@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float3 LightDirection[3];
-row_major float4x4 ModelViewProj;
+float3 LightDirection[3] : register(c13);
+row_major float4x4 ModelViewProj : register(c0);
 //
 //
 // Registers:

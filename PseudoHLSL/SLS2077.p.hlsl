@@ -7,7 +7,7 @@
 // Parameters:
 //
 sampler2D BaseMap : register(s0);
-float4 PSLightColor[4];
+float4 PSLightColor[4] : register(c2);
 sampler2D ShadowMap : register(s6);
 //
 //

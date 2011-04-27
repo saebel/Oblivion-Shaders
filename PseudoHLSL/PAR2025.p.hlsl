@@ -9,7 +9,7 @@
 sampler2D AttenuationMap : register(s3);
 sampler2D BaseMap : register(s1);
 sampler2D NormalMap : register(s0);
-float4 PSLightColor[4];
+float4 PSLightColor[4] : register(c2);
 float4 Toggles : register(c7);
 //
 //

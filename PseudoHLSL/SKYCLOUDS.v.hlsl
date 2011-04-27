@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float4 BlendColor[3];
-row_major float4x4 ModelViewProj;
+float4 BlendColor[3] : register(c4);
+row_major float4x4 ModelViewProj : register(c0);
 float TexCoordYOff : register(c12);
 //
 //

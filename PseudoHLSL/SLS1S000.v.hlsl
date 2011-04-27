@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-float4 Bones[54];
-row_major float4x4 SkinModelViewProj;
+float4 Bones[54] : register(c42);
+row_major float4x4 SkinModelViewProj : register(c1);
 //
 //
 // Registers:

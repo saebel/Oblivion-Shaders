@@ -7,7 +7,7 @@
 // Parameters:
 //
 float4 DecalFade : register(c31);
-row_major float4x4 ModelViewProj;
+row_major float4x4 ModelViewProj : register(c0);
 //
 //
 // Registers:

@@ -10,7 +10,7 @@ float4 AmbientColor : register(c0);
 sampler2D BaseMap : register(s0);
 float3 HairTint : register(c2);
 sampler2D LayerMap : register(s5);
-float4 LightData[30];
+float4 LightData[30] : register(c9);
 float3 MatAlpha : register(c3);
 sampler2D NormalMap : register(s1);
 float4 ToggleADTS : register(c5);

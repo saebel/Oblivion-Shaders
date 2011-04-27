@@ -7,7 +7,7 @@
 #define	ScreenSpace	Src0
 // Parameters:
 //
-float4 BlurOffsets[16];
+float4 BlurOffsets[16] : register(c3);
 float2 BlurScale : register(c2);
 sampler2D ScreenSpace : register(s0);
 //

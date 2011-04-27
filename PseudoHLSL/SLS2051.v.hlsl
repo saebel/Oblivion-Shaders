@@ -7,9 +7,9 @@
 // Parameters:
 //
 float4 EyePosition : register(c25);
-float4 LightPosition[3];
-row_major float4x4 ModelViewProj;
-row_major float4x4 ShadowProj;
+float4 LightPosition[3] : register(c16);
+row_major float4x4 ModelViewProj : register(c0);
+row_major float4x4 ShadowProj : register(c28);
 float4 ShadowProjData : register(c32);
 float4 ShadowProjTransform : register(c33);
 //

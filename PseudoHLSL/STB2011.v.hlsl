@@ -9,10 +9,10 @@
 float4 EyePosition : register(c25);
 float3 FogColor : register(c24);
 float4 FogParam : register(c23);
-float3 LightDirection[3];
-float4 LightPosition[3];
-row_major float4x4 ModelViewProj;
-row_major float4x4 ShadowProj;
+float3 LightDirection[3] : register(c13);
+float4 LightPosition[3] : register(c16);
+row_major float4x4 ModelViewProj : register(c0);
+row_major float4x4 ShadowProj : register(c28);
 float4 ShadowProjData : register(c32);
 float4 ShadowProjTransform : register(c33);
 float4 WindMatrices[16];

@@ -2996,11 +2996,15 @@ for ($lnb = 0; $lnb < $snb; $lnb++) {
 
 	#//   Scroll          const_0       1
 	if ($line =~ /([a-zA-Z0-9]+) +const_([0-9]+) +1/) {
-		$_regp{$1} = "$1 : register(c$2)";
+		$_regp{$1} = " : register(c$2)";
+	}
+	#//   ModelViewProj[0]          const_0       1
+	if ($line =~ /([a-zA-Z0-9]+)\[0\] +const_([0-9]+) +1/) {
+		$_regp{$1} = " : register(c$2)";
 	}
 	#//   ReflectionMap   texture_0       1
 	if ($line =~ /\/\/ +([a-zA-Z0-9]+) +texture_([0-9]+) +1/) {
-		$_regp{$1} = "$1 : register(s$2)";
+		$_regp{$1} = " : register(s$2)";
 	}
 
 	$prolog[$lnb] = $line;
@@ -3013,7 +3017,10 @@ foreach $key (sort keys %_regp) {
 		$line = $prolog[$lnb];
 
 		if ($line =~ /$key;/) {
-			$line =~ s/$key/$_regp{$key}/g;
+			$line =~ s/$key/$key$_regp{$key}/g;
+		}
+		if ($line =~ /$key\[([0-9]+)\];/) {
+			$line =~ s/$key\[([0-9]+)\]/$key\[$1\]$_regp{$key}/g;
 		}
 
 		$prolog[$lnb] = $line;

@@ -6,8 +6,8 @@
 //
 // Parameters:
 //
-row_major float4x4 ModelViewProj;
-row_major float4x4 WorldViewTranspose;
+row_major float4x4 ModelViewProj : register(c0);
+row_major float4x4 WorldViewTranspose : register(c4);
 //
 //
 // Registers:
