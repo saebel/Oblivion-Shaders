@@ -12,14 +12,14 @@ float4 BillboardUp : register(c14);
 float4 DiffColor : register(c6);
 float3 FogColor : register(c9);
 float4 FogParam : register(c8);
-float4 LeafBase[48];
+float4 LeafBase[48] : register(c34);
 float4 LeafLighting : register(c17);
 float4 LightVector : register(c11);
 row_major float4x4 ModelViewProj : register(c0);
 float4 RockParams : register(c15);
 float4 RustleParams : register(c16);
 float SunDimmer : register(c10);
-float4 WindMatrices[16];
+float4 WindMatrices[16] : register(c18);
 //
 //
 // Registers:

@@ -12,7 +12,7 @@ row_major float4x4 ModelViewProj : register(c0);
 row_major float4x4 ShadowProj : register(c28);
 float4 ShadowProjData : register(c32);
 float4 ShadowProjTransform : register(c33);
-float4 WindMatrices[16];
+float4 WindMatrices[16] : register(c38);
 //
 //
 // Registers:

@@ -7,7 +7,7 @@
 // Parameters:
 //
 row_major float4x4 ModelViewProj : register(c0);
-float4 WindMatrices[16];
+float4 WindMatrices[16] : register(c38);
 //
 //
 // Registers:

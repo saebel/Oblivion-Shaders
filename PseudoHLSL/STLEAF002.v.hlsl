@@ -11,7 +11,7 @@ float4 BillboardRight : register(c13);
 float4 BillboardUp : register(c14);
 float4 DiffColor : register(c6);
 float4 DiffColorPt : register(c7);
-float4 LeafBase[48];
+float4 LeafBase[48] : register(c34);
 float4 LeafLighting : register(c17);
 float4 LightPos : register(c12);
 float4 LightVector : register(c11);
@@ -19,7 +19,7 @@ row_major float4x4 ModelViewProj : register(c0);
 float4 RockParams : register(c15);
 float4 RustleParams : register(c16);
 float SunDimmer : register(c10);
-float4 WindMatrices[16];
+float4 WindMatrices[16] : register(c18);
 //
 //
 // Registers:

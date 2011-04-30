@@ -9,7 +9,7 @@
 float4 EyePosition : register(c25);
 float3 LightDirection[3] : register(c13);
 row_major float4x4 ModelViewProj : register(c0);
-float4 WindMatrices[16];
+float4 WindMatrices[16] : register(c38);
 //
 //
 // Registers:
