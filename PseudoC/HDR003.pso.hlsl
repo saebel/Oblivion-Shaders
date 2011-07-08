@@ -26,6 +26,6 @@
     // - full screen Shader
     // - copy input to output, set w to 1
     //
-    // out.xyzw = [in.xyz,1]
+    // out . xyzw = [in . xyz,1]
 
 // approximately 3 instruction slots used (1 texture, 2 arithmetic)

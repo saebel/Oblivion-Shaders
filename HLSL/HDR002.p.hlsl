@@ -3,6 +3,14 @@
 //
 //   vsa shaderdump19/HDR002.pso /Fcshaderdump19/HDR002.pso.dis
 //
+//
+#define	ScreenSpace	Src0
+// Parameters:
+//
+float4 BlurOffsets[16] : register(c3);
+float2 BlurScale : register(c2);
+sampler2D ScreenSpace : register(s0);
+//
 //	SetPixelShaderConstantF[0+]				[BlurShaderHDR]
 //		|0.000000|0.000000|0.000000|0.000000|           fTargetLUM=1.2000
 //	SetPixelShaderConstantF[1+]                             fUpperLUMClamp=1.4000
@@ -27,17 +35,35 @@
 //		|7.000000|7.000000|0.000000|0.000000|
 //		|0.000000|0.000000|0.000000|0.000000|
 //
-// Parameters:
+// Registers:
+//
+//   Name         Reg   Size
+//   ------------ ----- ----
+//   BlurScale    const_2       1		1/256 => 0.003906
+//   BlurOffsets[0]  const_3       1
+//   BlurOffsets[1]  const_4       1
+//   BlurOffsets[2]  const_5       1
+//   BlurOffsets[3]  const_6       1
+//   BlurOffsets[4]  const_7       1
+//   BlurOffsets[5]  const_8       1
+//   BlurOffsets[6]  const_9       1
+//   BlurOffsets[7]  const_10      1
+//   BlurOffsets[8]  const_11      1
+//   BlurOffsets[9]  const_12      1
+//   BlurOffsets[10]  const_13      1
+//   BlurOffsets[11]  const_14      1
+//   BlurOffsets[12]  const_15      1
+//   BlurOffsets[13]  const_16      1
+//   BlurOffsets[14]  const_17      1
+//   ScreenSpace         texture_0       1
+//
 
-float4 BlurOffsets[16];
-float2 BlurScale;
-sampler2D Src0;
+#include "includes/Color.hlsl"
 
 // Structures:
 
 struct VS_OUTPUT {
-    float4 position : POSITION;
-    float2 texcoord_0 : TEXCOORD0;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -49,57 +75,78 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    float2 p1  = (BlurOffsets[1].xy  * BlurScale) + IN.texcoord_0;
-    float2 p0  = (BlurOffsets[0].xy  * BlurScale) + IN.texcoord_0;
-    float2 p2  = (BlurOffsets[2].xy  * BlurScale) + IN.texcoord_0;
-    float2 p3  = (BlurOffsets[3].xy  * BlurScale) + IN.texcoord_0;
-    float2 p4  = (BlurOffsets[4].xy  * BlurScale) + IN.texcoord_0;
-    float2 p5  = (BlurOffsets[5].xy  * BlurScale) + IN.texcoord_0;
-    float2 p6  = (BlurOffsets[6].xy  * BlurScale) + IN.texcoord_0;
-    float2 p7  = (BlurOffsets[7].xy  * BlurScale) + IN.texcoord_0;
-    float2 p8  = (BlurOffsets[8].xy  * BlurScale) + IN.texcoord_0;
-    float2 p9  = (BlurOffsets[9].xy  * BlurScale) + IN.texcoord_0;
-    float2 p10 = (BlurOffsets[10].xy * BlurScale) + IN.texcoord_0;
-    float2 p11 = (BlurOffsets[11].xy * BlurScale) + IN.texcoord_0;
-    float2 p12 = (BlurOffsets[12].xy * BlurScale) + IN.texcoord_0;
-    float2 p13 = (BlurOffsets[13].xy * BlurScale) + IN.texcoord_0;
-    float2 p14 = (BlurOffsets[14].xy * BlurScale) + IN.texcoord_0;
+    float3 q14;
+    float3 t0;
+    float3 t1;
+    float3 t10;
+    float3 t11;
+    float3 t12;
+    float3 t13;
+    float3 t18;
+    float3 t2;
+    float3 t3;
+    float3 t4;
+    float3 t5;
+    float3 t6;
+    float3 t7;
+    float3 t8;
+    float3 t9;
 
-    float3 c1  = tex2D(Src0, p1 );
-    float3 c0  = tex2D(Src0, p0 );
-    float3 c2  = tex2D(Src0, p2 );
-    float3 c3  = tex2D(Src0, p3 );
-    float3 c4  = tex2D(Src0, p4 );
-    float3 c5  = tex2D(Src0, p5 );
-    float3 c6  = tex2D(Src0, p6 );
-    float3 c7  = tex2D(Src0, p7 );
-    float3 c8  = tex2D(Src0, p8 );
-    float3 c9  = tex2D(Src0, p9 );
-    float3 c10 = tex2D(Src0, p10);
-    float3 c11 = tex2D(Src0, p11);
-    float3 c12 = tex2D(Src0, p12);
-    float3 c13 = tex2D(Src0, p13);
-    float3 c14 = tex2D(Src0, p14);
+    /* original shader ---------------------------------------
+     *
+     * unknown kernel
+     */
 
-    float3 sum =
-    	(BlurOffsets[1].z  * c1 ) +
-    	(BlurOffsets[0].z  * c0 ) +
-    	(BlurOffsets[2].z  * c2 ) +
-    	(BlurOffsets[3].z  * c3 ) +
-    	(BlurOffsets[4].z  * c4 ) +
-    	(BlurOffsets[5].z  * c5 ) +
-    	(BlurOffsets[6].z  * c6 ) +
-    	(BlurOffsets[7].z  * c7 ) +
-    	(BlurOffsets[8].z  * c8 ) +
-    	(BlurOffsets[9].z  * c9 ) +
-    	(BlurOffsets[10].z * c10) +
-    	(BlurOffsets[11].z * c11) +
-    	(BlurOffsets[12].z * c12) +
-    	(BlurOffsets[13].z * c13) +
-    	(BlurOffsets[14].z * c14);
+    float2 pos0  = (BlurScale.xy * BlurOffsets[ 0].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos1  = (BlurScale.xy * BlurOffsets[ 1].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos2  = (BlurScale.xy * BlurOffsets[ 2].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos3  = (BlurScale.xy * BlurOffsets[ 3].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos4  = (BlurScale.xy * BlurOffsets[ 4].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos5  = (BlurScale.xy * BlurOffsets[ 5].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos6  = (BlurScale.xy * BlurOffsets[ 6].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos7  = (BlurScale.xy * BlurOffsets[ 7].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos8  = (BlurScale.xy * BlurOffsets[ 8].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos9  = (BlurScale.xy * BlurOffsets[ 9].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos10 = (BlurScale.xy * BlurOffsets[10].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos11 = (BlurScale.xy * BlurOffsets[11].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos12 = (BlurScale.xy * BlurOffsets[12].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos13 = (BlurScale.xy * BlurOffsets[13].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
+    float2 pos14 = (BlurScale.xy * BlurOffsets[14].xy) + IN.ScreenOffset.xy;	// |?.??????|?.??????| + (in / 256)
 
-    OUT.color_0.rgb = sum;
-    OUT.color_0.a   = 1;
+    t11.xyz = tex2D(ScreenSpace, pos0 );
+    t12.xyz = tex2D(ScreenSpace, pos1 );
+    t10.xyz = tex2D(ScreenSpace, pos2 );
+    t9.xyz  = tex2D(ScreenSpace, pos3 );
+    t8.xyz  = tex2D(ScreenSpace, pos4 );
+    t7.xyz  = tex2D(ScreenSpace, pos5 );
+    t6.xyz  = tex2D(ScreenSpace, pos6 );
+    t5.xyz  = tex2D(ScreenSpace, pos7 );
+    t4.xyz  = tex2D(ScreenSpace, pos8 );
+    t3.xyz  = tex2D(ScreenSpace, pos9 );
+    t2.xyz  = tex2D(ScreenSpace, pos10);
+    t1.xyz  = tex2D(ScreenSpace, pos11);
+    t0.xyz  = tex2D(ScreenSpace, pos12);
+    t13.xyz = tex2D(ScreenSpace, pos13);
+    t18.xyz = tex2D(ScreenSpace, pos14);
+
+    q14.xyz = (BlurOffsets[ 0].z * t11.xyz) +
+	      (BlurOffsets[ 1].z * t12.xyz) +
+	      (BlurOffsets[ 2].z * t10.xyz) +
+	      (BlurOffsets[ 3].z * t9.xyz) +
+	      (BlurOffsets[ 4].z * t8.xyz) +
+	      (BlurOffsets[ 5].z * t7.xyz) +
+	      (BlurOffsets[ 6].z * t6.xyz) +
+	      (BlurOffsets[ 7].z * t5.xyz) +
+	      (BlurOffsets[ 8].z * t4.xyz) +
+	      (BlurOffsets[ 9].z * t3.xyz) +
+	      (BlurOffsets[10].z * t2.xyz) +
+	      (BlurOffsets[11].z * t1.xyz) +
+	      (BlurOffsets[12].z * t0.xyz) +
+	      (BlurOffsets[13].z * t13.xyz) +
+	      (BlurOffsets[14].z * t18.xyz);
+
+    OUT.color_0.a = 1;
+    OUT.color_0.rgb = q14.xyz;
 
     return OUT;
 };

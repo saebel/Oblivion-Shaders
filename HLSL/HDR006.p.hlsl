@@ -53,6 +53,13 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float3 c0, c1, c2;
     float upper, lower, range, decay;
 
+    /* original shader ---------------------------------------
+     *
+     * brightness cut-off
+     * with luminance adaption over time
+     * RGB channels are individual
+     */
+
     c0 = tex2D(Src0,   IN.texcoord_0);
     c1 = tex2D(AvgLum, IN.texcoord_0);
 

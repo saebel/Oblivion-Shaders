@@ -5,9 +5,19 @@
 //
 //
 // Parameters:
+//
+float4 texRatio0 : register(c6);
+float4 texRatio1 : register(c7);
+//
+//
+// Registers:
+//
+//   Name         Reg   Size
+//   ------------ ----- ----
+//   texRatio0    const_6       1
+//   texRatio1    const_7       1
+//
 
-float4 texRatio0;
-float4 texRatio1;
 
 // Structures:
 
@@ -27,9 +37,11 @@ struct VS_OUTPUT {
 VS_OUTPUT main(VS_INPUT IN) {
     VS_OUTPUT OUT;
 
-    OUT.texcoord_0.xy = (IN.texcoord_0 * texRatio0) + texRatio0.zwzw;
-    OUT.texcoord_1.xy = (IN.texcoord_0 * texRatio1) + texRatio1.zwzw;
-    OUT.position = IN.position;
+    /* original shader --------------------------------------- */
+
+    OUT.position.xyzw = IN.position.xyzw;
+    OUT.texcoord_0.xy = (IN.texcoord_0.xy * texRatio0.xy) + texRatio0.zw;
+    OUT.texcoord_1.xy = (IN.texcoord_0.xy * texRatio1.xy) + texRatio1.zw;
 
     return OUT;
 };

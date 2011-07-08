@@ -28,6 +28,11 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float3 c2;
     float upper, lower, range;
 
+    /* original shader ---------------------------------------
+     *
+     * brightness cut-off
+     */
+
     c2 = tex2D(Src0, IN.texcoord_0);
 
     upper = max(0.01, length(c2));			// max(length, 0.01)

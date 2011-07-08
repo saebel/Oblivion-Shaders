@@ -55,6 +55,12 @@ PS_OUTPUT main(VS_OUTPUT IN) {
     float3 c0, c1, c2;
     float strength, blend, devia, upper;
 
+    /* original shader ---------------------------------------
+     *
+     * blending of original surface and bloom
+     * RGB channels weight equal
+     */
+
     c2 = tex2D(AvgLum,    IN.texcoord_0);		// range-surface
     c1 = tex2D(Src0,      IN.texcoord_0);		// blur-surface
     c0 = tex2D(DestBlend, IN.texcoord_1);		// original-surface
