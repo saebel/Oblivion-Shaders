@@ -59,24 +59,23 @@ struct PS_OUTPUT {
 PS_OUTPUT main(VS_OUTPUT IN) {
     PS_OUTPUT OUT;
 
-    float3 q0;
-    float3 t0;
+    float3 c0, c1;
 
     /* original shader ---------------------------------------
      *
      * normalizing
      * black-point thresholding and range expansion/contraction
      *
-     * color = (color - min) * (max - min)
+     * color = (color - min) * range
      */
 
-    t0.xyz = tex2D(ScreenSpace, IN.ScreenOffset.xy);
+    c0 = tex2D(ScreenSpace, IN.ScreenOffset.xy).rgb;
 
     // max(in - 1.225, 0) * fBrightClamp == 1.350000
-    q0.xyz = max(t0.xyz - HDRParam.x, 0) * HDRParam.y;
+    c1 = max(c0 - HDRParam.x, 0) * HDRParam.y;
 
+    OUT.color_0.rgb = c1;
     OUT.color_0.a = 1;
-    OUT.color_0.rgb = q0.xyz;
 
     return OUT;
 };

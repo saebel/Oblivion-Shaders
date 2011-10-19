@@ -27,6 +27,7 @@
 //		|7.000000|7.000000|0.000000|0.000000|
 //		|0.000000|0.000000|0.000000|0.000000|
 //
+#define	ScreenSpace	Src0
 // Parameters:
 
 sampler2D AvgLum;
@@ -37,8 +38,8 @@ float4 TimingData;
 // Structures:
 
 struct VS_OUTPUT {
-    float4 position : POSITION;
-    float2 texcoord_0 : TEXCOORD0;
+    float4 Position : POSITION;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -60,10 +61,10 @@ PS_OUTPUT main(VS_OUTPUT IN) {
      * RGB channels are individual
      */
 
-    c0 = tex2D(Src0,   IN.texcoord_0);
-    c1 = tex2D(AvgLum, IN.texcoord_0);
+    c0 = tex2D(ScreenSpace, IN.ScreenOffset.xy).rgb;
+    c1 = tex2D(AvgLum, IN.ScreenOffset.xy).rgb;
 
-    decay = 1.0 - pow(HDRParam.z, TimingData.z);	// 1.0 - pow(HDRParam.z == 0.500000, TimingData)
+    decay = 1.0 - pow(abs(HDRParam.z), TimingData.z);	// 1.0 - pow(HDRParam.z == 0.500000, TimingData)
     c2 = lerp(c0, c1, decay);				// lerp(Src0, AvgLum, 1.0 - pow(something))
 
     upper = max(0.01, length(c2));			// max(length, 0.01)

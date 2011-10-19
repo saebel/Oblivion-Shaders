@@ -4,6 +4,7 @@
 //   vsa shaderdump19/HDR007.pso /Fcshaderdump19/HDR007.pso.dis
 //
 //
+#define	ScreenSpace	Src0
 // Parameters:
 
 float4 HDRParam;
@@ -12,8 +13,8 @@ sampler2D Src0;
 // Structures:
 
 struct VS_OUTPUT {
-    float4 position : POSITION;
-    float2 texcoord_0 : TEXCOORD0;
+    float4 Position : POSITION;
+    float2 ScreenOffset : TEXCOORD0;
 };
 
 struct PS_OUTPUT {
@@ -33,7 +34,7 @@ PS_OUTPUT main(VS_OUTPUT IN) {
      * brightness cut-off
      */
 
-    c2 = tex2D(Src0, IN.texcoord_0);
+    c2 = tex2D(ScreenSpace, IN.ScreenOffset.xy).rgb;
 
     upper = max(0.01, length(c2));			// max(length, 0.01)
     lower = min(upper, HDRParam.x);			// min(length, fUpperLUMClamp == 1.400000)
